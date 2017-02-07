@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+
+	<a href="{{ url_for('content.title_show', id = content.title_id) }}"><< {{ content.title.name }}</a><br>
+	<h4>{{ content.name }}</h4>
+	<p>created_at: {{ content.created_at.strftime('%F %T') }}</p>
+	<p>{{ content.description | safe }}</p>
+
+{% endblock %}

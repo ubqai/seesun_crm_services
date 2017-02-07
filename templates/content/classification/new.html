@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+
+	<form action="{{ url_for('content.classification_new', category_id = category_id) }}" method="post">
+		<div>{{ form.name.label }}<div>{{ form.name }}</div></div>
+		<div>{{ form.description.label }}<div>{{ form.description }}</div></div>
+		<div>
+			<button type="submit">Create a classification</button>
+			<a href="{{ url_for('content.category_show', id = category_id) }}">Cancel</a>
+		</div>
+	</form>
+
+{% endblock %}

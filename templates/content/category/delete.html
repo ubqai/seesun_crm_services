@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+	<h4>{{ category.name }}</h4>
+	<form action="{{ url_for('content.category_delete', id = category.id) }}" method="post">
+		<button type="submit" data-confirm="Are you sure?">Delete category</button>
+		<a href="{{ url_for('content.category_index') }}">Cancel</a>
+	</form>
+	{% for classification in category.classifications %}
+		<p>{{ classification.name }}</p>
+		<ul>
+		{% for option in classification.options %}
+			<li>{{ option.name }}</li>	
+		{% endfor %}
+		</ul>
+	{% endfor %}
+
+{% endblock %}

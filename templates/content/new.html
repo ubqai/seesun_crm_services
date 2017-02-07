@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block extra_scripts %}
+	<script src="{{ url_for('static',filename = 'ckeditor/ckeditor.js') }}"></script>
+{% endblock %}
+{% block content %}
+
+	<form action="{{ url_for('content.new', title_id = title_id) }}" method="post">
+		<div>{{ form.name.label }}<div>{{ form.name }}</div></div>
+		<div>{{ form.description.label }}<div>{{ form.description(class="ckeditor") }}</div></div>
+		<script>CKEDITOR.replace('description', { filebrowerUploadUrl: '/ckupload/', });</script>
+		<div>
+			<button type="submit">Create a content</button>
+			<a href="{{ url_for('content.title_show', id = title_id) }}">Cancel</a>
+		</div>
+	</form>
+
+{% endblock %}

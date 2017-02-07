@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+	<a href="{{ url_for('content.title_index') }}"><< Content titles</a><br>
+	<a href="{{ url_for('content.new', title_id = title.id) }}"> Create a new content</a>
+	<h4>{{ title.name }}</h4>
+	<p>分类: 
+		{% for option in title.options %}
+			<a href="{{ url_for('content.option_show', id = option.id) }}">{{ option.name }}</a> 
+		{% endfor %}
+	</p>
+	{% for content in title.contents %}
+		<p>
+			<span>{{ content.created_at.strftime('%F %T') }}</span>
+			<a href="{{ url_for('content.show', id = content.id) }}">{{ content.name }}</a>
+			<a href="{{ url_for('content.edit', id = content.id) }}">edit</a>
+			<a href="{{ url_for('content.delete', id = content.id) }}">delete</a>
+		</p>
+		<div>{{ content.description | safe }}</div>
+	{% endfor %}
+
+{% endblock %}

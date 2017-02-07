@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+	<form action="{{ url_for('content.classification_edit', id = classification.id) }}" method="post">
+		<div>{{ form.name.label }}<div>{{ form.name }}</div></div>
+		<div>{{ form.description.label }}<div>{{ form.description }}</div></div>
+		<div>Category: {{ classification.category.name }}</div>
+		{{ form.category_id }}
+		<div>
+			<button type="submit">Update classification</button>
+			<a href="{{ url_for('content.category_show', id = classification.category_id) }}">Cancel</a>
+		</div>
+	</form>
+
+{% endblock %}

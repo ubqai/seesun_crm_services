@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block extra_scripts %}
+	<script src="{{ url_for('static',filename = 'ckeditor/ckeditor.js') }}"></script>
+{% endblock %}
+{% block content %}
+
+	<form action="{{ url_for('content.edit', id = content.id) }}" method="post">
+		<div>Title: {{ content.title.name }}</div>
+		<div>{{ form.name.label }}<div>{{ form.name }}</div></div>
+		<div>{{ form.description.label }}<div>{{ form.description(class="ckeditor") }}</div></div>
+		<div>
+			<button type="submit">Update content</button>
+			<a href="{{ url_for('content.title_show', id = content.title_id) }}">Cancel</a>
+		</div>
+	</form>
+
+{% endblock %}

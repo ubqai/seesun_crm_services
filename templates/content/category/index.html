@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+	<a href="{{ url_for('content.index') }}"><< Home</a><br>
+	<a href="{{ url_for('content.category_new') }}"> Create a new category</a>
+	<h4>Categories</h4>
+	{% for category in categories %}
+		<p>
+			<span>{{ category.created_at.strftime('%F %T') }}</span>
+			<a href="{{ url_for('content.category_show', id = category.id) }}">{{ category.name }}</a>
+			<a href="{{ url_for('content.category_edit', id = category.id) }}">edit</a>
+			<a href="{{ url_for('content.category_delete', id = category.id) }}">delete</a>
+		</p>
+	{% endfor %}
+
+{% endblock %}

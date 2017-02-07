@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+	<a href="{{ url_for('content.category_index') }}"><< Categories</a><br>
+	<a href="{{ url_for('content.classification_new', category_id = category.id) }}"> Create a new classification</a>
+	<h4>{{ category.name }}</h4>
+	{% for classification in category.classifications %}
+		<p>
+			<span>{{ classification.created_at.strftime('%F %T') }}</span>
+			<a href="{{ url_for('content.classification_show', id = classification.id) }}">{{ classification.name }}</a>
+			<a href="{{ url_for('content.classification_edit', id = classification.id) }}">edit</a>
+			<a href="{{ url_for('content.classification_delete', id = classification.id) }}">delete</a>
+		</p>
+	{% endfor %}
+
+{% endblock %}

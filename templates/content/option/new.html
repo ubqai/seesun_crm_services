@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+
+	<form action="{{ url_for('content.option_new', classification_id = classification_id) }}" method="post">
+		<div>{{ form.name.label }}<div>{{ form.name }}</div></div>
+		<div>
+			<button type="submit">Create an option</button>
+			<a href="{{ url_for('content.classification_show', id = classification_id) }}">Cancel</a>
+		</div>
+	</form>
+
+{% endblock %}

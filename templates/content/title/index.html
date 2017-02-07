@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+	<a href="{{ url_for('content.index') }}"><< Home</a><br>
+	<a href="{{ url_for('content.title_new') }}"> Create a new title</a>
+	<h4>Content titles</h4>
+	{% for title in titles %}
+		<p>
+			<span>{{ title.created_at.strftime('%F %T') }}</span>
+			<a href="{{ url_for('content.title_show', id = title.id) }}">{{ title.name }}</a>
+			<a href="{{ url_for('content.title_edit', id = title.id) }}">edit</a>
+			<a href="{{ url_for('content.title_delete', id = title.id) }}">delete</a>
+		</p>
+	{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+	<form action="{{ url_for('content.category_edit', id = category.id) }}" method="post">
+		{% for field in form %}
+			<div>
+				{{ field.label }}
+				<div>{{ field }}</div>
+			</div>
+		{% endfor %}
+		<div>
+			<button type="submit">Update category</button>
+			<a href="{{ url_for('content.category_index') }}">Cancel</a>
+		</div>
+	</form>
+
+{% endblock %}

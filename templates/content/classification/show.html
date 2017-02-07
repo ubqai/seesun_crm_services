@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+	<a href="{{ url_for('content.category_show', id = classification.category_id) }}"><< {{ classification.category.name }}</a><br>
+	<a href="{{ url_for('content.option_new', classification_id = classification.id) }}"> Create a new option</a>
+	<h4>{{ classification.category.name}} > {{ classification.name }}</h4>
+	<p>Description: {{ classification.description }}</p>
+	{% for option in classification.options %}
+		<p>
+			<span>{{ option.created_at.strftime('%F %T') }}</span>
+			<a href="{{ url_for('content.option_show', id = option.id) }}">{{ option.name }}</a>
+			<a href="{{ url_for('content.option_edit', id = option.id) }}">edit</a>
+			<a href="{{ url_for('content.option_delete', id = option.id) }}">delete</a>
+		</p>
+	{% endfor %}
+
+{% endblock %}
