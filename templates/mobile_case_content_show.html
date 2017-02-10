@@ -1,0 +1,17 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_header.html' import mobile_header %}
+{% block content %}
+{{ mobile_header('产品展示') }}
+
+		<div class="main-content">
+			<div class="nav-tab clearfix">
+				<a><span class="glyphicon glyphicon-save nav-icon"></span>保存</a>
+				<a><span class="glyphicon glyphicon-log-in nav-icon"></span>转发</a>
+				<a><span class="glyphicon glyphicon-envelope nav-icon"></span>邮件</a>
+			</div>
+			<div class="wrapper">
+			{{ content.description|safe }}
+			</div>
+		</div>
+
+{% endblock %}

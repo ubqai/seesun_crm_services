@@ -1,0 +1,73 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_header.html' import mobile_header %}
+{% block content %}
+{{ mobile_header('库存查询') }}
+
+		<div class="main-content">
+			<div class="text">
+				<p class="text-title title-style-1">博格专版木纹</p>
+			</div>
+			<div class="expanded-table table-responsive">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+						  <th>产品</th>
+						  <th>颜色</th>
+						  <th>纹理</th>
+						  <th>厚度</th>
+						  <th>存量</th>
+						  <th>选择</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+						  <td>博格专版</td>
+						  <td>红色</td>
+						  <td>柳叶纹</td>
+						  <td>5</td>
+						  <td>10000</td>
+						  <td><input type="text" pattern="[0-9]*"></input></td>
+						</tr>
+						<tr>
+						  <td>博格专版</td>
+						  <td>红色</td>
+						  <td>柳叶纹</td>
+						  <td>5</td>
+						  <td>10000</td>
+						  <td><input type="text" pattern="[0-9]*"></input></td>
+						</tr>
+						<tr>
+						  <td>博格专版</td>
+						  <td>红色</td>
+						  <td>柳叶纹</td>
+						  <td>5</td>
+						  <td>10000</td>
+						  <td><input type="text" pattern="[0-9]*"></input></td>
+						</tr>
+						<tr>
+						  <td>博格专版</td>
+						  <td>红色</td>
+						  <td>柳叶纹</td>
+						  <td>5</td>
+						  <td>10000</td>
+						  <td><input type="text" pattern="[0-9]*"></input></td>
+						</tr>
+						<tr>
+						  <td>博格专版</td>
+						  <td>红色</td>
+						  <td>柳叶纹</td>
+						  <td>5</td>
+						  <td>10000</td>
+						  <td><input type="text" pattern="[0-9]*"></input></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div class="fixed-bot">
+				<a class="col-6 orange">加入购物车</a>
+				<a href="mobile_cart.html" class="col-6 gray">进入购物车</a>
+			</div>
+		</div>
+
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_header.html' import mobile_header %}
+{% block content %}
+{{ mobile_header('库存列表') }}
+
+		<div class="main-content">
+		
+			<div class="wrapper">
+				<div class="text">
+					<p class="text-title">北京库存</p>
+					<p class="text-content text-sm left-gap-1">联系人：大毛</p>
+					<p class="text-content text-sm left-gap-1 bot-gap-1">电话：1388888888</p>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>品牌</th>
+								<th>产品</th>
+								<th>纹理</th>
+								<th>颜色</th>
+								<th>厚度</th>
+								<th>库存</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>博格</td>
+								<td>博格</td>
+								<td>木纹</td>
+								<td>红色</td>
+								<td>5.0</td>
+								<td>300平</td>
+							</tr>
+							<tr>
+								<td>帝彩</td>
+								<td>奥萨</td>
+								<td></td>
+								<td></td>
+								<td>3.0</td>
+								<td>600平</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>	
+			
+			<div class="divider4 top-gap-1 bot-gap-1"></div>
+			
+			<div class="wrapper">
+				<div class="text">
+					<p class="text-content text-sm left-gap-1">联系人：二毛</p>
+					<p class="text-content text-sm left-gap-1 bot-gap-1">电话：1388888888</p>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>品牌</th>
+								<th>产品</th>
+								<th>纹理</th>
+								<th>颜色</th>
+								<th>厚度</th>
+								<th>库存</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>博格</td>
+								<td>博格</td>
+								<td>木纹</td>
+								<td>红色</td>
+								<td>5.0</td>
+								<td>300平</td>
+							</tr>
+							<tr>
+								<td>帝彩</td>
+								<td>奥萨</td>
+								<td></td>
+								<td></td>
+								<td>3.0</td>
+								<td>600平</td>
+							</tr>
+							<tr>
+								<td>博格</td>
+								<td>博格</td>
+								<td>沙粒</td>
+								<td>红色</td>
+								<td>6.0</td>
+								<td>600平</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>	
+			
+			<div class="fixed-bot">
+				<a class="orange">上传共享库存</a>
+			</div>
+			
+		</div>
+
+{% endblock %}

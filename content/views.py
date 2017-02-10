@@ -18,8 +18,7 @@ def new(title_id):
 		form = ContentForm(request.form)
 		if form.validate():
 			content = form.save(Content(title_id = title_id))
-			db.session.add(content)
-			db.session.commit()
+			content.save
 			flash('Content "{name}" created successfully.'.format(name = content.name), 'success')
 			return redirect(url_for('content.title_show', id = title_id))
 	else:
@@ -38,8 +37,7 @@ def edit(id):
 		form = ContentForm(request.form)
 		if form.validate():
 			content = form.save(content)
-			db.session.add(content)
-			db.session.commit()
+			content.save
 			flash('Content "{name}" has been updated.'.format(name = content.name), 'success')
 			return redirect(url_for('content.title_show', id = content.title_id))
 	else:
@@ -50,8 +48,7 @@ def edit(id):
 def delete(id):
 	content = Content.query.get_or_404(id)
 	if request.method == 'POST':
-		db.session.delete(content)
-		db.session.commit()
+		content.delete
 		flash('Content "{name}" has been deleted.'.format(name = content.name), 'success')
 		return redirect(url_for('content.title_show', id = content.title_id))
 	return render_template('content/delete.html', content = content)
@@ -72,8 +69,7 @@ def title_new():
 			request_options = ContentClassificationOption.query.filter(ContentClassificationOption.id.in_(option_ids))
 			title = form.save(ContentTitle())
 			title.append_options(request_options)
-			db.session.add(title)
-			db.session.commit()
+			title.save
 			flash('Content title "{name}" created successfully.'.format(name = title.name), 'success')
 			return redirect(url_for('content.title_index'))
 	else:
@@ -96,8 +92,7 @@ def title_edit(id):
 			request_options = ContentClassificationOption.query.filter(ContentClassificationOption.id.in_(option_ids))
 			title = form.save(title)
 			title.update_options(request_options)
-			db.session.add(title)
-			db.session.commit()
+			title.save
 			flash('Content title "{name}" has been updated.'.format(name = title.name), 'success')
 			return redirect(url_for('content.title_index'))
 	else:
@@ -108,8 +103,7 @@ def title_edit(id):
 def title_delete(id):
 	title = ContentTitle.query.get_or_404(id)
 	if request.method == 'POST':
-		db.session.delete(title)
-		db.session.commit()
+		title.delete_p
 		flash('Content title "{name}" has been deleted.'.format(name = title.name), 'success')
 		return redirect(url_for('content.title_index'))
 	return render_template('content/title/delete.html', title = title)
@@ -126,8 +120,7 @@ def category_new():
 		form = ContentCategoryForm(request.form)
 		if form.validate():
 			category = form.save(ContentCategory())
-			db.session.add(category)
-			db.session.commit()
+			category.save
 			flash('Content category "{name}" created successfully.'.format(name = category.name), 'success')
 			return redirect(url_for('content.category_index'))
 	else:
@@ -146,8 +139,7 @@ def category_edit(id):
 		form = ContentCategoryForm(request.form)
 		if form.validate():
 			category = form.save(category)
-			db.session.add(category)
-			db.session.commit()
+			category.save
 			flash('Content category "{name}" has been updated.'.format(name = category.name), 'success')
 			return redirect(url_for('content.category_index'))
 	else:
@@ -158,8 +150,7 @@ def category_edit(id):
 def category_delete(id):
 	category = ContentCategory.query.get_or_404(id)
 	if request.method == 'POST':
-		db.session.delete(category)
-		db.session.commit()
+		category.delete_p
 		flash('Content category "{name}" has been deleted.'.format(name = category.name), 'success')
 		return redirect(url_for('content.category_index'))
 	return render_template('content/category/delete.html', category = category)
@@ -171,8 +162,7 @@ def classification_new(category_id):
 		form = ContentClassificationForm(request.form)
 		if form.validate():
 			classification = form.save(ContentClassification(category_id = category_id))
-			db.session.add(classification)
-			db.session.commit()
+			classification.save
 			flash('Content classification "{name}" created successfully.'.format(name = classification.name), 'success')
 			return redirect(url_for('content.category_show', id = category_id))
 	else:
@@ -191,8 +181,7 @@ def classification_edit(id):
 		form = ContentClassificationForm(request.form)
 		if form.validate():
 			classification = form.save(classification)
-			db.session.add(classification)
-			db.session.commit()
+			classification.save
 			flash('Content Classification "{name}" has been updated.'.format(name = classification.name), 'success')
 			return redirect(url_for('content.category_show', id = classification.category_id))
 	else:
@@ -203,8 +192,7 @@ def classification_edit(id):
 def classification_delete(id):
 	classification = ContentClassification.query.get_or_404(id)
 	if request.method == 'POST':
-		db.session.delete(classification)
-		db.session.commit()
+		classification.delete_p
 		flash('Content classification "{name}" has been deleted.'.format(name = classification.name), 'success')
 		return redirect(url_for('content.category_show', id = classification.category_id))
 	return render_template('content/classification/delete.html', classification = classification)
@@ -216,8 +204,7 @@ def option_new(classification_id):
 		form = ContentClassificationOptionForm(request.form)
 		if form.validate():
 			option = form.save(ContentClassificationOption(classification_id = classification_id))
-			db.session.add(option)
-			db.session.commit()
+			option.save
 			flash('Content classification Option "{name}" created successfully.'.format(name = option.name), 'success')
 			return redirect(url_for('content.classification_show', id = classification_id))
 	else:
@@ -236,8 +223,7 @@ def option_edit(id):
 		form = ContentClassificationOptionForm(request.form)
 		if form.validate():
 			option = form.save(option)
-			db.session.add(option)
-			db.session.commit()
+			option.save
 			flash('Content Classification Option "{name}" has been updated.'.format(name = option.name), 'success')
 			return redirect(url_for('content.classification_show', id = option.classification_id))
 	else:
@@ -248,9 +234,7 @@ def option_edit(id):
 def option_delete(id):
 	option = ContentClassificationOption.query.get_or_404(id)
 	if request.method == 'POST':
-		db.session.delete(option)
-		db.session.commit()
+		option.delete
 		flash('Content classification option "{name}" has been deleted.'.format(name = option.name), 'success')
 		return redirect(url_for('content.classification_show', id = option.classification_id))
 	return render_template('content/option/delete.html', option = option)
-

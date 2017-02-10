@@ -2,6 +2,19 @@
 import datetime
 from app import db
 
+class Rails(object):
+	@property
+	def save(self):
+		db.session.add(self)
+		db.session.commit()
+		return self
+
+	@property
+	def delete(self):
+		db.session.delete(self)
+		db.session.commit()
+		return self
+
 # Contents_and_options: id, content_title_id, content_classification_option_id
 contents_and_options = db.Table('contents_and_options',
 	db.Column('id', db.Integer, primary_key = True),
@@ -10,7 +23,7 @@ contents_and_options = db.Table('contents_and_options',
 	)
 
 # Contents: id, content_title_id, name, description, content_image_links(json), content_detail_link
-class Content(db.Model):
+class Content(db.Model, Rails):
 	id = db.Column(db.Integer, primary_key = True)
 	name = db.Column(db.String(100))
 	description = db.Column(db.Text)
@@ -24,8 +37,12 @@ class Content(db.Model):
 	def __repr__(self):
 		return '<Content: %s>' % self.name
 
+	@property
+	def image_path(self):
+		return '/static/images/sport2.jpg'
+
 # Content_titles: id, name,description,content_thumbnail,reference_info(json{name,value})
-class ContentTitle(db.Model):
+class ContentTitle(db.Model, Rails):
 	id = db.Column(db.Integer, primary_key = True)
 	name = db.Column(db.String(100))
 	description = db.Column(db.Text)
@@ -42,6 +59,13 @@ class ContentTitle(db.Model):
 	def __repr__(self):
 		return '<ContentTitle: %s>' % self.name
 
+	@property
+	def delete_p(self):
+		for content in self.contents:
+			content.delete
+		self.delete
+		return self
+
 	def append_options(self, options):
 		existing_options = self.options
 		new_options = []
@@ -57,8 +81,13 @@ class ContentTitle(db.Model):
 		self.append_options(options)
 		return self.options
 
+	# temporarily used for development
+	@property
+	def image_path(self):
+		return '/static/images/sport1.jpg'
+
 # Content_categories: id,name
-class ContentCategory(db.Model):
+class ContentCategory(db.Model, Rails):
 	id         = db.Column(db.Integer, primary_key = True)
 	name       = db.Column(db.String(100), unique = True)
 	created_at = db.Column(db.DateTime, default = datetime.datetime.now)
@@ -69,8 +98,15 @@ class ContentCategory(db.Model):
 	def __repr__(self):
 		return '<ContentCategory: %s>' % self.name
 
+	@property
+	def delete_p(self):
+		for classification in self.classifications:
+			classification.delete_p
+		self.delete
+		return self
+
 # Content_classifications: id, content_category_id, name,description
-class ContentClassification(db.Model):
+class ContentClassification(db.Model, Rails):
 	id          = db.Column(db.Integer, primary_key = True)
 	name        = db.Column(db.String(100))
 	description = db.Column(db.Text)
@@ -83,8 +119,15 @@ class ContentClassification(db.Model):
 	def __repr__(self):
 		return '<ContentClassification: %s>' % self.name
 
+	@property
+	def delete_p(self):
+		for option in self.options:
+			option.delete
+		self.delete
+		return self
+
 # Content_classification_options: id, content_classification_id,name
-class ContentClassificationOption(db.Model):
+class ContentClassificationOption(db.Model, Rails):
 	id         = db.Column(db.Integer, primary_key = True)
 	name       = db.Column(db.String(100))
 	created_at = db.Column(db.DateTime, default = datetime.datetime.now)

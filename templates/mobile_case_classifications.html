@@ -1,0 +1,14 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_header.html' import mobile_header %}
+{% block content %}
+{{ mobile_header('案例展示') }}
+
+		<div class="main-content">
+			<div class="center-wrappper">
+			{% for classification in classifications %}
+			<a class="btn btn-default btn-block top-gap-3 text-lg" href="{{ url_for('mobile_case_classification_show', id = classification.id) }}">{{ classification.name }}</a>
+			{% endfor %}
+			</div>
+		</div>
+
+{% endblock %}

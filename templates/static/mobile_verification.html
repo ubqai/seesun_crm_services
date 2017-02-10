@@ -1,0 +1,16 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_header.html' import mobile_header %}
+{% block content %}
+{{ mobile_header('检验真伪') }}
+
+		<div class="main-content">
+			<div class="top-gap-3 left-gap-3 right-gap-3 bot-gap-3 wrappper" style="padding:10%">
+				<img src="/static/images/scanning.jpg" class="full-img" style="border:1px solid #aaa">
+			</div>
+			<div class="wrappper">
+				<a class="btn btn-default btn-block text-lg" disabled style="background:url('/static/images/btn-bg.jpg'); color:#fff">赛尚荣誉出品</a>
+				<a class="btn btn-warning btn-block top-gap-3 text-lg">查询无此交易</a>
+			</div>
+		</div>
+
+{% endblock %}

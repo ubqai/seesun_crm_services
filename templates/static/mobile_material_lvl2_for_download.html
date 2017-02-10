@@ -1,0 +1,17 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_header.html' import mobile_header %}
+{% block content %}
+{{ mobile_header('物料需要') }}
+
+		<div class="main-content">
+			<div class="center-wrappper" style="top:100px;">
+				<a href="/mobile_material_lvl3" class="btn btn-default btn-block text-lg">门头设计下载</a>
+				<a class="btn btn-default btn-block top-gap-3 text-lg">合同范本下载</a>
+				<a class="btn btn-default btn-block top-gap-3 text-lg">竞标范本下载</a>
+				<a class="btn btn-default btn-block top-gap-3 text-lg">日常设计下载</a>
+				<a class="btn btn-default btn-block top-gap-3 text-lg">促销内容下载</a>
+				<a class="btn btn-default btn-block top-gap-3 text-lg">促销设计下载</a>
+			</div>
+		</div>
+
+{% endblock %}

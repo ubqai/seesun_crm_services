@@ -1,0 +1,52 @@
+<!-- 可以做成自动重定向 -->
+
+<html>
+	<head>
+		<!---inilization-->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=0;">
+		<!--公用的css-->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/init.css">
+		<!--公用的javascript-->
+		<script type="text/javascript" src="js/jquery.min.js"></script> 
+		<script type="text/javascript" src="js/bootstrap.min.js"></script> 
+	</head>
+	<body class="index-body">
+		<script>
+			//入口判断
+			function browserRedirect() {
+				var sUserAgent = navigator.userAgent.toLowerCase();
+				var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+				var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+				var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+				var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+				var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+				var bIsAndroid = sUserAgent.match(/android/i) == "android";
+				var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+				var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+				if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
+					$.ajax({
+						url:"index_mobile",
+						type:"GET",
+						dataType:"html",
+						success:function(data){
+							$("body").html("").append(data);
+						}
+					})
+				}else{
+					$.ajax({
+						url:"index_mobile",
+						type:"GET",
+						dataType:"html",
+						success:function(data){
+							$("body").html("").append(data);
+						}
+					})
+				}
+			}
+			browserRedirect();
+		</script>
+	</body>
+</html>
+	

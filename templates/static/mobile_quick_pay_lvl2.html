@@ -1,0 +1,36 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_header.html' import mobile_header %}
+{% block content %}
+{{ mobile_header('一键下单') }}
+
+		<div class="main-content">
+			<div class="text bot-gap-2">
+				<p class="text-title bot-gap-1">合同明细</p>
+				<p class="text-content text-sm">区域负责人：阿里巴巴</p>
+				<div class="light-divider"></div>
+				<p class="text-content text-sm">负责人电话：13636638088</p>
+				<div class="light-divider"></div>
+				<p class="text-content text-sm">合同生成日期：2017.2.2</p>
+				<div class="light-divider"></div>
+				<p class="text-content text-sm">合同编号：n1890182</p>
+				<div class="light-divider"></div>
+				<div class="modal fade full-modal" id="modal_1">
+					<div class="modal-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-content">
+									<div class="modal-body"><img src="/static/images/project.png" class="full-img"></div>
+							</div><!-- /.modal-content -->
+					</div><!-- /.modal -->
+				</div>
+				
+				<div class="top-gap-2 thumbnail img_modal_1">
+					<img src="/static/images/project.png" class="full-img">
+				</div>
+			</div>
+		</div>
+		<script>
+			$(".img_modal_1").on("click",function(){
+				$("#modal_1").modal("show");
+			})		
+		</script>
+
+{% endblock %}

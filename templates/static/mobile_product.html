@@ -1,0 +1,100 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_header.html' import mobile_header %}
+{% block content %}
+{{ mobile_header('产品展示') }}
+
+		<div class="main-content">
+			<div class="nav-tab clearfix">
+				<a id="to_sport">运动系列产品</a>
+				<a id="to_business">商用系列产品</a>
+				<a id="to_customer">家用休闲产品</a>
+			</div>
+			<div class="module-1">
+				<div class="sub-module-1" id="sport">
+					<p class="module-title">运动系列产品</p>
+					<div class="divider2"></div>
+					<div class="module-row clearfix">
+						<a href="/mobile_product_show" class="col-6-gap product">
+							<img class="full-img" src="/static/images/sport1.jpg">
+							<p>博格专版木纹</p>
+							<div class="product-divider"></div>
+						</a>
+						<a class="col-6-gap product">
+							<img class="full-img" src="/static/images/sport2.jpg">
+							<p>博格木纹</p>
+							<div class="product-divider"></div>
+						</a>
+					</div>
+					<div class="module-row clearfix">
+						<a class="col-6-gap product">
+							<img class="full-img" src="/static/images/sport1.jpg">
+							<p>博格专版logo纹</p>
+							<div class="product-divider"></div>
+						</a>
+						<a class="col-6-gap product">
+							<img class="full-img" src="/static/images/sport2.jpg">
+							<p>博格宝石纹</p>
+							<div class="product-divider"></div>
+						</a>
+					</div>
+				</div>
+				<div class="sub-module-1" id="business">
+					<p class="module-title">商用系列产品</p>
+					<div class="divider2"></div>
+					<div class="module-row clearfix">
+						<a class="col-6-gap product">
+							<img class="full-img" src="/static/images/sport1.jpg">
+							<p>帝彩—奥萨	</p>
+							<div class="product-divider"></div>
+						</a>
+						<a class="col-6-gap product">
+							<img class="full-img" src="/static/images/sport2.jpg">
+							<p>帝彩—尚丽</p>
+							<div class="product-divider"></div>
+						</a>
+					</div>
+					<div class="module-row clearfix">
+						<a class="col-6-gap product">
+							<img class="full-img" src="/static/images/sport1.jpg">
+							<p>帝彩—尚宝</p>
+							<div class="product-divider"></div>
+						</a>
+						<a class="col-6-gap product">
+							<img class="full-img" src="/static/images/sport2.jpg">
+							<p>帝彩—卡乐</p>
+							<div class="product-divider"></div>
+						</a>
+					</div>
+				</div>
+				<div class="sub-module-1" id="customer">
+					<p class="module-title">家用系列产品</p>
+					<div class="divider2"></div>
+					<div class="module-row clearfix">
+						<a class="col-6-gap product">
+							<img class="full-img" src="/static/images/sport1.jpg">
+							<p>帝彩—卡乐</p>
+							<div class="product-divider"></div>
+						</a>
+						<a class="col-6-gap product">
+							<img class="full-img" src="/static/images/sport2.jpg">
+							<p>帝彩—卡乐</p>
+							<div class="product-divider"></div>
+						</a>
+					</div>
+					<div class="module-row clearfix">
+						<a class="col-6-gap product">
+							<img class="full-img" src="/static/images/sport1.jpg">
+							<p>帝彩—卡乐</p>
+							<div class="product-divider"></div>
+						</a>
+						<a class="col-6-gap product">
+							<img class="full-img" src="/static/images/sport2.jpg">
+							<p>帝彩—卡乐</p>
+							<div class="product-divider"></div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+{% endblock %}
