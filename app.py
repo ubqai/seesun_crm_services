@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 # extensions
+import os
 from flask import Flask,g
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate    import Migrate, MigrateCommand
-from flask_script     import Manager
 
 # internal models
-from config import Configuration
+from config import config
 
 app = Flask(__name__)
-app.config.from_object(Configuration)
-
+app.config.from_object(config[os.getenv('FLASK_CONFIG') or 'default'])
 db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-manager = Manager(app)
-manager.add_command('db', MigrateCommand)

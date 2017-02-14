@@ -27,8 +27,10 @@ class Content(db.Model, Rails):
 	id = db.Column(db.Integer, primary_key = True)
 	name = db.Column(db.String(100))
 	description = db.Column(db.Text)
-	image_links = db.Column(db.JSON)
-	detail_link = db.Column(db.String(200))
+	image_path  = db.Column(db.String(200))
+	reference_info = db.Column(db.JSON)
+	# image_links = db.Column(db.JSON)
+	# detail_link = db.Column(db.String(200))
 	created_at  = db.Column(db.DateTime, default = datetime.datetime.now)
 	updated_at  = db.Column(db.DateTime, default = datetime.datetime.now, onupdate = datetime.datetime.now)
 
@@ -37,16 +39,13 @@ class Content(db.Model, Rails):
 	def __repr__(self):
 		return '<Content: %s>' % self.name
 
-	@property
-	def image_path(self):
-		return '/static/images/sport2.jpg'
-
 # Content_titles: id, name,description,content_thumbnail,reference_info(json{name,value})
 class ContentTitle(db.Model, Rails):
 	id = db.Column(db.Integer, primary_key = True)
 	name = db.Column(db.String(100))
 	description = db.Column(db.Text)
-	content_thumbnail = db.Column(db.String(100))
+	image_path  = db.Column(db.String(200))
+	# content_thumbnail = db.Column(db.String(100))
 	reference_info = db.Column(db.JSON)
 	created_at  = db.Column(db.DateTime, default = datetime.datetime.now)
 	updated_at  = db.Column(db.DateTime, default = datetime.datetime.now, onupdate = datetime.datetime.now)
@@ -80,11 +79,6 @@ class ContentTitle(db.Model, Rails):
 		self.options = []
 		self.append_options(options)
 		return self.options
-
-	# temporarily used for development
-	@property
-	def image_path(self):
-		return '/static/images/sport1.jpg'
 
 # Content_categories: id,name
 class ContentCategory(db.Model, Rails):

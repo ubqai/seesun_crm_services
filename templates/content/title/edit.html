@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
 
-	<form action="{{ url_for('content.title_edit', id = title.id) }}" method="post">
+	<form action="{{ url_for('content.title_edit', id = title.id) }}" enctype="multipart/form-data" method="post">
 		{% for field in form %}
 			<div>
 				{{ field.label }}
 				<div>{{ field }}</div>
 			</div>
 		{% endfor %}
+		<img src="{{ title.image_path }}" />
+		<div class="clear">
 		{% for option in options %}
 			<input id="option_{{ option.id }}" name="option_ids[]" value="{{ option.id }}" type="checkbox"{% if option in title.options %} checked="true"{% endif %}>{{ option.name }} - {{ option.classification.name }} - {{ option.classification.category.name}}<br>
 		{% endfor %}

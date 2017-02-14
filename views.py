@@ -26,22 +26,17 @@ def mobile_case_classifications():
 		ContentClassification.created_at.asc())
 	return render_template('mobile_case_classifications.html', classifications = classifications)
 
-@app.route('/mobile_case_classification/<id>')
+@app.route('/mobile_case_classification/<int:id>')
 def mobile_case_classification_show(id):
 	classification = ContentClassification.query.get_or_404(id)
 	return render_template('mobile_case_classification_show.html', classification = classification)
 
-@app.route('/mobile_case_option/<id>')
-def mobile_case_option_show(id):
-	option = ContentClassificationOption.query.get_or_404(id)
-	return render_template('mobile_case_option_show.html', option = option)
-
-@app.route('/mobile_case_title/<id>')
+@app.route('/mobile_case_title/<int:id>')
 def mobile_case_title_show(id):
 	title = ContentTitle.query.get_or_404(id)
 	return render_template('mobile_case_title_show.html', title = title)
 
-@app.route('/mobile_case_content/<id>')
+@app.route('/mobile_case_content/<int:id>')
 def mobile_case_content_show(id):
 	content = Content.query.get_or_404(id)
 	return render_template('mobile_case_content_show.html', content = content)
@@ -83,6 +78,14 @@ def mobile_storage():
 @app.route('/mobile_storage_show')
 def mobile_storage_show():
 	return render_template('static/mobile_storage_show.html')
+
+@app.route('/mobile_cart')
+def mobile_cart():
+	return render_template('static/mobile_cart.html')
+
+@app.route('/mobile_contract')
+def mobile_contract():
+	return render_template('static/mobile_contract.html')
 
 # --- Project ---
 @app.route('/mobile_project_lvl1')
@@ -158,7 +161,7 @@ def mobile_after_service():
 
 # --- CKEditor file upload ---
 def gen_rnd_filename():
-	filename_prefix = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+	filename_prefix = 'ck' + datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 	return '%s%s' % (filename_prefix, str(random.randrange(1000, 10000)))
 
 @app.route('/ckupload/', methods = ['POST'])

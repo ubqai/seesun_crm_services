@@ -7,6 +7,7 @@ from models import Content, ContentTitle, ContentCategory, ContentClassification
 class ContentForm(wtforms.Form):
 	name = wtforms.StringField('Content Name',  validators = [DataRequired(message = 'name is necessary')])
 	description = wtforms.TextAreaField('Description', validators= [DataRequired(message = 'description is necessary')])
+	image_file = wtforms.FileField('Image file', validators = [])
 
 	def save(self, content):
 		self.populate_obj(content)
@@ -14,8 +15,9 @@ class ContentForm(wtforms.Form):
 
 class ContentTitleForm(wtforms.Form):
 	name = wtforms.StringField('Title Name', validators = [DataRequired(message = 'title name is necessary')])
-	content_thumbnail = wtforms.StringField('Content Thumbnail', validators = [DataRequired(message = 'content thumbnail is necessary')])
+	#content_thumbnail = wtforms.StringField('Content Thumbnail', validators = [DataRequired(message = 'content thumbnail is necessary')])
 	description = wtforms.TextAreaField('Description', validators = [DataRequired(message = 'description is necessary')])
+	image_file = wtforms.FileField('Image file', validators = [])
 
 	def save(self, title):
 		self.populate_obj(title)

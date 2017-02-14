@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-	<form action="{{ url_for('content.title_new') }}" method="post">
+	<form action="{{ url_for('content.title_new') }}" enctype="multipart/form-data" method="post">
 		{% for field in form %}
 			<div>
 				{{ field.label }}

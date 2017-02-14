@@ -32,11 +32,11 @@ if not ContentCategory.query.filter(ContentCategory.name == '案例展示').firs
 	classification2 = ContentClassification(name = '按场景选择案例', description = '按场景选择案例', category_id = category.id).save
 	classification3 = ContentClassification(name = '按地域选择案例', description = '按地域选择案例', category_id = category.id).save
 
-	title1 = ContentTitle(name = '博格专版木纹').save
-	title2 = ContentTitle(name = '博格木纹').save
+	title1 = ContentTitle(name = '博格专版木纹', image_path = '/static/images/sport1.jpg').save
+	title2 = ContentTitle(name = '博格木纹', image_path = '/static/images/sport2.jpg').save
 	for name in content_list:
-		Content(name = name, description = content_body, title_id = title1.id).save
-		Content(name = name, description = content_body, title_id = title2.id).save
+		Content(name = name, description = content_body, image_path = "/static/images/sport1.jpg", title_id = title1.id).save
+		Content(name = name, description = content_body, image_path = "/static/images/sport1.jpg", title_id = title2.id).save
 
 	for i in range(len(option_list_1)):
 		option = ContentClassificationOption(name = option_list_1[i], classification_id = classification1.id).save

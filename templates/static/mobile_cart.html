@@ -1,129 +1,113 @@
-<html>
-	<head>
-		<!---inilization-->
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=0;">
-		<!--公用的css-->
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/init.css">
-		<!--公用的javascript-->
-		<script type="text/javascript" src="js/jquery.min.js"></script> 
-		<script type="text/javascript" src="js/bootstrap.min.js"></script> 
-		<!--mobile的js-->
-		<script type="text/javascript" src="js/mobile_general.js"></script>
-		<!--mobile的css-->
-		<link rel="stylesheet" href="css/mobile_style.css">
-	</head>
-	<body>
-		<header class="header">
-			<div class="header-logo"><a href="index.html"><img class="img-responsive" src="images/logo.png"></a></div>
-			<div class="header-title">购物车</div>
-		</header>
-		<div class="main-content">
-			<div class="text bot-gap-2">
-				<p class="text-title bot-gap-1">购物车</p>
-				<p class="text-content text-sm">企业名称：阿里巴巴</p>
-				<div class="light-divider"></div>
-				<p class="text-content text-sm">项目地址：上海市宝山区古村公园</p>
-				<div class="light-divider"></div>
-				<p class="text-content text-sm">联系电话：12390876678</p>
-				<div class="light-divider"></div>
-				<p class="text-content text-sm">联系姓名：阿里</p>
-				<div class="light-divider"></div>
-				
-			</div>
-			<div class="expanded-table table-responsive">
-				<table class="table table-striped">
-					<thead>
-						<tr>
-						  <th>产品</th>
-						  <th>颜色</th>
-						  <th>纹理</th>
-						  <th>厚度</th>
-						  <th>存量</th>
-						  <th>选择</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-						  <td>博格专版</td>
-						  <td>红色</td>
-						  <td>柳叶纹</td>
-						  <td>5</td>
-						  <td>10000</td>
-						  <td>22</td>
-						</tr>
-						<tr>
-						  <td>博格专版</td>
-						  <td>红色</td>
-						  <td>柳叶纹</td>
-						  <td>5</td>
-						  <td>10000</td>
-						  <td>22</td>
-						</tr>
-						<tr>
-						  <td>博格专版</td>
-						  <td>红色</td>
-						  <td>柳叶纹</td>
-						  <td>5</td>
-						  <td>10000</td>
-						  <td>22</td>
-						</tr>
-						<tr>
-						  <td>博格专版</td>
-						  <td>红色</td>
-						  <td>柳叶纹</td>
-						  <td>5</td>
-						  <td>10000</td>
-						  <td>22</td>
-						</tr>
-						<tr>
-						  <td>博格专版</td>
-						  <td>红色</td>
-						  <td>柳叶纹</td>
-						  <td>5</td>
-						  <td>10000</td>
-						  <td>22</td>
-						</tr>
-						<tr>
-						  <td>博格专版</td>
-						  <td>红色</td>
-						  <td>柳叶纹</td>
-						  <td>5</td>
-						  <td>10000</td>
-						  <td>22</td>
-						</tr>
-						<tr>
-						  <td>博格专版</td>
-						  <td>红色</td>
-						  <td>柳叶纹</td>
-						  <td>5</td>
-						  <td>10000</td>
-						  <td>22</td>
-						</tr>
-						<tr>
-						  <td>博格专版</td>
-						  <td>红色</td>
-						  <td>柳叶纹</td>
-						  <td>5</td>
-						  <td>10000</td>
-						  <td>22</td>
-						</tr>
-						<tr>
-						  <td>博格专版</td>
-						  <td>红色</td>
-						  <td>柳叶纹</td>
-						  <td>5</td>
-						  <td>10000</td>
-						  <td>22</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			
-			<div class="fixed-bot">
-				<a href="mobile_contract.html" class="orange">一键下单生成合同</a>
-			</div>
-		</div>
-	</body>
-</html>
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_header.html' import mobile_header %}
+{% block content %}
+{{ mobile_header('购物车') }}
+
+<div class="main-content">
+	<div class="text bot-gap-2">
+		<p class="text-title bot-gap-1">购物车</p>
+		<p class="text-content text-sm">企业名称：阿里巴巴</p>
+		<div class="light-divider"></div>
+		<p class="text-content text-sm">项目地址：上海市宝山区古村公园</p>
+		<div class="light-divider"></div>
+		<p class="text-content text-sm">联系电话：12390876678</p>
+		<div class="light-divider"></div>
+		<p class="text-content text-sm">联系姓名：阿里</p>
+		<div class="light-divider"></div>
+		
+	</div>
+	<div class="expanded-table table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+				  <th>产品</th>
+				  <th>颜色</th>
+				  <th>纹理</th>
+				  <th>厚度</th>
+				  <th>存量</th>
+				  <th>选择</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+				  <td>博格专版</td>
+				  <td>红色</td>
+				  <td>柳叶纹</td>
+				  <td>5</td>
+				  <td>10000</td>
+				  <td>22</td>
+				</tr>
+				<tr>
+				  <td>博格专版</td>
+				  <td>红色</td>
+				  <td>柳叶纹</td>
+				  <td>5</td>
+				  <td>10000</td>
+				  <td>22</td>
+				</tr>
+				<tr>
+				  <td>博格专版</td>
+				  <td>红色</td>
+				  <td>柳叶纹</td>
+				  <td>5</td>
+				  <td>10000</td>
+				  <td>22</td>
+				</tr>
+				<tr>
+				  <td>博格专版</td>
+				  <td>红色</td>
+				  <td>柳叶纹</td>
+				  <td>5</td>
+				  <td>10000</td>
+				  <td>22</td>
+				</tr>
+				<tr>
+				  <td>博格专版</td>
+				  <td>红色</td>
+				  <td>柳叶纹</td>
+				  <td>5</td>
+				  <td>10000</td>
+				  <td>22</td>
+				</tr>
+				<tr>
+				  <td>博格专版</td>
+				  <td>红色</td>
+				  <td>柳叶纹</td>
+				  <td>5</td>
+				  <td>10000</td>
+				  <td>22</td>
+				</tr>
+				<tr>
+				  <td>博格专版</td>
+				  <td>红色</td>
+				  <td>柳叶纹</td>
+				  <td>5</td>
+				  <td>10000</td>
+				  <td>22</td>
+				</tr>
+				<tr>
+				  <td>博格专版</td>
+				  <td>红色</td>
+				  <td>柳叶纹</td>
+				  <td>5</td>
+				  <td>10000</td>
+				  <td>22</td>
+				</tr>
+				<tr>
+				  <td>博格专版</td>
+				  <td>红色</td>
+				  <td>柳叶纹</td>
+				  <td>5</td>
+				  <td>10000</td>
+				  <td>22</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<div class="fixed-bot">
+		<a href="/mobile_contract" class="orange">一键下单生成合同</a>
+	</div>
+</div>
+
+{% endblock %}

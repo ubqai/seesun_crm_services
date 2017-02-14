@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+import os
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 
 from app     import app, db
-from helpers import object_list
+from helpers import object_list, save_upload_file, clip_image
 from models  import Content, ContentTitle, ContentCategory, ContentClassification, ContentClassificationOption
 from content.forms import *
 
@@ -12,12 +13,17 @@ content = Blueprint('content', __name__, template_folder = 'templates')
 def index():
 	return render_template('content/index.html')
 
-@content.route('/new/<title_id>', methods = ['GET', 'POST'])
+@content.route('/new/<int:title_id>', methods = ['GET', 'POST'])
 def new(title_id):
 	if request.method == 'POST':
 		form = ContentForm(request.form)
 		if form.validate():
 			content = form.save(Content(title_id = title_id))
+			image_file = request.files['image_file']
+			if image_file:
+				image_path = save_upload_file(image_file)
+				clip_image((app.config['APPLICATION_DIR'] + image_path), size = (379, 226))
+				content.image_path = image_path
 			content.save
 			flash('Content "{name}" created successfully.'.format(name = content.name), 'success')
 			return redirect(url_for('content.title_show', id = title_id))
@@ -25,18 +31,24 @@ def new(title_id):
 		form = ContentForm()
 	return render_template('content/new.html', form = form, title_id = title_id)
 
-@content.route('/<id>')
+@content.route('/<int:id>')
 def show(id):
 	content = Content.query.get_or_404(id)
 	return render_template('content/show.html', content = content)
 
-@content.route('/<id>/edit', methods = ['GET', 'POST'])
+@content.route('/<int:id>/edit', methods = ['GET', 'POST'])
 def edit(id):
 	content = Content.query.get_or_404(id)
 	if request.method == 'POST':
 		form = ContentForm(request.form)
 		if form.validate():
 			content = form.save(content)
+			image_file = request.files['image_file']
+			if image_file:
+				image_path = save_upload_file(image_file)
+				clip_image((app.config['APPLICATION_DIR'] + image_path), size = (379, 226))
+				os.remove(app.config['APPLICATION_DIR'] + content.image_path)
+				content.image_path = image_path				
 			content.save
 			flash('Content "{name}" has been updated.'.format(name = content.name), 'success')
 			return redirect(url_for('content.title_show', id = content.title_id))
@@ -44,7 +56,7 @@ def edit(id):
 		form = ContentForm(obj = content)
 	return render_template('content/edit.html', form = form, content = content)
 
-@content.route('/<id>/delete', methods = ['GET', 'POST'])
+@content.route('/<int:id>/delete', methods = ['GET', 'POST'])
 def delete(id):
 	content = Content.query.get_or_404(id)
 	if request.method == 'POST':
@@ -66,9 +78,14 @@ def title_new():
 		form = ContentTitleForm(request.form)
 		if form.validate():
 			option_ids = request.form.getlist('option_ids[]')
+			image_file = request.files['image_file']
 			request_options = ContentClassificationOption.query.filter(ContentClassificationOption.id.in_(option_ids))
 			title = form.save(ContentTitle())
 			title.append_options(request_options)
+			if image_file:
+				image_path = save_upload_file(image_file)
+				clip_image((app.config['APPLICATION_DIR'] + image_path), size = (379, 226))
+				title.image_path = image_path
 			title.save
 			flash('Content title "{name}" created successfully.'.format(name = title.name), 'success')
 			return redirect(url_for('content.title_index'))
@@ -76,12 +93,12 @@ def title_new():
 		form = ContentTitleForm()
 	return render_template('content/title/new.html', form = form, options = options)
 
-@content.route('/title/<id>')
+@content.route('/title/<int:id>')
 def title_show(id):
 	title = ContentTitle.query.get_or_404(id)
 	return render_template('content/title/show.html', title = title)
 
-@content.route('/title/<id>/edit', methods = ['GET', 'POST'])
+@content.route('/title/<int:id>/edit', methods = ['GET', 'POST'])
 def title_edit(id):
 	options = ContentClassificationOption.query.order_by(ContentClassificationOption.classification_id)
 	title = ContentTitle.query.get_or_404(id)
@@ -89,9 +106,15 @@ def title_edit(id):
 		form = ContentTitleForm(request.form)
 		if form.validate():
 			option_ids = request.form.getlist('option_ids[]')
+			image_file = request.files['image_file']
 			request_options = ContentClassificationOption.query.filter(ContentClassificationOption.id.in_(option_ids))
 			title = form.save(title)
 			title.update_options(request_options)
+			if image_file:
+				image_path = save_upload_file(image_file)
+				clip_image((app.config['APPLICATION_DIR'] + image_path), size = (379, 226))
+				os.remove(app.config['APPLICATION_DIR'] + title.image_path)
+				title.image_path = image_path
 			title.save
 			flash('Content title "{name}" has been updated.'.format(name = title.name), 'success')
 			return redirect(url_for('content.title_index'))
@@ -99,7 +122,7 @@ def title_edit(id):
 		form = ContentTitleForm(obj = title)
 	return render_template('content/title/edit.html', form = form, title = title, options = options)
 
-@content.route('/title/<id>/delete', methods = ['GET', 'POST'])
+@content.route('/title/<int:id>/delete', methods = ['GET', 'POST'])
 def title_delete(id):
 	title = ContentTitle.query.get_or_404(id)
 	if request.method == 'POST':
@@ -127,12 +150,12 @@ def category_new():
 		form = ContentCategoryForm()
 	return render_template('content/category/new.html', form = form)
 
-@content.route('/category/<id>')
+@content.route('/category/<int:id>')
 def category_show(id):
 	category = ContentCategory.query.get_or_404(id)
 	return render_template('content/category/show.html', category = category)
 
-@content.route('/category/<id>/edit', methods = ['GET', 'POST'])
+@content.route('/category/<int:id>/edit', methods = ['GET', 'POST'])
 def category_edit(id):
 	category = ContentCategory.query.get_or_404(id)
 	if request.method == 'POST':
@@ -146,7 +169,7 @@ def category_edit(id):
 		form = ContentCategoryForm(obj = category)
 	return render_template('content/category/edit.html', form = form, category = category)
 
-@content.route('/category/<id>/delete', methods = ['GET', 'POST'])
+@content.route('/category/<int:id>/delete', methods = ['GET', 'POST'])
 def category_delete(id):
 	category = ContentCategory.query.get_or_404(id)
 	if request.method == 'POST':
@@ -156,7 +179,7 @@ def category_delete(id):
 	return render_template('content/category/delete.html', category = category)
 
 # url -- /content/classification/..
-@content.route('/classification/new/<category_id>', methods = ['GET', 'POST'])
+@content.route('/classification/new/<int:category_id>', methods = ['GET', 'POST'])
 def classification_new(category_id):
 	if request.method == 'POST':
 		form = ContentClassificationForm(request.form)
@@ -169,12 +192,12 @@ def classification_new(category_id):
 		form = ContentClassificationForm()
 	return render_template('content/classification/new.html', form = form, category_id = category_id)
 
-@content.route('/classification/<id>')
+@content.route('/classification/<int:id>')
 def classification_show(id):
 	classification = ContentClassification.query.get_or_404(id)
 	return render_template('content/classification/show.html', classification = classification)
 
-@content.route('/classification/<id>/edit', methods = ['GET', 'POST'])
+@content.route('/classification/<int:id>/edit', methods = ['GET', 'POST'])
 def classification_edit(id):
 	classification = ContentClassification.query.get_or_404(id)
 	if request.method == 'POST':
@@ -188,7 +211,7 @@ def classification_edit(id):
 		form = ContentClassificationForm(obj = classification)
 	return render_template('content/classification/edit.html', form = form, classification = classification)
 
-@content.route('/classification/<id>/delete', methods = ['GET', 'POST'])
+@content.route('/classification/<int:id>/delete', methods = ['GET', 'POST'])
 def classification_delete(id):
 	classification = ContentClassification.query.get_or_404(id)
 	if request.method == 'POST':
@@ -198,7 +221,7 @@ def classification_delete(id):
 	return render_template('content/classification/delete.html', classification = classification)
 
 # url -- /content/option/..
-@content.route('/option/new/<classification_id>', methods = ['GET', 'POST'])
+@content.route('/option/new/<int:classification_id>', methods = ['GET', 'POST'])
 def option_new(classification_id):
 	if request.method == 'POST':
 		form = ContentClassificationOptionForm(request.form)
@@ -211,12 +234,12 @@ def option_new(classification_id):
 		form = ContentClassificationOptionForm()
 	return render_template('content/option/new.html', form = form, classification_id = classification_id)
 
-@content.route('/option/<id>')
+@content.route('/option/<int:id>')
 def option_show(id):
 	option = ContentClassificationOption.query.get_or_404(id)
 	return render_template('content/option/show.html', option = option)
 
-@content.route('/option/<id>/edit', methods = ['GET', 'POST'])
+@content.route('/option/<int:id>/edit', methods = ['GET', 'POST'])
 def option_edit(id):
 	option = ContentClassificationOption.query.get_or_404(id)
 	if request.method == 'POST':
@@ -230,7 +253,7 @@ def option_edit(id):
 		form = ContentClassificationOptionForm(obj = option)
 	return render_template('content/option/edit.html', form = form, option = option)
 
-@content.route('/option/<id>/delete', methods = ['GET', 'POST'])
+@content.route('/option/<int:id>/delete', methods = ['GET', 'POST'])
 def option_delete(id):
 	option = ContentClassificationOption.query.get_or_404(id)
 	if request.method == 'POST':
