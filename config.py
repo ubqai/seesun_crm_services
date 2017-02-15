@@ -5,10 +5,9 @@ class Configuration(object):
 	APPLICATION_DIR = os.path.dirname(os.path.realpath(__file__))
 	STATIC_DIR = os.path.join(APPLICATION_DIR, 'static')
 	IMAGES_DIR = os.path.join(STATIC_DIR, 'images')
-	# database
 	SQLALCHEMY_TRACK_MODIFICATIONS = True
-	# file uploading
 	MAX_CONTENT_LENGTH = 16 * 1024 * 1024
+	ALLOWED_EXTENSIONS = set(['jpg', 'JPG', 'png', 'PNG', 'gif', 'GIF'])
 
 class DevelopmentConfiguration(Configuration):
 	DEBUG = True

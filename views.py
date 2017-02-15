@@ -9,155 +9,155 @@ from models import *
 def root():
 	return redirect(url_for('mobile_index'))
 
-@app.route('/mobile_index')
+@app.route('/mobile/index')
 def mobile_index():
-	return render_template('mobile_index.html')
+	return render_template('mobile/index.html')
 
 @app.route('/admin')
 def admin():
 	return redirect(url_for('content.index'))
 
 # --- Case show, client content model ---
-@app.route('/mobile_case_classifications')
+@app.route('/mobile/case_classifications')
 def mobile_case_classifications():
 	category = ContentCategory.query.filter(ContentCategory.name == '案例展示').first_or_404()
 	classifications = ContentClassification.query.filter(
 		ContentClassification.category_id == category.id).order_by(
 		ContentClassification.created_at.asc())
-	return render_template('mobile_case_classifications.html', classifications = classifications)
+	return render_template('mobile/case_classifications.html', classifications = classifications)
 
-@app.route('/mobile_case_classification/<int:id>')
+@app.route('/mobile/case_classification/<int:id>')
 def mobile_case_classification_show(id):
 	classification = ContentClassification.query.get_or_404(id)
-	return render_template('mobile_case_classification_show.html', classification = classification)
+	return render_template('mobile/case_classification_show.html', classification = classification)
 
-@app.route('/mobile_case_title/<int:id>')
+@app.route('/mobile/case_title/<int:id>')
 def mobile_case_title_show(id):
 	title = ContentTitle.query.get_or_404(id)
-	return render_template('mobile_case_title_show.html', title = title)
+	return render_template('mobile/case_title_show.html', title = title)
 
-@app.route('/mobile_case_content/<int:id>')
+@app.route('/mobile/case_content/<int:id>')
 def mobile_case_content_show(id):
 	content = Content.query.get_or_404(id)
-	return render_template('mobile_case_content_show.html', content = content)
+	return render_template('mobile/case_content_show.html', content = content)
 
 # --- Product model ---
-@app.route('/mobile_product')
+@app.route('/mobile/product')
 def mobile_product():
-	return render_template('static/mobile_product.html')
+	return render_template('mobile/product.html')
 
-@app.route('/mobile_product_show')
+@app.route('/mobile/product_show')
 def mobile_product_show():
-	return render_template('static/mobile_product_show.html')
+	return render_template('mobile/product_show.html')
 
 # --- Storage model ---
-@app.route('/mobile_share')
+@app.route('/mobile/share')
 def mobile_share():
-	return render_template('static/mobile_share.html')
+	return render_template('mobile/share.html')
 
-@app.route('/mobile_share_storage_detail')
-def mobiel_share_storage_detail():
-	return render_template('static/mobile_share_storage_detail.html')
+@app.route('/mobile/share_storage_detail')
+def mobile_share_storage_detail():
+	return render_template('mobile/share_storage_detail.html')
 
-@app.route('/mobile_share_storage_for_detail')
+@app.route('/mobile/share_storage_for_detail')
 def mobile_share_storage_for_detail():
-	return render_template('static/mobile_share_storage_for_detail.html')
+	return render_template('mobile/share_storage_for_detail.html')
 
-@app.route('/mobile_share_storage_for_upload')
+@app.route('/mobile/share_storage_for_upload')
 def mobile_share_storage_for_upload():
-	return render_template('static/mobile_share_storage_for_upload.html')
+	return render_template('mobile/share_storage_for_upload.html')
 
-@app.route('/mobile_share_storage_upload')
+@app.route('/mobile/share_storage_upload')
 def mobile_share_storage_upload():
-	return render_template('static/mobile_share_storage_upload.html')
+	return render_template('mobile/share_storage_upload.html')
 
-@app.route('/mobile_storage')
+@app.route('/mobile/storage')
 def mobile_storage():
-	return render_template('static/mobile_storage.html')
+	return render_template('mobile/storage.html')
 
-@app.route('/mobile_storage_show')
+@app.route('/mobile/storage_show')
 def mobile_storage_show():
-	return render_template('static/mobile_storage_show.html')
+	return render_template('mobile/storage_show.html')
 
-@app.route('/mobile_cart')
+@app.route('/mobile/cart')
 def mobile_cart():
-	return render_template('static/mobile_cart.html')
+	return render_template('mobile/cart.html')
 
-@app.route('/mobile_contract')
+@app.route('/mobile/contract')
 def mobile_contract():
-	return render_template('static/mobile_contract.html')
+	return render_template('mobile/contract.html')
 
 # --- Project ---
-@app.route('/mobile_project_lvl1')
+@app.route('/mobile/project_lvl1')
 def mobile_project_lvl1():
-	return render_template('static/mobile_project_lvl1.html')
+	return render_template('mobile/project_lvl1.html')
 
-@app.route('/mobile_project_lvl2')
+@app.route('/mobile/project_lvl2')
 def mobile_project_lvl2():
-	return render_template('static/mobile_project_lvl2.html')
+	return render_template('mobile/project_lvl2.html')
 
 # --- Design ---
-@app.route('/mobile_design')
+@app.route('/mobile/design')
 def mobile_design():
-	return render_template('static/mobile_design.html')
+	return render_template('mobile/design.html')
 
 # --- Material ---
-@app.route('/mobile_material_lvl1')
+@app.route('/mobile/material_lvl1')
 def mobile_material_lvl1():
-	return render_template('static/mobile_material_lvl1.html')
+	return render_template('mobile/material_lvl1.html')
 
-@app.route('/mobile_material_lvl2_for_apply')
+@app.route('/mobile/material_lvl2_for_apply')
 def mobile_material_lvl2_for_apply():
-	return render_template('static/mobile_material_lvl2_for_apply.html')
+	return render_template('mobile/material_lvl2_for_apply.html')
 
-@app.route('/mobile_material_lvl2_for_download')
+@app.route('/mobile/material_lvl2_for_download')
 def mobile_material_lvl2_for_download():
-	return render_template('static/mobile_material_lvl2_for_download.html')
+	return render_template('mobile/material_lvl2_for_download.html')
 
-@app.route('/mobile_material_lvl3')
+@app.route('/mobile/material_lvl3')
 def mobile_material_lvl3():
-	return render_template('static/mobile_material_lvl3.html')
+	return render_template('mobile/material_lvl3.html')
 
 # --- Quick pay ---
-@app.route('/mobile_quick_pay')
+@app.route('/mobile/quick_pay')
 def mobile_quick_pay():
-	return render_template('static/mobile_quick_pay.html')
+	return render_template('mobile/quick_pay.html')
 
-@app.route('/mobile_quick_pay_lvl2')
+@app.route('/mobile/quick_pay_lvl2')
 def mobile_quick_pay_lvl2():
-	return render_template('static/mobile_quick_pay_lvl2.html')
+	return render_template('mobile/quick_pay_lvl2.html')
 
 # --- Tracking info ---
-@app.route('/mobile_tracking_lvl1')
+@app.route('/mobile/tracking_lvl1')
 def mobile_tracking_lvl1():
-	return render_template('static/mobile_tracking_lvl1.html')
+	return render_template('mobile/tracking_lvl1.html')
 
-@app.route('/mobile_tracking_lvl2')
+@app.route('/mobile/tracking_lvl2')
 def mobile_tracking_lvl2():
-	return render_template('static/mobile_tracking_lvl2.html')
+	return render_template('mobile/tracking_lvl2.html')
 
 # --- Verification ---
-@app.route('/mobile_verification')
+@app.route('/mobile/verification')
 def mobile_verification():
-	return render_template('static/mobile_verification.html')
+	return render_template('mobile/verification.html')
 
 # --- Construction ---
-@app.route('/mobile_construction_lvl1')
+@app.route('/mobile/construction_lvl1')
 def mobile_construction_lvl1():
-	return render_template('static/mobile_construction_lvl1.html')
+	return render_template('mobile/construction_lvl1.html')
 
-@app.route('/mobile_construction_lvl2_for_materials')
+@app.route('/mobile/construction_lvl2_for_materials')
 def mobile_construction_lvl2_for_materials():
-	return render_template('static/mobile_construction_lvl2_for_materials.html')
+	return render_template('mobile/construction_lvl2_for_materials.html')
 
-@app.route('/mobile_construction_lvl2_for_zlp')
+@app.route('/mobile/construction_lvl2_for_zlp')
 def mobile_construction_lvl2_for_zlp():
-	return render_template('static/mobile_construction_lvl2_for_zlp.html')
+	return render_template('mobile/construction_lvl2_for_zlp.html')
 
 # --- After service ---
-@app.route('/mobile_after_service')
+@app.route('/mobile/after_service')
 def mobile_after_service():
-	return render_template('/static/mobile_after_service.html')
+	return render_template('mobile/after_service.html')
 
 # --- CKEditor file upload ---
 def gen_rnd_filename():

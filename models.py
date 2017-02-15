@@ -17,7 +17,6 @@ class Rails(object):
 
 # Contents_and_options: id, content_title_id, content_classification_option_id
 contents_and_options = db.Table('contents_and_options',
-	db.Column('id', db.Integer, primary_key = True),
 	db.Column('content_title_id', db.Integer, db.ForeignKey('content_title.id')),
 	db.Column('content_classification_option_id', db.Integer, db.ForeignKey('content_classification_option.id'))
 	)
@@ -131,5 +130,3 @@ class ContentClassificationOption(db.Model, Rails):
 
 	def __repr__(self):
 		return '<ContentClassificationOption: %s>' % self.name
-
-

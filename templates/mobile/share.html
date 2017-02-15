@@ -1,0 +1,13 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_header.html' import mobile_header %}
+{% block content %}
+{{ mobile_header('库存共享') }}
+
+<div class="main-content">
+	<div class="center-wrappper">
+		<a class="btn btn-default btn-block text-lg" href="{{ url_for('mobile_share_storage_for_detail') }}">查看共享库存</a>
+		<a class="btn btn-warning btn-block top-gap-3 text-lg" href="{{ url_for('mobile_share_storage_for_upload') }}">上传共享库存</a>
+	</div>
+</div>
+
+{% endblock %}

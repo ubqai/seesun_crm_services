@@ -2,15 +2,14 @@
 
 ###### Developed by Team UBQAI -- You Ling, Li Fuyuan, Teng Wei, Cai Chang, Li Yixiao
 
-****************************
-* VERSION 1.0 , Feb-7-2017 *
-****************************
+### VERSION 1.0 , Feb-7-2017 
 
-~ How to run the project
+
+#### How to run the project
 
 	1. install python3.5.3
-
-	2. install all extensions listed in _dependencies__.txt
+s
+	2. install all extensions listed in requirements.txt
 		$ pip install -r requirements.txt
 
 	3. run the project
@@ -18,7 +17,7 @@
 		OR
 		$ python manage.py runserver
 
-~ About database
+#### About database
 
 	1. Default database: Postgresql
 
@@ -33,5 +32,13 @@
 		And you can rollback your last migration if necessary
 		$ python manage.py db downgrade
 
-	4. Execute seed file
+	4. Execute seed file to create a bunch of sample data
 		$ python seed.py
+
+#### Testing
+
+	$ python manage.py test
+
+#### Console
+
+	$ python manage.py shell

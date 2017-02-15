@@ -8,6 +8,9 @@ from models  import Content, ContentTitle, ContentCategory, ContentClassificatio
 from content.forms import *
 
 content = Blueprint('content', __name__, template_folder = 'templates')
+title_image_size   = (379, 226)
+content_image_size = (379, 226)
+
 # url -- /content/..
 @content.route('/')
 def index():
@@ -22,8 +25,9 @@ def new(title_id):
 			image_file = request.files['image_file']
 			if image_file:
 				image_path = save_upload_file(image_file)
-				clip_image((app.config['APPLICATION_DIR'] + image_path), size = (379, 226))
-				content.image_path = image_path
+				if image_path:
+					clip_image((app.config['APPLICATION_DIR'] + image_path), size = content_image_size)
+					content.image_path = image_path
 			content.save
 			flash('Content "{name}" created successfully.'.format(name = content.name), 'success')
 			return redirect(url_for('content.title_show', id = title_id))
@@ -46,9 +50,10 @@ def edit(id):
 			image_file = request.files['image_file']
 			if image_file:
 				image_path = save_upload_file(image_file)
-				clip_image((app.config['APPLICATION_DIR'] + image_path), size = (379, 226))
-				os.remove(app.config['APPLICATION_DIR'] + content.image_path)
-				content.image_path = image_path				
+				if image_path:
+					clip_image((app.config['APPLICATION_DIR'] + image_path), size = content_image_size)
+					os.remove(app.config['APPLICATION_DIR'] + content.image_path)
+					content.image_path = image_path				
 			content.save
 			flash('Content "{name}" has been updated.'.format(name = content.name), 'success')
 			return redirect(url_for('content.title_show', id = content.title_id))
@@ -84,8 +89,9 @@ def title_new():
 			title.append_options(request_options)
 			if image_file:
 				image_path = save_upload_file(image_file)
-				clip_image((app.config['APPLICATION_DIR'] + image_path), size = (379, 226))
-				title.image_path = image_path
+				if image_path:
+					clip_image((app.config['APPLICATION_DIR'] + image_path), size = title_image_size)
+					title.image_path = image_path
 			title.save
 			flash('Content title "{name}" created successfully.'.format(name = title.name), 'success')
 			return redirect(url_for('content.title_index'))
@@ -112,9 +118,10 @@ def title_edit(id):
 			title.update_options(request_options)
 			if image_file:
 				image_path = save_upload_file(image_file)
-				clip_image((app.config['APPLICATION_DIR'] + image_path), size = (379, 226))
-				os.remove(app.config['APPLICATION_DIR'] + title.image_path)
-				title.image_path = image_path
+				if image_path:
+					clip_image((app.config['APPLICATION_DIR'] + image_path), size = title_image_size)
+					os.remove(app.config['APPLICATION_DIR'] + title.image_path)
+					title.image_path = image_path
 			title.save
 			flash('Content title "{name}" has been updated.'.format(name = title.name), 'success')
 			return redirect(url_for('content.title_index'))

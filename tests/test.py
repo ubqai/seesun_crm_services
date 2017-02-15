@@ -21,7 +21,7 @@ class HttpTest(unittest.TestCase):
 		self.assertEqual(response.status_code, 302)
 
 	def test_get_content_index(self):
-		response = self.app.get('/content/')
+		response = self.app.get('/admin/content/')
 		self.assertEqual(response.status_code, 200)
 
 class HelperTest(unittest.TestCase):

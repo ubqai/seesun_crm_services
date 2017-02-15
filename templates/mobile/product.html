@@ -1,7 +1,7 @@
 {% extends 'mobile_base.html' %}
 {% from 'macros/mobile_header.html' import mobile_header %}
 {% block content %}
-{{ mobile_header('库存查询') }}
+{{ mobile_header('产品展示') }}
 
 <div class="main-content">
 	<div class="nav-tab clearfix">
@@ -14,7 +14,7 @@
 			<p class="module-title">运动系列产品</p>
 			<div class="divider2"></div>
 			<div class="module-row clearfix">
-				<a href="/mobile_storage_show" class="col-6-gap product">
+				<a href="{{ url_for('mobile_product_show') }}" class="col-6-gap product">
 					<img class="full-img" src="/static/images/sport1.jpg">
 					<p>博格专版木纹</p>
 					<div class="product-divider"></div>
