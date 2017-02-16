@@ -2,10 +2,10 @@
 import os
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 
-from app     import app, db
-from helpers import object_list, save_upload_file, clip_image
-from models  import Content, ContentTitle, ContentCategory, ContentClassification, ContentClassificationOption
-from content.forms import *
+from ..app     import app, db
+from ..helpers import object_list, save_upload_file, clip_image
+from ..models  import Content, ContentTitle, ContentCategory, ContentClassification, ContentClassificationOption
+from .forms    import *
 
 content = Blueprint('content', __name__, template_folder = 'templates')
 title_image_size   = (379, 226)

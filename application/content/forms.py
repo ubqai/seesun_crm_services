@@ -2,7 +2,7 @@
 import wtforms
 from wtforms.validators import *
 
-from models import Content, ContentTitle, ContentCategory, ContentClassification, ContentClassificationOption
+from ..models import Content, ContentTitle, ContentCategory, ContentClassification, ContentClassificationOption
 
 class ContentForm(wtforms.Form):
 	name = wtforms.StringField('案例名称',  validators = [DataRequired(message = 'name is necessary')])

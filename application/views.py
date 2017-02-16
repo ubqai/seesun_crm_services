@@ -2,8 +2,8 @@
 import os, datetime, random
 from flask.helpers import make_response
 from flask import flash, redirect, render_template, request, url_for
-from app import app
-from models import *
+from .app import app
+from .models import *
 
 @app.route('/')
 def root():
@@ -15,7 +15,7 @@ def mobile_index():
 
 @app.route('/admin')
 def admin():
-	return redirect(url_for('content.index'))
+	return redirect(url_for('content.title_index'))
 
 # --- Case show, client content model ---
 @app.route('/mobile/case_classifications')

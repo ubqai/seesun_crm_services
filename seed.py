@@ -3,7 +3,7 @@
 $ python seed.py
 Execute this file will create a bunch of sample data for mobile application display.
 """
-from models import *
+from main.models import *
 
 option_list_1 = set(['运动系列产品', '商品系列产品', '家用休闲产品'])
 option_list_2 = set(['校园专用', '医院专用', '球馆专用'])

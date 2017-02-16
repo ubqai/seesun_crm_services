@@ -4,7 +4,7 @@ from flask import render_template, request
 from werkzeug import secure_filename
 from PIL import Image
 
-from app import app
+from .app import app
 
 def object_list(template_name, query, paginate_by = 20, **context):
 	page = request.args.get('page')
