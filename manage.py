@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from flask_migrate    import Migrate, MigrateCommand
-from flask_script     import Manager, Shell
+from flask_migrate import Migrate, MigrateCommand
+from flask_script  import Manager, Shell
 
 from app import app, db
-from main import *
 from models import *
+import views
 
 migrate = Migrate(app, db)
 manager = Manager(app)

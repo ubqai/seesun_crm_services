@@ -1,16 +1,48 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
 
-	<a href="{{ url_for('content.classification_show', id = option.classification_id) }}"><< {{ option.classification.name }}</a><br>
-	
-	<h4>{{ option.classification.category.name}} > {{ option.classification.name }} > {{ option.name }}</h4>
-	{% for title in option.titles %}
-		<p>
-			<span>{{ title.created_at.strftime('%F %T') }}</span>
-			<a href="{{ url_for('content.title_show', id = title.id) }}">{{ title.name }}</a>
-			<a href="{{ url_for('content.title_edit', id = title.id) }}">edit</a>
-			<a href="{{ url_for('content.title_delete', id = title.id) }}">delete</a>
-		</p>
-	{% endfor %}
-
+{{ sidebar(active_tab = 'category') }}
+<div class="contents">
+	<div class="contents-header">
+		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+		<p class="contents-header-p">三级目录</p>
+		<p class="contents-header-p text-sm">Option</p>
+	</div>
+	<div class="separator"><span></span></div>
+	<div class="widget">
+		<div class="widget_header">
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;
+			<a href="{{ url_for('content.category_index') }}">目录列表</a> > 
+			<a href="{{ url_for('content.category_show', id = option.classification.category_id) }}">{{ option.classification.category.name }}</a> >
+			<a href="{{ url_for('content.classification_show', id = option.classification_id) }}">{{ option.classification.name }}</a> > {{ option.name }}</h4>
+		</div>
+		<div class="widget_contents padding-0">
+			<table class="tables">
+				<thead>
+					<tr>
+						<th>名称</th>
+						<th>创建日期</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for title in option.titles %}
+					<tr>
+						<td><a href="{{ url_for('content.title_show', id = title.id) }}" class="table-link">{{ title.name }}</a></td>
+						<td>{{ title.created_at.strftime('%F %T') }}</td>
+						<td>
+							<a class="table-edit text-info" href="{{ url_for('content.title_edit', id = title.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
+							<a class="table-del text-danger"><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</a>
+						</td>
+					</tr>								
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+			
 {% endblock %}
+
+

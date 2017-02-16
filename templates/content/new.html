@@ -1,17 +1,57 @@
-{% extends 'base.html' %}
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
 {% block extra_scripts %}
-	<script src="{{ url_for('static',filename = 'ckeditor/ckeditor.js') }}"></script>
+	<script src="{{ url_for('static', filename = 'javascripts/pc_general.js') }}"></script>
+	<script src="{{ url_for('static', filename = 'ckeditor/ckeditor.js') }}"></script>
 {% endblock %}
-{% block content %}
+{% block main_content %}
 
-	<form action="{{ url_for('content.new', title_id = title_id) }}" enctype="multipart/form-data" method="post">
-		<div>{{ form.name.label }}<div>{{ form.name }}</div></div>
-		<div>{{ form.description.label }}<div>{{ form.description(class="ckeditor") }}</div></div>
-		<div>{{ form.image_file.label}}<div>{{ form.image_file }}</div></div>
-		<div>
-			<button type="submit">Create a content</button>
-			<a href="{{ url_for('content.title_show', id = title_id) }}">Cancel</a>
+{{ sidebar(active_tab = 'content') }}
+<div class="contents">
+	<div class="contents-header">
+		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+		<p class="contents-header-p">新增案例</p>
+		<p class="contents-header-p text-sm">new content</p>
+	</div>
+	<div class="separator"><span></span></div>
+	<div class="widget">
+		<div class="widget_header">
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;新增案例</h4>
 		</div>
-	</form>
+
+		<form action="{{ url_for('content.new', title_id = title_id) }}" enctype="multipart/form-data" method="post">
+			<div class="widget_contents padding-0">
+				<div class="form-item">
+					<span class="form-label">{{ form.name.label }}</span>{{ form.name(class = 'form-input form-control') }}
+				</div>
+				<div class="form-item">
+					<span class="form-label">{{ form.description.label }}</span>
+					{{ form.description(class = 'form-input form-control ckeditor') }}
+				</div>
+				<div class="form-item">
+					<span class="form-label">{{ form.image_file.label }}</span>
+					<div class="file">
+						<a href="javascript:;">
+							<span class="glyphicon glyphicon-arrow-up"></span>
+							{{ form.image_file }}
+						</a>
+					</div>
+					<div class="pic-upload top-gap-1">
+						<img class="full-img" src="/static/images/alt.jpg">
+					</div>
+				</div>
+			</div>
+
+			<div class="text-right top-gap-1">
+				<button type="submit" class="btn btn-default my-btn">提交</button>
+				<a href="{{ url_for('content.title_show', id = title_id) }}" class="btn btn-default my-btn">返回</a>									
+			</div>
+
+		</form>
+
+	</div>
+</div>
 
 {% endblock %}
+
+

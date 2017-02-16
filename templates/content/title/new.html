@@ -1,20 +1,64 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
 
-	<form action="{{ url_for('content.title_new') }}" enctype="multipart/form-data" method="post">
-		{% for field in form %}
-			<div>
-				{{ field.label }}
-				<div>{{ field }}</div>
-			</div>
-		{% endfor %}
-		{% for option in options %}
-			<input id="option_{{ option.id }}" name="option_ids[]" value="{{ option.id }}" type="checkbox">{{ option.name }} - {{ option.classification.name }} - {{ option.classification.category.name}}<br>
-		{% endfor %}
-		<div>
-			<button type="submit">Create a category</button>
-			<a href="{{ url_for('content.title_index') }}">Cancel</a>
+{{ sidebar(active_tab = 'content') }}
+<div class="contents">
+	<div class="contents-header">
+		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+		<p class="contents-header-p">新增标题</p>
+		<p class="contents-header-p text-sm">new titles</p>
+	</div>
+	<div class="separator"><span></span></div>
+	<div class="widget">
+		<div class="widget_header">
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;新增标题</h4>
 		</div>
-	</form>
+
+		<form action="{{ url_for('content.title_new') }}" enctype="multipart/form-data" method="post">
+			<div class="widget_contents padding-0">
+				<div class="form-item">
+					<span class="form-label">{{ form.name.label }}</span>
+					{{ form.name(class = 'form-input form-control') }}
+				</div>
+				<div class="form-item">
+					<span class="form-label">{{ form.description.label }}</span>
+					{{ form.description(class = 'form-input form-control') }}
+				</div>
+				<div class="form-item">
+					<span class="form-label">{{ form.image_file.label}}</span>
+					<div class="file">
+						<a href="javascript:;">
+							<span class="glyphicon glyphicon-arrow-up"></span>
+							{{ form.image_file }}
+						</a>
+					</div>
+					<div class="pic-upload top-gap-1">
+						<img class="full-img" src="/static/images/alt.jpg">
+					</div>
+				</div>
+
+				<div class="form-item">
+					<span class="form-label">选择标签</span>
+					<div class="label-block">
+					{% for option in options %}
+					<div class="label-item">
+						<input id="option_{{ option.id }}" name="option_ids[]" value="{{ option.id }}" type="checkbox" class="chk_1"> 
+						<label for="option_{{ option.id }}">{{ option.name }}</label> 
+					</div>
+					{% endfor %}
+					</div>
+				</div>
+			</div>
+
+			<div class="text-right top-gap-1">
+				<button type="submit" class="btn btn-default my-btn">提交</button>
+				<a href="{{ url_for('content.title_index') }}" class="btn btn-default my-btn">返回</a>
+			</div>
+		</form>
+		
+	</div>
+</div>
 
 {% endblock %}
+

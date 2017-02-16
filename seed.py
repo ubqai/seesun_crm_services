@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 $ python seed.py
 Execute this file will create a bunch of sample data for mobile application display.

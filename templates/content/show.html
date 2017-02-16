@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
-{% block content %}
+{% from 'macros/pc_sidebar.html' import pc_sidebar %}
+{% block main_content %}
+
+{{ pc_sidebar(active_tab = 'content') }}
 
 	<a href="{{ url_for('content.title_show', id = content.title_id) }}"><< {{ content.title.name }}</a><br>
 	<h4>{{ content.name }}</h4>

@@ -1,16 +1,49 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
 
-	<a href="{{ url_for('content.index') }}"><< Home</a><br>
-	<a href="{{ url_for('content.category_new') }}"> Create a new category</a>
-	<h4>Categories</h4>
-	{% for category in categories %}
-		<p>
-			<span>{{ category.created_at.strftime('%F %T') }}</span>
-			<a href="{{ url_for('content.category_show', id = category.id) }}">{{ category.name }}</a>
-			<a href="{{ url_for('content.category_edit', id = category.id) }}">edit</a>
-			<a href="{{ url_for('content.category_delete', id = category.id) }}">delete</a>
-		</p>
-	{% endfor %}
+{{ sidebar(active_tab = 'category') }}
+<div class="contents">
+	<div class="contents-header">
+		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+		<p class="contents-header-p">目录列表</p>
+		<p class="contents-header-p text-sm">list of categories</p>
+		<a class="new-one" href="{{ url_for('content.category_new') }}"><span class="glyphicon glyphicon-plus"></span></a>
+	</div>
+	<div class="separator"><span></span></div>
+	<div class="widget">
+		<div class="widget_header">
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;目录列表</h4>
+		</div>
+		<div class="widget_contents padding-0">
+			<table class="tables">
+				<thead>
+					<tr>
+						<th>目录名称</th>
+						<th>创建日期</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for category in categories %}
+					<tr>
+						<td><a href="{{ url_for('content.category_show', id = category.id) }}" class="table-link">{{ category.name }}</a></td>
+						<td>{{ category.created_at.strftime('%F %T') }}</td>
+						<td>
+							<a class="table-edit text-info" href="{{ url_for('content.category_edit', id = category.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
+							<form action="{{ url_for('content.category_delete', id = category.id) }}" method="post" style="display: inline;">
+								<button type="submit" data-confirm="Are you sure?" class="btn-link table-del" style="color: #843534; text-decoration: none; "><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</button>
+							</form>
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
 
 {% endblock %}
+
+
+		

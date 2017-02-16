@@ -9,6 +9,9 @@ app = Flask(__name__)
 app.config.from_object(config[os.getenv('FLASK_ENV') or 'default'])
 db = SQLAlchemy(app)
 
+from content.views import content
+app.register_blueprint(content, url_prefix = '/content')
+
 @app.errorhandler(404)
 def page_not_found(error):
 	return render_template('404.html'), 404
