@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
-from .app import db
+from . import db
 
 class Rails(object):
 	@property

@@ -1,1 +1,0 @@
-# Tells Python to use the seesun_crm/ directory as a python package

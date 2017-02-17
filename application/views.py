@@ -2,7 +2,7 @@
 import os, datetime, random
 from flask.helpers import make_response
 from flask import flash, redirect, render_template, request, url_for
-from .app import app
+from . import app
 from .models import *
 
 @app.route('/')

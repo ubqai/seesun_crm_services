@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 from flask import request
-from app import app
+from application import app
 import json
 
 class HttpTest(unittest.TestCase):
@@ -13,7 +13,7 @@ class HttpTest(unittest.TestCase):
 		self.assertEqual(response.status_code, 302)
 
 	def test_get_mobile_index(self):
-		response = self.app.get('/mobile_index')
+		response = self.app.get('/mobile/index')
 		self.assertEqual(response.status_code, 200)
 
 	def test_get_admin_redirect(self):
@@ -21,7 +21,7 @@ class HttpTest(unittest.TestCase):
 		self.assertEqual(response.status_code, 302)
 
 	def test_get_content_index(self):
-		response = self.app.get('/admin/content/')
+		response = self.app.get('/content/title/index')
 		self.assertEqual(response.status_code, 200)
 
 class HelperTest(unittest.TestCase):

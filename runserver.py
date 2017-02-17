@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from application.app import app, db
+from application import app, db
 import application.models
 import application.views
 

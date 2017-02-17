@@ -2,7 +2,7 @@
 import os
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 
-from ..app     import app, db
+from ..     import app, db
 from ..helpers import object_list, save_upload_file, clip_image
 from ..models  import Content, ContentTitle, ContentCategory, ContentClassification, ContentClassificationOption
 from .forms    import *
