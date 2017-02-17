@@ -11,9 +11,8 @@ manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
 def make_shell_context():
-	return dict(app = app, db = db, Content = Content, ContentTitle = ContentTitle,
-		ContentCategory = ContentCategory, ContentClassification = ContentClassification,
-		ContentClassificationOption = ContentClassificationOption)
+	return dict(app = app, db = db, Content = Content, ContentCategory = ContentCategory, 
+		ContentClassification = ContentClassification, ContentClassificationOption = ContentClassificationOption)
 manager.add_command("shell", Shell(make_context = make_shell_context))
 
 @manager.command

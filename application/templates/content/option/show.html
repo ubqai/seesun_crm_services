@@ -27,12 +27,12 @@
 					</tr>
 				</thead>
 				<tbody>
-				{% for title in option.titles %}
+				{% for content in option.contents %}
 					<tr>
-						<td><a href="{{ url_for('content.title_show', id = title.id) }}" class="table-link">{{ title.name }}</a></td>
-						<td>{{ title.created_at.strftime('%F %T') }}</td>
+						<td><a href="{{ url_for('content.show', id = content.id) }}" class="table-link">{{ content.name }}</a></td>
+						<td>{{ content.created_at.strftime('%F %T') }}</td>
 						<td>
-							<a class="table-edit text-info" href="{{ url_for('content.title_edit', id = title.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
+							<a class="table-edit text-info" href="{{ url_for('content.edit', id = content.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
 							<a class="table-del text-danger"><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</a>
 						</td>
 					</tr>								

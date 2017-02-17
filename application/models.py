@@ -15,54 +15,28 @@ class Rails(object):
 		db.session.commit()
 		return self
 
-# Contents_and_options: id, content_title_id, content_classification_option_id
+# Contents_and_options: id, content_id, content_classification_option_id
 contents_and_options = db.Table('contents_and_options',
-	db.Column('content_title_id', db.Integer, db.ForeignKey('content_title.id')),
+	db.Column('content_id', db.Integer, db.ForeignKey('content.id')),
 	db.Column('content_classification_option_id', db.Integer, db.ForeignKey('content_classification_option.id'))
 	)
 
-# Contents: id, content_title_id, name, description, content_image_links(json), content_detail_link
+# Contents: id, name,description,content_thumbnail,reference_info(json{name,value})
 class Content(db.Model, Rails):
 	id = db.Column(db.Integer, primary_key = True)
 	name = db.Column(db.String(100))
 	description = db.Column(db.Text)
 	image_path  = db.Column(db.String(200))
 	reference_info = db.Column(db.JSON)
-	# image_links = db.Column(db.JSON)
-	# detail_link = db.Column(db.String(200))
-	created_at  = db.Column(db.DateTime, default = datetime.datetime.now)
-	updated_at  = db.Column(db.DateTime, default = datetime.datetime.now, onupdate = datetime.datetime.now)
+	created_at = db.Column(db.DateTime, default = datetime.datetime.now)
+	updated_at = db.Column(db.DateTime, default = datetime.datetime.now, onupdate = datetime.datetime.now)
 
-	title_id = db.Column(db.Integer, db.ForeignKey('content_title.id'))
+	options = db.relationship('ContentClassificationOption', 
+		secondary = contents_and_options,
+		backref = db.backref('contents', lazy = 'dynamic'))
 
 	def __repr__(self):
 		return '<Content: %s>' % self.name
-
-# Content_titles: id, name,description,content_thumbnail,reference_info(json{name,value})
-class ContentTitle(db.Model, Rails):
-	id = db.Column(db.Integer, primary_key = True)
-	name = db.Column(db.String(100))
-	description = db.Column(db.Text)
-	image_path  = db.Column(db.String(200))
-	# content_thumbnail = db.Column(db.String(100))
-	reference_info = db.Column(db.JSON)
-	created_at  = db.Column(db.DateTime, default = datetime.datetime.now)
-	updated_at  = db.Column(db.DateTime, default = datetime.datetime.now, onupdate = datetime.datetime.now)
-
-	contents = db.relationship('Content', backref = 'title', lazy = 'dynamic')
-	options = db.relationship('ContentClassificationOption', 
-		secondary = contents_and_options,
-		backref = db.backref('titles', lazy = 'dynamic'))
-
-	def __repr__(self):
-		return '<ContentTitle: %s>' % self.name
-
-	@property
-	def delete_p(self):
-		for content in self.contents:
-			content.delete
-		self.delete
-		return self
 
 	def append_options(self, options):
 		existing_options = self.options

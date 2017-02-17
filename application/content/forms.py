@@ -2,7 +2,7 @@
 import wtforms
 from wtforms.validators import *
 
-from ..models import Content, ContentTitle, ContentCategory, ContentClassification, ContentClassificationOption
+from ..models import Content, ContentCategory, ContentClassification, ContentClassificationOption
 
 class ContentForm(wtforms.Form):
 	name = wtforms.StringField('案例名称',  validators = [DataRequired(message = 'name is necessary')])
@@ -12,16 +12,6 @@ class ContentForm(wtforms.Form):
 	def save(self, content):
 		self.populate_obj(content)
 		return content
-
-class ContentTitleForm(wtforms.Form):
-	name = wtforms.StringField('标题名称', validators = [DataRequired(message = 'title name is necessary')])
-	#content_thumbnail = wtforms.StringField('Content Thumbnail', validators = [DataRequired(message = 'content thumbnail is necessary')])
-	description = wtforms.TextAreaField('标题描述', validators = [DataRequired(message = 'description is necessary')])
-	image_file = wtforms.FileField('上传图片', validators = [])
-
-	def save(self, title):
-		self.populate_obj(title)
-		return title
 
 class ContentCategoryForm(wtforms.Form):
 	name = wtforms.StringField('目录名称', validators = [DataRequired(message = 'name is necessary')])

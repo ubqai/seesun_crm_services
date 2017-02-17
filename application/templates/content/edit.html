@@ -11,7 +11,7 @@
 	<div class="contents-header">
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
 		<p class="contents-header-p">编辑案例</p>
-		<p class="contents-header-p text-sm">edit contents</p>
+		<p class="contents-header-p text-sm">edit content</p>
 	</div>
 	<div class="separator"><span></span></div>
 	<div class="widget">
@@ -40,15 +40,26 @@
 						<img class="full-img" src="{{ content.image_path }}">
 					</div>
 				</div>
+
+				<div class="form-item">
+					<span class="form-label">选择标签</span>
+					<div class="label-block">
+					{% for option in options %}
+					<div class="label-item">
+						<input id="option_{{ option.id }}" name="option_ids[]" value="{{ option.id }}" type="checkbox" class="chk_1" {% if option in content.options %}checked=""{% endif %}> 
+						<label for="option_{{ option.id }}">{{ option.name }}</label> 
+					</div>
+					{% endfor %}
+					</div>
+				</div>
 			</div>
 
 			<div class="text-right top-gap-1">
 				<button type="submit" class="btn btn-default my-btn">更新</button>
-				<a href="{{ url_for('content.title_show', id = content.title_id) }}" class="btn btn-default my-btn">返回</a>									
+				<a href="{{ url_for('content.index') }}" class="btn btn-default my-btn">返回</a>									
 			</div>
 
 		</form>
-
 
 	</div>
 </div>

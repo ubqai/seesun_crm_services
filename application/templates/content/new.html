@@ -19,7 +19,7 @@
 			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;新增案例</h4>
 		</div>
 
-		<form action="{{ url_for('content.new', title_id = title_id) }}" enctype="multipart/form-data" method="post">
+		<form action="{{ url_for('content.new') }}" enctype="multipart/form-data" method="post">
 			<div class="widget_contents padding-0">
 				<div class="form-item">
 					<span class="form-label">{{ form.name.label }}</span>{{ form.name(class = 'form-input form-control') }}
@@ -40,11 +40,24 @@
 						<img class="full-img" src="/static/images/alt.jpg">
 					</div>
 				</div>
+
+				<div class="form-item">
+					<span class="form-label">选择标签</span>
+					<div class="label-block">
+					{% for option in options %}
+					<div class="label-item">
+						<input id="option_{{ option.id }}" name="option_ids[]" value="{{ option.id }}" type="checkbox" class="chk_1"> 
+						<label for="option_{{ option.id }}">{{ option.name }}</label> 
+					</div>
+					{% endfor %}
+					</div>
+				</div>
+				
 			</div>
 
 			<div class="text-right top-gap-1">
 				<button type="submit" class="btn btn-default my-btn">提交</button>
-				<a href="{{ url_for('content.title_show', id = title_id) }}" class="btn btn-default my-btn">返回</a>									
+				<a href="{{ url_for('content.index') }}" class="btn btn-default my-btn">返回</a>									
 			</div>
 
 		</form>

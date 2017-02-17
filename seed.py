@@ -3,13 +3,11 @@
 $ python seed.py
 Execute this file will create a bunch of sample data for mobile application display.
 """
-from main.models import *
+from application.models import *
 
-option_list_1 = set(['运动系列产品', '商品系列产品', '家用休闲产品'])
-option_list_2 = set(['校园专用', '医院专用', '球馆专用'])
-option_list_3 = set(['上海地区', '北京地区', '福建地区'])
-title_list    = set(['博格专版木纹', '博格木纹'])
-content_list  = set(['无锡国家体育馆', '北京奥运会鸟巢'])
+option_list_1 = ['运动系列产品', '商品系列产品', '家用休闲产品']
+option_list_2 = ['校园专用', '医院专用', '球馆专用']
+option_list_3 = ['上海地区', '北京地区', '福建地区']
 content_body = """
 <div class="text">
 <p>无锡国家体育馆</p>
@@ -33,30 +31,12 @@ if not ContentCategory.query.filter(ContentCategory.name == '案例展示').firs
 	classification2 = ContentClassification(name = '按场景选择案例', description = '按场景选择案例', category_id = category.id).save
 	classification3 = ContentClassification(name = '按地域选择案例', description = '按地域选择案例', category_id = category.id).save
 
-	title1 = ContentTitle(name = '博格专版木纹', image_path = '/static/images/sport1.jpg').save
-	title2 = ContentTitle(name = '博格木纹', image_path = '/static/images/sport2.jpg').save
-	for name in content_list:
-		Content(name = name, description = content_body, image_path = "/static/images/sport1.jpg", title_id = title1.id).save
-		Content(name = name, description = content_body, image_path = "/static/images/sport1.jpg", title_id = title2.id).save
-
 	for i in range(len(option_list_1)):
 		option = ContentClassificationOption(name = option_list_1[i], classification_id = classification1.id).save
-		title1.options.append(option)
-		title1.save
-		title2.options.append(option)
-		title2.save
 	for i in range(len(option_list_2)):
 		option = ContentClassificationOption(name = option_list_2[i], classification_id = classification2.id).save
-		title1.options.append(option)
-		title1.save
-		title2.options.append(option)
-		title2.save
 	for i in range(len(option_list_3)):
 		option = ContentClassificationOption(name = option_list_3[i], classification_id = classification3.id).save
-		title1.options.append(option)
-		title1.save
-		title2.options.append(option)
-		title2.save
 
 
 

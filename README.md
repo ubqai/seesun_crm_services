@@ -8,7 +8,7 @@
 #### How to run the project
 
 	1. install python3.5.3
-s
+
 	2. install all extensions listed in requirements.txt
 		$ pip install -r requirements.txt
 

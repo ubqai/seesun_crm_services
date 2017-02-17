@@ -15,7 +15,7 @@ def mobile_index():
 
 @app.route('/admin')
 def admin():
-	return redirect(url_for('content.title_index'))
+	return redirect(url_for('content.index'))
 
 # --- Case show, client content model ---
 @app.route('/mobile/case_classifications')
@@ -30,11 +30,6 @@ def mobile_case_classifications():
 def mobile_case_classification_show(id):
 	classification = ContentClassification.query.get_or_404(id)
 	return render_template('mobile/case_classification_show.html', classification = classification)
-
-@app.route('/mobile/case_title/<int:id>')
-def mobile_case_title_show(id):
-	title = ContentTitle.query.get_or_404(id)
-	return render_template('mobile/case_title_show.html', title = title)
 
 @app.route('/mobile/case_content/<int:id>')
 def mobile_case_content_show(id):

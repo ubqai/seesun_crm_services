@@ -4,25 +4,33 @@ from flask import Blueprint, flash, g, redirect, render_template, request, url_f
 
 from ..     import app, db
 from ..helpers import object_list, save_upload_file, clip_image
-from ..models  import Content, ContentTitle, ContentCategory, ContentClassification, ContentClassificationOption
+from ..models  import Content, ContentCategory, ContentClassification, ContentClassificationOption
 from .forms    import *
 
 content = Blueprint('content', __name__, template_folder = 'templates')
-title_image_size   = (379, 226)
 content_image_size = (379, 226)
 
 # url -- /content/..
 @content.route('/')
-def index():
-	return render_template('content/index.html')
+def root():
+	return redirect(url_for('content.index'))
 
-@content.route('/new/<int:title_id>', methods = ['GET', 'POST'])
-def new(title_id):
+@content.route('/index')
+def index():
+	contents = Content.query.order_by(Content.created_at.desc())
+	return render_template('content/index.html', contents = contents)
+
+@content.route('/new', methods = ['GET', 'POST'])
+def new():
+	options = ContentClassificationOption.query.order_by(ContentClassificationOption.classification_id)
 	if request.method == 'POST':
 		form = ContentForm(request.form)
 		if form.validate():
-			content = form.save(Content(title_id = title_id))
+			option_ids = request.form.getlist('option_ids[]')
 			image_file = request.files['image_file']
+			request_options = ContentClassificationOption.query.filter(ContentClassificationOption.id.in_(option_ids))
+			content = form.save(Content())
+			content.append_options(request_options)
 			if image_file:
 				image_path = save_upload_file(image_file)
 				if image_path:
@@ -30,10 +38,10 @@ def new(title_id):
 					content.image_path = image_path
 			content.save
 			flash('Content "{name}" created successfully.'.format(name = content.name), 'success')
-			return redirect(url_for('content.title_show', id = title_id))
+			return redirect(url_for('content.index'))
 	else:
 		form = ContentForm()
-	return render_template('content/new.html', form = form, title_id = title_id)
+	return render_template('content/new.html', form = form, options = options)
 
 @content.route('/<int:id>')
 def show(id):
@@ -42,24 +50,28 @@ def show(id):
 
 @content.route('/<int:id>/edit', methods = ['GET', 'POST'])
 def edit(id):
+	options = ContentClassificationOption.query.order_by(ContentClassificationOption.classification_id)
 	content = Content.query.get_or_404(id)
 	if request.method == 'POST':
 		form = ContentForm(request.form)
 		if form.validate():
-			content = form.save(content)
+			option_ids = request.form.getlist('option_ids[]')
 			image_file = request.files['image_file']
+			request_options = ContentClassificationOption.query.filter(ContentClassificationOption.id.in_(option_ids))
+			content = form.save(content)
+			content.update_options(request_options)
 			if image_file:
 				image_path = save_upload_file(image_file)
 				if image_path:
 					clip_image((app.config['APPLICATION_DIR'] + image_path), size = content_image_size)
-					os.remove(app.config['APPLICATION_DIR'] + content.image_path)
-					content.image_path = image_path				
+					os.remove(app.config['APPLICATION_DIR'] + title.image_path)
+					content.image_path = image_path
 			content.save
 			flash('Content "{name}" has been updated.'.format(name = content.name), 'success')
-			return redirect(url_for('content.title_show', id = content.title_id))
+			return redirect(url_for('content.index'))
 	else:
 		form = ContentForm(obj = content)
-	return render_template('content/edit.html', form = form, content = content)
+	return render_template('content/edit.html', form = form, content = content, options = options)
 
 @content.route('/<int:id>/delete', methods = ['GET', 'POST'])
 def delete(id):
@@ -67,76 +79,8 @@ def delete(id):
 	if request.method == 'POST':
 		content.delete
 		flash('Content "{name}" has been deleted.'.format(name = content.name), 'success')
-		return redirect(url_for('content.title_show', id = content.title_id))
-	return render_template('content/delete.html', content = content)
-
-# url -- /content/title/..
-@content.route('/title/index')
-def title_index():
-	titles = ContentTitle.query.order_by(ContentTitle.created_at.desc())
-	return render_template('content/title/index.html', titles = titles)
-
-@content.route('/title/new', methods = ['GET', 'POST'])
-def title_new():
-	options = ContentClassificationOption.query.order_by(ContentClassificationOption.classification_id)
-	if request.method == 'POST':
-		form = ContentTitleForm(request.form)
-		if form.validate():
-			option_ids = request.form.getlist('option_ids[]')
-			image_file = request.files['image_file']
-			request_options = ContentClassificationOption.query.filter(ContentClassificationOption.id.in_(option_ids))
-			title = form.save(ContentTitle())
-			title.append_options(request_options)
-			if image_file:
-				image_path = save_upload_file(image_file)
-				if image_path:
-					clip_image((app.config['APPLICATION_DIR'] + image_path), size = title_image_size)
-					title.image_path = image_path
-			title.save
-			flash('Content title "{name}" created successfully.'.format(name = title.name), 'success')
-			return redirect(url_for('content.title_index'))
-	else:
-		form = ContentTitleForm()
-	return render_template('content/title/new.html', form = form, options = options)
-
-@content.route('/title/<int:id>')
-def title_show(id):
-	title = ContentTitle.query.get_or_404(id)
-	return render_template('content/title/show.html', title = title)
-
-@content.route('/title/<int:id>/edit', methods = ['GET', 'POST'])
-def title_edit(id):
-	options = ContentClassificationOption.query.order_by(ContentClassificationOption.classification_id)
-	title = ContentTitle.query.get_or_404(id)
-	if request.method == 'POST':
-		form = ContentTitleForm(request.form)
-		if form.validate():
-			option_ids = request.form.getlist('option_ids[]')
-			image_file = request.files['image_file']
-			request_options = ContentClassificationOption.query.filter(ContentClassificationOption.id.in_(option_ids))
-			title = form.save(title)
-			title.update_options(request_options)
-			if image_file:
-				image_path = save_upload_file(image_file)
-				if image_path:
-					clip_image((app.config['APPLICATION_DIR'] + image_path), size = title_image_size)
-					os.remove(app.config['APPLICATION_DIR'] + title.image_path)
-					title.image_path = image_path
-			title.save
-			flash('Content title "{name}" has been updated.'.format(name = title.name), 'success')
-			return redirect(url_for('content.title_index'))
-	else:
-		form = ContentTitleForm(obj = title)
-	return render_template('content/title/edit.html', form = form, title = title, options = options)
-
-@content.route('/title/<int:id>/delete', methods = ['GET', 'POST'])
-def title_delete(id):
-	title = ContentTitle.query.get_or_404(id)
-	if request.method == 'POST':
-		title.delete_p
-		flash('Content title "{name}" has been deleted.'.format(name = title.name), 'success')
 		return redirect(url_for('content.title_index'))
-	return render_template('content/title/delete.html', title = title)
+	abort(404)
 
 # url -- /content/category/..
 @content.route('/category/index')
