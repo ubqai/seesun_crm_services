@@ -1,0 +1,36 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active_tab = 'p_category') }}
+<div class="contents">
+	<div class="contents-header">
+		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+		<p class="contents-header-p">新增产品目录</p>
+		<p class="contents-header-p text-sm">product category</p>
+	</div>
+	<div class="separator"><span></span></div>
+	<div class="widget">
+		<div class="widget_header">
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;新增产品目录</h4>
+			<a class="new-item new-product-category"><span class="glyphicon glyphicon-plus"></span></a>
+		</div>
+
+		<form action="{{ url_for('product.category_new') }}" method="post">
+			<div class="widget_contents padding-0 item-wrapper">
+				<div class="form-item item-template">
+					<span class="form-label">产品名称</span>
+					<input class="form-input form-control" name="names[]"/>
+					<span  class="form-ele del-wrapper">
+						<a class="del-item hidden"><span class="glyphicon glyphicon-minus"></span></a>
+					</span>
+				</div>
+			</div>
+			<div class="text-right top-gap-1">
+				<a class="btn btn-default my-btn right-gap-1" href="{{ url_for('product.category_index') }}">返回</a><button class="btn btn-default my-btn">提交</button>
+			</div>	
+		</form>
+	</div>
+</div>
+
+{% endblock %}

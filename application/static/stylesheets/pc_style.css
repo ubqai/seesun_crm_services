@@ -271,6 +271,8 @@ body{
     -webkit-box-shadow: inset 0 1px 0 #ffffff;
     box-shadow: inset 0 1px 0 #ffffff;
     padding: 0 15px;
+		/*2017-2-16新增加的*/
+		position: relative;
 }
 .widget_header_title{
     margin: 0;
@@ -341,6 +343,10 @@ body{
 .form-item:last-child{
     border-bottom: none;
 }
+.inline-2 .form-label {
+	width:90px;
+	vertical-align: middle;
+}
 .form-label {
     display: table-cell;
     color: #8f8f8f;
@@ -349,6 +355,9 @@ body{
     width: 130px;
     padding-left: 26px;
 	vertical-align: top;
+}
+.inline-2 .form-input {
+	width:90%;
 }
 .form-input{
     display: table-cell;
@@ -366,6 +375,23 @@ textarea.form-input{
     border: 1px solid #ccc;
 		padding: 10px;
 		min-height: 100px;
+}
+.small-pic .pic-upload {
+    width: 250px;
+		position:relative;
+		float:left;
+		margin-right:10px
+}
+.small-pic .form-label {
+    width: 100px;
+}
+.small-pic .inbox-file{
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+		opacity: 0;
 }
 .my-btn {
     background: linear-gradient(to bottom, #fcfcfc 0%,#f2f2f2 100%);
@@ -443,12 +469,12 @@ textarea.form-input{
 } 
  
 .chk_1:checked + label { 
-    background-color: #ECF2F7; 
-    border: 1px solid #92A1AC; 
+    background-color: #F8B500; 
+    border: 1px solid #F8B500; 
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1); 
-    color: #243441; 
+    color: #fff; 
 } 
-/*
+ /**
 .chk_1:checked + label:after { 
     content: '\2714'; //勾选符号 
     position: absolute; 
@@ -461,7 +487,7 @@ textarea.form-input{
     padding: 1px 0 0 0; 
     vertical-align: text-top; 
 } 
-*/
+**/
 .content-item {
     padding: 15px;
     margin-bottom: 30px;
@@ -486,4 +512,57 @@ textarea.form-input{
 }
 .ck-wrapper{
 	width:100%;
+}
+
+
+
+
+/*2017-2-16 新增加的*/
+.new-item{
+	  width: 25px;
+    height: 25px;
+    position: absolute;
+    box-shadow: 0px 1px 3px 1px rgba(0,0,0,0.15);
+    border-radius: 45px;
+    background: linear-gradient(to bottom, #fafafa 0%,#eaeaea 100%);
+    padding-left: 6.5px;
+    padding-top: 5px;
+    font-size: 13px;
+    color: #aaa;
+    right: 16px;
+    top: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.new-item:hover {
+    color:#F8B500;
+		box-shadow: 0px 1px 3px 2px rgba(0,0,0,0.25);
+}
+.del-item{
+	  width: 25px;
+    height: 25px;
+    position: absolute;
+    box-shadow: 0px 1px 3px 1px rgba(0,0,0,0.15);
+    border-radius: 45px;
+    background: linear-gradient(to bottom, #fafafa 0%,#eaeaea 100%);
+    padding-left: 5.5px;
+    padding-top: 5px;
+    font-size: 13px;
+    color: #aaa;
+    right: 13px;
+    top: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.del-item:hover {
+    color:#F8B500;
+		box-shadow: 0px 1px 3px 2px rgba(0,0,0,0.25);
+}
+.form-ele{
+	display: table-cell;
+	position:relative;
+}
+.del-wrapper{
+	  width: 54px;
+    height: 25px;
 }

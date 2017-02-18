@@ -1,0 +1,45 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active_tab = 'p_category') }}
+
+<div class="contents">
+	<div class="contents-header">
+		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+		<p class="contents-header-p">产品属性值</p>
+		<p class="contents-header-p text-sm">product options</p>
+		<a class="new-one" href="{{ url_for('product.option_new', feature_id = feature.get('feature_id')) }}"><span class="glyphicon glyphicon-plus"></span></a>
+	</div>
+	<div class="separator"><span></span></div>
+	<div class="widget">
+		<div class="widget_header">
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;博格木纹 > 颜色</h4>
+		</div>
+		<div class="widget_contents padding-0">
+			<table class="tables">
+				<thead>
+					<tr>
+						<th>属性值名称</th>
+						<th>创建日期</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for option in feature.get('options') %}
+					<tr>
+						<td><a class="table-link">{{ option.get('option_name') }}</a></td>
+						<td></td>
+						<td>
+							<a class="table-edit text-info" href="product_option_edit.html"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
+							<a class="table-del text-danger"><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</a>
+						</td>
+					</tr>				
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
