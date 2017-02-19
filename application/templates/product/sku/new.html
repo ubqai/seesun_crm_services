@@ -18,14 +18,14 @@
 				<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;{{ product.get('name') }}</h4>
 			</div>
 			<div class="widget_contents padding-0">
+
 				<div class="form-item inline-2">
 					{% for option in product.get('options') %}
-					{{ option.get('feature_name') }},{{ option.get('option_id') }},{{ option.get('option_name') }}<br>
-					{% endfor %}
-					<span class="form-label">option_id1</span>
-					<input class="form-input form-control" name="option_ids[]"/>
-					<span class="form-label">option_id2</span>
-					<input class="form-input form-control" name="option_ids[]"/>
+						<div class="label-item">
+							<input name="option_ids[]" value="{{ option.get('option_id') }}" type="checkbox" id="option_{{ option.get('option_id') }}" class="chk_1" /> 
+							<label for="option_{{ option.get('option_id') }}">{{ option.get('feature_name') }} - {{ option.get('option_name') }}</label> 
+						</div>					
+					{% endfor %} 
 				</div>
 				<div class="form-item inline-2">
 					<span class="form-label">sku代码</span>

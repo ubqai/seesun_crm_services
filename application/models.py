@@ -39,7 +39,7 @@ class Content(db.Model, Rails):
                               backref=db.backref('contents', lazy='dynamic'))
 
     def __repr__(self):
-        return '<Content: %s>' % self.name
+        return 'Content(id: %s, name: %s, ...)' % (self.id, self.name)
 
     def append_options(self, options):
         existing_options = self.options
@@ -67,7 +67,7 @@ class ContentCategory(db.Model, Rails):
     classifications = db.relationship('ContentClassification', backref='category', lazy='dynamic')
 
     def __repr__(self):
-        return '<ContentCategory: %s>' % self.name
+        return 'ContentCategory(id: %s, name: %s)' % (self.id, self.name)
 
     @property
     def delete_p(self):
@@ -89,7 +89,7 @@ class ContentClassification(db.Model, Rails):
     options = db.relationship('ContentClassificationOption', backref='classification', lazy='dynamic')
 
     def __repr__(self):
-        return '<ContentClassification: %s>' % self.name
+        return 'ContentClassification(id: %s, name: %s, description: %s)' % (self.id, self.name, self.description)
 
     @property
     def delete_p(self):
@@ -109,7 +109,7 @@ class ContentClassificationOption(db.Model, Rails):
     classification_id = db.Column(db.Integer, db.ForeignKey('content_classification.id'))
 
     def __repr__(self):
-        return '<ContentClassificationOption: %s>' % self.name
+        return 'ContentClassificationOption(id: %s, name: %s)' % (self.id, self.name)
 
 
 class District(db.Model, Rails):
@@ -119,6 +119,9 @@ class District(db.Model, Rails):
     person_in_charge = db.Column(db.String(200))
     dealers = db.relationship('Dealer', backref='district')
 
+    def __repr__(self):
+        return 'District(id: %s, name: %s, person_in_charge: %s)' % (self.id, self.name, self.person_in_charge)
+
 
 class Dealer(db.Model, Rails):
     __tablename__ = 'dealers'
@@ -127,8 +130,11 @@ class Dealer(db.Model, Rails):
     district_id = db.Column(db.Integer, db.ForeignKey('districts.id'))
     orders = db.relationship('Order', backref='dealer')
 
+    def __repr__(self):
+        return 'Dealer(id: %s, name: %s, district_id: %s)' % (self.id, self.name, self.district_id)
 
-class Order(db.Model):
+
+class Order(db.Model, Rails):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
     order_no = db.Column(db.String(30), unique=True)
@@ -139,6 +145,10 @@ class Order(db.Model):
     order_memo = db.Column(db.Text)
     contracts = db.relationship('Contract', backref='order', lazy='dynamic')
     order_contents = db.relationship('OrderContent', backref='order')
+
+    def __repr__(self):
+        return 'Order(id: %s, order_no: %s, dealer_id: %s, order_status: %s, order_memo: %s)' % (
+            self.id, self.order_no, self.dealer_id, self.order_status, self.order_memo)
 
 
 class Contract(db.Model):
@@ -153,8 +163,12 @@ class Contract(db.Model):
     shipment_status = db.Column(db.String(50))
     contract_content = db.Column(db.JSON)
 
+    def __repr__(self):
+        return 'Contract(id: %s, contract_no: %s, contract_date: %s, order_id: %s, contract_status: %s, product_status: %s, shipment_status: %s, ...)' % (
+            self.id, self.contract_no, self.contract_date, self.order_id, self.contract_status, self.product_status, self.shipment_status)
 
-class OrderContent(db.Model):
+
+class OrderContent(db.Model, Rails):
     __tablename__ = 'order_contents'
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
@@ -163,3 +177,7 @@ class OrderContent(db.Model):
     sku_code = db.Column(db.String(30))
     number = db.Column(db.Integer)
     square_num = db.Column(db.Integer)
+
+    def __repr__(self):
+        return 'OrderContent(id: %s, order_id: %s, product_name: %s, sku_specification: %s, sku_code: %s, number: %s, square_num: %s)' % (
+            self.id, self.order_id, self.product_name, self.sku_specification, self.sku_code, self.number, self.square_num)
