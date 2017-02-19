@@ -14,7 +14,7 @@
 			<div class="item active">
 				<div id="banner">
 						<a style="display: block; ">
-								<img src="/static/images/sport1.jpg" class="full-img" />
+								<img src="/static/images/sport2.jpg" class="full-img" />
 						</a>
 				</div>
 			</div>
@@ -114,6 +114,13 @@
 				<p class="text-center light-font-md">北京奥运会鸟巢</p>
 			</div>
 		</div>
+	</div>
+
+	<div>
+	产品名称: {{ product.get('name') }}<br>
+	产品代码: {{ product.get('code') }}<br>
+	产品描述: <br>
+	{{ product.get('description')|safe }}
 	</div>
 
 </div>

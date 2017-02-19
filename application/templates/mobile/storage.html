@@ -5,95 +5,26 @@
 
 <div class="main-content">
 	<div class="nav-tab clearfix">
-		<a id="to_sport">运动系列产品</a>
-		<a id="to_business">商用系列产品</a>
-		<a id="to_customer">家用休闲产品</a>
+	{% for category in categories %}
+		<a id="category_{{ category.get('category_id') }}">{{ category.get('category_name') }}</a>
+	{% endfor %}
 	</div>
 	<div class="module-1">
-		<div class="sub-module-1" id="sport">
-			<p class="module-title">运动系列产品</p>
+	{% for category in categories %}
+		<div class="sub-module-1" id="p_category_{{ category.get('category_id') }}">
+			<p class="module-title">{{ category.get('category_name') }}</p>
 			<div class="divider2"></div>
-			<div class="module-row clearfix">
-				<a href="{{ url_for('mobile_storage_show') }}" class="col-6-gap product">
-					<img class="full-img" src="/static/images/sport1.jpg">
-					<p>博格专版木纹</p>
+			{% for product in products_hash.get(category.get('category_id')) %}
+				<a href="{{ url_for('mobile_storage_show', product_id = product.get('product_id')) }}" class="col-6-gap product">
+					<img class="full-img" src="{{ product.get('images')[0] }}">
+					<p>{{ product.get('name') }}</p>
 					<div class="product-divider"></div>
-				</a>
-				<a class="col-6-gap product">
-					<img class="full-img" src="/static/images/sport2.jpg">
-					<p>博格木纹</p>
-					<div class="product-divider"></div>
-				</a>
-			</div>
-			<div class="module-row clearfix">
-				<a class="col-6-gap product">
-					<img class="full-img" src="/static/images/sport1.jpg">
-					<p>博格专版logo纹</p>
-					<div class="product-divider"></div>
-				</a>
-				<a class="col-6-gap product">
-					<img class="full-img" src="/static/images/sport2.jpg">
-					<p>博格宝石纹</p>
-					<div class="product-divider"></div>
-				</a>
-			</div>
+				</a>		
+			{% endfor %}
 		</div>
-		<div class="sub-module-1" id="business">
-			<p class="module-title">商用系列产品</p>
-			<div class="divider2"></div>
-			<div class="module-row clearfix">
-				<a class="col-6-gap product">
-					<img class="full-img" src="/static/images/sport1.jpg">
-					<p>帝彩—奥萨	</p>
-					<div class="product-divider"></div>
-				</a>
-				<a class="col-6-gap product">
-					<img class="full-img" src="/static/images/sport2.jpg">
-					<p>帝彩—尚丽</p>
-					<div class="product-divider"></div>
-				</a>
-			</div>
-			<div class="module-row clearfix">
-				<a class="col-6-gap product">
-					<img class="full-img" src="/static/images/sport1.jpg">
-					<p>帝彩—尚宝</p>
-					<div class="product-divider"></div>
-				</a>
-				<a class="col-6-gap product">
-					<img class="full-img" src="/static/images/sport2.jpg">
-					<p>帝彩—卡乐</p>
-					<div class="product-divider"></div>
-				</a>
-			</div>
-		</div>
-		<div class="sub-module-1" id="customer">
-			<p class="module-title">家用系列产品</p>
-			<div class="divider2"></div>
-			<div class="module-row clearfix">
-				<a class="col-6-gap product">
-					<img class="full-img" src="/static/images/sport1.jpg">
-					<p>帝彩—卡乐</p>
-					<div class="product-divider"></div>
-				</a>
-				<a class="col-6-gap product">
-					<img class="full-img" src="/static/images/sport2.jpg">
-					<p>帝彩—卡乐</p>
-					<div class="product-divider"></div>
-				</a>
-			</div>
-			<div class="module-row clearfix">
-				<a class="col-6-gap product">
-					<img class="full-img" src="/static/images/sport1.jpg">
-					<p>帝彩—卡乐</p>
-					<div class="product-divider"></div>
-				</a>
-				<a class="col-6-gap product">
-					<img class="full-img" src="/static/images/sport2.jpg">
-					<p>帝彩—卡乐</p>
-					<div class="product-divider"></div>
-				</a>
-			</div>
-		</div>
+		<div class="clearfix"></div>
+	{% endfor %}
+
 	</div>
 </div>
 

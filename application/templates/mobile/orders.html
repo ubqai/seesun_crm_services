@@ -1,0 +1,38 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('一键下单') }}
+
+{% for order in orders %}
+	Order_no: {{ order.order_no }} <br>
+	Dealer: {{ order.dealer.name }} <br>
+	Order_status: {{ order.order_status }} <br>
+	Order_memo: {{ order.order_memo }} <br>
+	<div class="clear"></div>
+	<table>
+	<thead>
+	<tr>
+		<th>Product Name</th>
+		<th>SKU Specification</th>
+		<th>SKU Code</th>
+		<th>Number</th>
+		<th>Square Num</th>
+	</tr>		
+	</thead>
+	<tbody>
+
+	{% for order_content in order.order_contents %}
+		<tr>
+		<td>{{ order_content.product_name }}</td>
+		<td>{{ order_content.sku_specification }}</td>
+		<td>{{ order_content.sku_code }}</td>
+		<td>{{ order_content.number }}</td>
+		<td>{{ order_content.square_num }}</td>
+		</tr>
+	{% endfor %}
+
+	</tbody>
+	</table>
+{% endfor %}
+
+{% endblock %}
