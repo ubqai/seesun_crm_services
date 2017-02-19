@@ -1,0 +1,82 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active_tab = 'contract_manage') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">合同详情</p>
+        <p class="contents-header-p text-sm">details of contracts</p>
+        <a class="new-one" href="{{ url_for('order_manage.contract_show', id=contract.id) }}"><span class="glyphicon glyphicon-envelope"></span></a>
+    </div>
+    <div class="separator"><span></span></div>
+
+
+    <div class="widget">
+        <div class="widget_header">
+            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;订单详情</h4>
+        </div>
+        <div class="widget_contents padding-0 bot-gap-3">
+            <div class="form-item inline-2">
+                <span class="form-label">合同号</span>
+                <input class="form-input form-control" value="{{ contract.contract_no }}" disabled/>
+                <span class="form-label">合同日期</span>
+                <input class="form-input form-control" value="{{ contract.contract_date.strftime('%Y-%m-%d') }}" disabled/>
+                <span class="form-label">合同状态</span>
+                <input class="form-input form-control" value="{{ contract.contract_status }}" disabled/>
+            </div>
+            <div class="form-item inline-2">
+                <span class="form-label">订单号</span>
+                <input class="form-input form-control" value="{{ contract.order.order_no }}" disabled/>
+                <span class="form-label">订单日期</span>
+                <input class="form-input form-control" value="{{ contract.order.created_at.strftime('%Y-%m-%d') }}" disabled/>
+                <span class="form-label">订单状态</span>
+                <input class="form-input form-control" value="{{ contract.order.order_status }}" disabled/>
+            </div>
+            <div class="form-item inline-2">
+                <span class="form-label">订单备注</span>
+                <input class="form-input form-control" value="{{ contract.order.order_memo }}" disabled/>
+            </div>
+            <div class="form-item inline-2">
+                <span class="form-label">经销商</span>
+                <input class="form-input form-control" value="{{ contract.order.dealer.name }}" disabled/>
+            </div>
+            <div class="form-item inline-2">
+                <span class="form-label">经销商所属区域</span>
+                <input class="form-input form-control" value="{{ contract.order.dealer.district.name }}" disabled/>
+            </div>
+            <div class="form-item inline-2">
+                <span class="form-label">合同金额</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('amount') }}" disabled/>
+            </div>
+            <div class="form-item inline-2">
+                <span class="form-label">交货时间</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('delivery_time') }}" disabled/>
+            </div>
+        </div>
+        <div class="widget_contents padding-0">
+            <table class="tables">
+                <thead>
+                    <tr>
+                        <th>产品名</th>
+                        <th>规格</th>
+                        <th>平方数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for content in contract.order.order_contents %}
+                    <tr>
+                        <td><a class="table-link">{{ content.product_name }}</a></td>
+                        <td>{{ content.sku_specification }}</td>
+                        <td>{{ content.square_num }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

@@ -8,7 +8,7 @@
         <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
         <p class="contents-header-p">订单详情</p>
         <p class="contents-header-p text-sm">details of orders</p>
-        <a class="new-one" href="contract_show.html"><span class="glyphicon glyphicon-envelope"></span></a>
+        <a class="new-one" href="{{ url_for('order_manage.order_show', id=order.id) }}"><span class="glyphicon glyphicon-envelope"></span></a>
     </div>
     <div class="separator"><span></span></div>
 
@@ -48,94 +48,24 @@
                         <th>平方数</th>
                     </tr>
                 </thead>
-            <tbody>
-                {% for content in order.order_contents %}
-                <tr>
-                    <td><a class="table-link">{{ content.product_name }}</a></td>
-                    <td>{{ content.sku_specification }}</td>
-                    <td>{{ content.square_num }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <div class="text-right top-gap-3">
-        <a class="btn btn-default my-btn right-gap-2">同意生成合同</a><a class="btn btn-default my-btn">取消订单</a>
-    </div>
-
+                <tbody>
+                    {% for content in order.order_contents %}
+                    <tr>
+                        <td><a class="table-link">{{ content.product_name }}</a></td>
+                        <td>{{ content.sku_specification }}</td>
+                        <td>{{ content.square_num }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if order.order_status=="新订单" %}
+            <div class="text-right top-gap-3">
+                <a class="btn btn-default my-btn right-gap-2" href="{{ url_for('order_manage.contract_new', id=order.id) }}">同意生成合同</a>
+                <a class="btn btn-default my-btn" href="{{ url_for('order_manage.order_cancel', id=order.id) }}">取消订单</a>
+            </div>
+        {% endif %}
     </div>
 </div>
 
 {% endblock %}
-
-
-
-
-
-
-<html>
-	<head>
-		<!---inilization-->
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=0;">
-		<!--公用的css-->
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/init.css">
-		<link rel="stylesheet" href="css/style.css">
-		<!--公用的javascript-->
-		<script type="text/javascript" src="js/jquery.min.js"></script> 
-		<script type="text/javascript" src="js/bootstrap.min.js"></script> 
-		<script type="text/javascript" src="js/general.js"></script> 
-	</head>
-	<body>
-		<div class="body-content">
-			<header class="my-header">
-				<div class="my-header-content clearfix">
-					<div class="user">
-						<img src="images/user_avatar.png" alt="user_avatar" class="user_avatar">
-						<span>Luka Wei</span>
-					</div>
-				</div>
-			</header>
-			<div class="my-main">
-				<div class="my-main-content">
-					<div class="main-nav clearfix">
-						<div class="logo"><img src="images/logo.png" alt="logo" class="logo" style="width:153px"></div>
-						<div class="menu">
-							<a class="menu-block active">
-								<span>产品操作</span>
-							</a>
-							<a class="menu-block">
-								<span>首页</span>
-							</a>
-						</div>
-					</div>
-					<div class="main-content clearfix">
-						<aside class="sidebar">
-							<ul class="tab_nav">
-								<li class="active_tab pic-dashboard">
-									<a href="ordrs-of-dealer.html" title="List">
-										<span class="tab_label">订单管理</span>
-										<span class="tab_info">List</span>
-									</a>
-								</li>
-								<li class="pic-form">
-									<a href="contracts-of-dealer" title="New">
-										<span class="tab_label">合同管理</span>
-										<span class="tab_info">New</span>
-									</a>
-								</li>
-							</ul>
-						</aside>
-						<div class="contents">
-
-						</div>
-					</div>
-				</div>
-			</div>
-			<footer class="my-footer">
-			</footer>
-		</div>
-	</body>
-</html>
