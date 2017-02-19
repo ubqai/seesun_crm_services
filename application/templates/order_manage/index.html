@@ -1,0 +1,85 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active_tab = 'order_manage') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">订单列表</p>
+        <p class="contents-header-p text-sm">list of orders</p>
+    </div>
+    <div class="separator"><span></span></div>
+    <form class="form form-horizontal" method="get" url="{{ url_for('product.category_index') }}"
+          role="form" enctype="multipart/form-data">
+        <div class="form-style form-default">
+            <div class="form-item-2 col-3">
+                <span>从</span>
+                <input class="form-control datetimePicker" name="from">
+            </div>
+            <div class="form-item-2 col-3">
+                <span>到</span>
+                <input class="form-control datetimePicker" name="to">
+            </div>
+            <div class="form-item-2 col-3">
+                <span>订单号</span>
+                <input class="form-control" name="order_no">
+            </div>
+            <div class="form-item-2 col-3">
+                <span>区域</span>
+                <select class="form-control" name="district"></select>
+            </div>
+            <div class="form-item-2 col-3">
+                <span>经销商</span>
+                <select class="form-control" name="dealer"></select>
+            </div>
+            <div class="form-item-2 col-3">
+                <span>订单状态</span>
+                <select class="form-control" name="order_status"></select>
+            </div>
+            <div class="clearfix"></div>
+            <div class="text-right top-gap-2 right-gap-3">
+                <button class="btn btn-default my-btn">筛选条件</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="widget">
+        <div class="widget_header">
+            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;订单列表</h4>
+        </div>
+        <div class="widget_contents padding-0">
+            <table class="tables">
+                <thead>
+                    <tr>
+                        <th>订单号</th>
+                        <th>订单日期</th>
+                        <th>合同号</th>
+                        <th>区域负责人</th>
+                        <th>经销商</th>
+                        <th>订单状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><a href="{{ url_for("order_manage.order_show", id=order.id) }}" class="table-link">{{ order.order_no }}</a></td>
+                        <td>{{ order.created_at.strftime('%Y%m%d') }}</td>
+                        <td>
+                            {% if not order.contracts.all() == [] %}
+                                {{ order.contracts[0].contract_no }}
+                            {% endif %}
+                        </td>
+                        <td>{{ order.dealer.district.person_in_charge }}</td>
+                        <td>{{ order.dealer.name }}</td>
+                        <td><span class="text-warning">{{ order.order_status }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

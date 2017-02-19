@@ -13,6 +13,9 @@ from .content.views import content
 app.register_blueprint(content, url_prefix = '/content')
 from .product.views import product
 app.register_blueprint(product, url_prefix = '/product')
+from .order_manage.views import order_manage
+app.register_blueprint(order_manage, url_prefix='/order_manage')
+
 
 @app.errorhandler(404)
 def page_not_found(error):

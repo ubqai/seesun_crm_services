@@ -19,6 +19,12 @@
 					<span class="tab_info">Product</span>
 				</a>
 			</li>
+            <li class="pic-dashboard {% if active_tab == 'order_manage' %}active_tab{% endif %}">
+				<a href="{{ url_for('order_manage.order_index') }}" title="Product">
+					<span class="tab_label">订单管理</span>
+					<span class="tab_info">Order</span>
+				</a>
+			</li>
 			<!--
 			<li class="pic-form {% if active_tab == 'product' %}active_tab{% endif %}">
 				<a href="products_manage.html" title="Product">

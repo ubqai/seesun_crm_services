@@ -1,0 +1,168 @@
+<html>
+	<head>
+		<!---inilization-->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=0;">
+		<!--公用的css-->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/init.css">
+		<link rel="stylesheet" href="css/style.css">
+		<!--公用的javascript-->
+		<script type="text/javascript" src="js/jquery.min.js"></script> 
+		<script type="text/javascript" src="js/bootstrap.min.js"></script> 
+		<script type="text/javascript" src="js/general.js"></script> 
+	</head>
+	<body>
+		<div class="body-content">
+			<header class="my-header">
+				<div class="my-header-content clearfix">
+					<div class="user">
+						<img src="images/user_avatar.png" alt="user_avatar" class="user_avatar">
+						<span>Luka Wei</span>
+					</div>
+				</div>
+			</header>
+			<div class="my-main">
+				<div class="my-main-content">
+					<div class="main-nav clearfix">
+						<div class="logo"><img src="images/logo.png" alt="logo" class="logo" style="width:153px"></div>
+						<div class="menu">
+							<a class="menu-block active">
+								<span>产品操作</span>
+							</a>
+							<a class="menu-block">
+								<span>首页</span>
+							</a>
+						</div>
+					</div>
+					<div class="main-content clearfix">
+						<aside class="sidebar">
+							<ul class="tab_nav">
+								<li class="pic-dashboard">
+									<a href="ordrs-of-dealer.html" title="List">
+										<span class="tab_label">订单管理</span>
+										<span class="tab_info">List</span>
+									</a>
+								</li>
+								<li class="active_tab  pic-form">
+									<a href="contracts-of-dealer" title="New">
+										<span class="tab_label">合同管理</span>
+										<span class="tab_info">New</span>
+									</a>
+								</li>
+							</ul>
+						</aside>
+						<div class="contents">
+							<div class="contents-header">
+								<div class="contents-header-img"><img class="full-img" src="images/product.png" /></div>
+								<p class="contents-header-p">合同列表</p>
+								<p class="contents-header-p text-sm">list of orders</p>
+							</div>
+							<div class="separator"><span></span></div>
+							
+							<div class="form-style form-default">
+								<div class="form-item-2 col-3">
+									<span>从</span>
+									<input class="form-control">
+								</div>
+								<div class="form-item-2 col-3">
+									<span>到</span>
+									<input class="form-control">
+								</div>
+								<div class="form-item-2 col-3">
+									<span>合同/订单号</span>
+									<input class="form-control">
+								</div>
+								<div class="form-item-2 col-3">
+									<span>区域</span>
+									<select class="form-control"></select>
+								</div>
+								<div class="form-item-2 col-3">
+									<span>经销商</span>
+									<select class="form-control"></select>
+								</div>
+								<div class="form-item-2 col-3">
+									<span>合同状态</span>
+									<select class="form-control"></select>
+								</div>
+								<div class="clearfix"></div>
+								<div class="text-right top-gap-2 right-gap-3">
+									<a class="btn btn-default my-btn">筛选条件</a>
+								</div>
+							</div>
+							
+							<div class="widget">
+								<div class="widget_header">
+									<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;订单列表</h4>
+								</div>
+								<div class="widget_contents padding-0">
+									<table class="tables">
+										<thead>
+											<tr>
+												<th>合同号</th>
+												<th>合同日期</th>
+												<th>订单号</th>
+												<th>区域负责人</th>
+												<th>经销商</th>
+												<th>合同状态</th>
+												<th>生产状况</th>
+												<th>物流状态</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td><a href="show.html" class="table-link">SS17010100001</a></td>
+												<td>2017-02-14</td>
+												<td>SSCONTR0000001</td>
+												<td>王某</td>
+												<td>马云</td>
+												<td><span class="text-warning">新合同</span></td>
+												<td></td>
+												<td></td>
+											</tr>
+											<tr>
+												<td><a href="show.html" class="table-link">SS17010100001</a></td>
+												<td>2017-02-14</td>
+												<td>SSCONTR0000001</td>
+												<td>王某</td>
+												<td>马云</td>
+												<td><span class="text-info">合同生效</span></td>
+												<td><span class="text-info">生产中</span></td>
+												<td></td>
+											</tr>
+											<tr>
+												<td><a href="show.html" class="table-link">SS17010100001</a></td>
+												<td>2017-02-14</td>
+												<td>SSCONTR0000001</td>
+												<td>王某</td>
+												<td>马云</td>
+												<td><span class="text-danger">合同取消</span></td>
+												<td></td>
+												<td></td>
+											</tr>
+											<tr>
+												<td><a href="show.html" class="table-link">SS17010100001</a></td>
+												<td>2017-02-14</td>
+												<td>SSCONTR0000001</td>
+												<td>王某</td>
+												<td>马云</td>
+												<td><span class="text-success">合同完成</span></td>
+												<td><span class="text-success">生产完成</span></td>
+												<td><span class="text-success">配送完成</span></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="text-left top-gap-2">
+								<a class="btn btn-default my-btn">查看统计信息</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<footer class="my-footer">
+			</footer>
+		</div>
+	</body>
+</html>
