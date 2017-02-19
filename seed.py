@@ -5,6 +5,9 @@ Execute this file will create a bunch of sample data for mobile application disp
 """
 from application.models import *
 
+district = District(name="华东区", person_in_charge="马云").save
+dealer = Dealer(name="马化腾", district=district).save
+
 option_list_1 = ['运动系列产品', '商品系列产品', '家用休闲产品']
 option_list_2 = ['校园专用', '医院专用', '球馆专用']
 option_list_3 = ['上海地区', '北京地区', '福建地区']

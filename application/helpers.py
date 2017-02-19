@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, datetime, random
 from flask import render_template, request
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 from PIL import Image
 
 from . import app
