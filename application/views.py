@@ -116,7 +116,7 @@ def mobile_create_order():
     if 'order' in session and session['order']:
         order_no = 'DEV' + datetime.datetime.now().strftime('%Y%m%s%H%M%S')
         dealer = Dealer.query.first()
-        order = Order(order_no = order_no, dealer = dealer, order_status = 'created', 
+        order = Order(order_no = order_no, dealer = dealer, order_status = '新订单', 
             order_memo = '目前没有输入, 由系统直接赋值').save
         for order_content in session['order']:
             OrderContent(order = order, product_name = order_content.get('product_name'), 
@@ -124,6 +124,8 @@ def mobile_create_order():
                 sku_code = order_content.get('sku_code'), number = order_content.get('number'),
                 square_num = order_content.get('square_num')
                 ).save
+        # should modify sku stocks info meanwhile
+        # call sku edit api
         session.pop('order', None)
         return redirect(url_for('mobile_orders'))
     else:
@@ -131,6 +133,8 @@ def mobile_create_order():
 
 @app.route('/mobile/orders')
 def mobile_orders():
+    if 'order' in session and session['order']:
+        return redirect(url_for('mobile_cart'))
     orders = Order.query.all()
     return render_template('mobile/orders.html', orders = orders)
 

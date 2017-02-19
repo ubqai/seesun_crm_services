@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from .config import config
 
 app = Flask(__name__)
-app.config.from_object(config[os.getenv('FLASK_CONFIG') or 'default'])
+app.config.from_object(config[os.getenv('FLASK_ENV') or 'default'])
 db = SQLAlchemy(app)
 
 from .content.views import content
