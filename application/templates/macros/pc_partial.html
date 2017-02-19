@@ -25,6 +25,12 @@
 					<span class="tab_info">Order</span>
 				</a>
 			</li>
+            <li class="pic-dashboard {% if active_tab == 'contract_manage' %}active_tab{% endif %}">
+				<a href="{{ url_for('order_manage.contract_index') }}" title="Product">
+					<span class="tab_label">合同管理</span>
+					<span class="tab_info">Contract</span>
+				</a>
+			</li>
 			<!--
 			<li class="pic-form {% if active_tab == 'product' %}active_tab{% endif %}">
 				<a href="products_manage.html" title="Product">
