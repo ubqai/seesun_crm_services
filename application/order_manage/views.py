@@ -10,4 +10,11 @@ order_manage = Blueprint('order_manage', __name__, template_folder='templates')
 
 @order_manage.route("/orders")
 def order_index():
-    return render_template('order_manage/index.html')
+    orders = Order.query.all()
+    return render_template('order_manage/index.html', orders=orders)
+
+
+@order_manage.route("/orders/<int:id>")
+def order_show(id):
+    order = Order.query.get_or_404(id)
+    return render_template('order_manage/show.html', order=order)
