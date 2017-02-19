@@ -13,18 +13,20 @@
 					<span class="tab_info">Category</span>
 				</a>
 			</li>
-			<li class="pic-dashboard {% if active_tab == 'p_category' %}active_tab{% endif %}">
-				<a href="{{ url_for('product.category_index') }}" title="P_Category">
-					<span class="tab_label">产品目录</span>
-					<span class="tab_info">P_Category</span>
+			<li class="pic-dashboard {% if active_tab == 'product' %}active_tab{% endif %}">
+				<a href="{{ url_for('product.category_index') }}" title="Product">
+					<span class="tab_label">产品管理</span>
+					<span class="tab_info">Product</span>
 				</a>
 			</li>
+			<!--
 			<li class="pic-form {% if active_tab == 'product' %}active_tab{% endif %}">
 				<a href="products_manage.html" title="Product">
 					<span class="tab_label">产品管理</span>
 					<span class="tab_info">无用</span>
 				</a>
 			</li>
+			-->
 		</ul>
 	</aside>
 {% endmacro %}

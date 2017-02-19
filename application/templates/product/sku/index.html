@@ -2,7 +2,7 @@
 {% from 'macros/pc_partial.html' import sidebar %}
 {% block main_content %}
 
-{{ sidebar(active_tab = 'p_category') }}
+{{ sidebar(active_tab = 'product') }}
 
 <div class="contents">
 	<div class="contents-header">
@@ -28,7 +28,6 @@
 						<th>code</th>
 						<th>hscode</th>
 						<th>options</th>
-						<th>thumbnail</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -42,7 +41,6 @@
 						<td>{{ sku.get('code') }}</td>
 						<td>{{ sku.get('hscode') }}</td>
 						<td>{{ sku.get('options') }}</td>
-						<td>{{ sku.get('thumbnail') }}</td>
 					</tr>
 				{% endfor %}
 				</tbody>

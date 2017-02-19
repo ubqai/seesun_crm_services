@@ -5,77 +5,15 @@ import json
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 from .. import app
 from ..helpers import save_upload_file, clip_image
+from .api import *
 
 product = Blueprint('product', __name__, template_folder = 'templates')
-
-site = 'http://localhost:5001'
-
-def api_get(url):
-	response = urllib.request.urlopen(url)
-	return response
-
-def api_post(url, data = {}):
-	data = json.dumps(data).encode()
-	request = urllib.request.Request(url, data)
-	request.add_header('Content-Type', 'application/json')
-	response = urllib.request.urlopen(request)
-	return response
-
-def load_products(category_id):
-	url = '%s/api/product_category/%s/products' % (site, category_id)
-	response = api_get(url)
-	if response.getcode() == 200:
-		return json.loads(response.read().decode())
-	else:
-		return []
-
-def load_product(product_id):
-	url = '%s/api/product/%s' % (site, product_id)
-	response = api_get(url)
-	if response.getcode() == 200:
-		return json.loads(response.read().decode())
-	else:
-		{}
-
-def load_skus(product_id):
-	url = '%s/api/products/%s/skus' % (site, product_id)
-	response = api_get(url)
-	if response.getcode() == 200:
-		return json.loads(response.read().decode())
-	else:
-		{}
-
-def load_categories():
-	url = '%s/api/product_categories' % site
-	response = api_get(url)
-	if response.getcode() == 200:
-		return json.loads(response.read().decode())
-	else: 
-		return []
-
-def load_category(category_id):
-	url = '%s/api/product_categories/%s' % (site, category_id)
-	response = api_get(url)
-	if response.getcode() == 200:
-		return json.loads(response.read().decode())[0]
-	else:
-		return {}
-
-def load_features(category_id):
-	return load_category(category_id).get('features') or []
-
-def load_feature(feature_id):
-	url = '%s/api/sku_feature/%s' % (site, feature_id)
-	response = api_get(url)
-	if response.getcode() == 200:
-		return json.loads(response.read().decode())
-	else:
-		return {}
 
 @product.route('/index/<int:category_id>')
 def index(category_id):
 	products = load_products(category_id)
-	return render_template('product/index.html', products = products, category_id = category_id)
+	category = load_category(category_id)
+	return render_template('product/index.html', products = products, category = category)
 
 @product.route('/new/<int:category_id>', methods = ['GET', 'POST'])
 def new(category_id):
@@ -100,8 +38,9 @@ def new(category_id):
 		}
 		response = api_post(url, data)
 		return redirect(url_for('product.index', category_id = category_id))
+	category = load_category(category_id)
 	features = load_features(category_id)
-	return render_template('product/new.html', category_id = category_id, features = features)
+	return render_template('product/new.html', category = category, features = features)
 
 @product.route('/<int:id>')
 def show(id):
@@ -141,7 +80,8 @@ def sku_new(product_id):
 		}
 		response = api_post(url, data)
 		return redirect(url_for('product.sku_index', product_id = product_id))
-	return render_template('product/sku/new.html', product_id = product_id)
+	product = load_product(product_id)
+	return render_template('product/sku/new.html', product = product)
 
 @product.route('/category/index')
 def category_index():

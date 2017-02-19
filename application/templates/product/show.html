@@ -2,7 +2,7 @@
 {% from 'macros/pc_partial.html' import sidebar %}
 {% block main_content %}
 
-{{ sidebar(active_tab = 'p_category') }}
+{{ sidebar(active_tab = 'product') }}
 
 <div class="contents">
 	<div class="contents-header">
@@ -13,7 +13,7 @@
 	<div class="separator"><span></span></div>
 	<div class="widget">
 		<div class="widget_header">
-			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;博格木纹 > 博格木纹-ruby</h4>
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;{{ product.get('name') }}</h4>
 		</div>
 		<div class="widget_contents padding-0">
 			<div class="form-item">
@@ -25,7 +25,7 @@
 				<input class="form-input form-control" disabled value="{{ product.get('code') }}"/>
 			</div>
 			<div class="form-item">
-				<span class="form-label">产品描述</span>
+				<span class="form-label">产品描述<br>(样式要改下)</span>
 				<textarea class="form-input form-control" disabled>{{ product.get('description')|safe }}</textarea>
 			</div>
 			<div class="form-item">
