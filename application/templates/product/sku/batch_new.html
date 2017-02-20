@@ -1,0 +1,68 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active_tab = 'product') }}
+
+<div class="contents">
+	<div class="contents-header">
+		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+		<p class="contents-header-p">批量创建sku</p>
+		<p class="contents-header-p text-sm">batch new sku</p>
+	</div>
+	<div class="separator"><span></span></div>
+
+	<form action="{{ url_for('product.sku_batch_new', product_id = product.get('product_id')) }}" enctype="multipart/form-data" method="post">
+	<input name="sku_count" value="{{ option_combinations | length }}" type="hidden">
+	{% for combination in option_combinations %}
+	{% set index = option_combinations.index(combination) %}
+
+		<div class="widget">
+			<div class="widget_header">
+				<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;
+				{% for option in combination %}{{ option.get('feature_name') }}:{{ option.get('option_name') }}/{% endfor %}</h4>
+			</div>
+			<div class="widget_contents padding-0">
+				{% for option in combination %}
+					<input name="{{ index }}_option_ids[]" value="{{ option.get('option_id') }}" type="hidden" id="option_{{ option.get('option_id') }}" /> 
+				{% endfor %}
+			
+				<div class="form-item inline-2">
+					<span class="form-label">sku代码</span>
+					<input class="form-input form-control" name="{{ index }}_code"/>
+					<span class="form-label">价格</span>
+					<input class="form-input form-control" name="{{ index }}_price"/>
+				</div>
+				<div class="form-item inline-2">
+					<span class="form-label">库存</span>
+					<input class="form-input form-control" name="{{ index }}_stocks"/>
+					<span class="form-label">Barcode</span>
+					<input class="form-input form-control" name="{{ index }}_barcode"/>
+				</div>
+				<div class="form-item inline-2">
+					<span class="form-label">hscode</span>
+					<input class="form-input form-control" name="{{ index }}_hscode"/>
+					<span class="form-label">重量</span>
+					<input class="form-input form-control" name="{{ index }}_weight"/>
+				</div>
+				<div class="form-item small-pic">
+					<span class="form-label">产品图片</span>
+					<div class="pic-upload top-gap-1">
+						<input type="file" name="{{ index }}_image_file" id="image_file" class="inbox-file">
+						<img class="full-img" src="/static/images/alt.jpg">
+					</div>
+				</div>
+			</div>
+		</div>
+
+	{% endfor %}
+
+		<div class="text-right top-gap-1">
+			<a class="btn btn-default my-btn right-gap-1" href="javascript:history.go(-1);">返回</a>
+			<button class="btn btn-default my-btn">提交</button>
+		</div>
+	</form>
+	
+</div>
+
+{% endblock %}

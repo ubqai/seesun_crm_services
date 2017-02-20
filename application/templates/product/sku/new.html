@@ -20,13 +20,16 @@
 			<div class="widget_contents padding-0">
 
 				<div class="form-item inline-2">
-					{% for option in product.get('options') %}
-						<div class="label-item">
-							<input name="option_ids[]" value="{{ option.get('option_id') }}" type="checkbox" id="option_{{ option.get('option_id') }}" class="chk_1" /> 
-							<label for="option_{{ option.get('option_id') }}">{{ option.get('feature_name') }} - {{ option.get('option_name') }}</label> 
-						</div>					
-					{% endfor %} 
+					{% for options in option_sorted_by_feature %}
+						<span class="form-label">{{ options[0].get('feature_name') }}</span>
+						<select name="option_ids[]" class="form-input form-control">
+							{% for option in options %}
+								<option value="{{ option.get('option_id') }}">{{ option.get('option_name') }}</option>
+							{% endfor %}
+						</select>
+					{% endfor %}
 				</div>
+
 				<div class="form-item inline-2">
 					<span class="form-label">sku代码</span>
 					<input class="form-input form-control" name="code"/>
@@ -60,12 +63,6 @@
 			<button class="btn btn-default my-btn">提交</button>
 		</div>
 	</form>
-
-	
-	
-	
-	
-
 	
 </div>
 

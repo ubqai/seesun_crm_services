@@ -21,8 +21,8 @@ class TestConfiguration(Configuration):
     PRODUCT_SERVER = 'http://localhost:5001'
 
 class ProductionConfiguration(Configuration):
-    SQLALCHEMY_DATABASE_URI = 'postgresql://seesun:123456@localhost/seesun_crm'
-    PRODUCT_SERVER = 'http://localhost:5001'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://seesun_db:sEEsUn2o17@rm-bp1ksn1m18154025j.pg.rds.aliyuncs.com:3433/seesun_crm_services_db'
+    PRODUCT_SERVER = 'http://118.178.185.40:5000'
 
 config = {
     'default': DevelopmentConfiguration,
