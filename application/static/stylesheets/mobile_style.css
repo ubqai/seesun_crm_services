@@ -386,6 +386,12 @@ td input{
 .table.text-left td,.table.text-left th{
 	text-align:left;
 }
+/*button*/
+.btn-style-1 {
+    border: 1px solid #F8B500;
+    color: #F8B500;
+    padding: 0.3em 0.5em;
+}
 /*index*/
 .header{
 	box-shadow:0px 0px 3px 0px rgba(0,0,0,0.6);
@@ -533,6 +539,25 @@ td input{
     background: #7C7365;
     color: #fff;
 }
+.fixed-bot button {
+    display: block;
+    text-align: center;
+    font-size: 1em;
+    padding: 15px 0px;
+		border: none;
+    border-top: 1px solid #ddd;
+}
+.fixed-bot button:last-child {
+    border-right: none;
+}
+.fixed-bot button.orange{
+    background: #F8B500;
+    color: #fff;
+}
+.fixed-bot button.gray{
+    background: #7C7365;
+    color: #fff;
+}
 /*share*/
 .center-wrappper {
     position: absolute;
@@ -625,4 +650,33 @@ td input{
     border-bottom: 0px;
 	background:#7C7365;
 	color:#fff;
+}
+/*合同*/
+.contract-header {
+    padding: 0.5em;
+    border-radius: 0.4em 0.4em 0 0;
+    border: 1px solid #ccc;
+    border-bottom: 1px dashed #ccc;
+}
+.contract-item {
+    padding: 0.6em;
+    border: 1px solid #ccc;
+    border-bottom: 1px dashed #ccc;
+    border-top: none;
+}
+.contract-table {
+    display: table;
+    width: 100%;
+}
+.contract-table p {
+    display: table-cell;
+		width:50%;
+		color:#7d7d7d;
+		line-height:1.9em;
+}
+.contract-footer {
+    padding: 0.5em;
+    border-radius: 0 0 0.4em 0.4em;
+    border: 1px solid #ccc;
+    border-top: none;
 }
