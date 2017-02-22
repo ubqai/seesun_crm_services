@@ -181,3 +181,76 @@ class OrderContent(db.Model, Rails):
     def __repr__(self):
         return 'OrderContent(id: %s, order_id: %s, product_name: %s, sku_specification: %s, sku_code: %s, number: %s, square_num: %s)' % (
             self.id, self.order_id, self.product_name, self.sku_specification, self.sku_code, self.number, self.square_num)
+
+
+users_and_resources = db.Table(
+    'users_and_resources',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('resource_id', db.Integer, db.ForeignKey('resources.id'))
+)
+
+
+users_and_sales_areas = db.Table(
+    'users_and_sales_areas',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('sales_area_id', db.Integer, db.ForeignKey('sales_area_hierarchies.id'))
+)
+
+
+users_and_departments = db.Table(
+    'users_and_departments',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('dep_id', db.Integer, db.ForeignKey('department_hierarchies.id'))
+)
+
+
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(60), nullable=False)
+    nickname = db.Column(db.String(200))
+    user_or_origin = db.Column(db.Integer)
+    user_infos = db.relationship('UserInfo', backref='user')
+    resources = db.relationship('Resource', secondary=users_and_resources,
+                                backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
+    sales_areas = db.relationship('SalesAreaHierarchy', secondary=users_and_sales_areas,
+                                  backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
+    departments = db.relationship('DepartmentHierarchy', secondary=users_and_departments,
+                                  backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
+
+
+class UserInfo(db.Model):
+    __tablename__ = 'user_infos'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(400))
+    telephone = db.Column(db.String(20))
+    address = db.Column(db.String(500))
+    title = db.Column(db.String(200))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+
+class Resource(db.Model):
+    __tablename__ = 'resources'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.String(400))
+
+
+class SalesAreaHierarchy(db.Model):
+    __tablename__ = 'sales_area_hierarchies'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(300), nullable=False)
+    parent_id = db.Column(db.Integer)
+    level_grade = db.Column(db.Integer)
+
+
+class DepartmentHierarchy(db.Model):
+    __tablename__ = 'department_hierarchies'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(300), nullable=False)
+    parent_id = db.Column(db.Integer)
+    level_grade = db.Column(db.Integer)
+
+
+
+
