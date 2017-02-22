@@ -185,7 +185,7 @@ users_and_departments = db.Table(
 )
 
 
-class User(db.Model):
+class User(db.Model, Rails):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(60), nullable=False)
