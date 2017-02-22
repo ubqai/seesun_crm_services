@@ -40,8 +40,6 @@ def new():
             return redirect(url_for('content.index'))
     else:
         options = ContentClassificationOption.query.order_by(ContentClassificationOption.classification_id)
-        if request.args.get('category_id'):
-
         form = ContentForm()
     return render_template('content/new.html', form = form, options = options)
 
