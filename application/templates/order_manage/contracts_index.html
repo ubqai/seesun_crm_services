@@ -70,8 +70,8 @@
                             <td><a href="{{ url_for('order_manage.contract_show', id=contract.id) }}" class="table-link">{{ contract.contract_no }}</a></td>
                             <td>{{ contract.contract_date.strftime('%Y%m%d') }}</td>
                             <td>{{ contract.order.order_no }}</td>
-                            <td>{{ contract.order.dealer.district.person_in_charge }}</td>
-                            <td>{{ contract.order.dealer.name }}</td>
+                            <td>{{ contract.order.user.sales_areas.all()[0].name }}</td>
+                            <td>{{ contract.order.user.name }}</td>
                             <td><span class="text-warning">{{ contract.contract_status }}</span></td>
                             <td><span class="text-warning">{{ contract.product_status }}</span></td>
                             <td><span class="text-warning">{{ contract.shipment_status }}</span></td>

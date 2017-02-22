@@ -124,9 +124,9 @@ def mobile_cart():
 def mobile_create_order():
     if 'order' in session and session['order']:
         order_no = 'DEV' + datetime.datetime.now().strftime('%Y%m%s%H%M%S')
-        dealer = Dealer.query.first()
-        order = Order(order_no = order_no, dealer = dealer, order_status = '新订单', 
-            order_memo = '目前没有输入, 由系统直接赋值').save
+        user = User.query.first()
+        order = Order(order_no=order_no, user=user, order_status='新订单',
+                      order_memo='目前没有输入, 由系统直接赋值').save
         for order_content in session['order']:
             OrderContent(order = order, product_name = order_content.get('product_name'), 
                 sku_specification = order_content.get('sku_specification'), 

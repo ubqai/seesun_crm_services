@@ -115,35 +115,13 @@ class ContentClassificationOption(db.Model, Rails):
         return 'ContentClassificationOption(id: %s, name: %s)' % (self.id, self.name)
 
 
-class District(db.Model, Rails):
-    __tablename__ = 'districts'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200))
-    person_in_charge = db.Column(db.String(200))
-    dealers = db.relationship('Dealer', backref='district')
-
-    def __repr__(self):
-        return 'District(id: %s, name: %s, person_in_charge: %s)' % (self.id, self.name, self.person_in_charge)
-
-
-class Dealer(db.Model, Rails):
-    __tablename__ = 'dealers'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200))
-    district_id = db.Column(db.Integer, db.ForeignKey('districts.id'))
-    orders = db.relationship('Order', backref='dealer')
-
-    def __repr__(self):
-        return 'Dealer(id: %s, name: %s, district_id: %s)' % (self.id, self.name, self.district_id)
-
-
 class Order(db.Model, Rails):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
     order_no = db.Column(db.String(30), unique=True)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
-    dealer_id = db.Column(db.Integer, db.ForeignKey('dealers.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     order_status = db.Column(db.String(50))
     order_memo = db.Column(db.Text)
     contracts = db.relationship('Contract', backref='order', lazy='dynamic')
@@ -214,6 +192,7 @@ class User(db.Model):
     nickname = db.Column(db.String(200))
     user_or_origin = db.Column(db.Integer)
     user_infos = db.relationship('UserInfo', backref='user')
+    orders = db.relationship('Order', backref='user')
     resources = db.relationship('Resource', secondary=users_and_resources,
                                 backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
     sales_areas = db.relationship('SalesAreaHierarchy', secondary=users_and_sales_areas,
