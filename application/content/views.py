@@ -15,6 +15,11 @@ content_image_size = (379, 226)
 def root():
     return redirect(url_for('content.index'))
 
+@content.route('/select_category')
+def select_category():
+    categories = ContentCategory.query.filter(ContentCategory.created_at.asc())
+    return 'cc'
+
 @content.route('/index')
 def index():
     contents = Content.query.order_by(Content.created_at.desc())
