@@ -17,7 +17,7 @@
 			{% for product in products_hash.get(category.get('category_id')) %}
 				<a href="{{ url_for('mobile_storage_show', product_id = product.get('product_id')) }}" class="col-6-gap product">
 					<img class="full-img" src="{{ product.get('images')[0] }}">
-					<p>{{ product.get('name') }}</p>
+					<p class="text-center">{{ product.get('name') }}</p>
 					<div class="product-divider"></div>
 				</a>		
 			{% endfor %}
