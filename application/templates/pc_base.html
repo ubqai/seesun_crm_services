@@ -1,37 +1,37 @@
 {% extends 'base.html' %}
 {% block extra_styles %}
 	<link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/pc_style.css') }}">
+	{% block custome_styles %}
+	{% endblock %}
 {% endblock %}
+
 {% block extra_scripts %}
+	{% block custom_scripts %}
+	{% endblock %}
 	<script src="{{ url_for('static', filename = 'javascripts/pc_general.js') }}"></script>
+	<script src="{{ url_for('static', filename = 'javascripts/metisMenu.js') }}"></script>
+	<script src="{{ url_for('static', filename = 'javascripts/nicescroll.js') }}"></script>
 {% endblock %}
 
 {% block content %}
 <div class="body-content">
 	<header class="my-header">
-		<div class="my-header-content clearfix">
-			<div class="user">
-				<img src="/static/images/user_avatar.png" alt="user_avatar" class="user_avatar">
-				<span>Luka Wei</span>
-			</div>
-		</div>
+		<div class="logo"><img src="/static/images/logo.png" alt="logo"class="full-img"><span> CRM</span></div>
+		<ul class="header-notify">
+			<li><a class="notify-icon glyphicon glyphicon-envelope"><span class="notify-badge green">1</a></span></li>
+			<li><a class="notify-icon glyphicon glyphicon-calendar"><span class="notify-badge red">3</a></span></li>
+			<li><a class="notify-icon glyphicon glyphicon-bell"><span class="notify-badge yellow">5</a></span></li>
+		</ul>
+		<!--login-->
+		<a class="login glyphicon glyphicon-log-in" title="登录"></a>
+		<!--logout-->
+		<!--
+		<a class="logout glyphicon glyphicon-log-out" title="注销"></a>
+		-->
 	</header>
 	<div class="my-main">
-		<div class="my-main-content">
-			<div class="main-nav clearfix">
-				<div class="logo"><img src="/static/images/logo.png" alt="logo" class="logo" style="width:153px"></div>
-				<div class="menu">
-					<a class="menu-block active">
-						<span>产品操作</span>
-					</a>
-					<a class="menu-block">
-						<span>首页</span>
-					</a>
-				</div>
-			</div>
-			<div class="main-content clearfix">
-				{% block main_content %}{% endblock %}
-			</div>
+		<div class="main-content clearfix">
+			{% block main_content %}{% endblock %}
 		</div>
 	</div>
 	<footer class="my-footer">

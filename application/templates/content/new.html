@@ -1,12 +1,14 @@
 {% extends 'pc_base.html' %}
 {% from 'macros/pc_partial.html' import sidebar %}
 {% block extra_scripts %}
+  <script src="{{ url_for('static', filename = 'ckeditor/ckeditor.js') }}"></script>
+	<script src="{{ url_for('static', filename = 'javascripts/metisMenu.js') }}"></script>
+	<script src="{{ url_for('static', filename = 'javascripts/nicescroll.js') }}"></script>
 	<script src="{{ url_for('static', filename = 'javascripts/pc_general.js') }}"></script>
-	<script src="{{ url_for('static', filename = 'ckeditor/ckeditor.js') }}"></script>
 {% endblock %}
 {% block main_content %}
 
-{{ sidebar(active_tab = 'content') }}
+{{ sidebar(active = 'product') }}
 <div class="contents">
 	<div class="contents-header">
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
