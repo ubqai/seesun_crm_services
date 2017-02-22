@@ -184,9 +184,12 @@ def category_new():
             if len(name) == 0:
                 flash('Please input correct names', 'danger')
                 return render_template('product/category/new.html')
-        url = site + '/api/product_categories'
         data = { 'category_names': category_names }
-        response = api_post(url, data)
+        response = create_category(data)
+        if response.status_code == 201:
+            flash('产品目录创建成功', 'success')
+        else:
+            flash('产品目录创建失败', 'danger')
         return redirect(url_for('product.category_index'))
     return render_template('product/category/new.html')
 
@@ -194,6 +197,20 @@ def category_new():
 def category_show(id):
     category = load_category(id)
     return render_template('product/category/show.html', category = category)
+
+@product.route('/category/<int:id>/edit', methods = ['GET', 'POST'])
+def category_edit(id):
+    category = load_category(id)
+    if request.method == 'POST':
+        name = request.form.get('name')
+        data = { 'category_name': name }
+        response = edit_category(category.get('category_id'), data = data)
+        if response.status_code == 200:
+            flash('产品目录修改成功', 'success')
+        else:
+            flash('产品目录修改失败', 'danger')
+        return redirect(url_for('product.category_index'))
+    return render_template('product/category/edit.html', category = category)
 
 @product.route('/feature/new/<int:category_id>', methods = ['GET', 'POST'])
 def feature_new(category_id):
