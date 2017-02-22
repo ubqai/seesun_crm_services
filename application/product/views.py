@@ -101,6 +101,11 @@ def sku_new(product_id):
         option_sorted_by_feature.append(group)
     return render_template('product/sku/new.html', product = product, option_sorted_by_feature = option_sorted_by_feature)
 
+@product.route('/sku/<int:id>/edit', methods =['GET', 'POST'])
+def sku_edit(id):
+    return 'sku_edit_page'
+    #return render_template('product/sku/edit.html')
+
 @product.route('/sku/batch_new/<int:product_id>', methods = ['GET', 'POST'])
 def sku_batch_new(product_id):
     if request.method == 'POST':

@@ -35,8 +35,9 @@ class Content(db.Model, Rails):
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
+    category_id = db.Column(db.Integer, db.ForeignKey('content_category.id'))
     options = db.relationship('ContentClassificationOption', secondary=contents_and_options,
-                              backref=db.backref('contents', lazy='dynamic'))
+                              backref=db.backref('contents', lazy='dynamic'), lazy='dynamic')
 
     def __repr__(self):
         return 'Content(id: %s, name: %s, ...)' % (self.id, self.name)
@@ -64,6 +65,7 @@ class ContentCategory(db.Model, Rails):
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
+    contents = db.relationship('Content', backref='category', lazy='dynamic' )
     classifications = db.relationship('ContentClassification', backref='category', lazy='dynamic')
 
     def __repr__(self):
