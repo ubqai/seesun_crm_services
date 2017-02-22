@@ -65,6 +65,11 @@
     padding: 5px 10px;
     background: url(../images/separator_circle.png) no-repeat scroll center center #F9F9F9;
 }
+.base-alert{
+	  z-index: 1000000;
+    position: absolute;
+    width: 100%;
+}
 /*layout*/
 body{
 	background:#efefef;

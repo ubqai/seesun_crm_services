@@ -37,7 +37,7 @@ $(function(){
 		items.each(function(index,ele){
 			var inputs=$(ele).find("input,select");
 			inputs.each(function(_index,_ele){
-				$(_ele).attr("name",names[_index]+index);
+				names[_index].indexOf("[]")>0?$(_ele).attr("name",names[_index]):$(_ele).attr("name",names[_index]+index);
 			})		
 		});
 	}
