@@ -27,17 +27,12 @@
 					<tr>
 						<td>{{ category.get('category_name') }}</td>
 						<td>
-						</td>
-					</tr>
-                    <tr>
-                        <td></td>
-                        <td>
                             {% with products_json = load_products(category.get('category_id')) %}
                                 {% if len(products_json) > 0 %}
                                     <table class="tables">
                                         <thead>
                                             <tr>
-                                                <th width="15%">产品</th>
+                                                <th width="20%">产品</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -45,12 +40,7 @@
                                             {% for product_json in products_json %}
                                                 <tr>
                                                     <td>{{ product_json.get('name') }}</td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td>
-                                                        {% with skus_json = load_skus(product_json.get('product_id')) %}
+                                                    <td>{% with skus_json = load_skus(product_json.get('product_id')) %}
                                                             {% if len(skus_json.get('skus')) > 0 %}
                                                                 <table class="tables">
                                                                     <thead>
@@ -88,8 +78,8 @@
                                     </table>
                                 {% endif %}
                             {% endwith %}
-                        </td>
-                    </tr>
+						</td>
+					</tr>
 				{% endfor %}
 				</tbody>
 			</table>
