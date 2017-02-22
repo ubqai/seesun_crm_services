@@ -40,11 +40,11 @@
             </div>
             <div class="form-item inline-2">
                 <span class="form-label">经销商</span>
-                <input class="form-input form-control" value="{{ contract.order.dealer.name }}" disabled/>
+                <input class="form-input form-control" value="{{ contract.order.user.name }}" disabled/>
             </div>
             <div class="form-item inline-2">
                 <span class="form-label">经销商所属区域</span>
-                <input class="form-input form-control" value="{{ contract.order.dealer.district.name }}" disabled/>
+                <input class="form-input form-control" value="{{ contract.order.user.sales_areas.all()[0].name }}" disabled/>
             </div>
             <div class="form-item inline-2">
                 <span class="form-label">合同金额</span>
