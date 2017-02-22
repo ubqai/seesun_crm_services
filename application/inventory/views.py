@@ -29,6 +29,7 @@ def new(id):
         if user_id == '公司':
             inv_type = 1
             user_name = '公司'
+            user_id = 0
         else:
             inv_type = 2
             user_name = User.query.get_or_404(user_id).nickname
