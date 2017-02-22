@@ -129,8 +129,9 @@ def mobile_cart():
                                      # should be optimized later
                                      'sku_specification': request.form.get('sku_specification_%s' % index),
                                      'sku_code': request.form.get('sku_code_%s' % index),
+                                     'sku_id': index,
                                      'number': int(request.form.get('number_%s' % index)),
-                                     'square_num': 0.3*int(request.form.get('number_%s' % index))}
+                                     'square_num': "%.2f" % (0.3*int(request.form.get('number_%s' % index)))}
                     order.append(order_content)
         session['order'] = order
         return redirect(url_for('mobile_cart'))
@@ -155,6 +156,12 @@ def mobile_create_order():
                               sku_specification=order_content.get('sku_specification'),
                               sku_code=order_content.get('sku_code'), number=order_content.get('number'),
                               square_num=order_content.get('square_num'))
+            sku_id=order_content.get('sku_id')
+            from .inventory.api import update_sku
+            data = {"stocks_for_order": order_content.get('number')}
+            response = update_sku(sku_id, data)
+            if not response.status_code == 200:
+                raise BaseException('error')
             db.session.add(oc)
         db.session.commit()
         # should modify sku stocks info meanwhile

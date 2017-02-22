@@ -68,3 +68,8 @@ def load_inventory(inv_id):
     else:
         return {}
 
+
+def update_sku(sku_id, data={}):
+    url = '%s/%s/product_skus/%s/edit' % (site, version, sku_id)
+    response = requests.put(url, json=data, headers=headers)
+    return response   # 200
