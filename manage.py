@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask_migrate import Migrate, MigrateCommand
-from flask_script  import Manager, Shell
+from flask_script import Manager, Shell
 
 from application import app, db
 from application.models import *
@@ -10,12 +10,17 @@ migrate = Migrate(app, db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
+
 def make_shell_context():
-    return dict(app = app, db = db, Content = Content, ContentCategory = ContentCategory, 
-        ContentClassification = ContentClassification, ContentClassificationOption = ContentClassificationOption,
-        District = District, Dealer = Dealer, Order = Order, OrderContent = OrderContent, Contract = Contract)
+    return dict(app=app, db=db, Content=Content, ContentCategory=ContentCategory,
+                ContentClassification=ContentClassification,
+                ContentClassificationOption=ContentClassificationOption, District=District, Dealer=Dealer,
+                Order=Order, OrderContent=OrderContent, Contract=Contract,
+                User=User, UserInfo=UserInfo, Resource=Resource, SalesAreaHierarchy=SalesAreaHierarchy,
+                DepartmentHierarchy=DepartmentHierarchy)
         
-manager.add_command("shell", Shell(make_context = make_shell_context))
+manager.add_command("shell", Shell(make_context=make_shell_context))
+
 
 @manager.command
 def test():
