@@ -1,0 +1,25 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('经销商管理') }}
+
+<div class="main-content">
+	<div class="wrappper top-gap-3">
+		<form action="{{ url_for('mobile_users_dealers_new') }}" method="post">
+			<input name="email" class="form-control" placeholder="请输入email">
+			<input name="name" class="form-control top-gap-3" placeholder="请输入姓名">
+			<input name="address" class="form-control top-gap-3" placeholder="请输入地址">
+			<input name="phone" class="form-control top-gap-3" placeholder="请输入电话">
+			<input name="title" class="form-control top-gap-3" placeholder="请输入title">
+			<select name="sales_range" class="form-control top-gap-3">
+				<option value="none">选择销售范围</option>
+				{% for id in sales_range %}
+					<option value={{ id }}>{{ sales_range[id] }}</option>
+				{% endfor %}
+			</select>
+			<input type="submit" class="btn btn-block btn-warning top-gap-3" value="新增">
+		</form>
+	</div>
+</div>
+
+{% endblock %}

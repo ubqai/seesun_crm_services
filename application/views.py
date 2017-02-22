@@ -5,6 +5,7 @@ from flask import flash, redirect, render_template, request, url_for, session
 from . import app
 from .models import *
 from .product.api import *
+import traceback
 
 @app.route('/')
 def root():
@@ -260,3 +261,160 @@ def ckupload():
     response = make_response(res)
     response.headers['Content-Type'] = 'text/html'
     return response
+
+# --- user service ---
+@app.route('/mobile/users')
+def mobile_users():
+    return render_template('mobile/users.html')
+
+@app.route('/mobile/users/dealers')
+def mobile_users_dealers():
+    return render_template('mobile/users_dealers.html')
+
+@app.route('/mobile/users/dealers/new' , methods=['GET', 'POST'])
+def mobile_users_dealers_new():
+    app.logger.info("into mobile_users_dealers_new %s" , request.method)
+    if request.method == 'POST':
+        try:
+            email,name,address,phone,title,sah_id = request.form.get("email"),request.form.get("name"),request.form.get("address"),request.form.get("phone"),request.form.get("title"),request.form.get("sales_range")
+            if email=="" or name=="" or address=="" or phone=="" or title=="":
+                raise ValueError("请输入参数!")
+
+            if sah_id=="none" or sah_id=="":
+                raise ValueError("请选择销售区域!")
+
+
+            if User.query.filter_by(email=email).count()>0:
+                raise ValueError("email已被注册,请更换!")
+
+            sah = SalesAreaHierarchy.query.filter_by(id=sah_id).first()
+            if sah==None:
+                raise ValueError("无此销售区域!")
+
+            ui=UserInfo()
+            ui.name,ui.telephone,ui.address,ui.title = name,phone,address,title
+
+            u=User()
+            u.email,u.user_or_origin,u.nickname = email,2,name
+            u.user_infos.append(ui)
+            u.sales_areas.append(sah)
+
+            db.session.add(u)
+            db.session.commit()
+
+            flash("添加经销商 %s,%s 成功" % (email,name))
+            return render_template('mobile/users_dealers_search.html')
+        except Exception as e:
+            flash(e)
+            print(traceback.print_exc())
+            sales_range={}
+            sahs=SalesAreaHierarchy.query.filter_by(level_grade=3).all()
+            for sah in sahs:
+                sales_range[sah.id]=sah.name
+
+            return render_template('mobile/users_dealers_new.html',sales_range=sales_range)
+    else:
+        sales_range={}
+        sahs=SalesAreaHierarchy.query.filter_by(level_grade=3).all()
+        for sah in sahs:
+            sales_range[sah.id]=sah.name
+
+        return render_template('mobile/users_dealers_new.html',sales_range=sales_range)
+
+@app.route('/mobile/users/dealers/search')
+def mobile_users_dealers_search():
+    sales_range={}
+    sahs=SalesAreaHierarchy.query.filter_by(level_grade=3).all()
+    for sah in sahs:
+        sales_range[sah.id]=sah.name
+
+    us = User.query.filter_by(user_or_origin=2)
+    if request.args.get("email"):
+        us = us.filter(User.email.like(request.args.get("email")+"%"))
+    if request.args.get("name"):
+        us = us.filter(User.nickname.like("%"+request.args.get("name")+"%"))
+    #how to search in many-to-many
+    if request.args.get("sales_range"):
+        pass
+    
+    us=us.all()
+
+    return render_template('mobile/users_dealers_search.html',users_dealers=us,sales_range=sales_range)
+
+
+@app.route('/mobile/users/staffs')
+def mobile_users_staffs():
+    return render_template('mobile/users_staffs.html')
+
+@app.route('/mobile/users/staffs/new' , methods=['GET', 'POST'])
+def mobile_users_staffs_new():
+    if request.method == 'POST':
+        try:
+            email,name,address,phone,title,dh_id = request.form.get("email"),request.form.get("name"),request.form.get("address"),request.form.get("phone"),request.form.get("title"),request.form.get("dept_range")
+            if email=="" or name=="" or address=="" or phone=="" or title=="":
+                raise ValueError("请输入参数!")
+            if dh_id=="none" or dh_id=="":
+                raise ValueError("请选择部门!")
+
+
+            if User.query.filter_by(email=email).count()>0:
+                raise ValueError("email已被注册,请更换!")
+
+            dh = DepartmentHierarchy.query.filter_by(id=dh_id).first()
+            if dh==None:
+                raise ValueError("无此部门!")
+
+            ui=UserInfo()
+            ui.name,ui.telephone,ui.address,ui.title = name,phone,address,title
+
+            u=User()
+            u.email,u.user_or_origin = email,3
+            if request.form.get("nickname"):
+                u.nickname=request.form.get("nickname")
+            else:
+                u.nickname=name
+
+            u.user_infos.append(ui)
+            u.departments.append(dh)
+
+            db.session.add(u)
+            db.session.commit()
+
+            flash("添加员工 %s,%s 成功" % (email,name))
+            return render_template('mobile/users_staffs_search.html')
+        except Exception as e:
+            flash(e)
+            print(traceback.print_exc())
+            dept_range={}
+            dhs=DepartmentHierarchy.query.all()
+            for dh in dhs:
+                dept_range[dh.id]=dh.name
+
+            return render_template('mobile/users_staffs_new.html',dept_range=dept_range)
+    else:
+        dept_range={}
+        dhs=DepartmentHierarchy.query.all()
+        for dh in dhs:
+            dept_range[dh.id]=dh.name
+
+        return render_template('mobile/users_staffs_new.html',dept_range=dept_range)
+
+@app.route('/mobile/users/staffs/search')
+def mobile_users_staffs_search():
+    dept_range={}
+    dhs=DepartmentHierarchy.query.all()
+    for dh in dhs:
+        dept_range[dh.id]=dh.name
+
+    us = User.query.filter_by(user_or_origin=3)
+    if request.args.get("email"):
+        us = us.filter(User.email.like(request.args.get("email")+"%"))
+    if request.args.get("name"):
+        us = us.filter(User.nickname.like("%"+request.args.get("name")+"%"))
+    #how to search in many-to-many
+    if request.args.get("dept_range"):
+        pass
+    
+    us=us.all()
+
+    return render_template('mobile/users_staffs_search.html',users_staffs=us,dept_range=dept_range)
