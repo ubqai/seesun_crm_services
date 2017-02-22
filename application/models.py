@@ -32,6 +32,7 @@ class Content(db.Model, Rails):
     description = db.Column(db.Text)
     image_path = db.Column(db.String(200))
     reference_info = db.Column(db.JSON)
+    product_ids = db.Column(db.JSON, default=[])
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 

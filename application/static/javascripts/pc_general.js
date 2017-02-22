@@ -58,14 +58,14 @@ $(function(){
 	
 	//增加产品目录
 	$(".new-product-category").click(function(){
-		add_item(["name"])
+		add_item(["names[]"])
 	})
 	//增加产品属性
 	$(".new-product-feature").click(function(){
-		add_item(["name"])
+		add_item(["names[]"])
 	})
 	$(".new-product-option").click(function(){
-		add_item(["name"])
+		add_item(["names[]"])
 	})
 	$(".new-product").click(function(){
 		add_item(["name"])

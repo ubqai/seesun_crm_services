@@ -9,7 +9,7 @@
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
 		<p class="contents-header-p">产品属性值</p>
 		<p class="contents-header-p text-sm">product options</p>
-		<a class="new-one" href="{{ url_for('product.option_new', feature_id = feature.get('feature_id')) }}"><span class="glyphicon glyphicon-plus"></span></a>
+		<a class="new-one" href="{{ url_for('product.option_new', feature_id = feature.get('feature_id'), category_id = request.args.get('category_id')) }}"><span class="glyphicon glyphicon-plus"></span></a>
 	</div>
 	<div class="separator"><span></span></div>
 	<div class="widget">
@@ -31,7 +31,7 @@
 						<td><a class="table-link">{{ option.get('option_name') }}</a></td>
 						<td></td>
 						<td>
-							<a class="table-edit text-info" href="product_option_edit.html"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
+							<a class="table-edit text-info" href="{{ url_for('product.option_edit', id = option.get('option_id'), category_id = request.args.get('category_id')) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
 							<a class="table-del text-danger"><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</a>
 						</td>
 					</tr>				

@@ -21,7 +21,6 @@
 				<thead>
 					<tr>
 						<th>sku_id</th>
-						<th>stocks</th>
 						<th>price</th>
 						<th>weight</th>
 						<th>barcode</th>
@@ -34,7 +33,6 @@
 				{% for sku in skus.get('skus') %}
 					<tr>
 						<td>{{ sku.get('sku_id') }}</td>
-						<td>{{ sku.get('stocks') }}</td>
 						<td>{{ sku.get('price') }}</td>
 						<td>{{ sku.get('weight') }}</td>
 						<td>{{ sku.get('barcode') }}</td>

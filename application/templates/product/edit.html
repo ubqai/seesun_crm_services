@@ -13,26 +13,27 @@
 <div class="contents">
 	<div class="contents-header">
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
-		<p class="contents-header-p">新增产品</p>
-		<p class="contents-header-p text-sm">new product</p>
+		<p class="contents-header-p">编辑产品</p>
+		<p class="contents-header-p text-sm">edit product</p>
 	</div>
 	<div class="separator"><span></span></div>
 	<div class="widget">
 		<div class="widget_header">
 			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;
-			<a href="{{ url_for('product.category_index') }}">产品目录列表</a> > {{ category.get('category_name') }}</h4>
+			<a href="{{ url_for('product.category_index') }}">产品目录列表</a> >  
+			<a href="{{ url_for('product.index', category_id = category.get('category_id')) }}">{{ category.get('category_name') }}</a> > {{ product.get('name') }}</h4>
 		</div>
 
-		<form action="{{ url_for('product.new', category_id = category.get('category_id')) }}" enctype="multipart/form-data" method="post">
+		<form action="{{ url_for('product.edit', id = product.get('product_id'), category_id = request.args.get('category_id')) }}" enctype="multipart/form-data" method="post">
 
 			<div class="widget_contents padding-0">
 				<div class="form-item">
 					<span class="form-label">产品名称</span>
-					<input class="form-input form-control" name="name" />
+					<input class="form-input form-control" name="name" value="{{ product.get('name') }}"/>
 				</div>
 				<div class="form-item">
 					<span class="form-label">产品代码</span>
-					<input class="form-input form-control" name="code" />
+					<input class="form-input form-control" name="code" value="{{ product.get('code') }}" disabled=""/>
 				</div>
 				<div class="form-item">
 					<span class="form-label">产品图片</span>
@@ -43,7 +44,7 @@
 						</a>
 					</div>
 					<div class="pic-upload top-gap-1">
-						<img class="full-img" src="/static/images/alt.jpg">
+						<img class="full-img" src="{{ product.get('images')[0] }}">
 					</div>
 				</div>
 
@@ -53,7 +54,8 @@
 						<div class="label-block">
 						{% for option in feature.get('options') %}
 							<div class="label-item">
-								<input name="option_ids[]" value="{{ option.get('option_id') }}" type="checkbox" id="option_{{ option.get('option_id') }}" class="chk_1" /> 
+								<input name="option_ids[]" value="{{ option.get('option_id') }}" type="checkbox" id="option_{{ option.get('option_id') }}" class="chk_1" 
+								{% if option.get('option_id') in option_ids %}checked=""{% endif %}/> 
 								<label for="option_{{ option.get('option_id') }}">{{ option.get('option_name') }}</label> 
 							</div>
 						{% endfor %}
@@ -64,12 +66,14 @@
 				<div class="form-item">
 					<span class="form-label">产品描述</span>
 					<div class="ck-wrapper">
-						<textarea class="form-input form-control ckeditor" id="description" name="description"></textarea>
+						<textarea class="form-input form-control ckeditor" id="description" name="description">
+							{{ product.get('description') }}
+						</textarea>
 					</div>
 				</div>
 			</div>
 			<div class="text-right top-gap-1">
-				<a class="btn btn-default my-btn right-gap-1" href="{{ url_for('product.index', category_id = category.get('category_id')) }}">返回</a><button class="btn btn-default my-btn">提交</button>
+				<a class="btn btn-default my-btn right-gap-1" href="{{ url_for('product.index', category_id = request.args.get('category_id')) }}">返回</a><button class="btn btn-default my-btn">提交</button>
 			</div>
 
 		</form>
