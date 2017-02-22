@@ -45,6 +45,7 @@ $(function(){
 	//增加item
 	function add_item(_names){
 		var clone=$(".item-template").clone();
+		clone.find("input").val("");
 		clone.removeClass("item-template")
 			.find(".del-item").removeClass("hidden")
 			.on("click",function(){
