@@ -22,7 +22,6 @@ def index():
 
 @content.route('/new', methods = ['GET', 'POST'])
 def new():
-    options = ContentClassificationOption.query.order_by(ContentClassificationOption.classification_id)
     if request.method == 'POST':
         form = ContentForm(request.form)
         if form.validate():
@@ -40,6 +39,7 @@ def new():
             flash('Content "{name}" created successfully.'.format(name = content.name), 'success')
             return redirect(url_for('content.index'))
     else:
+        options = ContentClassificationOption.query.order_by(ContentClassificationOption.classification_id)
         form = ContentForm()
     return render_template('content/new.html', form = form, options = options)
 

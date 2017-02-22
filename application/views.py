@@ -32,6 +32,15 @@ def mobile_case_classification_show(id):
     classification = ContentClassification.query.get_or_404(id)
     return render_template('mobile/case_classification_show.html', classification = classification)
 
+@app.route('/mobile/product_cases')
+def mobile_product_cases():
+    categories = load_categories()
+    products_hash = {}
+    for category in categories:
+        products = load_products(category.get('category_id'))
+        products_hash[category.get('category_id')] = products
+    return render_template('mobile/product_cases.html', categories = categories, products_hash = products_hash)
+
 @app.route('/mobile/case_content/<int:id>')
 def mobile_case_content_show(id):
     content = Content.query.get_or_404(id)
