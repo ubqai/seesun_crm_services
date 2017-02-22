@@ -62,6 +62,7 @@
                         <th>合同状态</th>
                         <th>生产状况</th>
                         <th>物流状态</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,10 +72,11 @@
                             <td>{{ contract.contract_date.strftime('%Y%m%d') }}</td>
                             <td>{{ contract.order.order_no }}</td>
                             <td>{{ contract.order.user.sales_areas.all()[0].name }}</td>
-                            <td>{{ contract.order.user.name }}</td>
+                            <td>{{ contract.order.user.nickname }}</td>
                             <td><span class="text-warning">{{ contract.contract_status }}</span></td>
                             <td><span class="text-warning">{{ contract.product_status }}</span></td>
                             <td><span class="text-warning">{{ contract.shipment_status }}</span></td>
+                            <td><a class="new-one" href="{{ url_for('order_manage.contract_offer', id=contract.id) }}">查看订货要约</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
