@@ -158,7 +158,7 @@ class OrderContent(db.Model, Rails):
     sku_specification = db.Column(db.String(500))
     sku_code = db.Column(db.String(30))
     number = db.Column(db.Integer)
-    square_num = db.Column(db.Float)
+
     price = db.Column(db.Float, default=0)
     amount = db.Column(db.Float, default=0)
     memo = db.Column(db.String(100))
