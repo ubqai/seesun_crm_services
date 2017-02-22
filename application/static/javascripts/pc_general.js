@@ -1,3 +1,8 @@
+$(function(){
+	$("body").niceScroll({cursorwidth: '0',cursorborder: '0'});
+	$(".my-nav").niceScroll({cursorwidth: '0',cursorborder: '0'});
+	$('#sidebar').metisMenu();
+})
 //to change the text as the file uploaded
 $(function(){
 	
@@ -47,22 +52,22 @@ $(function(){
 				refresh(_names);
 			});	
 		$(".item-wrapper").append(clone);
-		//refresh(_names);	
+		refresh(_names);	
 	}
 	
 	//增加产品目录
 	$(".new-product-category").click(function(){
-		add_item(["names[]"])
+		add_item(["name"])
 	})
 	//增加产品属性
 	$(".new-product-feature").click(function(){
-		add_item(["names[]"])
+		add_item(["name"])
 	})
 	$(".new-product-option").click(function(){
-		add_item(["names[]"])
+		add_item(["name"])
 	})
 	$(".new-product").click(function(){
-		add_item(["names[]"])
+		add_item(["name"])
 	})
 })
  
