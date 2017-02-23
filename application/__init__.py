@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from flask import Flask, g, render_template
+from flask import Flask, g, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 from .config import config
@@ -32,3 +32,12 @@ def page_not_found(error):
 @app.errorhandler(500)
 def internal_server_error(error):
     return render_template('500.html'), 500
+
+
+@app.route('/')
+def root():
+    return redirect(url_for('mobile_index'))
+
+@app.route('/admin')
+def admin():
+    return redirect(url_for('content.category_index'))
