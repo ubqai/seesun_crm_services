@@ -35,7 +35,7 @@ def new(category_id):
                 image_path = save_upload_file(image_file)
                 if image_path:
                     clip_image((app.config['APPLICATION_DIR'] + image_path), size = content_image_size)
-                    content.image_path = image_path
+                    content.image_links = [image_path]
             content.save
             flash('Content "{name}" created successfully.'.format(name = content.name), 'success')
             return redirect(url_for('content.index', category_id = category_id))
@@ -66,8 +66,8 @@ def edit(id):
                 image_path = save_upload_file(image_file)
                 if image_path:
                     clip_image((app.config['APPLICATION_DIR'] + image_path), size = content_image_size)
-                    os.remove(app.config['APPLICATION_DIR'] + title.image_path)
-                    content.image_path = image_path
+                    os.remove(app.config['APPLICATION_DIR'] + content.image_links[0])
+                    content.image_links = [image_path]
             content.save
             flash('Content "{name}" has been updated.'.format(name = content.name), 'success')
             return redirect(url_for('content.index', category_id = content.category_id))
