@@ -3,16 +3,18 @@
 {% block content %}
 {{ header('购物车') }}
 <div class="main-content">
+    <form action="{{ url_for('mobile_create_order') }}" method="get">
 	<div class="text bot-gap-2">
 		<p class="text-title bot-gap-1">购物车</p>
-		<p class="text-content text-sm">企业名称：阿里巴巴</p>
+		<p class="text-content text-sm">要约方(买方)：<input class="form-control" name="buyer"></p>
 		<div class="light-divider"></div>
-		<p class="text-content text-sm">项目地址：上海市宝山区古村公园</p>
+		<p class="text-content text-sm">收货单位：<input class="form-control" name="buyer_company"></p>
 		<div class="light-divider"></div>
-		<p class="text-content text-sm">联系电话：12390876678</p>
+		<p class="text-content text-sm">收货地址：<input class="form-control" name="buyer_address"></p>
 		<div class="light-divider"></div>
-		<p class="text-content text-sm">联系姓名：阿里</p>
-		<div class="light-divider"></div>
+	</div>
+	<div class="bot-gap-2">
+		<a href="{{ url_for('mobile_created_orders') }}" class="btn btn-style-1 text-sm">订单列表</a>
 	</div>
 	<div class="expanded-table table-responsive">
 		<table class="table table-striped">
@@ -40,8 +42,9 @@
 	</div>
 	
 	<div class="fixed-bot">
-		<a href="{{ url_for('mobile_create_order') }}" class="orange">一键下单(生成订单)</a>
+        <button type="submit" class="col-12 orange">一键下单(生成订单)</button>
 	</div>
+    </form>
 </div>
 
 {% endblock %}

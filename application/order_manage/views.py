@@ -33,18 +33,23 @@ def contract_new(id):
     form = ContractForm()
     if request.method == 'POST':
         contract_no = "SSCONTR%s" % datetime.datetime.now().strftime('%y%m%d%H%M%S')
-        contract_content = {"amount": request.form.get("amount"), "delivery_time": request.form.get("delivery_time")}
-        contract_date = request.form.get("contract_date")
+        contract_content = {"amount": request.form.get("amount"),
+                            "delivery_time": request.form.get("delivery_time"),
+                            "offer_no": request.form.get("offer_no")}
         contract = Contract(
             contract_no=contract_no,
             order=order,
             contract_status="新合同",
             product_status="未生产",
             shipment_status="未出库",
-            contract_content=contract_content,
-            contract_date=contract_date
+            contract_content=contract_content
         )
         order.order_status = '生成合同'
+        for order_content in order.order_contents:
+            order_content.price = request.form.get("%sprice" % order_content.id)
+            order_content.amount = request.form.get("%samount" % order_content.id)
+            order_content.memo = request.form.get("%smemo" % order_content.id)
+            db.session.add(order_content)
         db.session.add(contract)
         db.session.add(order)
         db.session.commit()
@@ -63,3 +68,8 @@ def contract_show(id):
     contract = Contract.query.get_or_404(id)
     return render_template('order_manage/contract_show.html', contract=contract)
 
+
+@order_manage.route("/contract_offer/<int:id>", methods=['GET'])
+def contract_offer(id):
+    contract = Contract.query.get_or_404(id)
+    return render_template('order_manage/contract_offer.html', contract=contract)

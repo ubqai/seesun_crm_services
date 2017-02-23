@@ -115,43 +115,22 @@ class ContentClassificationOption(db.Model, Rails):
         return 'ContentClassificationOption(id: %s, name: %s)' % (self.id, self.name)
 
 
-class District(db.Model, Rails):
-    __tablename__ = 'districts'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200))
-    person_in_charge = db.Column(db.String(200))
-    dealers = db.relationship('Dealer', backref='district')
-
-    def __repr__(self):
-        return 'District(id: %s, name: %s, person_in_charge: %s)' % (self.id, self.name, self.person_in_charge)
-
-
-class Dealer(db.Model, Rails):
-    __tablename__ = 'dealers'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200))
-    district_id = db.Column(db.Integer, db.ForeignKey('districts.id'))
-    orders = db.relationship('Order', backref='dealer')
-
-    def __repr__(self):
-        return 'Dealer(id: %s, name: %s, district_id: %s)' % (self.id, self.name, self.district_id)
-
-
 class Order(db.Model, Rails):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
     order_no = db.Column(db.String(30), unique=True)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
-    dealer_id = db.Column(db.Integer, db.ForeignKey('dealers.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     order_status = db.Column(db.String(50))
     order_memo = db.Column(db.Text)
+    buyer_info = db.Column(db.JSON)
     contracts = db.relationship('Contract', backref='order', lazy='dynamic')
     order_contents = db.relationship('OrderContent', backref='order')
 
     def __repr__(self):
-        return 'Order(id: %s, order_no: %s, dealer_id: %s, order_status: %s, order_memo: %s)' % (
-            self.id, self.order_no, self.dealer_id, self.order_status, self.order_memo)
+        return 'Order(id: %s, order_no: %s, user_id: %s, order_status: %s, order_memo: %s)' % (
+            self.id, self.order_no, self.user_id, self.order_status, self.order_memo)
 
 
 class Contract(db.Model):
@@ -179,7 +158,10 @@ class OrderContent(db.Model, Rails):
     sku_specification = db.Column(db.String(500))
     sku_code = db.Column(db.String(30))
     number = db.Column(db.Integer)
-    square_num = db.Column(db.Integer)
+    square_num = db.Column(db.Float)
+    price = db.Column(db.Float, default=0)
+    amount = db.Column(db.Float, default=0)
+    memo = db.Column(db.String(100))
 
     def __repr__(self):
         return 'OrderContent(id: %s, order_id: %s, product_name: %s, sku_specification: %s, sku_code: %s, number: %s, square_num: %s)' % (
@@ -207,13 +189,14 @@ users_and_departments = db.Table(
 )
 
 
-class User(db.Model):
+class User(db.Model, Rails):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(60), nullable=False)
     nickname = db.Column(db.String(200))
     user_or_origin = db.Column(db.Integer)
     user_infos = db.relationship('UserInfo', backref='user')
+    orders = db.relationship('Order', backref='user')
     resources = db.relationship('Resource', secondary=users_and_resources,
                                 backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
     sales_areas = db.relationship('SalesAreaHierarchy', secondary=users_and_sales_areas,
