@@ -12,22 +12,50 @@
     <div class="separator"><span></span></div>
     <form class="form form-horizontal" method="post" url="{{ url_for('order_manage.contract_new', id=order.id) }}"
           role="form" enctype="multipart/form-data">
-        <div class="widget_contents padding-0">
-            <div class="form-item">
-                <span class="form-label">{{ form.amount.label }}</span>
-                {{ form.amount(class = 'form-input form-control') }}
+        <div class="widget_contents padding-0 item-wrapper">
+            <div class="form-item item-template">
+                <div class="form-item-2 col-3">
+                    <span>{{ form.amount.label }}</span>
+                    {{ form.amount(class = 'form-input form-control') }}
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>{{ form.delivery_time.label }}</span>
+                    {{ form.delivery_time(class = 'form-input form-control') }}
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>{{ form.offer_no.label }}</span>
+                    {{ form.offer_no(class = 'form-input form-control') }}
+                </div>
+                <br/>
+                <table class="tables">
+                    <thead>
+                        <tr>
+                            <th>产品名</th>
+                            <th>规格</th>
+                            <th>数量</th>
+                            <th>单价</th>
+                            <th>总价</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for content in order.order_contents %}
+                        <tr>
+                            <td><a class="table-link">{{ content.product_name }}</a></td>
+                            <td>{{ content.sku_specification }}</td>
+                            <td>{{ content.number }}</td>
+                            <td><input class="form-control" name="{{ content.id }}price"></td>
+                            <td><input class="form-control" name="{{ content.id }}amount"></td>
+                            <td><input class="form-control" name="{{ content.id }}memo"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="text-right top-gap-1">
+                    <button type="submit" class="btn btn-default my-btn">提交</button>
+                </div>
             </div>
-            <div class="form-item">
-                <span class="form-label">{{ form.delivery_time.label }}</span>
-                {{ form.delivery_time(class = 'form-input form-control') }}
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{ form.contract_date.label }}</span>
-                {{ form.contract_date(class = 'form-input form-control') }}
-            </div>
-            <div class="text-right top-gap-1">
-				<button type="submit" class="btn btn-default my-btn">提交</button>
-			</div>
         </div>
     </form>
 </div>

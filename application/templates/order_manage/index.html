@@ -71,7 +71,7 @@
                             {% endif %}
                         </td>
                         <td>{{ order.user.sales_areas.all()[0].name }}</td>
-                        <td>{{ order.user.name }}</td>
+                        <td>{{ order.user.nickname }}</td>
                         <td><span class="text-warning">{{ order.order_status }}</span></td>
                     </tr>
                     {% endfor %}

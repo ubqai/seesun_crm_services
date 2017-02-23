@@ -124,12 +124,13 @@ class Order(db.Model, Rails):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     order_status = db.Column(db.String(50))
     order_memo = db.Column(db.Text)
+    buyer_info = db.Column(db.JSON)
     contracts = db.relationship('Contract', backref='order', lazy='dynamic')
     order_contents = db.relationship('OrderContent', backref='order')
 
     def __repr__(self):
-        return 'Order(id: %s, order_no: %s, dealer_id: %s, order_status: %s, order_memo: %s)' % (
-            self.id, self.order_no, self.dealer_id, self.order_status, self.order_memo)
+        return 'Order(id: %s, order_no: %s, user_id: %s, order_status: %s, order_memo: %s)' % (
+            self.id, self.order_no, self.user_id, self.order_status, self.order_memo)
 
 
 class Contract(db.Model):
@@ -157,7 +158,10 @@ class OrderContent(db.Model, Rails):
     sku_specification = db.Column(db.String(500))
     sku_code = db.Column(db.String(30))
     number = db.Column(db.Integer)
-    square_num = db.Column(db.Integer)
+    square_num = db.Column(db.Float)
+    price = db.Column(db.Float, default=0)
+    amount = db.Column(db.Float, default=0)
+    memo = db.Column(db.String(100))
 
     def __repr__(self):
         return 'OrderContent(id: %s, order_id: %s, product_name: %s, sku_specification: %s, sku_code: %s, number: %s, square_num: %s)' % (
@@ -185,7 +189,7 @@ users_and_departments = db.Table(
 )
 
 
-class User(db.Model):
+class User(db.Model, Rails):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(60), nullable=False)

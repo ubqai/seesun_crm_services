@@ -1,7 +1,4 @@
-import urllib
-import urllib.request
 import requests
-import json
 from .. import app
 
 site = app.config['PRODUCT_SERVER']
@@ -48,6 +45,29 @@ def load_skus(product_id):
         return response.json()
     else:
         {}
+
+def load_sku(product_id, sku_id):
+    skus = load_skus(product_id).get('skus')
+    if skus:
+        for sku in skus:
+            if sku.get('sku_id') == sku_id:
+                return sku
+    return {}
+
+def create_sku(data = {}):
+    url = '%s/%s/product_skus' % (site, version)
+    response = requests.post(url, json = data, headers = headers)
+    return response
+
+def edit_sku(sku_id, data = {}):
+    url = '%s/%s/product_skus/%s/edit' % (site, version, sku_id)
+    response = requests.put(url, json = data, headers = headers)
+    return response # 200
+
+def delete_sku(sku_id):
+    url = '%s/%s/product_skus/%s' % (site, version, sku_id)
+    response = requests.delete(url)
+    return response
 
 # resource :categories, [:index, :show, :new, :edit]
 def load_categories():
