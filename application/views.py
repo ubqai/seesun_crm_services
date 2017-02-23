@@ -23,13 +23,11 @@ def admin():
 
 
 # --- Case show, client content model ---
-@app.route('/mobile/case_classifications')
-def mobile_case_classifications():
+@app.route('/mobile/case_show')
+def mobile_case_show():
     category = ContentCategory.query.filter(ContentCategory.name == '案例展示').first_or_404()
-    classifications = ContentClassification.query.filter(
-        ContentClassification.category_id == category.id).order_by(
-        ContentClassification.created_at.asc())
-    return render_template('mobile/case_classifications.html', classifications = classifications)
+    classifications = category.classifications.order_by(ContentClassification.created_at.asc())
+    return render_template('mobile/case_show.html', classifications = classifications)
 
 
 @app.route('/mobile/case_classification/<int:id>')
@@ -46,6 +44,14 @@ def mobile_product_cases():
         products = load_products(category.get('category_id'))
         products_hash[category.get('category_id')] = products
     return render_template('mobile/product_cases.html', categories = categories, products_hash = products_hash)
+
+
+@app.route('/mobile/product_case/<int:product_id>')
+def mobile_product_case_show(product_id):
+    product = load_product(product_id)
+    case_ids = product.get('case_ids')
+    contents = Content.query.filter(Content.id.in_(case_ids)).order_by(Content.created_at.desc())
+    return render_template('mobile/product_case_show.html', product = product, contents = contents)
 
 
 @app.route('/mobile/case_content/<int:id>')
@@ -215,7 +221,31 @@ def mobile_design():
     return render_template('mobile/design.html')
 
 
-# --- Material ---
+# --- Material need ---
+@app.route('/mobile/material_need')
+def mobile_material_need():
+    category = ContentCategory.query.filter(ContentCategory.name == '物料需要').first_or_404()
+    classifications = category.classifications
+    return render_template('mobile/material_need.html', classifications = classifications)
+
+@app.route('/mobile/material_need_options/<int:classification_id>')
+def mobile_material_need_options(classification_id):
+    classification = ContentClassification.query.get_or_404(classification_id)
+    options = classification.options
+    return render_template('mobile/material_need_options.html', options = options)
+
+@app.route('/mobile/material_need_contents/<int:option_id>')
+def mobile_material_need_contents(option_id):
+    option = ContentClassificationOption.query.get_or_404(option_id)
+    contents = option.contents
+    return render_template('mobile/material_need_contents.html', contents = contents)
+
+@app.route('/mobile/material_application', methods = ['GET', 'POST'])
+def mobile_material_application():
+    if request.method == 'POST':
+        return 'cc'
+    return render_template('mobile/material_application.html')
+
 @app.route('/mobile/material_lvl1')
 def mobile_material_lvl1():
     return render_template('mobile/material_lvl1.html')
@@ -264,20 +294,26 @@ def mobile_verification():
     return render_template('mobile/verification.html')
 
 
-# --- Construction ---
-@app.route('/mobile/construction_lvl1')
-def mobile_construction_lvl1():
-    return render_template('mobile/construction_lvl1.html')
+# --- Construction guide ---
+@app.route('/mobile/construction_guide')
+def mobile_construction_guide():
+    category = ContentCategory.query.filter(ContentCategory.name == '施工指导').first_or_404()
+    classifications = category.classifications.order_by(ContentClassification.created_at.desc())
+    return render_template('mobile/construction_guide.html', classifications = classifications)
 
 
-@app.route('/mobile/construction_lvl2_for_materials')
-def mobile_construction_lvl2_for_materials():
-    return render_template('mobile/construction_lvl2_for_materials.html')
+@app.route('/mobile/construction_guide_options/<int:classification_id>')
+def mobile_construction_guide_options(classification_id):
+    classification = ContentClassification.query.get_or_404(classification_id)
+    options = classification.options
+    return render_template('mobile/construction_guide_options.html', options = options)
 
 
-@app.route('/mobile/construction_lvl2_for_zlp')
-def mobile_construction_lvl2_for_zlp():
-    return render_template('mobile/construction_lvl2_for_zlp.html')
+@app.route('/mobile/construction_guide_contents/<int:option_id>')
+def mobile_construction_guide_contents(option_id):
+    option = ContentClassificationOption.query.get_or_404(option_id)
+    contents = option.contents
+    return render_template('mobile/construction_guide_contents.html', contents = contents)
 
 
 # --- After service ---

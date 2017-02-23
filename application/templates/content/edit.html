@@ -12,13 +12,14 @@
 <div class="contents">
 	<div class="contents-header">
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
-		<p class="contents-header-p">编辑案例</p>
+		<p class="contents-header-p">编辑内容</p>
 		<p class="contents-header-p text-sm">edit content</p>
 	</div>
 	<div class="separator"><span></span></div>
 	<div class="widget">
 		<div class="widget_header">
-			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;编辑案例</h4>
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;<a href="{{ url_for('content.category_index') }}">目录列表</a> > 
+			<a href="{{ url_for('content.index', category_id = content.category_id) }}">{{ content.category.name }}</a> >编辑内容</h4>
 		</div>
 
 		<form action="{{ url_for('content.edit', id = content.id) }}" enctype="multipart/form-data" method="post">
@@ -57,7 +58,7 @@
 			</div>
 
 			<div class="text-right top-gap-1">
-				<a href="{{ url_for('content.index') }}" class="btn btn-default my-btn">返回</a>	
+				<a href="{{ url_for('content.index', category_id = content.category_id) }}" class="btn btn-default my-btn">返回</a>	
 				<button type="submit" class="btn btn-default my-btn">更新</button>
 			</div>
 

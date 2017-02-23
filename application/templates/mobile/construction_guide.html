@@ -1,0 +1,14 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('施工指导') }}
+
+<div class="main-content">
+	<div class="center-wrappper">
+	{% for classification in classifications %}
+		<a class="btn btn-default btn-block top-gap-3 text-lg" href="{{ url_for('mobile_construction_guide_options', classification_id = classification.id) }}">{{ classification.name }}</a>
+	{% endfor %}
+	</div>
+</div>
+
+{% endblock %}

@@ -15,25 +15,21 @@ content_image_size = (379, 226)
 def root():
     return redirect(url_for('content.index'))
 
-@content.route('/select_category')
-def select_category():
-    categories = ContentCategory.query.filter(ContentCategory.created_at.asc())
-    return 'cc'
+@content.route('/index/<int:category_id>')
+def index(category_id):
+    category = ContentCategory.query.get_or_404(category_id)
+    contents = Content.query.filter(Content.category_id == category_id).order_by(Content.created_at.desc())
+    return render_template('content/index.html', category = category, contents = contents)
 
-@content.route('/index')
-def index():
-    contents = Content.query.order_by(Content.created_at.desc())
-    return render_template('content/index.html', contents = contents)
-
-@content.route('/new', methods = ['GET', 'POST'])
-def new():
+@content.route('/new/<int:category_id>', methods = ['GET', 'POST'])
+def new(category_id):
     if request.method == 'POST':
         form = ContentForm(request.form)
         if form.validate():
             option_ids = request.form.getlist('option_ids[]')
             image_file = request.files['image_file']
             request_options = ContentClassificationOption.query.filter(ContentClassificationOption.id.in_(option_ids))
-            content = form.save(Content())
+            content = form.save(Content(category_id = category_id))
             content.append_options(request_options)
             if image_file:
                 image_path = save_upload_file(image_file)
@@ -42,11 +38,12 @@ def new():
                     content.image_path = image_path
             content.save
             flash('Content "{name}" created successfully.'.format(name = content.name), 'success')
-            return redirect(url_for('content.index'))
+            return redirect(url_for('content.index', category_id = category_id))
     else:
-        options = ContentClassificationOption.query.order_by(ContentClassificationOption.classification_id)
+        category = ContentCategory.query.get_or_404(category_id)
+        options = category.options
         form = ContentForm()
-    return render_template('content/new.html', form = form, options = options)
+    return render_template('content/new.html', form = form, options = options, category = category)
 
 @content.route('/<int:id>')
 def show(id):
@@ -55,8 +52,8 @@ def show(id):
 
 @content.route('/<int:id>/edit', methods = ['GET', 'POST'])
 def edit(id):
-    options = ContentClassificationOption.query.order_by(ContentClassificationOption.classification_id)
     content = Content.query.get_or_404(id)
+    options = content.category.options
     if request.method == 'POST':
         form = ContentForm(request.form)
         if form.validate():
@@ -73,7 +70,7 @@ def edit(id):
                     content.image_path = image_path
             content.save
             flash('Content "{name}" has been updated.'.format(name = content.name), 'success')
-            return redirect(url_for('content.index'))
+            return redirect(url_for('content.index', category_id = content.category_id))
     else:
         form = ContentForm(obj = content)
     return render_template('content/edit.html', form = form, content = content, options = options)

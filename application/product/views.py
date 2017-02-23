@@ -4,7 +4,7 @@ from flask import Blueprint, flash, g, redirect, render_template, request, url_f
 from .. import app, db
 from ..helpers import save_upload_file, clip_image
 from .api import *
-from ..models import Content
+from ..models import Content, ContentCategory
 
 product = Blueprint('product', __name__, template_folder = 'templates')
 
@@ -50,11 +50,11 @@ def new(category_id):
 @product.route('/relate_cases/<int:product_id>', methods = ['GET', 'POST'])
 def relate_cases(product_id):
     product = load_product(product_id)
-    contents = Content.query.all()
+    contents = ContentCategory.query.filter(ContentCategory.name == '案例展示').first().contents
     if request.method == 'POST':
         case_ids = [int(id) for id in request.form.getlist('case_ids[]')]
         data = { 'case_ids': case_ids }
-        response = edit_product(product.get('product_id'), data = data)
+        response = update_product(product.get('product_id'), data = data)
         if response.status_code == 200:
             for content in contents:
                 if content.id in case_ids:
@@ -106,7 +106,7 @@ def edit(id):
         'product_image_links': [image_path],
         'options_id': [ str(id) for id in option_ids ]
         }
-        response = edit_product(id, data = data)
+        response = update_product(id, data = data)
         if response.status_code == 200:
             flash('产品修改成功', 'success')
         else:
@@ -201,7 +201,7 @@ def sku_edit(id):
         'weight': request.form.get('weight'),
         'thumbnail': image_path
         }
-        response = edit_sku(sku_id = id, data = data)
+        response = update_sku(sku_id = id, data = data)
         if response.status_code == 200:
             flash('SKU修改成功', 'success')
         else:
@@ -324,7 +324,7 @@ def category_edit(id):
     if request.method == 'POST':
         name = request.form.get('name')
         data = { 'category_name': name }
-        response = edit_category(category.get('category_id'), data = data)
+        response = update_category(category.get('category_id'), data = data)
         if response.status_code == 200:
             flash('产品目录修改成功', 'success')
         else:
@@ -369,7 +369,7 @@ def feature_edit(id):
         'name': request.form.get('name'),
         'description': request.form.get('description')
         }
-        response = edit_feature(feature.get('feature_id'), data = data)
+        response = update_feature(feature.get('feature_id'), data = data)
         if response.status_code == 200:
             flash('产品属性修改成功', 'success')
         else:
@@ -407,7 +407,7 @@ def option_edit(id):
     category_id = request.args.get('category_id')
     if request.method == 'POST':
         data = { 'name': request.form.get('name') }
-        response = edit_option(id , data = data)
+        response = update_option(id , data = data)
         if response.status_code == 200:
             flash('产品属性值修改成功', 'success')
         else:

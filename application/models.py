@@ -79,6 +79,12 @@ class ContentCategory(db.Model, Rails):
         self.delete
         return self
 
+    @property
+    def options(self):
+        classification_ids = [classification.id for classification in self.classifications]
+        options = ContentClassificationOption.query.filter(ContentClassificationOption.classification_id.in_(classification_ids))
+        return options
+
 
 # Content_classifications: id, content_category_id, name,description
 class ContentClassification(db.Model, Rails):
