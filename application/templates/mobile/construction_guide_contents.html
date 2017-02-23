@@ -1,0 +1,12 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('施工指导') }}
+
+<div class="main-content">
+	{% for content in contents %}
+		<div class="wrapper">{{ content.description|safe }}</div>
+	{% endfor %}
+</div>
+
+{% endblock %}

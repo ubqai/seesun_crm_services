@@ -1,0 +1,14 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('施工指导') }}
+
+<div class="main-content">
+	<div class="center-wrappper">
+	{% for option in options %}
+		<a  href="{{ url_for('mobile_construction_guide_contents', option_id = option.id) }}" class="btn btn-default btn-block top-gap-3 text-lg">{{ option.name }}</a>
+	{% endfor %}
+	</div>
+</div>
+
+{% endblock %}

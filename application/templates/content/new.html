@@ -12,16 +12,17 @@
 <div class="contents">
 	<div class="contents-header">
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
-		<p class="contents-header-p">新增案例</p>
+		<p class="contents-header-p">新增内容</p>
 		<p class="contents-header-p text-sm">new content</p>
 	</div>
 	<div class="separator"><span></span></div>
 	<div class="widget">
 		<div class="widget_header">
-			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;新增案例</h4>
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;<a href="{{ url_for('content.category_index') }}">目录列表</a> > 
+			<a href="{{ url_for('content.index', category_id = category.id) }}">{{ category.name }}</a> > 新增内容</h4>
 		</div>
 
-		<form action="{{ url_for('content.new') }}" enctype="multipart/form-data" method="post">
+		<form action="{{ url_for('content.new', category_id = category.id) }}" enctype="multipart/form-data" method="post">
 			<div class="widget_contents padding-0">
 				<div class="form-item">
 					<span class="form-label">{{ form.name.label }}</span>{{ form.name(class = 'form-input form-control') }}
@@ -58,8 +59,8 @@
 			</div>
 
 			<div class="text-right top-gap-1">
-				<button type="submit" class="btn btn-default my-btn">提交</button>
-				<a href="{{ url_for('content.index') }}" class="btn btn-default my-btn">返回</a>									
+				<a href="{{ url_for('content.index', category_id = category.id) }}" class="btn btn-default my-btn">返回</a>	
+				<button type="submit" class="btn btn-default my-btn">提交</button>	
 			</div>
 
 		</form>

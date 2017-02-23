@@ -32,11 +32,11 @@
             </div>
             <div class="form-item inline-2">
                 <span class="form-label">经销商</span>
-                <input class="form-input form-control" value="{{ order.dealer.name }}" disabled/>
+                <input class="form-input form-control" value="{{ order.user.nickname }}" disabled/>
             </div>
             <div class="form-item inline-2">
                 <span class="form-label">经销商所属区域</span>
-                <input class="form-input form-control" value="{{ order.dealer.district.name }}" disabled/>
+                <input class="form-input form-control" value="{{ order.user.sales_areas.all()[0].name }}" disabled/>
             </div>
         </div>
         <div class="widget_contents padding-0">
@@ -46,6 +46,7 @@
                         <th>产品名</th>
                         <th>规格</th>
                         <th>平方数</th>
+                        <th>数量</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,6 +55,7 @@
                         <td><a class="table-link">{{ content.product_name }}</a></td>
                         <td>{{ content.sku_specification }}</td>
                         <td>{{ content.square_num }}</td>
+                        <td>{{ content.number }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

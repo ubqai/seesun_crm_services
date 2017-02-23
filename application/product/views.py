@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-import json
-from flask import Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
+import os
+from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 from .. import app, db
 from ..helpers import save_upload_file, clip_image
 from .api import *
-from ..models import Content
+from ..models import Content, ContentCategory
 
 product = Blueprint('product', __name__, template_folder = 'templates')
 
@@ -50,11 +50,11 @@ def new(category_id):
 @product.route('/relate_cases/<int:product_id>', methods = ['GET', 'POST'])
 def relate_cases(product_id):
     product = load_product(product_id)
-    contents = Content.query.all()
+    contents = ContentCategory.query.filter(ContentCategory.name == '案例展示').first().contents
     if request.method == 'POST':
         case_ids = [int(id) for id in request.form.getlist('case_ids[]')]
         data = { 'case_ids': case_ids }
-        response = edit_product(product.get('product_id'), data = data)
+        response = update_product(product.get('product_id'), data = data)
         if response.status_code == 200:
             for content in contents:
                 if content.id in case_ids:
@@ -97,6 +97,7 @@ def edit(id):
             image_path = save_upload_file(image_file)
             if image_path:
                 clip_image((app.config['APPLICATION_DIR'] + image_path), size = product_image_size)
+                os.remove(app.config['APPLICATION_DIR'] + product.get('images')[0])
         else:
             image_path = product.get('images')[0]
         data = {
@@ -105,7 +106,7 @@ def edit(id):
         'product_image_links': [image_path],
         'options_id': [ str(id) for id in option_ids ]
         }
-        response = edit_product(id, data = data)
+        response = update_product(id, data = data)
         if response.status_code == 200:
             flash('产品修改成功', 'success')
         else:
@@ -140,7 +141,6 @@ def sku_new(product_id):
             image_path = save_upload_file(image_file)
         else:
             image_path = ''
-        url = '%s/api/product_skus' % site
         sku_infos = []
         sku_info = {
         'code': str(request.form.get('code')),
@@ -157,7 +157,11 @@ def sku_new(product_id):
         'product_id': str(product_id),
         'sku_infos': sku_infos
         }
-        response = api_post(url, data)
+        response = create_sku(data)
+        if response.status_code == 201:
+            flash('SKU创建成功', 'success')
+        else:
+            flash('SKU创建失败', 'danger')
         return redirect(url_for('product.sku_index', product_id = product_id))
     product = load_product(product_id)
 
@@ -175,10 +179,52 @@ def sku_new(product_id):
         option_sorted_by_feature.append(group)
     return render_template('product/sku/new.html', product = product, option_sorted_by_feature = option_sorted_by_feature)
 
-@product.route('/sku/<int:id>/edit', methods =['GET', 'POST'])
+@product.route('/sku/<int:id>/edit', methods = ['GET', 'POST'])
 def sku_edit(id):
-    return 'sku_edit_page'
-    #return render_template('product/sku/edit.html')
+    product_id = request.args.get('product_id')
+    if not product_id:
+        return redirect(url_for('product.category_index'))
+    product = load_product(product_id)
+    sku = load_sku(product_id = product_id, sku_id = id)
+    if request.method == 'POST':
+        image_file = request.files.get('image_file')
+        if image_file:
+            image_path = save_upload_file(image_file)
+            if image_path:
+                os.remove(app.config['APPLICATION_DIR'] + sku.get('thumbnail'))
+        else: 
+            image_path = sku.get('thumbnail')
+        data ={
+        'code': request.form.get('code'),
+        'barcode': request.form.get('barcode'),
+        'hscode': request.form.get('hscode'),
+        'weight': request.form.get('weight'),
+        'thumbnail': image_path
+        }
+        response = update_sku(sku_id = id, data = data)
+        if response.status_code == 200:
+            flash('SKU修改成功', 'success')
+        else:
+            flash('SKU修改失败', 'danger')
+        return redirect(url_for('product.sku_index', product_id = product_id))
+    option_set = []
+    for option in sku.get('options'):
+        for key in option:
+            option_set.append([key, option[key]])
+    return render_template('product/sku/edit.html', sku = sku, product = product, option_set = option_set)
+
+@product.route('/sku/<int:id>/delete', methods = ['POST'])
+def sku_delete(id):
+    product_id = request.args.get('product_id')
+    if request.method == 'POST':
+        response = delete_sku(id)
+        if response.status_code == 200:
+            flash('SKU删除成功', 'success')
+        else:
+            flash('SKU删除失败', 'danger')
+        if product_id:
+            return redirect(url_for('product.sku_index', product_id = product_id))
+        return redirect(url_for('product.category_index'))
 
 @product.route('/sku/batch_new/<int:product_id>', methods = ['GET', 'POST'])
 def sku_batch_new(product_id):
@@ -278,7 +324,7 @@ def category_edit(id):
     if request.method == 'POST':
         name = request.form.get('name')
         data = { 'category_name': name }
-        response = edit_category(category.get('category_id'), data = data)
+        response = update_category(category.get('category_id'), data = data)
         if response.status_code == 200:
             flash('产品目录修改成功', 'success')
         else:
@@ -323,7 +369,7 @@ def feature_edit(id):
         'name': request.form.get('name'),
         'description': request.form.get('description')
         }
-        response = edit_feature(feature.get('feature_id'), data = data)
+        response = update_feature(feature.get('feature_id'), data = data)
         if response.status_code == 200:
             flash('产品属性修改成功', 'success')
         else:
@@ -361,7 +407,7 @@ def option_edit(id):
     category_id = request.args.get('category_id')
     if request.method == 'POST':
         data = { 'name': request.form.get('name') }
-        response = edit_option(id , data = data)
+        response = update_option(id , data = data)
         if response.status_code == 200:
             flash('产品属性值修改成功', 'success')
         else:

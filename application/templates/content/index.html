@@ -6,20 +6,21 @@
 <div class="contents">
 	<div class="contents-header">
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
-		<p class="contents-header-p">案例列表</p>
-		<p class="contents-header-p text-sm">list of titles</p>
-		<a class="new-one" href="{{ url_for('content.new') }}"><span class="glyphicon glyphicon-plus"></span></a>
+		<p class="contents-header-p">{{ category.name }}</p>
+		<p class="contents-header-p text-sm">list of contents</p>
+		<a class="new-one" href="{{ url_for('content.new', category_id = category.id) }}"><span class="glyphicon glyphicon-plus"></span></a>
 	</div>
 	<div class="separator"><span></span></div>
 	<div class="widget">
 		<div class="widget_header">
-			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;案例列表</h4>
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;<a href="{{ url_for('content.category_index') }}">目录列表</a> > {{ category.name }}</h4>
 		</div>
 		<div class="widget_contents padding-0">
 			<table class="tables">
 				<thead>
 					<tr>
 						<th>标题名称</th>
+						<th>分类</th>
 						<th>创建日期</th>
 						<th>操作</th>
 					</tr>
@@ -28,6 +29,7 @@
 				{% for content in contents %}
 					<tr>
 						<td><a href="{{ url_for('content.show', id = content.id) }}" class="table-link">{{ content.name }}</a></td>
+						<td>{% for option in content.options %}{{ option.name }}, {% endfor %}</td>
 						<td>{{ content.created_at.strftime('%F %T') }}</td>
 						<td>
 							<a class="table-edit text-info" href="{{ url_for('content.edit', id = content.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>

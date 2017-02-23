@@ -31,7 +31,7 @@
             </div>
             <div class="form-item-2 col-3">
                 <span>经销商</span>
-                <select class="form-control" name="dealer"></select>
+                <select class="form-control" name="user"></select>
             </div>
             <div class="form-item-2 col-3">
                 <span>订单状态</span>
@@ -70,8 +70,8 @@
                                 {{ order.contracts[0].contract_no }}
                             {% endif %}
                         </td>
-                        <td>{{ order.dealer.district.person_in_charge }}</td>
-                        <td>{{ order.dealer.name }}</td>
+                        <td>{{ order.user.sales_areas.all()[0].name }}</td>
+                        <td>{{ order.user.nickname }}</td>
                         <td><span class="text-warning">{{ order.order_status }}</span></td>
                     </tr>
                     {% endfor %}

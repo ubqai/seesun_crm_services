@@ -1,0 +1,90 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('合同详情') }}
+
+<!--这是要添加的内容-->
+<div class="main-content">
+	<div class="text bot-gap-2">
+		<p class="text-title bot-gap-1">合同详情</p>
+		<div class="contract-block top-gap-3">
+			<div class="contract-header">
+				<p class="text-md text-center">江苏赛尚建筑材料有限公司</p>
+				<p class="text-sm text-center" style="color:#9d9d9d">《订货要约》</p>
+			</div>
+            {% for content in contract.order.order_contents %}
+                <div class="contract-item">
+                    <div class="contract-table">
+                        <p class="text-sm">品名：{{ content.product_name }}</p>
+                        <p class="text-sm">型号：{{ content.sku_code }}</p>
+                    </div>
+                    <div class="contract-table">
+                        <p class="text-sm">规格：{{ content.sku_specification }}</p>
+                        <p class="text-sm">数量：{{ content.number }}</p>
+                    </div>
+                    <div class="contract-table">
+                        <p class="text-sm">单价：{{ content.price }}</p>
+                        <p class="text-sm">金额：{{ content.amount }}</p>
+                    </div>
+                    <div class="contract-table">
+                        <p class="text-sm">备注：{{ content.memo }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+			<div class="contract-item">
+				<div class="contract-table">
+					<p class="text-sm">合计（大写）：</p>
+					<p class="text-center text-sm">金额：{{ contract.contract_content.get('amount') }}</p>
+				</div>
+			</div>
+			<div class="contract-item">
+				<div class="contract-table">
+					<p class="text-sm">
+						提醒：接收货物时请检查是否包装完整、产品破损及油污色料污染等情况，以便及时取证，与物流公司商议赔偿处理。
+						<span class="text-warning">请填写好单位名称，收货信息，盖章回传。传真号：0510-86599304</span>
+					</p>
+				</div>
+			</div>
+			<div class="contract-item">
+				<div class="contract-table">
+					<p class="text-sm">要约方（买方）：{{ contract.order.buyer_info.get('buyer') }}</p>
+				</div>
+				<div class="contract-table">
+					<p class="text-sm">单位（章）：</p>
+				</div>
+				<div class="contract-table">
+					<p class="text-sm">收货单位：{{ contract.order.buyer_info.get('buyer_company') }}</p>
+				</div>
+				<div class="contract-table">
+					<p class="text-sm">收货地址：{{ contract.order.buyer_info.get('buyer_address') }}</p>
+				</div>
+				<div class="contract-table">
+					<p class="text-sm">结算方式：</p>
+				</div>
+			</div>
+			<div class="contract-footer">
+				<div class="contract-table">
+					<p class="text-sm">销售方(卖方)：江苏赛尚建筑材料有限公司</p>
+				</div>
+				<div class="contract-table">
+					<p class="text-sm">单位（章）：</p>
+				</div>
+				<div class="contract-table">
+					<p class="text-sm">销售代表：</p>
+				</div>
+				<div class="contract-table">
+					<p class="text-sm">销售助理：0510-85899304</p>
+				</div>
+				<div class="contract-table">
+					<p class="text-sm">传    真：0510-85899304</p>
+				</div>
+				<div class="contract-table">
+					<p class="text-sm">收款日期：</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}

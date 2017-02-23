@@ -24,8 +24,8 @@
 				{% endfor %}
 			</div>
 			<div class="text-right top-gap-1">
+				<a href="{{ url_for('content.classification_show', id = option.classification_id) }}" class="btn btn-default my-btn">返回</a>
 				<button type="submit" class="btn btn-default my-btn">更新</button>
-				<a href="{{ url_for('content.classification_show', id = option.classification_id) }}" class="btn btn-default my-btn">返回</a>									
 			</div>
 		</form>
 	</div>

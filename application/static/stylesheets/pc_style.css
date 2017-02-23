@@ -50,6 +50,12 @@
 .padding-0{
 	padding:0px !important;
 }
+.text-left-i{
+	text-align:left !important;
+}
+.text-right-i{
+	text-align:right !important;
+}
 .full-img{
 	width:100%;
 }
@@ -75,6 +81,7 @@ body{
 	background:#efefef;
 	min-width: 1280px;
 	height:100%;
+	overflow-x:auto !important;
 }
 .body-content{
 	width:100%;
@@ -174,6 +181,7 @@ body{
 	background: #2a3542;
 	top:0px;
 	left:0px;
+	z-index:1;
 }
 #sidebar ul li {
 	position: relative;
@@ -443,6 +451,9 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
     box-shadow: 0 1px 0 #FFFFFF inset;
     border-bottom-color: #dadada;
 }
+.tables.noPadding td {
+    padding:0px;
+}
 .tables td {
     color: #696969;
     font-size: 14px;
@@ -450,6 +461,10 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
     font-weight: normal;
     line-height: 32px;
 		text-align:center;
+}
+.too-long-td{
+		max-width: 400px;
+		word-wrap: break-word;
 }
 .table-link{
     color: #696969;
@@ -731,4 +746,54 @@ textarea.form-input{
 .form-item-2 input, .form-item-2 select {
     display: table-cell;
     border-radius: 0px 5px 5px 0px;
+}
+
+/*2017-2-22 新增加的*/
+.contract-template {
+    padding: 20px;
+		position: relative;
+}
+h4.contract-title {
+    text-align: center;
+    letter-spacing: 2px;
+    color: #5D5D5D;
+}
+p.contract-subtitle {
+    text-align: center;
+    color: #7d7d7d;
+    font-size: 14px;
+    margin: 10px;
+}
+.contract-logo {
+    width: 100px;
+    position: absolute;
+    top: 45px;
+    right: 35px;
+}
+.table th {
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-align: center;
+    font-weight: 500;
+    color: 4d4d4d;
+		background: #ededed;
+}
+.table td {
+    text-align: center;
+    font-weight: 500;
+    color: 7d7d7d;
+    font-size: 12px;
+}
+.contract-footer {
+    padding: 0px 5px;
+}
+.contract-footer-block {
+    float: left;
+    width: 50%;
+}
+.contract-footer-p {
+    line-height: 32px;
+    font-size: 13px;
+    color: #5d5d5d;
+    letter-spacing: 1px;
 }

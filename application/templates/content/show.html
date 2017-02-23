@@ -8,13 +8,15 @@
 	<div class="contents-header">
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
 		<p class="contents-header-p">案例内容</p>
-		<p class="contents-header-p text-sm">list of titles</p>
+		<p class="contents-header-p text-sm">content</p>
 		<a class="new-one" href="{{ url_for('content.edit', id = content.id) }}"><span class="glyphicon glyphicon-edit"></span></a>
 	</div>
 	<div class="separator"><span></span></div>
 	<div class="widget">
 		<div class="widget_header">
-			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;{{ content.name }} <span style="float: right;">{{ content.created_at.strftime('%F %T') }}</span></h4>
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;<a href="{{ url_for('content.category_index') }}">目录列表</a> > 
+			<a href="{{ url_for('content.index', category_id = content.category_id) }}">{{ content.category.name }}</a> > 
+			{{ content.name }} <span style="float: right;">{{ content.created_at.strftime('%F %T') }}</span></h4>
 		</div>
 		<!-- 这部分版面需要优化下 -->
 		<div class="widget_contents padding-0">

@@ -1,0 +1,91 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active = 'sale') }}
+<div class="contents">
+	<div class="contents-header">
+		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+		<p class="contents-header-p">订货要约</p>
+		<p class="contents-header-p text-sm">contract show</p>
+	</div>
+	<div class="separator"><span></span></div>
+	<div class="widget">
+		<div class="widget_header">
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;合同</h4>
+		</div>
+		<div class="widget_contents padding-0">
+			<div class="contract-template">
+				<h4 class="contract-title">江苏塞尚建筑材料有限公司</h4>
+				<p class="contract-subtitle">《订货要约》</p>
+				<img class="contract-logo" src="/static/images/logo.png" />
+				<div class="table-repsonsive top-gap-3">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>订货日期:</th>
+								<th>{{ contract.order.created_at.strftime('%Y-%m-%d') }}</th>
+								<th colspan="3"></th>
+								<th>要约No:{{ contract.contract_content.get('offer_no') }}</th>
+								<th class="text-left-i">交货期：{{ contract.contract_content.get('delivery_time') }}</th>
+							</tr>
+							<tr>
+								<th>品名</th>
+								<th>型号</th>
+								<th>规格</th>
+								<th>数量</th>
+								<th>单价</th>
+								<th>金额</th>
+								<th>备注</th>
+							</tr>
+						</thead>
+						<tbody>
+                            {% for content in contract.order.order_contents %}
+                                <tr>
+                                    <td>{{ content.product_name }}</td>
+                                    <td>{{ content.sku_code }}</td>
+                                    <td>{{ content.sku_specification }}</td>
+                                    <td>{{ content.number }}</td>
+                                    <td>{{ content.price }}</td>
+                                    <td>{{ content.amount }}</td>
+                                    <td>{{ content.memo }}</td>
+                                </tr>
+							{% endfor %}
+							<tr>
+								<td class="text-left-i" colspan="5">合计(大写)：</td>
+								<td>{{ contract.contract_content.get('amount') }}</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td class="text-left-i" colspan="5"> 提醒：接收货物时请检查是否包装完整、产品破损及油污色料污染等情况，以便及时取证，与物流公司商议赔偿处理。</td>
+								<td class="text-left-i" colspan="2">请填写好单位名称，收货信息，盖章回传。传真号：0510-86599304</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="contract-footer clearfix">
+					<div class="contract-footer-block">
+						<p class="contract-footer-p">要约方（买方）：{{ contract.order.buyer_info.get('buyer') }}</p>
+						<p class="contract-footer-p">单位（章）：</p>
+						<p class="contract-footer-p">收货单位：{{ contract.order.buyer_info.get('buyer_company') }}</p>
+						<p class="contract-footer-p">收货地址：{{ contract.order.buyer_info.get('buyer_address') }}</p>
+						<p class="contract-footer-p">计算方式：</p>
+					</div>
+					<div class="contract-footer-block pull-right">
+						<p class="contract-footer-p">销售方(卖方)：江苏赛尚建筑材料有限公司</p>
+						<p class="contract-footer-p">单位（章）：</p>
+						<p class="contract-footer-p">销售代表：</p>
+						<p class="contract-footer-p">销售助理：0510-85899304</p>
+						<p class="contract-footer-p">传    真：0510-85899304</p>
+						<p class="contract-footer-p">收款日期：</p>
+					</div>
+				</div>
+			</div>	
+		</div>
+	</div>
+	<div class="text-right top-gap-1">
+		<a href="javascript:history.go(-1);" class="btn btn-default my-btn">返回</a>
+	</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('物料需要') }}
+
+<div class="main-content">
+	<div class="center-wrappper">
+		<a class="btn btn-warning btn-block text-lg" href="{{ url_for('mobile_material_application') }}">物料申请</a>
+		{% for classification in classifications %}
+			<a class="btn btn-default btn-block top-gap-3 text-lg" href="{{ url_for('mobile_material_need_options', classification_id = classification.id) }}">{{ classification.name }}</a>
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock %}

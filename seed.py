@@ -5,8 +5,13 @@ Execute this file will create a bunch of sample data for mobile application disp
 """
 from application.models import *
 
-district = District(name="华东区", person_in_charge="马云").save
-dealer = Dealer(name="马化腾", district=district).save
+sales_area = SalesAreaHierarchy.query.filter_by(name='上海市').first()
+user1 = User(email='abc@hotmail.con', nickname='普陀区经销商', user_or_origin=2)
+user1.sales_areas.append(sales_area)
+user1.save
+user2 = User(email='bcd@hotmail.con', nickname='长宁区经销商', user_or_origin=2)
+user2.sales_areas.append(sales_area)
+user2.save
 
 if not ContentCategory.query.filter(ContentCategory.name == '案例展示').first():
 	cases = ContentCategory(name = '案例展示').save

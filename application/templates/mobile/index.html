@@ -1,4 +1,5 @@
 {% extends 'mobile_base.html' %}
+{% block html_class %}index-html{% endblock %}
 {% block body_class %}index-body{% endblock %}
 {% block content %}
 
@@ -8,12 +9,12 @@
 	</div>
 </header>
 <div class="main-content">
-	<div id="indexCarousel" class="carousel slide" style="background:#eee">
+	<div id="indexCarousel" class="carousel slide" style="background:#ddd">
 		<div class="carousel-inner" style="padding-bottom:10px">
 			<div class="item active box-style-1">
 				<div id="banner">
 					<a style="display: block; ">
-						<img src="/static/images/index-banner-2.jpg" class="full-img" />
+						<img src="/static/images/index-banner-1.jpg" class="full-img" />
 					</a>
 				</div>
 			</div>
@@ -26,64 +27,66 @@
 			</div>			
 		</div>
 	</div>
+	
 	<div class="menu">
-		<div class="menu-row top-gap-1 clearfix">
-			<div class="col-4-gap menu-ele flipInY">
-				<a href="{{ url_for('mobile_product') }}" ><img src="/static/images/profile.png"></a>
+		<div class="menu-row clearfix">
+			<div class="col-4 menu-ele flipInY">
+				<a href="{{ url_for('mobile_product') }}" ><img src="/static/images/3/8.png"></a>
 				<p>产品展示</p>
 			</div>
-			<div class="col-4-gap menu-ele flipInY">
-				<a href="{{ url_for('mobile_storage') }}"><img src="/static/images/storage.png"></a>
+			<div class="col-4 menu-ele flipInY">
+				<a href="{{ url_for('mobile_storage') }}"><img src="/static/images/3/2.png"></a>
 				<p>库存查询</p>
 			</div>
-			<div class="col-4-gap menu-ele flipInY">
-				<a href="{{ url_for('mobile_share') }}"><img src="/static/images/share.png"></a>
+			<div class="col-4 menu-ele flipInY">
+				<a href="{{ url_for('mobile_share') }}"><img src="/static/images/3/3.png"></a>
 				<p>库存共享</p>
 			</div>
 		</div>
 		<div class="menu-row clearfix">
-			<div class="col-4-gap menu-ele flipInY">
-				<a href="{{ url_for('mobile_case_classifications') }}"><img src="/static/images/show.png"></a>
+			<div class="col-4 menu-ele flipInY">
+				<a href="{{ url_for('mobile_case_show') }}"><img src="/static/images/3/4.png"></a>
 				<p>案例展示</p>
 			</div>
-			<div class="col-4-gap menu-ele flipInY">
-				<a href="{{ url_for('mobile_project_lvl1') }}"><img src="/static/images/service.png"></a>
+			<div class="col-4 menu-ele flipInY">
+				<a href="{{ url_for('mobile_project_lvl1') }}"><img src="/static/images/3/5.png"></a>
 				<p>项目报备</p>
 			</div>
-			<div class="col-4-gap menu-ele flipInY">
-				<a href="{{ url_for('mobile_design') }}"><img src="/static/images/design.png"></a>
+			<div class="col-4 menu-ele flipInY">
+				<a href="{{ url_for('mobile_design') }}"><img src="/static/images/3/10.png"></a>
 				<p>产品设计</p>
 			</div>
 		</div>
 		<div class="menu-row clearfix">
-			<div class="col-4-gap menu-ele flipInY">
-				<a href="{{ url_for('mobile_material_lvl1') }}"><img src="/static/images/need.png"></a>
+			<div class="col-4 menu-ele flipInY">
+				<a href="{{ url_for('mobile_material_need') }}"><img src="/static/images/3/7.png"></a>
 				<p>物料需要</p>
 			</div>
-			<div class="col-4-gap menu-ele flipInY">
-				<a href="{{ url_for('mobile_orders') }}"><img src="/static/images/order.png"></a>
+			<div class="col-4 menu-ele flipInY">
+				<a href="{{ url_for('mobile_orders') }}"><img src="/static/images/3/1.png"></a>
 				<p>一键下单</p>
 			</div>
-			<div class="col-4-gap menu-ele flipInY">
-				<a href="{{ url_for('mobile_tracking_lvl1') }}"><img src="/static/images/tracking.png"></a>
+			<div class="col-4 menu-ele flipInY">
+				<a href="{{ url_for('mobile_tracking_lvl1') }}"><img src="/static/images/3/9.png"></a>
 				<p>物流状态</p>
 			</div>
 		</div>
 		<div class="menu-row clearfix">
-			<div class="col-4-gap menu-ele flipInY">
-				<a href="{{ url_for('mobile_verification') }}"><img src="/static/images/verify.png"></a>
+			<div class="col-4 menu-ele flipInY">
+				<a href="{{ url_for('mobile_verification') }}"><img src="/static/images/3/6.png"></a>
 				<p>检验真伪</p>
 			</div>
-			<div class="col-4-gap menu-ele flipInY">
-				<a href="{{ url_for('mobile_construction_lvl1') }}"><img src="/static/images/industry.png"></a>
+			<div class="col-4 menu-ele flipInY">
+				<a href="{{ url_for('mobile_construction_guide') }}"><img src="/static/images/3/11.png"></a>
 				<p>施工指导</p>
 			</div>
-			<div class="col-4-gap menu-ele flipInY">
-				<a href="{{ url_for('mobile_after_service') }}"><img src="/static/images/kefu.png"></a>
+			<div class="col-4 menu-ele flipInY">
+				<a href="{{ url_for('mobile_after_service') }}"><img src="/static/images/3/12.png"></a>
 				<p>售后服务</p>
 			</div>
 		</div>
-	<div>
+	</div>
+	
 </div>
 <script>
 	$('#indexCarousel').carousel({

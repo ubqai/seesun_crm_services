@@ -3,8 +3,16 @@ body{
 	overflow-x:hidden;
 	
 }
+html.index-html {
+    background-image: url(/static/images/timg.jpg);
+    background-repeat: no-repeat;
+    background-position: bottom;
+    min-height: 100%;
+    background-size: 100% auto;
+}
 .index-body{
-    background-image:url(../images/p-bg2.jpg);
+    background-image:url();
+		background-color:#eee;
 	background-size: auto 100%;
 	background-repeat: repeat；
 	
@@ -367,7 +375,6 @@ td input{
 	margin-right:-5.55%;
     top: -60px;
     margin-bottom: -60px;
-    z-index: -1;
 }
 /*modal*/
 .full-modal .modal-dialog{
@@ -386,6 +393,12 @@ td input{
 .table.text-left td,.table.text-left th{
 	text-align:left;
 }
+/*button*/
+.btn-style-1 {
+    border: 1px solid #F8B500;
+    color: #F8B500;
+    padding: 0.3em 0.5em;
+}
 /*index*/
 .header{
 	box-shadow:0px 0px 3px 0px rgba(0,0,0,0.6);
@@ -395,6 +408,8 @@ td input{
 .index-body .header{
     background:rgba(0,0,0,0);
     box-shadow: none;
+		position:relative;
+		z-index:1;
 }
 .header-logo{
     width: 100px;
@@ -422,14 +437,21 @@ td input{
     margin: 0px auto;
 	margin-bottom:60px;
 }
+/*
 .menu-row {
     margin-top: 30px;
 }
 .menu-row:not(:first-child) {
     margin-top: 50px;
 }
+*/
+.menu {
+    margin-left: -5.5%;
+    margin-right: -5.55%;
+}
 .menu-ele{
 	position:relative;
+  background: #fff;
 }
 .menu-ele a img{
 	width:100%;
@@ -437,18 +459,15 @@ td input{
 .menu-ele a {
     display: block;
     text-align: center;
-    box-shadow: 0px 1px 3px 2px rgba(0,0,0,0.5);
-    border-radius: 200px;
+    width: 50%;
+    margin: 0.9em auto;
 }
 .menu-ele p{
-    position: absolute;
     font-size: 0.75em;
-    letter-spacing: 3px;
+    letter-spacing: 1px;
     text-shadow: 0px 0px 1px rgba(0,0,0,0.4);
-    bottom: -1.5em;
-    width: 185.1%;
     color: #7C7365;
-    margin-left: -56%;
+    margin-top: 0.7em;
     text-align: center;
 }
 /*product*/
@@ -530,6 +549,25 @@ td input{
     color: #fff;
 }
 .fixed-bot a.gray{
+    background: #7C7365;
+    color: #fff;
+}
+.fixed-bot button {
+    display: block;
+    text-align: center;
+    font-size: 1em;
+    padding: 15px 0px;
+		border: none;
+    border-top: 1px solid #ddd;
+}
+.fixed-bot button:last-child {
+    border-right: none;
+}
+.fixed-bot button.orange{
+    background: #F8B500;
+    color: #fff;
+}
+.fixed-bot button.gray{
     background: #7C7365;
     color: #fff;
 }
@@ -625,4 +663,33 @@ td input{
     border-bottom: 0px;
 	background:#7C7365;
 	color:#fff;
+}
+/*合同*/
+.contract-header {
+    padding: 0.5em;
+    border-radius: 0.4em 0.4em 0 0;
+    border: 1px solid #ccc;
+    border-bottom: 1px dashed #ccc;
+}
+.contract-item {
+    padding: 0.6em;
+    border: 1px solid #ccc;
+    border-bottom: 1px dashed #ccc;
+    border-top: none;
+}
+.contract-table {
+    display: table;
+    width: 100%;
+}
+.contract-table p {
+    display: table-cell;
+		width:50%;
+		color:#7d7d7d;
+		line-height:1.9em;
+}
+.contract-footer {
+    padding: 0.5em;
+    border-radius: 0 0 0.4em 0.4em;
+    border: 1px solid #ccc;
+    border-top: none;
 }
