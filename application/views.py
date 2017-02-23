@@ -7,19 +7,9 @@ from .models import *
 from .product.api import *
 
 
-@app.route('/')
-def root():
-    return redirect(url_for('mobile_index'))
-
-
 @app.route('/mobile/index')
 def mobile_index():
     return render_template('mobile/index.html')
-
-
-@app.route('/admin')
-def admin():
-    return redirect(url_for('content.index'))
 
 
 # --- Case show, client content model ---
