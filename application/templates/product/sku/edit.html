@@ -2,7 +2,7 @@
 {% from 'macros/pc_partial.html' import sidebar %}
 {% block main_content %}
 
-{{ sidebar(active_tab = 'product') }}
+{{ sidebar(active = 'product') }}
 
 <div class="contents">
 	<div class="contents-header">
@@ -12,7 +12,7 @@
 	</div>
 	<div class="separator"><span></span></div>
 
-	<form action="{{ url_for('product.sku_new', product_id = product.get('product_id')) }}" enctype="multipart/form-data" method="post">
+	<form action="{{ url_for('product.sku_edit', id = sku.get('sku_id'), product_id = product.get('product_id')) }}" enctype="multipart/form-data" method="post">
 		<div class="widget">
 			<div class="widget_header">
 				<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;{{ product.get('name') }}</h4>
@@ -20,39 +20,35 @@
 			<div class="widget_contents padding-0">
 
 				<div class="form-item inline-2">
-					{% for options in option_sorted_by_feature %}
-						<span class="form-label">{{ options[0].get('feature_name') }}</span>
-						<select name="option_ids[]" class="form-input form-control">
-							{% for option in options %}
-								<option value="{{ option.get('option_id') }}">{{ option.get('option_name') }}</option>
-							{% endfor %}
-						</select>
+					{% for option in option_set %}
+						<span class="form-label">{{ option[0] }}</span>
+						<input class="form-input form-control" name="code" value="{{ option[1] }}" disabled=""/>
 					{% endfor %}
 				</div>
 
 				<div class="form-item inline-2">
 					<span class="form-label">sku代码</span>
-					<input class="form-input form-control" name="code"/>
+					<input class="form-input form-control" name="code" value="{{ sku.get('code') }}"/>
 					<span class="form-label">价格</span>
-					<input class="form-input form-control" name="price"/>
+					<input class="form-input form-control" name="price" value="{{ sku.get('price') }}"/>
 				</div>
 				<div class="form-item inline-2">
 					<span class="form-label">库存</span>
-					<input class="form-input form-control" name="stocks"/>
+					<input class="form-input form-control" name="stocks" disabled=""/>
 					<span class="form-label">Barcode</span>
-					<input class="form-input form-control" name="barcode"/>
+					<input class="form-input form-control" name="barcode" value="{{ sku.get('barcode')}}"/>
 				</div>
 				<div class="form-item inline-2">
 					<span class="form-label">hscode</span>
-					<input class="form-input form-control" name="hscode"/>
+					<input class="form-input form-control" name="hscode" value="{{ sku.get('hscode') }}"/>
 					<span class="form-label">重量</span>
-					<input class="form-input form-control" name="weight"/>
+					<input class="form-input form-control" name="weight" value="{{ sku.get('weight') }}"/>
 				</div>
 				<div class="form-item small-pic">
 					<span class="form-label">产品图片</span>
 					<div class="pic-upload top-gap-1">
 						<input type="file" name="image_file" id="image_file" class="inbox-file">
-						<img class="full-img" src="/static/images/alt.jpg">
+						<img class="full-img" src="{{ sku.get('thumbnail') }}">
 					</div>
 				</div>
 			</div>
@@ -64,6 +60,6 @@
 		</div>
 	</form>
 	
-</div>
+</div> 
 
 {% endblock %}

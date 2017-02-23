@@ -27,6 +27,7 @@
 						<th>code</th>
 						<th>hscode</th>
 						<th>options</th>
+						<th>操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -39,6 +40,12 @@
 						<td>{{ sku.get('code') }}</td>
 						<td>{{ sku.get('hscode') }}</td>
 						<td>{{ sku.get('options') }}</td>
+						<td>
+							<a class="table-edit text-info" href="{{ url_for('product.sku_edit', id = sku.get('sku_id'), product_id = product_id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
+							<form action="{{ url_for('product.sku_delete', id = sku.get('sku_id'), product_id = product_id) }}" method="post" style="display: inline;">
+								<button type="submit" data-confirm="Are you sure?" class="btn-link table-del" style="color: #843534; text-decoration: none; "><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</button>
+							</form>
+						</td>
 					</tr>
 				{% endfor %}
 				</tbody>
