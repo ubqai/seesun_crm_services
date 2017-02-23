@@ -15,7 +15,7 @@
 			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;库存列表</h4>
 		</div>
 		<div class="widget_contents padding-0">
-			<table class="tables">
+			<table class="tables noPadding">
 				<thead>
 					<tr>
 						<th width="15%">产品目录</th>
@@ -29,7 +29,7 @@
 						<td>
                             {% with products_json = load_products(category.get('category_id')) %}
                                 {% if len(products_json) > 0 %}
-                                    <table class="tables">
+                                    <table class="tables noPadding">
                                         <thead>
                                             <tr>
                                                 <th width="20%">产品</th>
@@ -42,7 +42,7 @@
                                                     <td>{{ product_json.get('name') }}</td>
                                                     <td>{% with skus_json = load_skus(product_json.get('product_id')) %}
                                                             {% if len(skus_json.get('skus')) > 0 %}
-                                                                <table class="tables">
+                                                                <table class="tables noPadding">
                                                                     <thead>
                                                                         <tr>
                                                                             <th width="40%">Sku</th>
