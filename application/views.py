@@ -64,10 +64,12 @@ def mobile_product():
 
 @app.route('/mobile/product/<int:id>')
 def mobile_product_show(id):
-    product = load_product(id)
-    case_ids = product.get('case_ids')
-    contents = Content.query.filter(Content.id.in_(case_ids))
-    return render_template('mobile/product_show.html', product = product, contents = contents)
+    product  = load_product(id, option_sorted = True)
+    skus     = load_skus(id)
+    contents = Content.query.filter(Content.id.in_(product.get('case_ids')))
+    option_sorted = product.get('option_sorted')
+    return render_template('mobile/product_show.html', product = product, skus = skus, contents = contents, 
+        option_sorted = option_sorted)
 
 
 # --- Storage model ---

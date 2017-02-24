@@ -4,6 +4,12 @@
 {{ header('产品展示') }}
 
 <div class="main-content">
+	<div class="wrapper">
+		<div class="text">
+			<p class="text-title">{{ content.name }}</p>
+		</div>
+	</div>
+
 	<div class="wrapper">{{ content.description|safe }}</div>
 </div>
 

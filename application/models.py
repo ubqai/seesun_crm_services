@@ -59,6 +59,14 @@ class Content(db.Model, Rails):
         self.append_options(options)
         return self.options
 
+    @property
+    def title_image(self):
+        if self.image_links:
+            for image in self.image_links:
+                if image:
+                    return image
+        return ''
+
 
 # Content_categories: id,name
 class ContentCategory(db.Model, Rails):

@@ -39,7 +39,11 @@
 						<td>{{ sku.get('barcode') }}</td>
 						<td>{{ sku.get('code') }}</td>
 						<td>{{ sku.get('hscode') }}</td>
-						<td>{{ sku.get('options') }}</td>
+						<td>
+						{% for option in sku.get('options') %}
+							{% for key in option %}{{ key }}:{{ option[key] }}{% endfor %}&nbsp;&nbsp;
+						{% endfor %}
+						</td>
 						<td>
 							<a class="table-edit text-info" href="{{ url_for('product.sku_edit', id = sku.get('sku_id'), product_id = product_id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
 							<form action="{{ url_for('product.sku_delete', id = sku.get('sku_id'), product_id = product_id) }}" method="post" style="display: inline;">
@@ -51,12 +55,11 @@
 				</tbody>
 			</table>
 		</div>
-	</div>
 
-	<div class="text-right top-gap-1">
-		<a class="btn btn-default my-btn" href="{{ url_for('product.sku_batch_new', product_id = product_id) }}">批量创建sku</a>
+		<div class="text-right top-gap-1">
+			<a class="btn btn-default my-btn right-gap-1" href="javascript:history.go(-1);">返回</a>
+		</div>
 	</div>
-
 </div>
 
 {% endblock %}

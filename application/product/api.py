@@ -14,11 +14,26 @@ def load_products(category_id):
     else:
         return []
 
-def load_product(product_id):
+def load_product(product_id, option_sorted = False):
     url = '%s/%s/product/%s' % (site, version, product_id)
     response = requests.get(url)
     if response.status_code == 200:
-        return response.json()
+        product = response.json()
+        if option_sorted:
+            options = product.get('options')
+            feature_list = []
+            for option in options:
+                if not option.get('feature_name') in feature_list:
+                    feature_list.append(option.get('feature_name'))
+            option_sorted_by_feature = []
+            for feature in feature_list:
+                group = []
+                for option in options:
+                    if option.get('feature_name') == feature:
+                        group.append(option)
+                option_sorted_by_feature.append(group)
+            product['option_sorted'] = option_sorted_by_feature
+        return product
     else:
         {}
 

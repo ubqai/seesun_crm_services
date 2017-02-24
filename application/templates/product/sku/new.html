@@ -20,7 +20,7 @@
 			<div class="widget_contents padding-0">
 
 				<div class="form-item inline-2">
-					{% for options in option_sorted_by_feature %}
+					{% for options in option_sorted %}
 						<span class="form-label">{{ options[0].get('feature_name') }}</span>
 						<select name="option_ids[]" class="form-input form-control">
 							{% for option in options %}
