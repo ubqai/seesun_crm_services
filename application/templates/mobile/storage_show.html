@@ -25,13 +25,16 @@
 					</p>
 				</div>
 				<div class="p-input">
+					<input name="product_name_{{ sku.get('sku_id') }}" value="{{ skus.get('name') }}" type="hidden">
+					<input name="sku_code_{{ sku.get('sku_id') }}" value="{{ sku.get('code') }}" type="hidden">
+					<input name="sku_specification_{{ sku.get('sku_id') }}" value="{{ sku.get('options') }}" type="hidden">
 					<div class="input-group material-group">
 							<span class="input-group-btn del-btn ">
 									<button type="button" class="btn btn-default btn-padding">
 											<span class="glyphicon glyphicon-minus"></span>
 									</button>
 							</span>
-							<input type="text" class="text-center form-control padding-0 input-number" value="0">
+							<input type="text" name="number_{{ sku.get('sku_id') }}" class="text-center form-control padding-0 input-number" value="0">
 							<span class="input-group-btn add-btn ">
 									<button type="button" class="btn btn-default btn-padding">
 											<span class="glyphicon glyphicon-plus"></span>
