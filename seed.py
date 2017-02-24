@@ -39,7 +39,12 @@ if not ContentCategory.query.filter(ContentCategory.name == '施工指导').firs
 
 	option_list = ['自流平条件', '施工材料指导']
 	for name in option_list:
-		option = ContentClassificationOption(name = name, classification_id = cls1.id).save	
+		option = ContentClassificationOption(name = name, classification_id = cls1.id).save
+
+material_list = '运动展柜 商用展柜 家用展柜 博格画册 专版画册 锐动系列 帝彩尚丽 帝彩尚高 认证证书'.split()
+for i in material_list:
+	if not Material.query.filter(Material.name == i).first():
+		Material(name = i).save
 
 
 

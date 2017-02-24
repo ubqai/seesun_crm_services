@@ -4,9 +4,7 @@
 {{ header('产品展示') }}
 
 <div class="main-content">
-	{% for content in contents %}
-		<div class="wrapper">{{ content.description|safe }}</div>
-	{% endfor %}
+	<div class="wrapper">{{ content.description|safe }}</div>
 </div>
 
 {% endblock %}

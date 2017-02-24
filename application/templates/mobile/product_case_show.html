@@ -11,7 +11,7 @@
 			<div class="case-block">
 			{% for content in contents %}
 				<div class="col-6-gap case">
-					<a href="{{ url_for('mobile_case_content_show', id = content.id) }}" style="display:block"><img src="{{ content.image_path }}" class="full-img"></a>
+					<a href="{{ url_for('mobile_case_content_show', id = content.id) }}" style="display:block"><img src="{{ content.image_links[0] }}" class="full-img"></a>
 					<p class="text-center light-font-md">{{ content.name }}</p>
 				</div>
 			{% endfor %}

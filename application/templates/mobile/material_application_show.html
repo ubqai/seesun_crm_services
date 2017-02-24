@@ -1,0 +1,35 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('物料申请') }}
+
+<div class="main-content">
+	<div class="text bot-gap-2">
+		<p class="text-title bot-gap-1">物料申请详情</p>
+		<div class="contract-block top-gap-3">
+			<div class="contract-header">
+				<p class="text-md text-center">{{ application.app_no }}</p>
+				<p class="text-sm text-center">{{ application.user.sales_areas.all()[0].name }} - {{ application.user.nickname }}</p>
+			</div>
+            {% for content in application.application_contents %}
+                <div class="contract-item">
+                    <div class="contract-table">
+                        <p class="text-sm">物料名称：{{ content.material.name }}</p>
+                        <p class="text-sm">物料数量：{{ content.number }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+			<div class="contract-footer">
+				<div class="contract-table">
+					<p class="text-sm">申请日期： {{ application.created_at.strftime('%F') }}</p>
+				</div>
+				<div class="contract-table">
+					<p class="text-sm">申请状态： {{ application.status }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('物料申请') }}
+
+<div class="main-content">
+	<div class="text bot-gap-2">
+		<p class="text-title bot-gap-1">物料申请列表</p>
+		<div class="expanded-table table-responsive">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>申请号</th>
+						<th>申请日期</th>
+						<th>区域负责人</th>
+						<th>经销商</th>
+						<th>申请状态</th>
+                        <th></th>
+					</tr>
+				</thead>
+				<tbody>
+                    {% for application in applications %}
+                        <tr>
+                            <td>{{ application.app_no }}</td>
+                            <td>{{ application.created_at.strftime('%F') }}</td>
+                            <td>{{ application.user.sales_areas.all()[0].name }}</td>
+                            <td>{{ application.user.nickname }}</td>
+                            <td>{{ application.status }}</td>
+                            <td>
+                            <a href="{{ url_for('mobile_material_application_show', id = application.id) }}" class="text-success">查看详情</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

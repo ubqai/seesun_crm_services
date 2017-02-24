@@ -348,7 +348,7 @@ def feature_new(category_id):
         'feature_infos': feature_infos
         }
         response = create_feature(data)
-        if response.status_code == 200:
+        if response.status_code == 201:
             flash('产品属性创建成功', 'success')
         else:
             flash('产品属性创建失败', 'danger')

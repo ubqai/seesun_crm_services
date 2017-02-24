@@ -61,10 +61,12 @@ def mobile_product():
     return render_template('mobile/product.html', categories =  categories, products_hash = products_hash)
 
 
-@app.route('/mobile/product_show/<int:id>')
+@app.route('/mobile/product/<int:id>')
 def mobile_product_show(id):
     product = load_product(id)
-    return render_template('mobile/product_show.html', product = product)
+    case_ids = product.get('case_ids')
+    contents = Content.query.filter(Content.id.in_(case_ids))
+    return render_template('mobile/product_show.html', product = product, contents = contents)
 
 
 # --- Storage model ---
@@ -218,11 +220,13 @@ def mobile_material_need():
     classifications = category.classifications
     return render_template('mobile/material_need.html', classifications = classifications)
 
+
 @app.route('/mobile/material_need_options/<int:classification_id>')
 def mobile_material_need_options(classification_id):
     classification = ContentClassification.query.get_or_404(classification_id)
     options = classification.options
     return render_template('mobile/material_need_options.html', options = options)
+
 
 @app.route('/mobile/material_need_contents/<int:option_id>')
 def mobile_material_need_contents(option_id):
@@ -230,30 +234,44 @@ def mobile_material_need_contents(option_id):
     contents = option.contents
     return render_template('mobile/material_need_contents.html', contents = contents)
 
-@app.route('/mobile/material_application', methods = ['GET', 'POST'])
-def mobile_material_application():
+
+@app.route('/mobile/material_application/new', methods = ['GET', 'POST'])
+def mobile_material_application_new():
     if request.method == 'POST':
-        return 'cc'
-    return render_template('mobile/material_application.html')
+        app_contents = []
+        if request.form:
+            for param in request.form:
+                if 'material' in param and request.form.get(param):
+                    if int(request.form.get(param)) > 0:
+                        app_contents.append([param.split('_',1)[1], request.form.get(param)])
+        if app_contents:
+            user = User.query.first()
+            application = MaterialApplication(app_no = 'MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
+                user = user, status = '新申请')
+            db.session.add(application)
+            for app_content in app_contents:
+                content = MaterialApplicationContent(material_id = app_content[0], number = app_content[1], 
+                    application = application)
+                db.session.add(content)
+            db.session.commit()
+            flash('物料申请提交成功', 'success')
+        else:
+            flash('Please input correct number!', 'danger')
+        return redirect(url_for('mobile_material_application_new'))
+    materials = Material.query.all()
+    return render_template('mobile/material_application_new.html', materials = materials)
 
-@app.route('/mobile/material_lvl1')
-def mobile_material_lvl1():
-    return render_template('mobile/material_lvl1.html')
+
+@app.route('/mobile/material_applications')
+def mobile_material_applications():
+    applications = MaterialApplication.query.all()
+    return render_template('mobile/material_applications.html', applications = applications)
 
 
-@app.route('/mobile/material_lvl2_for_apply')
-def mobile_material_lvl2_for_apply():
-    return render_template('mobile/material_lvl2_for_apply.html')
-
-
-@app.route('/mobile/material_lvl2_for_download')
-def mobile_material_lvl2_for_download():
-    return render_template('mobile/material_lvl2_for_download.html')
-
-
-@app.route('/mobile/material_lvl3')
-def mobile_material_lvl3():
-    return render_template('mobile/material_lvl3.html')
+@app.route('/mobile/material_application/<int:id>')
+def mobile_material_application_show(id):
+    application = MaterialApplication.query.get_or_404(id)
+    return render_template('mobile/material_application_show.html', application = application)
 
 
 # --- Quick pay ---

@@ -11,116 +11,38 @@
 			<li data-target="#myCarousel" data-slide-to="1"></li>
 		</ol>   
 		<div class="carousel-inner">
+		{% for image in product.get('images') %}
 			<div class="item active">
 				<div id="banner">
-						<a style="display: block; ">
-								<img src="/static/images/sport2.jpg" class="full-img" />
-						</a>
+					<a style="display: block; ">
+						<img src="{{ image }}" class="full-img" />
+					</a>
 				</div>
 			</div>
-			<div class="item">
-				<div id="banner">
-						<a style="display: block; ">
-								<img src="/static/images/sport2.jpg" class="full-img" />
-						</a>
-				</div>
-			</div>			
+		{% endfor %}			
 		</div>
 	</div>
 	
 	<div class="wrapper">
 		<div class="text">
-			<p class="text-title">博格专版木纹</p>
-		</div>
-		
-		<div class="clearfix texture">
-			<div class="col-3-gap texture-block">
-				<img src="/static/images/texture1.jpg" class="full-img">
-				<p class="text-center light-font-sm">BT-7121</p>
-			</div>
-			<div class="modal fade" id="texture1">
-				<div class="modal-dialog texture-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-						<div class="modal-content">
-								<div class="modal-body"><img src="/static/images/texture1.jpg" class="full-img"></div>
-						</div><!-- /.modal-content -->
-				</div><!-- /.modal -->
-			</div>
-			
-			<div class="col-3-gap texture-block">
-				<img src="/static/images/texture2.jpg" class="full-img">
-				<p class="text-center light-font-sm">BT-7122</p>
-			</div>
-			<div class="modal fade" id="texture2">
-				<div class="modal-dialog texture-dialog">
-						<div class="modal-content">
-								<div class="modal-body"><img src="/static/images/texture2.jpg" class="full-img"></div>
-						</div><!-- /.modal-content -->
-				</div><!-- /.modal -->
-			</div>
-			<div class="col-3-gap texture-block">
-				<img src="/static/images/texture1.jpg" class="full-img">
-				<p class="text-center light-font-sm">BT-7122</p>
-			</div>
-			<div class="col-3-gap texture-block">
-				<img src="/static/images/texture2.jpg" class="full-img">
-				<p class="text-center light-font-sm">BT-7122</p>
-			</div>
+			<p class="text-title">{{ product.get('name') }}</p>
 		</div>
 	</div>
-	
-	<div class="wrapper">
-		<div class="text">
-			<p class="text-title">型号规格</p>
-			<p class="text-content text-indent-1 text-sm">产品厚度：5.0/7.0/9.0mm</p>
-			<p class="text-content text-indent-1 text-sm">产品原料：聚氯乙烯100%新料</p>
-			<p class="text-content text-indent-1 text-sm">卷长：20m</p>
-			<p class="text-content text-indent-1 text-sm">卷宽：1.8m</p>
-			<p class="text-content text-indent-1 text-sm">耐磨层厚度：0.8m</p>
-			<p class="text-content text-indent-1 text-sm">重量：4.09/5.01/5.59kg/㎡</p>
-		</div>
-	</div>
-	
-	<div class="wrapper">
-		<div class="text">
-			<p class="text-title">技术参数</p>
-			<p class="text-content text-indent-1 text-sm">产品厚度：5.0/7.0/9.0mm</p>
-			<p class="text-content text-indent-1 text-sm">产品原料：聚氯乙烯100%新料</p>
-			<p class="text-content text-indent-1 text-sm">卷长：20m</p>
-			<p class="text-content text-indent-1 text-sm">卷宽：1.8m</p>
-			<p class="text-content text-indent-1 text-sm">耐磨层厚度：0.8m</p>
-			<p class="text-content text-indent-1 text-sm">重量：4.09/5.01/5.59kg/㎡</p>
-		</div>
-	</div>
+
+	<div class="wrapper">product description area: {{ product.get('description')|safe }}</div>
 	
 	<div class="wrapper">
 		<div class="text">
 			<p class="text-title">案例</p>
 		</div>
 		<div class="case-block">
+		{% for content in contents %}
 			<div class="col-6-gap case">
-				<a href="/mobile_case" style="display:block"><img src="/static/images/sport1.jpg" class="full-img"></a>
-				<p class="text-center light-font-md">无锡国家体育馆</p>
+				<a href="{{ url_for('mobile_case_content_show', id = content.id) }}" style="display:block"><img src="{{ content.image_links[0] }}" class="full-img"></a>
+				<p class="text-center light-font-md">{{ content.name }}</p>
 			</div>
-			<div class="col-6-gap case">
-				<a style="display:block"><img src="/static/images/sport1.jpg" class="full-img"></a>
-				<p class="text-center light-font-md">北京奥运会鸟巢</p>
-			</div>
-			<div class="col-6-gap case">
-				<a style="display:block"><img src="/static/images/sport1.jpg" class="full-img"></a>
-				<p class="text-center light-font-md">北京奥运会鸟巢</p>
-			</div>
-			<div class="col-6-gap case">
-				<a style="display:block"><img src="/static/images/sport1.jpg" class="full-img"></a>
-				<p class="text-center light-font-md">北京奥运会鸟巢</p>
-			</div>
+		{% endfor %}
 		</div>
-	</div>
-
-	<div>
-	产品名称: {{ product.get('name') }}<br>
-	产品代码: {{ product.get('code') }}<br>
-	产品描述: <br>
-	{{ product.get('description')|safe }}
 	</div>
 
 </div>

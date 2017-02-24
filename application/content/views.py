@@ -4,7 +4,7 @@ from flask import Blueprint, flash, g, redirect, render_template, request, url_f
 
 from ..     import app, db
 from ..helpers import object_list, save_upload_file, clip_image
-from ..models  import Content, ContentCategory, ContentClassification, ContentClassificationOption
+from ..models  import Content, ContentCategory, ContentClassification, ContentClassificationOption, MaterialApplication
 from .forms    import *
 
 content = Blueprint('content', __name__, template_folder = 'templates')
@@ -214,3 +214,28 @@ def option_delete(id):
         flash('Content classification option "{name}" has been deleted.'.format(name = option.name), 'success')
         return redirect(url_for('content.classification_show', id = option.classification_id))
     return render_template('content/option/delete.html', option = option)
+
+# --- Material need ---
+@content.route('/material_application/index')
+def material_application_index():
+    applications = MaterialApplication.query.all()
+    return render_template('content/material_application/index.html', applications = applications)
+
+@content.route('/material_application/<int:id>')
+def material_application_show(id):
+    application = MaterialApplication.query.get_or_404(id)
+    return render_template('content/material_application/show.html', application = application)
+
+@content.route('/material_application/<int:id>/approve')
+def material_application_approve(id):
+    application = MaterialApplication.query.get_or_404(id)
+    application.status = '通过申请'
+    application.save
+    return redirect(url_for('content.material_application_index'))
+
+@content.route('/material_application/<int:id>/reject')
+def material_application_reject(id):
+    application = MaterialApplication.query.get_or_404(id)
+    application.status = '拒绝申请'
+    application.save
+    return redirect(url_for('content.material_application_index'))

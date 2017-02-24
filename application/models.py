@@ -122,6 +122,45 @@ class ContentClassificationOption(db.Model, Rails):
         return 'ContentClassificationOption(id: %s, name: %s)' % (self.id, self.name)
 
 
+class Material(db.Model, Rails):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    memo = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+
+    application_contents = db.relationship('MaterialApplicationContent', backref='material', lazy='dynamic')
+
+    def __repr__(self):
+        return 'Material(id: %s, name: %s, ...)' % (self.id, self.name)
+
+
+class MaterialApplication(db.Model, Rails):
+    id         = db.Column(db.Integer, primary_key=True)
+    app_no     = db.Column(db.String(30), unique=True)
+    status     = db.Column(db.String(50))
+    memo       = db.Column(db.String(200))
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    application_contents = db.relationship('MaterialApplicationContent', backref='application', lazy='dynamic')
+
+    def __repr__(self):
+        return 'MaterialApplication(id: %s,...)' % (self.id)
+
+
+class MaterialApplicationContent(db.Model, Rails):
+    id          = db.Column(db.Integer, primary_key=True)
+    material_id = db.Column(db.Integer, db.ForeignKey('material.id'))
+    number      = db.Column(db.Integer)
+    created_at  = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at  = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    application_id = db.Column(db.Integer, db.ForeignKey('material_application.id'))
+
+    def __repr__(self):
+        return 'MaterialApplicationContent(id: %s, material_id: %s, number: %s,...)' % (self.id, self.material_id, self.number)
+
+
 class Order(db.Model, Rails):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
@@ -204,6 +243,7 @@ class User(db.Model, Rails):
     user_or_origin = db.Column(db.Integer)
     user_infos = db.relationship('UserInfo', backref='user')
     orders = db.relationship('Order', backref='user')
+    material_applications = db.relationship('MaterialApplication', backref='user', lazy='dynamic')
     resources = db.relationship('Resource', secondary=users_and_resources,
                                 backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
     sales_areas = db.relationship('SalesAreaHierarchy', secondary=users_and_sales_areas,

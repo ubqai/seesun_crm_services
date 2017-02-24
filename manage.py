@@ -15,6 +15,8 @@ def make_shell_context():
     return dict(app=app, db=db, Content=Content, ContentCategory=ContentCategory,
                 ContentClassification=ContentClassification,
                 ContentClassificationOption=ContentClassificationOption,
+                Material=Material, MaterialApplication=MaterialApplication,
+                MaterialApplicationContent=MaterialApplicationContent,
                 Order=Order, OrderContent=OrderContent, Contract=Contract,
                 User=User, UserInfo=UserInfo, Resource=Resource, SalesAreaHierarchy=SalesAreaHierarchy,
                 DepartmentHierarchy=DepartmentHierarchy)
