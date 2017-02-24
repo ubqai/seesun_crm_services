@@ -76,4 +76,12 @@ $(function(){
 		add_item(["uer_id","production_date","valid_until","batch_no","stocks"])
 	})
 })
+//去除textarea的htmltag
+function delHtmlTag(str){
+    return str.replace(/<[^>]+>/g,"");
+}
+$(function(){
+	var str=$("textarea").val();
+	$("textarea").val(delHtmlTag(str));
+})
  
