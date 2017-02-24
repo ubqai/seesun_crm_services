@@ -22,38 +22,40 @@
 				<span class="form-label">产品代码</span>
 				<input class="form-input form-control" disabled value="{{ product.get('code') }}"/>
 			</div>
-			<div class="form-item small-pic">
-				<span class="form-label">产品图片</span>
-				<div class="pic-upload top-gap-1">
-					<img class="full-img" src="{{ product.get('images')[0] or '/static/images/alt.jpg' }}">
-				</div>
-				<div class="pic-upload top-gap-1">
-					<img class="full-img" src="{{ product.get('images')[1] or '/static/images/alt.jpg' }}">
-				</div>
-			</div>
 			<div class="form-item">
 				<p class="form-label">产品属性</p>
 				{% for options in option_sorted %}
-					<p class="">
+					<p class="label label-bg label-default right-gap-2" style="font-size:15px">
 						{{ options[0].get('feature_name') }}：
-						{% for option in options %}{{ option.get('option_name') }}/{% endfor %}
+						{% for option in options %}{{ option.get('option_name') }}{% endfor %}
 					</p>
 				{% endfor %}
 			</div>
 			<div class="form-item">
-				<span class="form-label">产品描述<br>(样式要改下)</span>
+				<span class="form-label">产品描述</span>
 				<textarea class="form-input form-control" disabled>{{ product.get('description')|safe }}</textarea>
 			</div>
-
-			<div class="form-item">
+			<div class="form-item small-pic">
+				<span class="form-label">产品图片</span>
+				<div class="pic-upload left-gap-28 top-gap-1">
+					<img class="full-img" src="{{ product.get('images')[0] or '/static/images/alt.jpg' }}">
+				</div>
+				<div class="pic-upload left-gap-28 top-gap-1">
+					<img class="full-img" src="{{ product.get('images')[1] or '/static/images/alt.jpg' }}">
+				</div>
+			</div>
+			<div class="form-item small-pic">
 				<span class="form-label">产品SKU</span>
 				{% for sku in skus.get('skus') %}
-					<div class="col-3">
+					<div class="left-gap-28 pic-upload">
 						<img src="{{ sku.get('thumbnail') }}" class="full-img">
 						<p class="text-center light-font-sm">{{ sku.get('code') }}</p>
 					</div>
 				{% endfor %}
-				<a href="{{ url_for('product.sku_index', product_id = product.get('product_id')) }}" class="btn btn-default my-btn">管理SKU</a>
+				<div class="clearfix"></div>
+				<div class="left-gap-28 top-gap-3">
+					<a href="{{ url_for('product.sku_index', product_id = product.get('product_id')) }}" class="btn btn-default my-btn">管理SKU</a>
+				</div>
 			</div>
 
 			<div class="form-item">

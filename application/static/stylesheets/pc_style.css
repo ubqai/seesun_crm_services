@@ -1,4 +1,11 @@
 /*general*/
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    cursor: not-allowed;
+    background-color: #eee;
+    opacity: 1;
+    background: rgba(0,0,0,0);
+    box-shadow: none;
+}
 .top-gap-0{
 	margin-top:0px !important;
 }
@@ -46,6 +53,10 @@
 }
 .right-gap-3{
 	margin-right:20px !important;
+}
+/*custom*/
+.left-gap-28{
+	margin-left:28px !important;
 }
 .padding-0{
 	padding:0px !important;
