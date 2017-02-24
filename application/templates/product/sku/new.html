@@ -21,12 +21,14 @@
 
 				<div class="form-item inline-2">
 					{% for options in option_sorted_by_feature %}
+					<div class="col-3" style="display:table; margin:10px 0px;">
 						<span class="form-label">{{ options[0].get('feature_name') }}</span>
 						<select name="option_ids[]" class="form-input form-control">
 							{% for option in options %}
 								<option value="{{ option.get('option_id') }}">{{ option.get('option_name') }}</option>
 							{% endfor %}
 						</select>
+					</div>
 					{% endfor %}
 				</div>
 
