@@ -36,6 +36,7 @@ $(function(){
 		var items=$(".item-wrapper").find(".form-item");
 		items.each(function(index,ele){
 			var inputs=$(ele).find("input,select");
+			index==0?index="":"";
 			inputs.each(function(_index,_ele){
 				names[_index].indexOf("[]")>0?$(_ele).attr("name",names[_index]):$(_ele).attr("name",names[_index]+index);
 			})		
@@ -69,6 +70,10 @@ $(function(){
 	})
 	$(".new-product").click(function(){
 		add_item(["name"])
+	})
+	//库存
+	$(".new-inventory").click(function(){
+		add_item(["uer_id","production_date","valid_until","batch_no","stocks"])
 	})
 })
  

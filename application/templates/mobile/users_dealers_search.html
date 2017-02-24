@@ -1,0 +1,38 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('经销商管理') }}
+
+<div class="main-content">
+	<div class="wrappper top-gap-3">
+		<form action="{{ url_for('mobile_users_dealers_search') }}" method="get">
+			<input name="email" class="form-control" placeholder="请输入email">
+			<input name="name" class="form-control top-gap-3" placeholder="请输入姓名">
+			<select name="sales_range" class="form-control top-gap-3">
+				<option value="none">选择销售范围</option>
+				{% for id in sales_range %}
+					<option value={{ id }}>{{ sales_range[id] }}</option>
+				{% endfor %}
+			</select>
+			<input type="submit" class="btn btn-block btn-warning top-gap-3">
+		</form>
+	</div>
+
+	<div class="wrappper top-gap-3">
+		{% for ud in users_dealers %}
+		<table class="tables">
+			<tr>
+				<td> {{ ud.email }} </td>
+				<td> {{ ud.nickname }} </td>
+				<td>
+					{% for sa in ud.sales_areas%}
+						{{ sa.name }} ,
+					{% endfor %}
+				</td>
+			</tr>
+		</table>
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock %}

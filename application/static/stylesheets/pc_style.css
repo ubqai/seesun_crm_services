@@ -451,6 +451,9 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
     box-shadow: 0 1px 0 #FFFFFF inset;
     border-bottom-color: #dadada;
 }
+.tables.noPadding td {
+    padding:0px;
+}
 .tables td {
     color: #696969;
     font-size: 14px;
@@ -458,6 +461,10 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
     font-weight: normal;
     line-height: 32px;
 		text-align:center;
+}
+.too-long-td{
+		max-width: 400px;
+		word-wrap: break-word;
 }
 .table-link{
     color: #696969;

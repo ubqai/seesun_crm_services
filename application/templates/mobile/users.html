@@ -1,0 +1,13 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('用户管理') }}
+
+<div class="main-content">
+	<div class="center-wrappper" style="top:100px;">
+		<a href="{{ url_for('mobile_users_staffs') }}" class="btn btn-default btn-block text-lg">员工管理</a>
+		<a href="{{ url_for('mobile_users_dealers') }}" class="btn btn-default btn-block top-gap-3 text-lg">经销商管理</a>
+	</div>
+</div>
+		
+{% endblock %}
