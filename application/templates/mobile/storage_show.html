@@ -2,14 +2,47 @@
 {% from 'macros/mobile_partial.html' import header %}
 {% block content %}
 {{ header('库存查询') }}
-
 <div class="main-content">
 	<div class="text">
 		<p class="text-title title-style-1">{{ skus.get('name') }}</p>
 	</div>
 
-	<form action="{{ url_for('mobile_cart') }}" method="post">
-
+	<form style="margin-top:2.5rem;" action="{{ url_for('mobile_cart') }}" method="post">
+		<div class="storage-block clearfix">
+		{% for sku in skus.get('skus') %}
+			<div class="col-6-gap storage-sku">
+				<a style="display:block"><img src="{{ sku.get('thumbnail') }}" class="full-img"></a>
+				<p class="text-center light-font-md p-title">sku号 ：{{ sku.get('code') }}</p>
+				<div class="p-content">
+					<p class="light-font-sm">
+						库存 ：{{ sku.get('stocks') }}
+					</p>
+					<p class="light-font-sm">
+						价格 ：{{ sku.get('price') }}/m2
+					</p>
+					<p class="light-font-sm">
+						规格 ：{{ sku.get('options') }}
+					</p>
+				</div>
+				<div class="p-input">
+					<div class="input-group material-group">
+							<span class="input-group-btn del-btn ">
+									<button type="button" class="btn btn-default btn-padding">
+											<span class="glyphicon glyphicon-minus"></span>
+									</button>
+							</span>
+							<input type="text" class="text-center form-control padding-0 input-number" value="0">
+							<span class="input-group-btn add-btn ">
+									<button type="button" class="btn btn-default btn-padding">
+											<span class="glyphicon glyphicon-plus"></span>
+									</button>
+							</span>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		</div>
+<!--
 		<div class="expanded-table table-responsive">
 			<table class="table table-striped">
 				<thead>
@@ -43,7 +76,7 @@
 				</tbody>
 			</table>
 		</div>
-		
+		-->
 		<div class="fixed-bot">
 			<button type="submit" class="col-6 orange">加入购物车</button>	
 			<a href="{{ url_for('mobile_cart') }}" class="col-6 gray">进入购物车</a>

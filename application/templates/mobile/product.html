@@ -15,13 +15,11 @@
 			<p class="module-title">{{ category.get('category_name') }}</p>
 			<div class="divider2"></div>
 			{% for product in products_hash.get(category.get('category_id')) %}
-				<div class="module-row clearfix">
-					<a href="{{ url_for('mobile_product_show', id = product.get('product_id')) }}" class="col-6-gap product">
-						<img class="full-img" src="{{ product.get('images')[0] }}">
-						<p>{{ product.get('name') }}</p>
-						<div class="product-divider"></div>
-					</a>
-				</div>				
+				<a href="{{ url_for('mobile_product_show', id = product.get('product_id')) }}" class="col-6-gap product top-gap-1">
+					<img class="full-img" src="{{ product.get('images')[0] }}">
+					<p class="text-center">{{ product.get('name') }}</p>
+					<div class="product-divider"></div>
+				</a>			
 			{% endfor %}
 		</div>
 		<div class="clearfix"></div>
