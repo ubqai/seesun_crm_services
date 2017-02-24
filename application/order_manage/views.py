@@ -35,7 +35,8 @@ def contract_new(id):
         contract_no = "SSCONTR%s" % datetime.datetime.now().strftime('%y%m%d%H%M%S')
         contract_content = {"amount": request.form.get("amount"),
                             "delivery_time": request.form.get("delivery_time"),
-                            "offer_no": request.form.get("offer_no")}
+                            "offer_no": request.form.get("offer_no"),
+                            "sale_contract": request.form.get('sale_contract')}
         contract = Contract(
             contract_no=contract_no,
             order=order,
