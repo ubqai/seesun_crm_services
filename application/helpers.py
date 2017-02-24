@@ -31,6 +31,13 @@ def save_upload_file(file):
         file.save(filepath)
         return '/static/upload/%s' % new_filename
     return None
+
+def delete_file(file_path):
+    try:
+        os.remove(app.config['APPLICATION_DIR'] + file_path)
+    except:
+        pass
+
  
 # This function is for clipping image by a specific size.
 # First, check whether original image's size is bigger than specific.

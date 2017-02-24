@@ -3,7 +3,7 @@ import os
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 
 from ..     import app, db
-from ..helpers import object_list, save_upload_file, clip_image
+from ..helpers import object_list, save_upload_file, delete_file, clip_image
 from ..models  import Content, ContentCategory, ContentClassification, ContentClassificationOption, MaterialApplication
 from .forms    import *
 
@@ -66,7 +66,7 @@ def edit(id):
                 image_path = save_upload_file(image_file)
                 if image_path:
                     clip_image((app.config['APPLICATION_DIR'] + image_path), size = content_image_size)
-                    os.remove(app.config['APPLICATION_DIR'] + content.image_links[0])
+                    delete_file(content.image_links[0])
                     content.image_links = [image_path]
             content.save
             flash('Content "{name}" has been updated.'.format(name = content.name), 'success')

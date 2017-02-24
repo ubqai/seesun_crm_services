@@ -2,13 +2,14 @@
 import os
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 from .. import app, db
-from ..helpers import save_upload_file, clip_image
+from ..helpers import save_upload_file, delete_file, clip_image
 from .api import *
 from ..models import Content, ContentCategory
 
 product = Blueprint('product', __name__, template_folder = 'templates')
 
 product_image_size = (379, 226)
+sku_image_size = (290, 290)
 
 @product.route('/index/<int:category_id>')
 def index(category_id):
@@ -20,18 +21,21 @@ def index(category_id):
 def new(category_id):
     if request.method == 'POST':
         option_ids = request.form.getlist('option_ids[]')
-        image_file = request.files.get('image_file')
-        if image_file:
-            image_path = save_upload_file(image_file)
-            if image_path:
-                clip_image((app.config['APPLICATION_DIR'] + image_path), size = product_image_size)
-        else:
-            image_path = ''
+        image_files = [request.files.get('image_file_0'), request.files.get('image_file_1')]
+        product_image_links = []
+        for image_file in image_files:
+            if image_file:
+                image_path = save_upload_file(image_file)
+                if image_path:
+                    clip_image((app.config['APPLICATION_DIR'] + image_path), size = product_image_size)
+            else:
+                image_path = ''
+            product_image_links.append(image_path)
         product_info = {
         'name': request.form.get('name'),
         'code': request.form.get('code'),
         'description': request.form.get('description'),
-        'product_image_links': [image_path],
+        'product_image_links': product_image_links,
         'case_ids': [],
         'options_id': [ str(id) for id in option_ids ]
         }
@@ -78,8 +82,12 @@ def relate_cases(product_id):
 
 @product.route('/<int:id>')
 def show(id):
-    product = load_product(id)
-    return render_template('product/show.html', product = product)
+    product = load_product(id, option_sorted = True)
+    skus     = load_skus(id)
+    contents = Content.query.filter(Content.id.in_(product.get('case_ids')))
+    option_sorted = product.get('option_sorted')
+    return render_template('product/show.html', product = product, skus = skus, contents = contents,
+        option_sorted = option_sorted)
 
 @product.route('/<int:id>/edit', methods = ['GET', 'POST'])
 def edit(id):
@@ -92,18 +100,24 @@ def edit(id):
     option_ids = [x.get('option_id') for x in product.get('options')]
     if request.method == 'POST':
         option_ids = request.form.getlist('option_ids[]')
-        image_file = request.files.get('image_file')
-        if image_file:
-            image_path = save_upload_file(image_file)
-            if image_path:
-                clip_image((app.config['APPLICATION_DIR'] + image_path), size = product_image_size)
-                os.remove(app.config['APPLICATION_DIR'] + product.get('images')[0])
-        else:
-            image_path = product.get('images')[0]
+        product_image_links = product.get('images') or []
+        if request.files:
+            for param in request.files:
+                if 'image_file' in param and request.files.get(param):
+                    index = int(param.rsplit('_',1)[1])
+                    if len(product_image_links) < index + 1:
+                        for i in range(index+1-len(product_image_links)):
+                            product_image_links.append('')
+                    image_path = save_upload_file(request.files.get(param))
+                    if image_path:
+                        clip_image((app.config['APPLICATION_DIR'] + image_path), size = product_image_size)
+                        if product_image_links[index]:
+                            delete_file(product_image_links[index])
+                        product_image_links[index] = image_path
         data = {
         'name': request.form.get('name'),
         'description': request.form.get('description'),
-        'product_image_links': [image_path],
+        'product_image_links': product_image_links,
         'options_id': [ str(id) for id in option_ids ]
         }
         response = update_product(id, data = data)
@@ -139,13 +153,14 @@ def sku_new(product_id):
         image_file = request.files.get('image_file')
         if image_file:
             image_path = save_upload_file(image_file)
+            if image_path:
+                clip_image((app.config['APPLICATION_DIR'] + image_path), size = sku_image_size)
         else:
             image_path = ''
         sku_infos = []
         sku_info = {
         'code': str(request.form.get('code')),
         'price': str(request.form.get('price')),
-        #'stocks': str(request.form.get('stocks')),
         'barcode': str(request.form.get('barcode')),
         'hscode': str(request.form.get('hscode')),
         'weight': str(request.form.get('weight')),
@@ -163,21 +178,9 @@ def sku_new(product_id):
         else:
             flash('SKU创建失败', 'danger')
         return redirect(url_for('product.sku_index', product_id = product_id))
-    product = load_product(product_id)
-
-    options = product.get('options')
-    feature_list = []
-    for option in options:
-        if not option.get('feature_name') in feature_list:
-            feature_list.append(option.get('feature_name'))
-    option_sorted_by_feature = []
-    for feature in feature_list:
-        group = []
-        for option in options:
-            if option.get('feature_name') == feature:
-                group.append(option)
-        option_sorted_by_feature.append(group)
-    return render_template('product/sku/new.html', product = product, option_sorted_by_feature = option_sorted_by_feature)
+    product = load_product(product_id, option_sorted = True)
+    option_sorted = product.get('option_sorted')
+    return render_template('product/sku/new.html', product = product, option_sorted = option_sorted)
 
 @product.route('/sku/<int:id>/edit', methods = ['GET', 'POST'])
 def sku_edit(id):
@@ -191,16 +194,19 @@ def sku_edit(id):
         if image_file:
             image_path = save_upload_file(image_file)
             if image_path:
-                os.remove(app.config['APPLICATION_DIR'] + sku.get('thumbnail'))
+                clip_image((app.config['APPLICATION_DIR'] + image_path), size = sku_image_size)
+                if sku.get('thumbnail'):
+                    delete_file(sku.get('thumbnail'))
         else: 
             image_path = sku.get('thumbnail')
         data ={
-        'code': request.form.get('code'),
         'barcode': request.form.get('barcode'),
         'hscode': request.form.get('hscode'),
         'weight': request.form.get('weight'),
         'thumbnail': image_path
         }
+        if not request.form.get('code') == sku.get('code'):
+            data['code'] = request.form.get('code')
         response = update_sku(sku_id = id, data = data)
         if response.status_code == 200:
             flash('SKU修改成功', 'success')
@@ -226,11 +232,11 @@ def sku_delete(id):
             return redirect(url_for('product.sku_index', product_id = product_id))
         return redirect(url_for('product.category_index'))
 
+"""
 @product.route('/sku/batch_new/<int:product_id>', methods = ['GET', 'POST'])
 def sku_batch_new(product_id):
     if request.method == 'POST':
         if request.form.get('sku_count'):
-            url = '%s/api/product_skus' % site
             sku_infos = []
             for i in range(int(request.form.get('sku_count'))):
                 if request.form.get('%s_code' % i) and request.form.get('%s_barcode' % i):
@@ -255,7 +261,7 @@ def sku_batch_new(product_id):
             'product_id': str(product_id),
             'sku_infos': sku_infos
             }
-            response = api_post(url, data)
+            response = create_sku(data)
         return redirect(url_for('product.sku_index', product_id = product_id))
     product = load_product(product_id)
     options = product.get('options')
@@ -290,6 +296,7 @@ def sku_batch_new(product_id):
         option_combinations.append(temp)
 
     return render_template('product/sku/batch_new.html', product = product, option_combinations = option_combinations)
+"""
 
 @product.route('/category/index')
 def category_index():
@@ -357,8 +364,12 @@ def feature_new(category_id):
 
 @product.route('/feature/<int:id>')
 def feature_show(id):
+    category_id = request.args.get('category_id')
+    if not category_id:
+        return redirect('product.category_index')
+    category = load_category(category_id)
     feature = load_feature(id)
-    return render_template('product/feature/show.html', feature = feature)
+    return render_template('product/feature/show.html', feature = feature, category = category)
 
 @product.route('/feature/<int:id>/edit', methods = ['GET', 'POST'])
 def feature_edit(id):
