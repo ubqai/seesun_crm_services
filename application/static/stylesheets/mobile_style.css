@@ -525,7 +525,7 @@ td input{
 .case:nth-child(2){
 	margin-top:0px;
 }
-
+/*库存*/
 /*storage*/
 .fixed-bot {
     position: fixed;
@@ -571,6 +571,34 @@ td input{
     background: #7C7365;
     color: #fff;
 }
+.storage-sku{
+	margin-top:15px;
+	position:relative;
+	box-shadow: 0px 0px 1px rgba(0,0,0,0.5);
+}
+.storage-sku .p-title{
+    background-color:#eee;
+    padding: 2px 0px;
+    border-top: 1px solid #aaa;
+}
+.storage-sku .p-content{
+	background:#f0f0f0;
+	padding: 0.25rem 0.35rem;
+	border-top:1px solid #ddd;
+}
+.storage-sku:first-child{
+	margin-top:0px;
+}
+.storage-sku:nth-child(2){
+	margin-top:0px;
+}
+.storage-sku .material-group {
+    width: 100%;
+    margin: 0px auto;
+}
+.storage-sku .material-group  button{
+    border-radius:0px;
+}
 /*share*/
 .center-wrappper {
     position: absolute;
@@ -579,7 +607,7 @@ td input{
 }
 /*物料需要*/
 .btn.btn-padding{
-	padding:9px 5px;
+	padding:6px 5px;
 }
 .line-height-34{
 	line-height:34px;

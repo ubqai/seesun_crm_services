@@ -208,7 +208,7 @@ body{
 	top: 15px;
 }
 
-.active .dcjq-icon {
+.active>a>.dcjq-icon {
 	background: url(/static/images/nav-expand.png) no-repeat bottom;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
@@ -262,7 +262,7 @@ ul.sidebar-menu li ul.sub li a {
 		cursor:pointer;
 }
 
-ul.sidebar-menu li ul.sub li a:hover,ul.sidebar-menu li ul.sub li.active a {
+ul.sidebar-menu li ul.sub>li>a:hover,ul.sidebar-menu li ul.sub>li.active>a {
 	color: #72d0eb;
 	-webkit-transition: all 0.3s ease;
 	-moz-transition: all 0.3s ease;
@@ -338,7 +338,12 @@ ul.sidebar-menu li.active a i {
 ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
 	color: #72d0eb;
 }
-
+.t-sub a:hover{
+    color: #72d0eb !important;
+}
+.t-sub li{
+    padding-left:15px !important;
+}
 
 .mail-info,.mail-info:hover {
 	margin: -3px 6px 0 0;

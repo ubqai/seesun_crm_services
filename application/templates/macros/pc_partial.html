@@ -14,7 +14,12 @@
 					<ul class="sub">
 						<li><a href="{{ url_for('order_manage.order_index') }}">订单列表</a></li>
 						<li><a href="{{ url_for('order_manage.contract_index') }}">合同列表</a></li>
-						<li><a>工作流与审批</a></li>
+						<li>
+							<a>工作流与审批<span class="dcjq-icon"></span></a>
+							<ul class="t-sub">
+								<li><a href="{{ url_for('content.material_application_index') }}">物料申请</a></li>
+							</ul>
+						</li>
 					</ul>
 				</li>
 				<li class="sub-menu {% if active == 'product' %}active{% endif %}">
@@ -22,8 +27,6 @@
 					<ul class="sub">
 						<li><a href="{{ url_for('product.category_index') }}">产品</a></li>
 						<li><a href="{{ url_for('inventory.index') }}">库存</a></li>
-						<li><a href="{{ url_for('content.category_index') }}">内容</a></li>
-						<li><a href="{{ url_for('content.material_application_index') }}">物料申请</a></li>
 					</ul>
 				</li>
 				<li class="sub-menu {% if active == 'design' %}active{% endif %}">
@@ -32,8 +35,11 @@
 						<li><a>待设计列表</a></li>
 					</ul>
 				</li>
-				<li class="{% if active == 'file' %}active{% endif %}">
-					<a><i class="glyphicon glyphicon-folder-open"></i><span>归档中心</span></span></a>
+				<li class="sub-menu {% if active == 'file' %}active{% endif %}">
+					<a><i class="glyphicon glyphicon-folder-open"></i><span>归档中心</span><span class="dcjq-icon"></span></a>
+					<ul class="sub">
+						<li><a href="{{ url_for('content.category_index') }}">内容</a></li>
+					</ul>
 				</li>
 				<li class="sub-menu {% if active == 'service' %}active{% endif %}">
 					<a><i class="glyphicon glyphicon-phone-alt"></i><span>售后服务</span><span class="dcjq-icon"></span></a>
@@ -42,7 +48,7 @@
 					</ul>
 				</li>
 				<li class="{% if active == 'statistics' %}active{% endif %}">
-					<a><i class="glyphicon glyphicon-signal"></i><span>数据统计</span></span></a>
+					<a><i class="glyphicon glyphicon-signal"></i><span>数据统计</span></a>
 				</li>
 				<li class="sub-menu {% if active == 'organization' %}active{% endif %}">
 					<a><i class="glyphicon glyphicon-user"></i><span>系统组织架构</span><span class="dcjq-icon"></span></a>

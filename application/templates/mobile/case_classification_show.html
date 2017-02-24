@@ -16,11 +16,13 @@
 			<p class="module-title">{{ option.name }}</p>
 			<div class="divider2"></div>
 			{% for content in option.contents %}
-				<a href="{{ url_for('mobile_case_content_show', id = content.id) }}" class="col-6-gap product">
-				<img class="full-img" src="{{ content.image_links[0] }}">
-				<p>{{ content.name }}</p>
-				<div class="product-divider"></div>
-				</a>
+				<div class="module-row clearfix">
+					<a href="{{ url_for('mobile_case_content_show', id = content.id) }}" class="col-6-gap product">
+						<img class="full-img" src="{{ content.image_links[0] }}">
+						<p>{{ content.name }}</p>
+						<div class="product-divider"></div>
+					</a>
+				<div class="module-row clearfix">
 			{% endfor %}
 			<div class="clearfix"></div>
 		</div>
