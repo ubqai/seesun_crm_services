@@ -26,16 +26,23 @@ def new(category_id):
     if request.method == 'POST':
         form = ContentForm(request.form)
         if form.validate():
-            option_ids = request.form.getlist('option_ids[]')
-            image_file = request.files['image_file']
+            option_ids = request.form.getlist('option_ids[]') 
             request_options = ContentClassificationOption.query.filter(ContentClassificationOption.id.in_(option_ids))
             content = form.save(Content(category_id = category_id))
             content.append_options(request_options)
-            if image_file:
-                image_path = save_upload_file(image_file)
-                if image_path:
-                    clip_image((app.config['APPLICATION_DIR'] + image_path), size = content_image_size)
-                    content.image_links = [image_path]
+            image_links = []
+            if request.files:
+                for param in request.files:
+                    if 'image_file' in param and request.files.get(param):
+                        index = int(param.rsplit('_',1)[1])
+                        if len(image_links) < index + 1:
+                            for i in range(index+1-len(image_links)):
+                                image_links.append('')
+                        image_path = save_upload_file(request.files.get(param))
+                        if image_path:
+                            clip_image((app.config['APPLICATION_DIR'] + image_path), size = content_image_size)
+                        image_links[index] = image_path
+            content.image_links = image_links
             content.save
             flash('Content "{name}" created successfully.'.format(name = content.name), 'success')
             return redirect(url_for('content.index', category_id = category_id))
@@ -58,16 +65,23 @@ def edit(id):
         form = ContentForm(request.form)
         if form.validate():
             option_ids = request.form.getlist('option_ids[]')
-            image_file = request.files['image_file']
             request_options = ContentClassificationOption.query.filter(ContentClassificationOption.id.in_(option_ids))
             content = form.save(content)
             content.update_options(request_options)
-            if image_file:
-                image_path = save_upload_file(image_file)
-                if image_path:
-                    clip_image((app.config['APPLICATION_DIR'] + image_path), size = content_image_size)
-                    delete_file(content.image_links[0])
-                    content.image_links = [image_path]
+            image_links = list(content.image_links)
+            if request.files:
+                for param in request.files:
+                    if 'image_file' in param and request.files.get(param):
+                        index = int(param.rsplit('_',1)[1])
+                        if len(image_links) < index + 1:
+                            for i in range(index+1-len(image_links)):
+                                image_links.append('')
+                        image_path = save_upload_file(request.files.get(param))
+                        if image_path:
+                            clip_image((app.config['APPLICATION_DIR'] + image_path), size = content_image_size)
+                            delete_file(image_links[index])
+                        image_links[index] = image_path
+            content.image_links = image_links
             content.save
             flash('Content "{name}" has been updated.'.format(name = content.name), 'success')
             return redirect(url_for('content.index', category_id = content.category_id))

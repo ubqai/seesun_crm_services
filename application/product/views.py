@@ -63,13 +63,13 @@ def relate_cases(product_id):
             for content in contents:
                 if content.id in case_ids:
                     if not product_id in content.product_ids:
-                        temp = content.product_ids
+                        temp = list(content.product_ids)
                         temp.append(product_id)
                         content.product_ids = temp
                         db.session.add(content)
                 else:
                     if product_id in content.product_ids:
-                        temp = content.product_ids
+                        temp = list(content.product_ids)
                         temp.remove(product_id)
                         content.product_ids = temp
                         db.session.add(content)

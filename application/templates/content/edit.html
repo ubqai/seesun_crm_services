@@ -31,17 +31,21 @@
 					<span class="form-label">{{ form.description.label }}</span>
 					{{ form.description(class = 'form-input form-control ckeditor') }}
 				</div>
-				<div class="form-item">
-					<span class="form-label">{{ form.image_file.label }}</span>
-					<div class="file">
-						<a href="javascript:;">
-							<span class="glyphicon glyphicon-arrow-up"></span>
-							{{ form.image_file }}
-						</a>
+
+				<div class="form-item small-pic">
+					<span class="form-label">内容图片</span>
+					<div class="pic-upload top-gap-1">
+						<input type="file" name="image_file_0" id="image_file_0" class="inbox-file">
+						<img class="full-img" src="{{ content.image_links[0] or '/static/images/alt.jpg' }}">
 					</div>
 					<div class="pic-upload top-gap-1">
-						<img class="full-img" src="{{ content.image_links[0] }}">
+						<input type="file" name="image_file_1" id="image_file_1" class="inbox-file">
+						<img class="full-img" src="{{ content.image_links[1] or '/static/images/alt.jpg' }}">
 					</div>
+					<div class="pic-upload top-gap-1">
+						<input type="file" name="image_file_2" id="image_file_2" class="inbox-file">
+						<img class="full-img" src="{{ content.image_links[2] or '/static/images/alt.jpg' }}">
+					</div>				
 				</div>
 
 				<div class="form-item">
