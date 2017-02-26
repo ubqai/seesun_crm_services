@@ -84,4 +84,31 @@ $(function(){
 	var str=$("textarea").val();
 	$("textarea").val(delHtmlTag(str));
 })
- 
+
+//增加图片
+$(function(){
+		//names进行重新排列
+	function refresh(_name){
+		var name=_name;
+		var pics=$(".pic-wrapper").find("input[type=file]");
+		pics.each(function(index,ele){
+			$(ele).attr("name",name+index)	
+		});
+	}
+	//增加item
+	function add_pic(_name){
+		var clone=$(".pic-template").clone();
+		var name=clone.removeClass("pic-template").find("input[type=file]").attr("name");
+		clone.find("input[type=file]").remove();
+		var new_file=$("<input type='file'>")
+		new_file.attr("name",name)
+			.attr("id",name)
+			.addClass("inbox-file");
+		clone.prepend(new_file);
+		$(".pic-add").before(clone);
+		refresh(_name);	
+	}
+	$(".pic-add").click(function(){
+		add_pic("image_file");
+	});
+})

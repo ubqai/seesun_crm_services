@@ -70,6 +70,11 @@
 .full-img{
 	width:100%;
 }
+.fixed-height-img-1{
+	height:146px;
+	display:block;
+	margin:0px auto;
+}
 .separator {
   background: url(../images/separator_line.png) repeat-x scroll 0 10px transparent;
 	border: 10px solid rgba(0,0,0,0);
@@ -818,4 +823,13 @@ p.contract-subtitle {
     font-size: 13px;
     color: #5d5d5d;
     letter-spacing: 1px;
+}
+
+/*2017-2-25 新增加的*/
+.pic-add{
+	cursor:pointer;
+	transition:all 0.5s;
+}
+.pic-add:hover{
+	box-shadow:0 0 4px 3px rgba(0,0,0,0.15);
 }
