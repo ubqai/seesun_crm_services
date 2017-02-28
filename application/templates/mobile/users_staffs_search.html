@@ -6,14 +6,9 @@
 <div class="main-content">
 	<div class="wrappper top-gap-3">
 		<form action="{{ url_for('mobile_users_staffs_search') }}" method="get">
-			<input name="email" class="form-control" placeholder="请输入email">
-			<input name="name" class="form-control top-gap-3" placeholder="请输入姓名">
-			<select name="dept_range" class="form-control top-gap-3">
-				<option value="none">选择所属部门</option>
-				{% for id in dept_range %}
-					<option value={{ id }}>{{ dept_range[id] }}</option>
-				{% endfor %}
-			</select>
+			{{ form.email(class="form-control",placeholder="请输入email") }}
+			{{ form.name(class="form-control top-gap-3",placeholder="请输入姓名") }}
+			{{ form.dept_range(class="form-control top-gap-3",placeholder="选择所属部门") }}
 			<input type="submit" class="btn btn-block btn-warning top-gap-3">
 		</form>
 	</div>
@@ -29,9 +24,24 @@
 						{{ d.name }} ,
 					{% endfor %}
 				</td>
+				<td>
+					<a href="{{ url_for('mobile_users_staffs_edit',user_id=us.id) }}">update</a>
+				</td>
 			</tr>
 		</table>
 		{% endfor %}
+
+		{% if pagination %}
+			<div class="pagination">
+				{% if pagination.has_prev %}
+					<a href="{{ url_for('mobile_users_staffs_search', page = pagination.prev_num,name=form.name.data,email=form.email.data,dept_range=form.dept_range.data) }}"><< 上一页</a>
+				{% endif %} 
+					|
+				{% if pagination.has_next %}
+					<a href="{{ url_for('mobile_users_staffs_search', page = pagination.next_num,name=form.name.data,email=form.email.data,dept_range=form.dept_range.date) }}">下一页 >></a>
+				{% endif %}
+			</div>
+		{% endif %}
 	</div>
 </div>
 

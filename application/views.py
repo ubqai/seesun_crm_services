@@ -6,7 +6,7 @@ from . import app
 from .models import *
 from .product.api import *
 import traceback
-
+from .forms import *
 
 @app.route('/mobile/index')
 def mobile_index():
@@ -460,29 +460,21 @@ def mobile_users_staffs():
 def mobile_users_staffs_new():
     if request.method == 'POST':
         try:
-            email,name,address,phone,title,dh_id = request.form.get("email"),request.form.get("name"),request.form.get("address"),request.form.get("phone"),request.form.get("title"),request.form.get("dept_range")
-            if email=="" or name=="" or address=="" or phone=="" or title=="":
-                raise ValueError("请输入参数!")
-            if dh_id=="none" or dh_id=="":
-                raise ValueError("请选择部门!")
+            form = UserForm(request.form)
 
+            if form.validate()==False:
+                raise ValueError("")
 
-            if User.query.filter_by(email=email).count()>0:
+            if User.query.filter_by(email=form.email.data).count()>0:
                 raise ValueError("email已被注册,请更换!")
 
-            dh = DepartmentHierarchy.query.filter_by(id=dh_id).first()
+            dh = DepartmentHierarchy.query.filter_by(id=form.dept_range.data).first()
             if dh==None:
                 raise ValueError("无此部门!")
 
-            ui=UserInfo()
-            ui.name,ui.telephone,ui.address,ui.title = name,phone,address,title
+            ui=UserInfo(name=form.name.data,telephone=form.phone.data,address=form.address.data,title=form.title.data)
 
-            u=User()
-            u.email,u.user_or_origin = email,3
-            if request.form.get("nickname"):
-                u.nickname=request.form.get("nickname")
-            else:
-                u.nickname=name
+            u=User(email=form.email.data,user_or_origin=3,nickname=form.nickname.data)
 
             u.user_infos.append(ui)
             u.departments.append(dh)
@@ -490,41 +482,83 @@ def mobile_users_staffs_new():
             db.session.add(u)
             db.session.commit()
 
-            flash("添加员工 %s,%s 成功" % (email,name))
+            flash("添加员工 %s,%s 成功" % (u.email,u.nickname))
             return render_template('mobile/users_staffs_search.html')
         except Exception as e:
             flash(e)
             print(traceback.print_exc())
-            dept_range={}
-            dhs=DepartmentHierarchy.query.all()
-            for dh in dhs:
-                dept_range[dh.id]=dh.name
-
-            return render_template('mobile/users_staffs_new.html',dept_range=dept_range)
+            return render_template('mobile/users_staffs_new.html',form=form)
     else:
-        dept_range={}
-        dhs=DepartmentHierarchy.query.all()
-        for dh in dhs:
-            dept_range[dh.id]=dh.name
+        form = UserForm()
+        return render_template('mobile/users_staffs_new.html',form=form)
 
-        return render_template('mobile/users_staffs_new.html',dept_range=dept_range)
+@app.route('/mobile/users/staffs/edit/<int:user_id>' , methods=['GET', 'POST'])
+def mobile_users_staffs_edit(user_id):
+    app.logger.info("into mobile_users_staffs_edit and method : %s" % (request.method))
+    if request.method == 'POST':
+        try:
+            form = UserForm(request.form)
+            app.logger.info("form info [%s]" % (request.form) )
+            u = User.query.filter_by(id=user_id).first()
+            if u==None:
+                raise ValueError("no user found!")
+
+            if form.validate()==False:
+                raise ValueError("")
+
+            dh = DepartmentHierarchy.query.filter_by(id=form.dept_range.data).first()
+            if dh==None:
+                raise ValueError("无此部门!")
+
+            u.email=form.email.data
+            u.emailnickname=form.nickname.data
+
+            ui = u.user_infos[0]
+            ui.name=form.name.data
+            ui.telephone=form.phone.data
+            ui.address=form.address.data
+            ui.title=form.title.data
+
+            u.departments.remove(u.departments[0])
+            u.departments.append(dh)
+
+            db.session.add(u)
+            db.session.commit()
+
+            flash("修改员工 %s,%s 成功" % (u.email,u.nickname))
+            return render_template('mobile/users_staffs_search.html')
+        except Exception as e:
+            flash(e)
+            print(traceback.print_exc())
+            if u==None:
+                return render_template('mobile/users_staffs_search.html')
+            else:
+                return render_template('mobile/users_staffs_edit.html',form=form,user_id=u.id)
+    else:
+        u=User.query.filter_by(id=user_id).first()
+        form = UserForm(obj=u)
+        ui=u.user_infos[0]
+        form.name.data=ui.name
+        form.address.data=ui.address
+        form.phone.data=ui.telephone
+        form.title.data=ui.title
+        form.dept_range.choices= [(str(u.departments[0].id),u.departments[0].name)] + [(str(dh.id),dh.name) for dh in DepartmentHierarchy.query.all() ]
+        return render_template('mobile/users_staffs_edit.html',form=form,user_id=u.id)
 
 @app.route('/mobile/users/staffs/search')
-def mobile_users_staffs_search():
-    dept_range={}
-    dhs=DepartmentHierarchy.query.all()
-    for dh in dhs:
-        dept_range[dh.id]=dh.name
+@app.route('/mobile/users/staffs/search/<int:page>')
+def mobile_users_staffs_search(page=1):
+    form=UserSearchForm(request.args)
 
     us = User.query.filter_by(user_or_origin=3)
-    if request.args.get("email"):
-        us = us.filter(User.email.like(request.args.get("email")+"%"))
-    if request.args.get("name"):
-        us = us.filter(User.nickname.like("%"+request.args.get("name")+"%"))
+    if form.email.data:
+        us = us.filter(User.email.like(form.email.data+"%"))
+    if form.name.data:
+        us = us.filter(User.nickname.like("%"+form.name.data+"%"))
     #how to search in many-to-many
-    if request.args.get("dept_range"):
+    if form.dept_range.data:
         pass
     
-    us=us.all()
+    pagination = us.paginate(page, 2, False) 
 
-    return render_template('mobile/users_staffs_search.html',users_staffs=us,dept_range=dept_range)
+    return render_template('mobile/users_staffs_search.html',users_staffs=pagination.items,pagination=pagination,form=form)
