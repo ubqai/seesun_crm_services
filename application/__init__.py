@@ -17,6 +17,8 @@ from .order_manage.views import order_manage
 app.register_blueprint(order_manage, url_prefix='/order_manage')
 from .inventory.views import inventory
 app.register_blueprint(inventory, url_prefix='/inventory')
+from .wechat.views import wechat
+app.register_blueprint(wechat, url_prefix='/wechat')
 
 from .inventory.api import load_products, load_skus
 app.add_template_global(load_products)

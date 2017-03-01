@@ -5,8 +5,8 @@
 
 <div class="main-content">
 	<div class="wrappper top-gap-3">
-		<form action="{{ url_for('mobile_users_dealers_new') }}" method="post">
-			{{ form.email(class="form-control",placeholder="请输入email") }}
+		<form action="{{ url_for('mobile_users_dealers_edit',user_id=user_id) }}" method="post">
+			{{ form.email(class="form-control",placeholder="请输入email",readonly="readonly") }}
 			{% if form.email.errors %}
 			    <ul class="errors">
 			    	{% for error in form.email.errors %}
@@ -60,6 +60,9 @@
 			    </ul>
 			{% endif %}
 
+
+			{{ form.existed_sales_range(class="form-control top-gap-3",readonly="readonly") }}
+
 			{{ form.sales_range(class="form-control top-gap-3",placeholder="选择销售范围") }}
 			{% if form.sales_range.errors %}
 			    <ul class="errors">
@@ -69,7 +72,7 @@
 			    </ul>
 			{% endif %}
 			
-			<input type="submit" class="btn btn-block btn-warning top-gap-3" value="新增">
+			<input type="submit" class="btn btn-block btn-warning top-gap-3" value="修改">
 		</form>
 	</div>
 </div>

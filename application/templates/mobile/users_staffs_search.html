@@ -14,25 +14,36 @@
 	</div>
 
 	<div class="wrappper top-gap-3">
-		{% for us in users_staffs %}
-		<table class="tables">
-			<tr>
-				<td> {{ us.email }} </td>
-				<td> {{ us.nickname }} </td>
-				<td>
-					{% for d in us.departments%}
-						{{ d.name }} ,
-					{% endfor %}
-				</td>
-				<td>
-					<a href="{{ url_for('mobile_users_staffs_edit',user_id=us.id) }}">update</a>
-				</td>
-			</tr>
+		{% if users_staffs: %}
+		<table class="table table-striped">
+			<thead>
+				<tr>
+				  <th>email</th>
+				  <th>name</th>
+				  <th>departments</th>
+				  <th>operator</th>
+				</tr>
+			</thead>
+			{% for us in users_staffs %}
+				<tr>
+					<td> {{ us.email }} </td>
+					<td> {{ us.nickname }} </td>
+					<td>
+						{% for d in us.departments%}
+							{{ d.name }} ,
+						{% endfor %}
+					</td>
+					<td>
+						<a href="{{ url_for('mobile_users_staffs_edit',user_id=us.id) }}">
+						update</a>
+					</td>
+				</tr>
+			{% endfor %}
 		</table>
-		{% endfor %}
+		{% endif %}
 
 		{% if pagination %}
-			<div class="pagination">
+			<div style="text-align:center;font-size:12px">
 				{% if pagination.has_prev %}
 					<a href="{{ url_for('mobile_users_staffs_search', page = pagination.prev_num,name=form.name.data,email=form.email.data,dept_range=form.dept_range.data) }}"><< 上一页</a>
 				{% endif %} 
