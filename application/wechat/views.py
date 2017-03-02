@@ -115,7 +115,7 @@ def server_authentication():
             text_event=root.getElementsByTagName('Event')[0].firstChild.data
             text_ek=root.getElementsByTagName('EventKey')[0].firstChild.data
             if text_event=="CLICK":
-                if text_ek=="click_bind_user"
+                if text_ek=="click_bind_user":
                     element_content = ret_doc.createElement('Content') 
                     text_content = ret_doc.createTextNode("功能尚在开发")
                     element_content.appendChild(text_content)
