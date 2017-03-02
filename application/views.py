@@ -126,14 +126,14 @@ def mobile_cart():
             for param in request.form:
                 if 'number' in param and request.form.get(param):
                     index = param.rsplit('_', 1)[1]
-                    order_content = {'product_name': request.form.get('product_name_%s' % index),
-                                     # should be optimized later
-                                     'sku_specification': request.form.get('sku_specification_%s' % index),
-                                     'sku_code': request.form.get('sku_code_%s' % index),
-                                     'sku_id': index,
-                                     'number': int(request.form.get('number_%s' % index)),
-                                     'square_num': "%.2f" % (0.3*int(request.form.get('number_%s' % index)))}
-                    order.append(order_content)
+                    if int(request.form.get('number_%s' % index)) > 0:
+                        order_content = {'product_name': request.form.get('product_name_%s' % index),
+                                         'sku_specification': request.form.get('sku_specification_%s' % index),
+                                         'sku_code': request.form.get('sku_code_%s' % index),
+                                         'sku_id': index,
+                                         'number': int(request.form.get('number_%s' % index)),
+                                         'square_num': "%.2f" % (0.3*int(request.form.get('number_%s' % index)))}
+                        order.append(order_content)
         session['order'] = order
         return redirect(url_for('mobile_cart'))
     return render_template('mobile/cart.html', order=order)
