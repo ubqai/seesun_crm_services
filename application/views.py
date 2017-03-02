@@ -447,7 +447,7 @@ def mobile_users_dealers_edit(user_id):
             u.nickname=form.nickname.data
 
             if len(u.user_infos)==0:
-                ui = UserInfo
+                ui = UserInfo()
             else:
                 ui = u.user_infos[0]
 
@@ -584,7 +584,7 @@ def mobile_users_staffs_edit(user_id):
             u.nickname=form.nickname.data
 
             if len(u.user_infos)==0:
-                ui = UserInfo
+                ui = UserInfo()
             else:
                 ui = u.user_infos[0]
             ui.name=form.name.data
