@@ -83,6 +83,7 @@ def server_authentication():
         text_tun=root.getElementsByTagName('ToUserName')[0].firstChild.data
         text_fun=root.getElementsByTagName('FromUserName')[0].firstChild.data
         text_ct=root.getElementsByTagName('CreateTime')[0].firstChild.data
+        text_mt=root.getElementsByTagName('MsgType')[0].firstChild.data
 
         ret_doc = xml.dom.minidom.Document() 
         element_root = ret_doc.createElement('xml') 
@@ -95,6 +96,10 @@ def server_authentication():
         text_from_user_name = ret_doc.createCDATASection(text_tun)
         element_from_user_name.appendChild(text_from_user_name)
 
+        element_root.appendChild(element_to_user_name)
+        element_root.appendChild(element_from_user_name)
+
+        #暂时全部返回文本消息
         element_create_time = ret_doc.createElement('CreateTime') 
         text_create_time = ret_doc.createTextNode(text_ct)
         element_create_time.appendChild(text_create_time)
@@ -103,17 +108,41 @@ def server_authentication():
         text_msg_type = ret_doc.createTextNode("text")
         element_msg_type.appendChild(text_msg_type)
 
-        element_content = ret_doc.createElement('Content') 
-        text_content = ret_doc.createTextNode("请点击按钮进行操作")
-        element_content.appendChild(text_content)
-
-        element_root.appendChild(element_to_user_name)
-        element_root.appendChild(element_from_user_name)
         element_root.appendChild(element_create_time)
         element_root.appendChild(element_msg_type)
-        element_root.appendChild(element_content)
-        ret_doc.appendChild(element_root)
 
+        if text_mt=="event":
+            text_event=root.getElementsByTagName('Event')[0].firstChild.data
+            text_ek=root.getElementsByTagName('EventKey')[0].firstChild.data
+            if text_event=="CLICK":
+                if text_ek=="click_bind_user"
+                    element_content = ret_doc.createElement('Content') 
+                    text_content = ret_doc.createTextNode("功能尚在开发")
+                    element_content.appendChild(text_content)
+
+                    element_root.appendChild(element_content)
+                else:
+                    element_content = ret_doc.createElement('Content') 
+                    text_content = ret_doc.createTextNode("未知click事件:"+text_ek)
+                    element_content.appendChild(text_content)
+
+                    element_root.appendChild(element_content)        
+            elif text_event=="subscribe":
+                element_content = ret_doc.createElement('Content') 
+                text_content = ret_doc.createTextNode("感谢关注公众号,请点击按钮进行操作")
+                element_content.appendChild(text_content)
+
+                element_root.appendChild(element_content)
+            else:
+                return ""
+        else:
+            element_content = ret_doc.createElement('Content') 
+            text_content = ret_doc.createTextNode("请点击按钮进行操作")
+            element_content.appendChild(text_content)
+
+            element_root.appendChild(element_content)
+
+        ret_doc.appendChild(element_root)
         xmlstr= ret_doc.toxml()
 
         app.logger.info("return xml : [" + xmlstr+"]")
