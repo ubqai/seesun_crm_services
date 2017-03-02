@@ -6,32 +6,53 @@
 <div class="main-content">
 	<div class="wrappper top-gap-3">
 		<form action="{{ url_for('mobile_users_dealers_search') }}" method="get">
-			<input name="email" class="form-control" placeholder="请输入email">
-			<input name="name" class="form-control top-gap-3" placeholder="请输入姓名">
-			<select name="sales_range" class="form-control top-gap-3">
-				<option value="none">选择销售范围</option>
-				{% for id in sales_range %}
-					<option value={{ id }}>{{ sales_range[id] }}</option>
-				{% endfor %}
-			</select>
+			{{ form.email(class="form-control",placeholder="请输入email") }}
+			{{ form.name(class="form-control top-gap-3",placeholder="请输入姓名") }}
+			{{ form.sales_range(class="form-control top-gap-3",placeholder="选择销售范围") }}
 			<input type="submit" class="btn btn-block btn-warning top-gap-3">
 		</form>
 	</div>
 
 	<div class="wrappper top-gap-3">
-		{% for ud in users_dealers %}
-		<table class="tables">
-			<tr>
-				<td> {{ ud.email }} </td>
-				<td> {{ ud.nickname }} </td>
-				<td>
-					{% for sa in ud.sales_areas%}
-						{{ sa.name }} ,
-					{% endfor %}
-				</td>
-			</tr>
+		{% if users_dealers: %}
+		<table class="table table-striped">
+			<thead>
+				<tr>
+				  <th>email</th>
+				  <th>name</th>
+				  <th>sales_areas</th>
+				  <th>operator</th>
+				</tr>
+			</thead>
+			{% for us in users_dealers %}
+				<tr>
+					<td> {{ us.email }} </td>
+					<td> {{ us.nickname }} </td>
+					<td>
+						{% for sa in us.sales_areas%}
+							{{ sa.name }} ,
+						{% endfor %}
+					</td>
+					<td>
+						<a href="{{ url_for('mobile_users_dealers_edit',user_id=us.id) }}">
+						update</a>
+					</td>
+				</tr>
+			{% endfor %}
 		</table>
-		{% endfor %}
+		{% endif %}
+
+		{% if pagination %}
+			<div style="text-align:center;font-size:12px">
+				{% if pagination.has_prev %}
+					<a href="{{ url_for('mobile_users_dealers_search', page = pagination.prev_num,name=form.name.data,email=form.email.data,sales_range=form.sales_range.data) }}"><< 上一页</a>
+				{% endif %} 
+					|
+				{% if pagination.has_next %}
+					<a href="{{ url_for('mobile_users_dealers_search', page = pagination.next_num,name=form.name.data,email=form.email.data,sales_range=form.sales_range.date) }}">下一页 >></a>
+				{% endif %}
+			</div>
+		{% endif %}
 	</div>
 </div>
 

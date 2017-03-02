@@ -259,7 +259,6 @@ class User(db.Model, Rails):
     departments = db.relationship('DepartmentHierarchy', secondary=users_and_departments,
                                   backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
 
-
 class UserInfo(db.Model):
     __tablename__ = 'user_infos'
     id = db.Column(db.Integer, primary_key=True)
@@ -291,7 +290,3 @@ class DepartmentHierarchy(db.Model):
     name = db.Column(db.String(300), nullable=False)
     parent_id = db.Column(db.Integer)
     level_grade = db.Column(db.Integer)
-
-
-
-

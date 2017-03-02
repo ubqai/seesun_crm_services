@@ -6,7 +6,8 @@ from . import app
 from .models import *
 from .product.api import *
 import traceback
-
+from .forms import *
+from sqlalchemy import distinct
 
 @app.route('/mobile/index')
 def mobile_index():
@@ -383,73 +384,142 @@ def mobile_users_dealers():
 
 @app.route('/mobile/users/dealers/new' , methods=['GET', 'POST'])
 def mobile_users_dealers_new():
-    app.logger.info("into mobile_users_dealers_new %s" , request.method)
+    app.logger.info("into mobile_users_dealers_new %s,[%s]" , request.method,request.form)
     if request.method == 'POST':
         try:
-            email,name,address,phone,title,sah_id = request.form.get("email"),request.form.get("name"),request.form.get("address"),request.form.get("phone"),request.form.get("title"),request.form.get("sales_range")
-            if email=="" or name=="" or address=="" or phone=="" or title=="":
-                raise ValueError("请输入参数!")
+            form = UserDealerForm(request.form)
 
-            if sah_id=="none" or sah_id=="":
-                raise ValueError("请选择销售区域!")
+            app.logger.info("sales_range [%s]" , form.sales_range.data)
+            if form.validate()==False:
+                raise ValueError("")
 
-
-            if User.query.filter_by(email=email).count()>0:
+            if User.query.filter_by(email=form.email.data).count()>0:
                 raise ValueError("email已被注册,请更换!")
 
-            sah = SalesAreaHierarchy.query.filter_by(id=sah_id).first()
-            if sah==None:
-                raise ValueError("无此销售区域!")
+            # sah = SalesAreaHierarchy.query.filter_by(id=form.email.data).first()
+            # if sah==None:
+            #     raise ValueError("无此销售区域!")
 
-            ui=UserInfo()
-            ui.name,ui.telephone,ui.address,ui.title = name,phone,address,title
+            ui=UserInfo(name=form.name.data,telephone=form.phone.data,address=form.address.data,title=form.title.data)
 
-            u=User()
-            u.email,u.user_or_origin,u.nickname = email,2,name
+            u=User(email=form.email.data,user_or_origin=2,nickname=form.nickname.data)
+
             u.user_infos.append(ui)
-            u.sales_areas.append(sah)
+            for sah_id in form.sales_range.data:
+                sah = SalesAreaHierarchy.query.filter_by(id=int(sah_id)).first()
+                if sah==None:
+                    raise ValueError("销售区域错误[%s]" % (sah_id))
+                u.sales_areas.append(sah)
 
             db.session.add(u)
             db.session.commit()
 
-            flash("添加经销商 %s,%s 成功" % (email,name))
-            return render_template('mobile/users_dealers_search.html')
+            flash("添加经销商 %s,%s 成功" % (u.email,u.nickname))
+            return render_template('mobile/users_dealers_search.html',form=UserDealerForm())
         except Exception as e:
             flash(e)
             print(traceback.print_exc())
-            sales_range={}
-            sahs=SalesAreaHierarchy.query.filter_by(level_grade=3).all()
-            for sah in sahs:
-                sales_range[sah.id]=sah.name
 
-            return render_template('mobile/users_dealers_new.html',sales_range=sales_range)
+            return render_template('mobile/users_dealers_new.html',form=form)
     else:
-        sales_range={}
-        sahs=SalesAreaHierarchy.query.filter_by(level_grade=3).all()
-        for sah in sahs:
-            sales_range[sah.id]=sah.name
+        form = UserDealerForm()
+        return render_template('mobile/users_dealers_new.html',form=form)
 
-        return render_template('mobile/users_dealers_new.html',sales_range=sales_range)
+
+
+@app.route('/mobile/users/dealers/edit/<int:user_id>' , methods=['GET', 'POST'])
+def mobile_users_dealers_edit(user_id):
+    if request.method == 'POST':
+        try:
+            form = UserDealerForm(request.form)
+            u = User.query.filter_by(id=user_id).first()
+            if u==None:
+                raise ValueError("no user found!")
+
+            app.logger.info("sales_range [%s]" , form.sales_range.data)
+            if form.validate()==False:
+                raise ValueError("")
+
+            # sah = SalesAreaHierarchy.query.filter_by(id=form.email.data).first()
+            # if sah==None:
+            #     raise ValueError("无此销售区域!")
+            u.email=form.email.data
+            u.nickname=form.nickname.data
+
+            if len(u.user_infos)==0:
+                ui = UserInfo()
+            else:
+                ui = u.user_infos[0]
+
+            ui.name=form.name.data
+            ui.telephone=form.phone.data
+            ui.address=form.address.data
+            ui.title=form.title.data
+
+            if len(u.user_infos)==0:
+                u.user_infos.append(ui)
+
+            if sorted([str(i.id) for i in u.sales_areas]) != sorted(form.sales_range.data):
+                app.logger.info("reset sales_range")
+                for sa in u.sales_areas:
+                    u.sales_areas.remove(sa)
+                for sah_id in form.sales_range.data:
+                    app.logger.info("reset sales_range [%s]" % (sah_id))
+                    sah = SalesAreaHierarchy.query.filter_by(id=int(sah_id)).first()
+                    if sah==None:
+                        raise ValueError("销售区域错误[%s]" % (sah_id))
+                    u.sales_areas.append(sah)
+            else:
+                app.logger.info("same sales_range")
+
+
+            db.session.add(u)
+            db.session.commit()
+
+            flash("修改经销商 %s,%s 成功" % (u.email,u.nickname))
+            return render_template('mobile/users_dealers_search.html',form=UserDealerForm())
+        except Exception as e:
+            flash(e)
+            print(traceback.print_exc())
+
+            if u==None:
+                return render_template('mobile/users_dealers_search.html',form=UserDealerForm())
+            else:
+                return render_template('mobile/users_dealers_edit.html',form=form,user_id=u.id)
+    else:
+        u=User.query.filter_by(id=user_id).first()
+        form = UserDealerForm(obj=u)
+        if len(u.user_infos)==0:
+            pass
+        else:
+            ui=u.user_infos[0]
+            form.name.data=ui.name
+            form.address.data=ui.address
+            form.phone.data=ui.telephone
+            form.title.data=ui.title
+
+        form.existed_sales_range.data='已选择销售范围 : '+','.join([i.name for i in u.sales_areas])
+        form.sales_range.default=[str(i.id) for i in u.sales_areas]
+        return render_template('mobile/users_dealers_edit.html',form=form,user_id=u.id)
 
 @app.route('/mobile/users/dealers/search')
-def mobile_users_dealers_search():
-    sales_range={}
-    sahs=SalesAreaHierarchy.query.filter_by(level_grade=3).all()
-    for sah in sahs:
-        sales_range[sah.id]=sah.name
+@app.route('/mobile/users/dealers/search/<int:page>')
+def mobile_users_dealers_search(page=1):
+    form=UserDealerForm(request.args)
 
-    us = User.query.filter_by(user_or_origin=2)
-    if request.args.get("email"):
-        us = us.filter(User.email.like(request.args.get("email")+"%"))
-    if request.args.get("name"):
-        us = us.filter(User.nickname.like("%"+request.args.get("name")+"%"))
+    us = db.session.query(distinct(User.id)).filter(User.user_or_origin==2)
+    if form.email.data:
+        us = us.filter(User.email.like(form.email.data+"%"))
+    if form.name.data:
+        us = us.filter(User.nickname.like("%"+form.name.data+"%"))
     #how to search in many-to-many
-    if request.args.get("sales_range"):
-        pass
-    
-    us=us.all()
+    if form.sales_range.data and form.sales_range.data != ["-1"]:
+        us=us.join(User.sales_areas).filter(SalesAreaHierarchy.id.in_(form.sales_range.data))
 
-    return render_template('mobile/users_dealers_search.html',users_dealers=us,sales_range=sales_range)
+    us=User.query.filter(User.id.in_(us)).order_by(User.id)
+    pagination = us.paginate(page, 10, False) 
+
+    return render_template('mobile/users_dealers_search.html',users_dealers=pagination.items,pagination=pagination,form=form)
 
 
 @app.route('/mobile/users/staffs')
@@ -460,29 +530,21 @@ def mobile_users_staffs():
 def mobile_users_staffs_new():
     if request.method == 'POST':
         try:
-            email,name,address,phone,title,dh_id = request.form.get("email"),request.form.get("name"),request.form.get("address"),request.form.get("phone"),request.form.get("title"),request.form.get("dept_range")
-            if email=="" or name=="" or address=="" or phone=="" or title=="":
-                raise ValueError("请输入参数!")
-            if dh_id=="none" or dh_id=="":
-                raise ValueError("请选择部门!")
+            form = UserStaffForm(request.form)
 
+            if form.validate()==False:
+                raise ValueError("")
 
-            if User.query.filter_by(email=email).count()>0:
+            if User.query.filter_by(email=form.email.data).count()>0:
                 raise ValueError("email已被注册,请更换!")
 
-            dh = DepartmentHierarchy.query.filter_by(id=dh_id).first()
+            dh = DepartmentHierarchy.query.filter_by(id=form.dept_range.data).first()
             if dh==None:
                 raise ValueError("无此部门!")
 
-            ui=UserInfo()
-            ui.name,ui.telephone,ui.address,ui.title = name,phone,address,title
+            ui=UserInfo(name=form.name.data,telephone=form.phone.data,address=form.address.data,title=form.title.data)
 
-            u=User()
-            u.email,u.user_or_origin = email,3
-            if request.form.get("nickname"):
-                u.nickname=request.form.get("nickname")
-            else:
-                u.nickname=name
+            u=User(email=form.email.data,user_or_origin=3,nickname=form.nickname.data)
 
             u.user_infos.append(ui)
             u.departments.append(dh)
@@ -490,41 +552,93 @@ def mobile_users_staffs_new():
             db.session.add(u)
             db.session.commit()
 
-            flash("添加员工 %s,%s 成功" % (email,name))
+            flash("添加员工 %s,%s 成功" % (u.email,u.nickname))
+            return render_template('mobile/users_staffs_search.html',form=UserStaffForm())
+        except Exception as e:
+            flash(e)
+            print(traceback.print_exc())
+            return render_template('mobile/users_staffs_new.html',form=form)
+    else:
+        form = UserStaffForm()
+        return render_template('mobile/users_staffs_new.html',form=form)
+
+@app.route('/mobile/users/staffs/edit/<int:user_id>' , methods=['GET', 'POST'])
+def mobile_users_staffs_edit(user_id):
+    app.logger.info("into mobile_users_staffs_edit and method : %s" % (request.method))
+    if request.method == 'POST':
+        try:
+            form = UserStaffForm(request.form)
+            app.logger.info("form info [%s]" % (request.form) )
+            u = User.query.filter_by(id=user_id).first()
+            if u==None:
+                raise ValueError("no user found!")
+
+            if form.validate()==False:
+                raise ValueError("")
+
+            dh = DepartmentHierarchy.query.filter_by(id=form.dept_range.data).first()
+            if dh==None:
+                raise ValueError("无此部门!")
+
+            u.email=form.email.data
+            u.nickname=form.nickname.data
+
+            if len(u.user_infos)==0:
+                ui = UserInfo()
+            else:
+                ui = u.user_infos[0]
+            ui.name=form.name.data
+            ui.telephone=form.phone.data
+            ui.address=form.address.data
+            ui.title=form.title.data
+
+            if len(u.user_infos)==0:
+                u.user_infos.append(ui)
+
+            u.departments.remove(u.departments[0])
+            u.departments.append(dh)
+
+            db.session.add(u)
+            db.session.commit()
+
+            flash("修改员工 %s,%s 成功" % (u.email,u.nickname))
             return render_template('mobile/users_staffs_search.html')
         except Exception as e:
             flash(e)
             print(traceback.print_exc())
-            dept_range={}
-            dhs=DepartmentHierarchy.query.all()
-            for dh in dhs:
-                dept_range[dh.id]=dh.name
-
-            return render_template('mobile/users_staffs_new.html',dept_range=dept_range)
+            if u==None:
+                return render_template('mobile/users_staffs_search.html',form=UserStaffForm())
+            else:
+                return render_template('mobile/users_staffs_edit.html',form=form,user_id=u.id)
     else:
-        dept_range={}
-        dhs=DepartmentHierarchy.query.all()
-        for dh in dhs:
-            dept_range[dh.id]=dh.name
-
-        return render_template('mobile/users_staffs_new.html',dept_range=dept_range)
+        u=User.query.filter_by(id=user_id).first()
+        form = UserStaffForm(obj=u)
+        if len(u.user_infos==0):
+            pass
+        else:
+            ui=u.user_infos[0]
+            form.name.data=ui.name
+            form.address.data=ui.address
+            form.phone.data=ui.telephone
+            form.title.data=ui.title
+        form.dept_range.choices= [(str(u.departments[0].id),u.departments[0].name)] + [(str(dh.id),dh.name) for dh in DepartmentHierarchy.query.all() ]
+        return render_template('mobile/users_staffs_edit.html',form=form,user_id=u.id)
 
 @app.route('/mobile/users/staffs/search')
-def mobile_users_staffs_search():
-    dept_range={}
-    dhs=DepartmentHierarchy.query.all()
-    for dh in dhs:
-        dept_range[dh.id]=dh.name
+@app.route('/mobile/users/staffs/search/<int:page>')
+def mobile_users_staffs_search(page=1):
+    form=UserStaffSearchForm(request.args)
 
-    us = User.query.filter_by(user_or_origin=3)
-    if request.args.get("email"):
-        us = us.filter(User.email.like(request.args.get("email")+"%"))
-    if request.args.get("name"):
-        us = us.filter(User.nickname.like("%"+request.args.get("name")+"%"))
+    us = db.session.query(distinct(User.id)).filter(User.user_or_origin==3)
+    if form.email.data:
+        us = us.filter(User.email.like(form.email.data+"%"))
+    if form.name.data:
+        us = us.filter(User.nickname.like("%"+form.name.data+"%"))
     #how to search in many-to-many
-    if request.args.get("dept_range"):
-        pass
-    
-    us=us.all()
+    if form.dept_range.data and form.dept_range.data != "-1" :
+        us=us.join(User.departments).filter(DepartmentHierarchy.id==form.dept_range.data)
 
-    return render_template('mobile/users_staffs_search.html',users_staffs=us,dept_range=dept_range)
+    us=User.query.filter(User.id.in_(us)).order_by(User.id)
+    pagination = us.paginate(page, 10, False) 
+
+    return render_template('mobile/users_staffs_search.html',users_staffs=pagination.items,pagination=pagination,form=form)

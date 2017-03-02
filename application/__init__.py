@@ -5,6 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 from .config import config
 
+import logging
+
 app = Flask(__name__)
 app.config.from_object(config[os.getenv('FLASK_ENV') or 'default'])
 db = SQLAlchemy(app)
@@ -17,12 +19,20 @@ from .order_manage.views import order_manage
 app.register_blueprint(order_manage, url_prefix='/order_manage')
 from .inventory.views import inventory
 app.register_blueprint(inventory, url_prefix='/inventory')
+from .wechat.views import wechat
+app.register_blueprint(wechat, url_prefix='/wechat')
 
 from .inventory.api import load_products, load_skus
 app.add_template_global(load_products)
 app.add_template_global(load_skus)
 app.add_template_global(len)
 
+@app.before_first_request
+def setup_logging():
+    if not app.debug:
+        # In production mode, add log handler to sys.stderr.
+        app.logger.addHandler(logging.StreamHandler())
+        app.logger.setLevel(logging.INFO)
 
 @app.errorhandler(404)
 def page_not_found(error):
