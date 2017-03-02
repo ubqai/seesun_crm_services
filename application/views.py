@@ -446,11 +446,18 @@ def mobile_users_dealers_edit(user_id):
             u.email=form.email.data
             u.nickname=form.nickname.data
 
-            ui = u.user_infos[0]
+            if len(u.user_infos)==0:
+                ui = UserInfo
+            else:
+                ui = u.user_infos[0]
+
             ui.name=form.name.data
             ui.telephone=form.phone.data
             ui.address=form.address.data
             ui.title=form.title.data
+
+            if len(u.user_infos)==0:
+                u.user_infos.append(ui)
 
             if sorted([str(i.id) for i in u.sales_areas]) != sorted(form.sales_range.data):
                 app.logger.info("reset sales_range")
@@ -482,11 +489,15 @@ def mobile_users_dealers_edit(user_id):
     else:
         u=User.query.filter_by(id=user_id).first()
         form = UserDealerForm(obj=u)
-        ui=u.user_infos[0]
-        form.name.data=ui.name
-        form.address.data=ui.address
-        form.phone.data=ui.telephone
-        form.title.data=ui.title
+        if len(u.user_infos)==0:
+            pass
+        else:
+            ui=u.user_infos[0]
+            form.name.data=ui.name
+            form.address.data=ui.address
+            form.phone.data=ui.telephone
+            form.title.data=ui.title
+
         form.existed_sales_range.data='已选择销售范围 : '+','.join([i.name for i in u.sales_areas])
         form.sales_range.default=[str(i.id) for i in u.sales_areas]
         return render_template('mobile/users_dealers_edit.html',form=form,user_id=u.id)
@@ -572,11 +583,17 @@ def mobile_users_staffs_edit(user_id):
             u.email=form.email.data
             u.nickname=form.nickname.data
 
-            ui = u.user_infos[0]
+            if len(u.user_infos)==0:
+                ui = UserInfo
+            else:
+                ui = u.user_infos[0]
             ui.name=form.name.data
             ui.telephone=form.phone.data
             ui.address=form.address.data
             ui.title=form.title.data
+
+            if len(u.user_infos)==0:
+                u.user_infos.append(ui)
 
             u.departments.remove(u.departments[0])
             u.departments.append(dh)
@@ -596,11 +613,14 @@ def mobile_users_staffs_edit(user_id):
     else:
         u=User.query.filter_by(id=user_id).first()
         form = UserStaffForm(obj=u)
-        ui=u.user_infos[0]
-        form.name.data=ui.name
-        form.address.data=ui.address
-        form.phone.data=ui.telephone
-        form.title.data=ui.title
+        if len(u.user_infos==0):
+            pass
+        else:
+            ui=u.user_infos[0]
+            form.name.data=ui.name
+            form.address.data=ui.address
+            form.phone.data=ui.telephone
+            form.title.data=ui.title
         form.dept_range.choices= [(str(u.departments[0].id),u.departments[0].name)] + [(str(dh.id),dh.name) for dh in DepartmentHierarchy.query.all() ]
         return render_template('mobile/users_staffs_edit.html',form=form,user_id=u.id)
 

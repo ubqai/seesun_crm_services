@@ -25,6 +25,16 @@ class WechatAccessToken(db.Model):
         return self
 
     @classmethod
+    def checkAccessToken(cls):
+        threshold_time = datetime.datetime.now()-datetime.timedelta(seconds=600)
+        wats=WechatAccessToken.query.filter(WechatAccessToken.expires_at<threshold_time,WechatAccessToken.use_flag==True).all()
+        for wat in wats:
+            wat.use_flag="N"
+            wat.save()
+
+        return ""
+
+    @classmethod
     def applyAccessToken(cls):
             url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s' % (WECHAT_APPID, WECHAT_APPSECRET)
             response = requests.get(url)
@@ -46,9 +56,11 @@ class WechatAccessToken(db.Model):
 
     @classmethod
     def getToken(cls):
+        WechatAccessToken.checkAccessToken()
+
         wat=WechatAccessToken.query.filter_by(use_flag=True).first()
         if wat==None:
-            wat=applyAccessToken()
+            wat=WechatAccessToken.applyAccessToken()
         if wat==None or wat.access_token==None:
             raise BaseException("wechat: no access_token can use !!")
 
@@ -60,7 +72,7 @@ class WechatCall:
     @classmethod
     def createMenu(cls):
         url="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s" % (WechatAccessToken.getToken())
-        crm_services_url="http://118.178.185.40"
+        crm_services_url="http://118.178.185.40/mobile/index"
         headers = {'content-type': 'application/json'}
         post_params=json.dumps({
             "button":[
