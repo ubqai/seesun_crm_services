@@ -4,6 +4,7 @@ from flask_script import Manager, Shell
 
 from application import app, db
 from application.models import *
+from application.wechat.models import *
 import application.views
 
 migrate = Migrate(app, db)
@@ -19,7 +20,8 @@ def make_shell_context():
                 MaterialApplicationContent=MaterialApplicationContent,
                 Order=Order, OrderContent=OrderContent, Contract=Contract,
                 User=User, UserInfo=UserInfo, Resource=Resource, SalesAreaHierarchy=SalesAreaHierarchy,
-                DepartmentHierarchy=DepartmentHierarchy)
+                DepartmentHierarchy=DepartmentHierarchy,
+                WechatAccessToken=WechatAccessToken,WechatCall=WechatCall)
         
 manager.add_command("shell", Shell(make_context=make_shell_context))
 
