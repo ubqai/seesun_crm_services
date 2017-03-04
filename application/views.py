@@ -301,7 +301,7 @@ def mobile_tracking_lvl2():
 
 
 # --- Verification ---
-@app.route('/mobile/verification')
+@app.route('/wechat/mobile/verification')
 def mobile_verification():
     return render_template('mobile/verification.html')
 
