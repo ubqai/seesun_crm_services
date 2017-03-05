@@ -21,6 +21,8 @@ from .inventory.views import inventory
 app.register_blueprint(inventory, url_prefix='/inventory')
 from .wechat.views import wechat
 app.register_blueprint(wechat, url_prefix='/wechat')
+from .design_application.views import design_application
+app.register_blueprint(design_application, url_prefix='/design_application')
 
 from .inventory.api import load_products, load_skus
 app.add_template_global(load_products)

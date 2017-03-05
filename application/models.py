@@ -169,6 +169,48 @@ class MaterialApplicationContent(db.Model, Rails):
         return 'MaterialApplicationContent(id: %s, material_id: %s, number: %s,...)' % (self.id, self.material_id, self.number)
 
 
+class DesignApplication(db.Model, Rails):
+    id = db.Column(db.Integer, primary_key=True)
+    filing_no = db.Column(db.String(50))
+    status = db.Column(db.String(50))
+    ul_file = db.Column(db.String(200))
+    dl_file = db.Column(db.String(200))
+    applicant_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    operator_id  = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+
+    def __repr__(self):
+        return 'DesignApplication(id: %s, filing_no: %s, status: %s,...)' % (self.id, self.filing_no, self.status)
+
+
+class TrackingInfo(db.Model, Rails):
+    id = db.Column(db.Integer, primary_key=True)
+    contract_no = db.Column(db.String(50))
+    contract_date = db.Column(db.DateTime)
+    receiver_name = db.Column(db.String(200))
+    receiver_tel = db.Column(db.String(30))
+    production_date = db.Column(db.DateTime)
+    delivery_date = db.Column(db.DateTime)
+    delivery_plate_no = db.Column(db.String(100))
+    delivery_man_tel = db.Column(db.String(30))
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    details = db.relationship('TrackingInfoDetail', backref='tracking_info', lazy='dynamic')
+
+    def __repr__(self):
+        return 'TrackingInfo(id: %s, contract_no: %s,...)' % (self.id, self.contract_no)
+
+
+class TrackingInfoDetail(db.Model, Rails):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200))
+    description = db.Column(db.String(500))
+    tracking_info_id = db.Column(db.Integer, db.ForeignKey('tracking_info.id'))
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+
+
 class Order(db.Model, Rails):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
@@ -252,6 +294,7 @@ class User(db.Model, Rails):
     user_infos = db.relationship('UserInfo', backref='user')
     orders = db.relationship('Order', backref='user')
     material_applications = db.relationship('MaterialApplication', backref='user', lazy='dynamic')
+    design_applications = db.relationship('DesignApplication', backref='applicant', lazy='dynamic')
     resources = db.relationship('Resource', secondary=users_and_resources,
                                 backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
     sales_areas = db.relationship('SalesAreaHierarchy', secondary=users_and_sales_areas,

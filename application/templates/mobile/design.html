@@ -4,12 +4,19 @@
 {{ header('产品设计') }}
 
 <div class="main-content">
-	<div class="center-wrappper" style="top:100px;">
-		<a class="btn btn-default btn-block text-lg">输入报备编号</a>
-		<a class="btn btn-default btn-block top-gap-3 text-lg">上传设计图纸</a>
-		<a class="btn btn-default btn-block top-gap-3 text-lg">申请设计</a>
-		<a class="btn btn-default btn-block top-gap-3 text-lg">查看申请结果</a>
-		<a class="btn btn-default btn-block top-gap-3 text-lg">下载设计文件</a>
+	<div class="wrappper top-gap-3">
+		<form action="{{ url_for('mobile_design') }}" enctype="multipart/form-data" method="post">
+			<div class="form-item">
+				<label>输入报备编号</label>
+				<input placeholder="请输入报备编号" type="text" name="filing_no" id="filing_no" class="form-control">
+			</div>
+			<div class="form-item">
+				<label>上传设计图纸</label>
+				<input type="file" name="ul_file" id="ul_file" class="form-control">
+			</div>
+			<button type="submit" class="btn btn-warning btn-block top-gap-3 text-lg">申请设计</button>
+		</form>
+		<a href="{{ url_for('mobile_design_applications') }}" class="btn btn-default btn-block top-gap-3 text-lg">查看申请结果</a>
 	</div>
 </div>
 		

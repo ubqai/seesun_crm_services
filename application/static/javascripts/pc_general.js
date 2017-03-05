@@ -109,6 +109,6 @@ $(function(){
 		refresh(_name);	
 	}
 	$(".pic-add").click(function(){
-		add_pic("image_file");
+		add_pic("image_file_");
 	});
 })

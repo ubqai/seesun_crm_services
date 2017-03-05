@@ -7,6 +7,7 @@ from .models import *
 from .product.api import *
 import traceback
 from .forms import *
+from .helpers import save_upload_file
 from sqlalchemy import distinct
 
 @app.route('/mobile/index')
@@ -212,9 +213,32 @@ def mobile_project_lvl2():
 
 
 # --- Design ---
-@app.route('/mobile/design')
+@app.route('/mobile/design', methods = ['GET', 'POST'])
 def mobile_design():
+    if request.method == 'POST':
+        filing_no_exsits = True
+        if request.form.get('filing_no') and request.files.get('ul_file'):
+            if filing_no_exsits:
+                file_path = save_upload_file(request.files.get('ul_file'))
+                user = User.query.first()
+                application = DesignApplication(filing_no = request.form.get('filing_no'), 
+                    ul_file = file_path, status = '新申请', applicant = user)
+                application.save
+                flash('产品设计申请提交成功', 'success')
+                return redirect(url_for('mobile_design_applications'))
+            else:
+                flash('项目报备编号不存在', 'danger')
+        else:
+            flash('项目报备编号和上传设计图纸不能为空', 'danger')
+        return redirect(url_for('mobile_design'))
     return render_template('mobile/design.html')
+
+
+@app.route('/mobile/design_applications')
+def mobile_design_applications():
+    # list design applications of current user
+    applications = DesignApplication.query.all()
+    return render_template('mobile/design_applications.html', applications = applications)
 
 
 # --- Material need ---
@@ -301,7 +325,7 @@ def mobile_tracking_lvl2():
 
 
 # --- Verification ---
-@app.route('/wechat/mobile/verification')
+@app.route('/mobile/verification')
 def mobile_verification():
     return render_template('mobile/verification.html')
 
