@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint, redirect, render_template, url_for, request
+from flask import Blueprint, flash, redirect, render_template, url_for, request
 from ..models import *
-from .forms import ContractForm
+from .forms import ContractForm, TrackingInfoForm1, TrackingInfoForm2
 
 order_manage = Blueprint('order_manage', __name__, template_folder='templates')
 
@@ -74,3 +74,58 @@ def contract_show(id):
 def contract_offer(id):
     contract = Contract.query.get_or_404(id)
     return render_template('order_manage/contract_offer.html', contract=contract)
+
+
+@order_manage.route('/tracking_infos')
+def tracking_infos():
+    tracking_infos = TrackingInfo.query.order_by(TrackingInfo.created_at.desc())
+    return render_template('order_manage/tracking_infos.html', tracking_infos = tracking_infos)
+
+
+@order_manage.route('/tracking_info/new/<int:contract_id>', methods = ['GET', 'POST'])
+def tracking_info_new(contract_id):
+    contract = Contract.query.get_or_404(contract_id)
+    if not contract.shipment_status == '未出库':
+        flash('不能重复生成物流状态', 'warning')
+        return redirect(url_for('order_manage.contract_index'))
+    if request.method == 'POST':
+        form = TrackingInfoForm1(request.form)
+        if form.validate():
+            tracking_info = form.save(TrackingInfo(status = '区域总监确认'))
+            tracking_info.contract_no = contract.contract_no
+            tracking_info.contract_date = contract.contract_date
+            db.session.add(tracking_info)
+            contract.shipment_status = '区域总监确认'
+            db.session.add(contract)
+            db.session.commit()
+            flash('物流状态创建成功', 'success')
+            return redirect(url_for('order_manage.tracking_infos'))
+        else:
+            flash('物流状态创建失败', 'danger')
+            return redirect(url_for('order_manage.tracking_info_new', contract_id = contract.id))
+    else:
+        form = TrackingInfoForm1()
+    return render_template('order_manage/tracking_info_new.html', contract = contract, form = form)
+
+
+@order_manage.route('/tracking_info/<int:id>/edit', methods = ['GET', 'POST'])
+def tracking_info_edit(id):
+    tracking_info = TrackingInfo.query.get_or_404(id)
+    contract = Contract.query.filter(Contract.contract_no == tracking_info.contract_no).first()
+    if request.method == 'POST':
+        form = TrackingInfoForm2(request.form)
+        if form.validate():
+            tracking_info = form.save(tracking_info)
+            tracking_info.status = '已出库'
+            db.session.add(tracking_info)
+            if contract:
+                contract.shipment_status = '已出库'
+                db.session.add(contract)
+            db.session.commit()
+            flash('物流状态更新成功', 'success')   
+        else:
+            flash('物流状态更新失败', 'danger')
+        return redirect(url_for('order_manage.tracking_infos'))  
+    else:
+        form = TrackingInfoForm2(obj = tracking_info)
+    return render_template('order_manage/tracking_info_edit.html', tracking_info = tracking_info, form = form)

@@ -186,6 +186,7 @@ class DesignApplication(db.Model, Rails):
 
 class TrackingInfo(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.String(50))
     contract_no = db.Column(db.String(50))
     contract_date = db.Column(db.DateTime)
     receiver_name = db.Column(db.String(200))

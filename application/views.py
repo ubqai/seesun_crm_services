@@ -302,7 +302,7 @@ def mobile_material_application_show(id):
     return render_template('mobile/material_application_show.html', application = application)
 
 
-# --- Quick pay ---
+# --- Quick pay --- not be used anymore
 @app.route('/mobile/quick_pay')
 def mobile_quick_pay():
     return render_template('mobile/quick_pay.html')
@@ -314,14 +314,27 @@ def mobile_quick_pay_lvl2():
 
 
 # --- Tracking info ---
-@app.route('/mobile/tracking_lvl1')
-def mobile_tracking_lvl1():
-    return render_template('mobile/tracking_lvl1.html')
+@app.route('/mobile/tracking', methods = ['GET', 'POST'])
+def mobile_tracking():
+    if request.method == 'POST':
+        contract_no = request.form.get('contract_no').strip()
+        receiver_tel = request.form.get('receiver_tel').strip()
+        tracking_info = TrackingInfo.query.filter(
+            (TrackingInfo.contract_no == contract_no) &
+            (TrackingInfo.receiver_tel == receiver_tel)
+            ).first()
+        if tracking_info:
+            return redirect(url_for('mobile_tracking_info', id = tracking_info.id))
+        else:
+            flash('未找到对应物流信息', 'warning')
+            return redirect(url_for('mobile_tracking'))
+    return render_template('mobile/tracking.html')
 
 
-@app.route('/mobile/tracking_lvl2')
-def mobile_tracking_lvl2():
-    return render_template('mobile/tracking_lvl2.html')
+@app.route('/mobile/tracking_info/<int:id>')
+def mobile_tracking_info(id):
+    tracking_info = TrackingInfo.query.get_or_404(id)
+    return render_template('mobile/tracking_info.html', tracking_info = tracking_info)
 
 
 # --- Verification ---
