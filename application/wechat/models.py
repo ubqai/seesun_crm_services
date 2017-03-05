@@ -188,10 +188,30 @@ class WechatCall:
                     "key":"click_bind_user"
                 },
                 {
-                    "type":"view",
-                    "name":"服务站".encode("utf-8").decode("latin1"),
-                    "url": crm_services_url
+                    "name":"相关服务".encode("utf-8").decode("latin1"),
+                    "sub_button":[
+                        {
+                            "type":"view",
+                            "name":"服务站".encode("utf-8").decode("latin1"),
+                            "url": crm_services_url
+                        },
+                        {
+                            "type":"scancode_push",
+                            "name":"检验1".encode("utf-8").decode("latin1"),
+                            "key": "click_scan_push"
+                        },
+                        {
+                            "type":"scancode_waitmsg",
+                            "name":"检验2".encode("utf-8").decode("latin1"),
+                            "key": "click_scan_wait"      
+                        }
+                    ]
                 }
+                # {
+                #     "type":"view",
+                #     "name":"服务站".encode("utf-8").decode("latin1"),
+                #     "url": crm_services_url
+                # }
             ]   
         }, ensure_ascii=False)
 

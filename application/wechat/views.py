@@ -94,6 +94,14 @@ def server_authentication():
                 element_content.appendChild(text_content)
 
                 element_root.appendChild(element_content)
+            elif text_event=="scancode_push" or text_event=="scancode_waitmsg":
+                text_sci=root.getElementsByTagName('ScanCodeInfo')[0].firstChild.data
+                text_sr=root.getElementsByTagName('ScanResult')[0].firstChild.data
+                element_content = ret_doc.createElement('Content') 
+                text_content = ret_doc.createTextNode("扫描["+text_sci+"]"+"成功["+text_sr+"],请等待处理")
+                element_content.appendChild(text_content)
+
+                element_root.appendChild(element_content)
             else:
                 return ""
         else:
