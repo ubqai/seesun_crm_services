@@ -166,6 +166,7 @@ class WechatAccessToken(db.Model):
 
         sign_params['sign']=hashlib.sha1(sign_value.encode('utf-8')).hexdigest()
         sign_params['appid'] = use_appid
+        sign_params['is_test'] = is_test
 
 
         print("getJsApiSign [%s] --> [%s]" % (sign_value,sign_params['sign']))
@@ -191,14 +192,14 @@ class WechatCall:
                     "name":"相关服务".encode("utf-8").decode("latin1"),
                     "sub_button":[
                         {
-                            "type":"view",
-                            "name":"服务站".encode("utf-8").decode("latin1"),
-                            "url": crm_services_url
-                        },
-                        {
                             "type":"scancode_waitmsg",
                             "name":"检验真伪".encode("utf-8").decode("latin1"),
                             "key": "click_scan_wait"      
+                        },
+                        {
+                            "type":"view",
+                            "name":"服务站".encode("utf-8").decode("latin1"),
+                            "url": crm_services_url
                         }
                     ]
                 }
