@@ -10,12 +10,12 @@ wechat = Blueprint('wechat', __name__, template_folder = 'templates')
 
 @wechat.route('/mobile/verification', methods=['GET', 'POST'])
 def mobile_verification():
+    wechat_info = WechatAccessToken.getJsApiSign(request.url)
     if request.method == 'POST':
         app.logger.info("wechat.mobile_verification: [%s]" , request.form.get("text-verification"))
         flash('校验成功', 'success')
         return render_template('wechat/mobile_verification.html',wechat_info=wechat_info)
     else:
-        wechat_info = WechatAccessToken.getJsApiSign(request.url)
         return render_template('wechat/mobile_verification.html',wechat_info=wechat_info)
 
 
