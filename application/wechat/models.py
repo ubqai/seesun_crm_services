@@ -145,7 +145,7 @@ class WechatAccessToken(db.Model):
 
     #jssdk签名计算
     @classmethod
-    def getJsApiSign(cls,url_suffix,is_test=TEST_MODE):
+    def getJsApiSign(cls,url,is_test=TEST_MODE):
         if is_test==False:
             use_appid=WECHAT_APPID
         else:
@@ -156,7 +156,7 @@ class WechatAccessToken(db.Model):
             "jsapi_ticket" : WechatAccessToken.getTokenByType("jsapi_ticket",is_test),
             "noncestr" : ''.join(random.sample(string.ascii_letters + string.digits, 16)),
             "timestamp" : str(int(time.time())) ,
-            "url" : HOOK_URL+url_suffix
+            "url" : url
         }
 
         sign_array=[]
