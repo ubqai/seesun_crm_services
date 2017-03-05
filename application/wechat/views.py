@@ -8,14 +8,16 @@ import xml.dom.minidom
 
 wechat = Blueprint('wechat', __name__, template_folder = 'templates')
 
-@wechat.route('/mobile/verification')
+@wechat.route('/mobile/verification', methods=['GET', 'POST'])
 def mobile_verification():
-    wechat_info = WechatAccessToken.getJsApiSign(request.url)
-    return render_template('wechat/mobile_verification.html',wechat_info=wechat_info)
+    if request.method == 'POST':
+        app.logger.info("wechat.mobile_verification: [%s]" , request.form.get("text-verification"))
+        flash('校验成功', 'success')
+        return render_template('wechat/mobile_verification.html',wechat_info=wechat_info)
+    else:
+        wechat_info = WechatAccessToken.getJsApiSign(request.url)
+        return render_template('wechat/mobile_verification.html',wechat_info=wechat_info)
 
-@wechat.route('/mobile/test', methods=['GET', 'POST'])
-def test():
-    return "test"
 
 @wechat.route("/server/authentication", methods=['GET', 'POST'])
 def server_authentication():
