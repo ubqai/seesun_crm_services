@@ -8,14 +8,16 @@ import xml.dom.minidom
 
 wechat = Blueprint('wechat', __name__, template_folder = 'templates')
 
-@wechat.route('/mobile/verification')
+@wechat.route('/mobile/verification', methods=['GET', 'POST'])
 def mobile_verification():
-    wechat_info = WechatAccessToken.getJsApiSign(request.path)
-    return render_template('wechat/mobile_verification.html',wechat_info=wechat_info)
+    wechat_info = WechatAccessToken.getJsApiSign(request.url)
+    if request.method == 'POST':
+        app.logger.info("wechat.mobile_verification: [%s]" , request.form.get("text-verification"))
+        flash('校验成功', 'success')
+        return render_template('wechat/mobile_verification.html',wechat_info=wechat_info)
+    else:
+        return render_template('wechat/mobile_verification.html',wechat_info=wechat_info)
 
-@wechat.route('/mobile/test', methods=['GET', 'POST'])
-def test():
-    return "test"
 
 @wechat.route("/server/authentication", methods=['GET', 'POST'])
 def server_authentication():
@@ -91,6 +93,15 @@ def server_authentication():
             elif text_event=="subscribe":
                 element_content = ret_doc.createElement('Content') 
                 text_content = ret_doc.createTextNode("感谢关注公众号,请点击按钮进行操作")
+                element_content.appendChild(text_content)
+
+                element_root.appendChild(element_content)
+            elif text_event=="scancode_push" or text_event=="scancode_waitmsg":
+                input_element_scan_info=root.getElementsByTagName('ScanCodeInfo')[0]
+                text_st=input_element_scan_info.getElementsByTagName('ScanType')[0].firstChild.data
+                text_sr=input_element_scan_info.getElementsByTagName('ScanResult')[0].firstChild.data
+                element_content = ret_doc.createElement('Content') 
+                text_content = ret_doc.createTextNode("扫描["+text_st+"]"+"成功["+text_sr+"],请等待处理")
                 element_content.appendChild(text_content)
 
                 element_root.appendChild(element_content)

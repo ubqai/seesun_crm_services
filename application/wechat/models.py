@@ -145,7 +145,7 @@ class WechatAccessToken(db.Model):
 
     #jssdk签名计算
     @classmethod
-    def getJsApiSign(cls,url_suffix,is_test=TEST_MODE):
+    def getJsApiSign(cls,url,is_test=TEST_MODE):
         if is_test==False:
             use_appid=WECHAT_APPID
         else:
@@ -156,7 +156,7 @@ class WechatAccessToken(db.Model):
             "jsapi_ticket" : WechatAccessToken.getTokenByType("jsapi_ticket",is_test),
             "noncestr" : ''.join(random.sample(string.ascii_letters + string.digits, 16)),
             "timestamp" : str(int(time.time())) ,
-            "url" : HOOK_URL+url_suffix
+            "url" : url
         }
 
         sign_array=[]
@@ -166,6 +166,7 @@ class WechatAccessToken(db.Model):
 
         sign_params['sign']=hashlib.sha1(sign_value.encode('utf-8')).hexdigest()
         sign_params['appid'] = use_appid
+        sign_params['is_test'] = is_test
 
 
         print("getJsApiSign [%s] --> [%s]" % (sign_value,sign_params['sign']))
@@ -188,10 +189,25 @@ class WechatCall:
                     "key":"click_bind_user"
                 },
                 {
-                    "type":"view",
-                    "name":"服务站".encode("utf-8").decode("latin1"),
-                    "url": crm_services_url
+                    "name":"相关服务".encode("utf-8").decode("latin1"),
+                    "sub_button":[
+                        {
+                            "type":"scancode_waitmsg",
+                            "name":"检验真伪".encode("utf-8").decode("latin1"),
+                            "key": "click_scan_wait"      
+                        },
+                        {
+                            "type":"view",
+                            "name":"服务站".encode("utf-8").decode("latin1"),
+                            "url": crm_services_url
+                        }
+                    ]
                 }
+                # {
+                #     "type":"view",
+                #     "name":"服务站".encode("utf-8").decode("latin1"),
+                #     "url": crm_services_url
+                # }
             ]   
         }, ensure_ascii=False)
 
