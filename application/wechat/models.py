@@ -196,13 +196,8 @@ class WechatCall:
                             "url": crm_services_url
                         },
                         {
-                            "type":"scancode_push",
-                            "name":"检验1".encode("utf-8").decode("latin1"),
-                            "key": "click_scan_push"
-                        },
-                        {
                             "type":"scancode_waitmsg",
-                            "name":"检验2".encode("utf-8").decode("latin1"),
+                            "name":"检验真伪".encode("utf-8").decode("latin1"),
                             "key": "click_scan_wait"      
                         }
                     ]
