@@ -22,7 +22,7 @@ def make_shell_context():
                 Order=Order, OrderContent=OrderContent, Contract=Contract,
                 User=User, UserInfo=UserInfo, Resource=Resource, SalesAreaHierarchy=SalesAreaHierarchy,
                 DepartmentHierarchy=DepartmentHierarchy,
-                WechatAccessToken=WechatAccessToken,WechatCall=WechatCall)
+                WechatAccessToken=WechatAccessToken, WechatCall=WechatCall, ProjectReport=ProjectReport)
         
 manager.add_command("shell", Shell(make_context=make_shell_context))
 

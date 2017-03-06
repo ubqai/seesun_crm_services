@@ -343,7 +343,8 @@ class ProjectReport(db.Model):
     audit_id = db.Column(db.Integer)
     report_no = db.Column(db.String(50))
     status = db.Column(db.String(50))
-    report_content = db.Column(db.JSON)
+    report_content = db.Column(db.JSON, default={})
+    audit_content = db.Column(db.JSON, default={})
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
