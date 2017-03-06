@@ -1,0 +1,111 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('项目报备申请详情') }}
+
+<div class="main-content">
+
+	<div class="wrapper">
+		<div class="text">
+			<p class="text-title">项目报备申请详情</p>
+            <p class="text-content text-sm left-gap-1">报备编号：{{ project_report.report_no }}</p>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>申请公司名称</th>
+						<th>项目跟进人</th>
+						<th>联系电话</th>
+						<th>联系传真</th>
+						<th>项目名称</th>
+                        <th>项目报备日期</th>
+						<th>项目地址</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{ project_report.report_content.get('app_company') }}</td>
+						<td>{{ project_report.report_content.get('project_follower') }}</td>
+						<td>{{ project_report.report_content.get('contract_phone') }}</td>
+						<td>{{ project_report.report_content.get('contract_fax') }}</td>
+						<td>{{ project_report.report_content.get('project_name') }}</td>
+                        <td>{{ project_report.report_content.get('report_date') }}</td>
+						<td>{{ project_report.report_content.get('project_address') }}</td>
+					</tr>
+				</tbody>
+                <thead>
+					<tr>
+						<th>项目面积</th>
+						<th>产品使用场所</th>
+						<th>推荐产品系列</th>
+						<th>推荐产品颜色</th>
+						<th>项目完工时间</th>
+                        <th>预计订购产品时间</th>
+						<th>竞争品牌情况</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{ project_report.report_content.get('project_area') }}</td>
+						<td>{{ project_report.report_content.get('product_place') }}</td>
+						<td>{{ project_report.report_content.get('recommended_product_line') }}</td>
+						<td>{{ project_report.report_content.get('recommended_product_color') }}</td>
+						<td>{{ project_report.report_content.get('project_completion_time') }}</td>
+                        <td>{{ project_report.report_content.get('expected_order_time') }}</td>
+						<td>{{ project_report.report_content.get('competitive_brand_situation') }}</td>
+					</tr>
+				</tbody>
+                <thead>
+					<tr>
+						<th>项目业主</th>
+						<th>项目装饰总包</th>
+						<th>项目设计公司</th>
+						<th>是否需要授权书</th>
+						<th>授权预计开具日期</th>
+                        <th>需授权公司名称</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{ project_report.report_content.get('project_owner') }}</td>
+						<td>{{ project_report.report_content.get('project_decoration_total') }}</td>
+						<td>{{ project_report.report_content.get('project_design_company') }}</td>
+						<td>{{ project_report.report_content.get('is_authorization_needed') }}</td>
+						<td>{{ project_report.report_content.get('expected_authorization_date') }}</td>
+                        <td>{{ project_report.report_content.get('authorize_company_name') }}</td>
+						<td></td>
+					</tr>
+				</tbody>
+                <thead>
+					<tr>
+						<th>销售代表</th>
+						<th>销售主管</th>
+						<th>销售总监</th>
+						<th>是否开具授权</th>
+						<th>授权书日期</th>
+                        <th>授权书编号</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{ project_report.report_content.get('sales_representative') }}</td>
+						<td>{{ project_report.report_content.get('sales_executive') }}</td>
+						<td>{{ project_report.report_content.get('sales_director') }}</td>
+						<td>{{ project_report.report_content.get('is_authorized') }}</td>
+						<td>{{ project_report.report_content.get('authorization_date') }}</td>
+                        <td>{{ project_report.report_content.get('authorization_no') }}</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="divider4 top-gap-1 bot-gap-1"></div>
+
+</div>
+
+{% endblock %}

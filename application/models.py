@@ -334,3 +334,16 @@ class DepartmentHierarchy(db.Model):
     name = db.Column(db.String(300), nullable=False)
     parent_id = db.Column(db.Integer)
     level_grade = db.Column(db.Integer)
+
+
+class ProjectReport(db.Model):
+    __tablename__ = 'project_reports'
+    id = db.Column(db.Integer, primary_key=True)
+    app_id = db.Column(db.Integer)
+    audit_id = db.Column(db.Integer)
+    report_no = db.Column(db.String(50))
+    status = db.Column(db.String(50))
+    report_content = db.Column(db.JSON)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+
