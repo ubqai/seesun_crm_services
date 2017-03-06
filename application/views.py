@@ -216,9 +216,9 @@ def mobile_project_lvl2():
 @app.route('/mobile/design', methods = ['GET', 'POST'])
 def mobile_design():
     if request.method == 'POST':
-        filing_no_exsits = True
         if request.form.get('filing_no') and request.files.get('ul_file'):
-            if filing_no_exsits:
+            project_report = ProjectReport.query.filter_by(report_no = request.form.get('filing_no')).first()
+            if project_report:
                 file_path = save_upload_file(request.files.get('ul_file'))
                 user = User.query.first()
                 application = DesignApplication(filing_no = request.form.get('filing_no'), 
