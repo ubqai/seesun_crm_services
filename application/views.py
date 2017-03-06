@@ -9,6 +9,8 @@ import traceback
 from .forms import *
 from sqlalchemy import distinct
 
+PAGINATION_PAGE_NUMBER=2
+
 @app.route('/mobile/index')
 def mobile_index():
     return render_template('mobile/index.html')
@@ -513,11 +515,11 @@ def mobile_users_dealers_search(page=1):
     if form.name.data:
         us = us.filter(User.nickname.like("%"+form.name.data+"%"))
     #how to search in many-to-many
-    if form.sales_range.data and form.sales_range.data != ["-1"]:
+    if form.sales_range.data and form.sales_range.data != ["-1"] and form.sales_range.data != [""]:
         us=us.join(User.sales_areas).filter(SalesAreaHierarchy.id.in_(form.sales_range.data))
 
     us=User.query.filter(User.id.in_(us)).order_by(User.id)
-    pagination = us.paginate(page, 10, False) 
+    pagination = us.paginate(page, PAGINATION_PAGE_NUMBER, False) 
 
     return render_template('mobile/users_dealers_search.html',users_dealers=pagination.items,pagination=pagination,form=form)
 
@@ -635,10 +637,10 @@ def mobile_users_staffs_search(page=1):
     if form.name.data:
         us = us.filter(User.nickname.like("%"+form.name.data+"%"))
     #how to search in many-to-many
-    if form.dept_range.data and form.dept_range.data != "-1" :
+    if form.dept_range.data and form.dept_range.data != "-1" and form.dept_range.data != "None":
         us=us.join(User.departments).filter(DepartmentHierarchy.id==form.dept_range.data)
 
     us=User.query.filter(User.id.in_(us)).order_by(User.id)
-    pagination = us.paginate(page, 10, False) 
+    pagination = us.paginate(page, PAGINATION_PAGE_NUMBER, False) 
 
     return render_template('mobile/users_staffs_search.html',users_staffs=pagination.items,pagination=pagination,form=form)
