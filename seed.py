@@ -48,6 +48,17 @@ for i in material_list:
 	if not Material.query.filter(Material.name == i).first():
 		Material(name = i).save
 
+dh_array = '董事长 销售部 仓储物流部 电商部 设计部 市场部 售后部'.split()
+for dh_name in dh_array:
+	if not DepartmentHierarchy().query.filter_by(name=dh_name).first():
+		dh=DepartmentHierarchy(name=dh_name)
+		if dh_name=="董事长":
+			dh.level_grade=1
+		else:
+			dh.level_grade=2
+			dh.parent_id=DepartmentHierarchy().query.filter_by(name='董事长').first().id
+		db.session.add(dh)
+		db.session.commit()
 
 
 

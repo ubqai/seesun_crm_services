@@ -1,5 +1,6 @@
 {% extends 'mobile_base.html' %}
 {% from 'macros/mobile_partial.html' import header %}
+{% from 'macros/mobile_form_field_error.html' import render_form_field_error %}
 {% block content %}
 {{ header('经销商管理') }}
 
@@ -7,67 +8,25 @@
 	<div class="wrappper top-gap-3">
 		<form action="{{ url_for('mobile_users_dealers_new') }}" method="post">
 			{{ form.email(class="form-control",placeholder="请输入email") }}
-			{% if form.email.errors %}
-			    <ul class="errors">
-			    	{% for error in form.email.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.email) }}
 
 			{{ form.name(class="form-control top-gap-3",placeholder="请输入姓名") }}
-			{% if form.name.errors %}
-			    <ul class="errors">
-			    	{% for error in form.name.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.name) }}
 
 			{{ form.nickname(class="form-control top-gap-3",placeholder="请输入昵称") }}
-			{% if form.nickname.errors %}
-			    <ul class="errors">
-			    	{% for error in form.nickname.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.nickname) }}
 
 			{{ form.address(class="form-control top-gap-3",placeholder="请输入地址") }}
-			{% if form.address.errors %}
-			    <ul class="errors">
-			    	{% for error in form.address.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.address) }}
 
 			{{ form.phone(class="form-control top-gap-3",placeholder="请输入电话") }}
-			{% if form.phone.errors %}
-			    <ul class="errors">
-			    	{% for error in form.phone.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.phone) }}
 
 			{{ form.title(class="form-control top-gap-3",placeholder="请输入title") }}
-			{% if form.title.errors %}
-			    <ul class="errors">
-			    	{% for error in form.title.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.title) }}
 
 			{{ form.sales_range(class="form-control top-gap-3",placeholder="选择销售范围") }}
-			{% if form.sales_range.errors %}
-			    <ul class="errors">
-			    	{% for error in form.sales_range.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.sales_range) }}
 			
 			<input type="submit" class="btn btn-block btn-warning top-gap-3" value="新增">
 		</form>
