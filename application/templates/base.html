@@ -6,9 +6,11 @@
 		<title>{% block title %}SEESUN CRM{% endblock %}</title>
 		<link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/bootstrap.min.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/init.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/datetimePicker.css') }}">
 		{% block extra_styles %}{% endblock %}
 		<script src="{{ url_for('static', filename = 'javascripts/jquery.min.js') }}"></script>
 		<script src="{{ url_for('static', filename = 'javascripts/bootstrap.min.js') }}"></script>
+		<script src="{{ url_for('static', filename = 'javascripts/datetimePicker.js') }}"></script>
 		{% block extra_scripts %}{% endblock %}
 	</head>
 
