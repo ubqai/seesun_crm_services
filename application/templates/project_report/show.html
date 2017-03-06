@@ -1,18 +1,35 @@
-{% extends 'mobile_base.html' %}
-{% from 'macros/mobile_partial.html' import header %}
-{% block content %}
-{{ header('项目报备申请详情') }}
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
 
-<div class="main-content">
+{{ sidebar(active = 'sale') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">项目报备详情</p>
+        <p class="contents-header-p text-sm">details of orders</p>
+        <a class="new-one" href="{{ url_for('project_report.show', id=project_report.id) }}"><span class="glyphicon glyphicon-envelope"></span></a>
+    </div>
+    <div class="separator"><span></span></div>
 
-	<div class="wrapper">
-		<div class="text">
-			<p class="text-title">项目报备申请详情</p>
-            <p class="text-content text-sm left-gap-1">报备编号：{{ project_report.report_no }}</p>
-		</div>
-		<div class="table-responsive">
-			<table class="table table-striped">
-				<thead>
+
+    <div class="widget">
+        <div class="widget_header">
+            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;项目报备详情</h4>
+        </div>
+        <div class="widget_contents padding-0 bot-gap-3">
+            <div class="form-item inline-2">
+                <span class="form-label">报备编号</span>
+                <input class="form-input form-control" value="{{ project_report.report_no }}" disabled/>
+                <span class="form-label">创建日期</span>
+                <input class="form-input form-control" value="{{ project_report.created_at.strftime('%Y-%m-%d') }}" disabled/>
+                <span class="form-label">状态</span>
+                <input class="form-input form-control" value="{{ project_report.status }}" disabled/>
+            </div>
+        </div>
+        <div class="widget_contents padding-0">
+            <table class="tables">
+                <thead>
 					<tr>
 						<th>申请公司名称</th>
 						<th>项目跟进人</th>
@@ -100,12 +117,15 @@
 						<td></td>
 					</tr>
 				</tbody>
-			</table>
-		</div>
-	</div>
-
-	<div class="divider4 top-gap-1 bot-gap-1"></div>
-
+            </table>
+        </div>
+        {% if project_report.status=="新创建待审核" %}
+            <div class="text-right top-gap-3">
+                <a class="btn btn-default my-btn right-gap-2" href="{{ url_for('project_report.audit', id=project_report.id) }}">填写审核信息</a>
+                <a class="btn btn-default my-btn" href="{{ url_for('project_report.cancel', id=project_report.id) }}">取消申请</a>
+            </div>
+        {% endif %}
+    </div>
 </div>
 
 {% endblock %}
