@@ -721,3 +721,32 @@ td input{
     border: 1px solid #ccc;
     border-top: none;
 }
+
+/*file*/
+.file a{
+		font-size: 0.75em;
+    border: 0px;
+    position: relative;
+    display: block;
+    border-radius: 10px;
+    padding: 4px 12px;
+    overflow: hidden;
+    text-decoration: none;
+    line-height: 24px;
+    text-align: center;
+    margin: 0px auto;
+    width: 120px;
+    box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.15);
+}
+
+.file input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.file a:hover {
+    background: #eee;
+    text-decoration: none;
+}

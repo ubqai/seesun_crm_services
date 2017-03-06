@@ -6,13 +6,15 @@
 <div class="main-content">
 	<div class="wrappper top-gap-3">
 		<form action="{{ url_for('mobile_design') }}" enctype="multipart/form-data" method="post">
-			<div class="form-item">
-				<label>输入报备编号</label>
-				<input placeholder="请输入报备编号" type="text" name="filing_no" id="filing_no" class="form-control">
+		  <div class="file form-item bot-gap-2">
+				<a href="javascript:;">
+					<img src="/static/images/upload.png" style="display: block; margin: 0px auto; width: 96px;">
+					上传设计图纸
+					<input type="file" name="ul_file" id="ul_file" class="form-control">
+				</a>
 			</div>
 			<div class="form-item">
-				<label>上传设计图纸</label>
-				<input type="file" name="ul_file" id="ul_file" class="form-control">
+				<input placeholder="请输入报备编号" type="text" name="filing_no" id="filing_no" class="form-control">
 			</div>
 			<button type="submit" class="btn btn-warning btn-block top-gap-3 text-lg">申请设计</button>
 		</form>
