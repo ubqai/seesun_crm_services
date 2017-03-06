@@ -17,11 +17,12 @@ def make_shell_context():
                 ContentClassification=ContentClassification,
                 ContentClassificationOption=ContentClassificationOption,
                 Material=Material, MaterialApplication=MaterialApplication,
-                MaterialApplicationContent=MaterialApplicationContent,
+                MaterialApplicationContent=MaterialApplicationContent, DesignApplication=DesignApplication,
+                TrackingInfo=TrackingInfo, TrackingInfoDetail=TrackingInfoDetail,
                 Order=Order, OrderContent=OrderContent, Contract=Contract,
                 User=User, UserInfo=UserInfo, Resource=Resource, SalesAreaHierarchy=SalesAreaHierarchy,
                 DepartmentHierarchy=DepartmentHierarchy,
-                WechatAccessToken=WechatAccessToken,WechatCall=WechatCall)
+                WechatAccessToken=WechatAccessToken, WechatCall=WechatCall, ProjectReport=ProjectReport)
         
 manager.add_command("shell", Shell(make_context=make_shell_context))
 

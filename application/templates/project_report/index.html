@@ -1,0 +1,75 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active = 'sale') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">项目报备申请列表</p>
+        <p class="contents-header-p text-sm">list of orders</p>
+    </div>
+    <div class="separator"><span></span></div>
+    <form class="form form-horizontal" method="get" url="{{ url_for('project_report.index') }}"
+          role="form" enctype="multipart/form-data">
+        <div class="form-style form-default">
+            <div class="form-item-2 col-3">
+                <span>报备编号</span>
+                <input class="form-control" name="order_no">
+            </div>
+            <div class="form-item-2 col-3">
+                <span>状态</span>
+                <select class="form-control" name="order_status"></select>
+            </div>
+            <div class="clearfix"></div>
+            <div class="text-right top-gap-2 right-gap-3">
+                <button class="btn btn-default my-btn">筛选条件</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="widget">
+        <div class="widget_header">
+            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;项目报备申请列表</h4>
+        </div>
+        <div class="widget_contents padding-0">
+            <table class="tables">
+                <thead>
+					<tr>
+						<th>报备编号</th>
+						<th>申请公司名称</th>
+						<th>创建日期</th>
+						<th>项目名称</th>
+						<th>状态</th>
+                        <th></th>
+                        <th></th>
+					</tr>
+				</thead>
+				<tbody>
+                    {% for project_report in project_reports %}
+                        <tr>
+                            <td>{{ project_report.report_no }}</td>
+                            <td>{{ project_report.report_content.get('app_company') }}</td>
+                            <td>{{ project_report.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ project_report.report_content.get('project_name') }}</td>
+                            <td>
+                                {{ project_report.status }}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('project_report.show', id=project_report.id) }}" class="text-success">查看详情</a>
+                            </td>
+                            <td>
+                                {% if project_report.status == '新创建待审核' %}
+                                    <a href="{{ url_for('project_report.audit', id=project_report.id) }}" class="text-success">审核</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+				</tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

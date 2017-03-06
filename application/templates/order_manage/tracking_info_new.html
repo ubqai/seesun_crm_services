@@ -1,0 +1,41 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active = 'sale') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">创建物流状态</p>
+        <p class="contents-header-p text-sm">new tracking info</p>
+    </div>
+    <div class="separator"><span></span></div>
+    <form url="{{ url_for('order_manage.tracking_info_new', contract_id = contract.id) }}" enctype="multipart/form-data" method="post" class="form form-horizontal" >
+        <div class="widget_contents padding-0 item-wrapper">
+            <div class="form-item item-template">
+                <div class="form-item-2 col-3">
+                    <span>{{ form.contract_no.label }}</span>
+                    {{ form.contract_no(class = 'form-input form-control', value = contract.contract_no, disabled='') }}
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>{{ form.contract_date.label }}</span>
+                    {{ form.contract_date(class = 'form-input form-control', value = contract.contract_date, disabled='') }}
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>{{ form.receiver_name.label }}</span>
+                    {{ form.receiver_name(class = 'form-input form-control') }}
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>{{ form.receiver_tel.label }}</span>
+                    {{ form.receiver_tel(class = 'form-input form-control') }}
+                </div>
+            </div>
+        </div>
+        <div class="text-right top-gap-1">
+            <button type="submit" class="btn btn-default my-btn">提交</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,37 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('产品设计') }}
+<div class="main-content">
+	<div class="text bot-gap-2">
+		<p class="text-title bot-gap-1">申请列表</p>
+		<div class="expanded-table table-responsive">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>报备编号</th>
+						<th>申请日期</th>
+						<th>申请状态</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+                    {% for application in applications %}
+                        <tr>
+                            <td>{{ application.filing_no }}</td>
+                            <td>{{ application.created_at.strftime('%F') }}</td>
+                            <td>{{ application.status }}</td>
+                            <td>
+                            {% if application.status == '申请通过' and application.dl_file %}
+                                <a href="{{ url_for('design_application.dl_file', id = application.id) }}" class="text-success">下载设计文件</a>
+                            {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

@@ -21,10 +21,15 @@ from .inventory.views import inventory
 app.register_blueprint(inventory, url_prefix='/inventory')
 from .wechat.views import wechat
 app.register_blueprint(wechat, url_prefix='/wechat')
+from .design_application.views import design_application
+app.register_blueprint(design_application, url_prefix='/design_application')
+from .project_report.views import project_report
+app.register_blueprint(project_report, url_prefix='/project_report')
 
-from .inventory.api import load_products, load_skus
+from .inventory.api import load_products, load_skus, load_user_inventories
 app.add_template_global(load_products)
 app.add_template_global(load_skus)
+app.add_template_global(load_user_inventories)
 app.add_template_global(len)
 
 @app.before_first_request

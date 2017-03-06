@@ -16,7 +16,7 @@
 			<a class="new-item new-inventory"><span class="glyphicon glyphicon-plus"></span></a>
 		</div>
 
-		<form action="{{ url_for('inventory.edit', id=id) }}" method="post">
+		<form action="{{ url_for('inventory.edit', id=id, from=from_path) }}" method="post">
 			<div class="widget_contents padding-0 item-wrapper">
                 <div class="form-item item-template">
                     <div class="form-item-2 col-3">
@@ -34,6 +34,10 @@
                     <div class="form-item-2 col-3">
                         <span>库存数量</span>
                         <input class="form-control" name="stocks" value="{{ inventory.get('stocks') }}">
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span>共享库存数量</span>
+                        <input class="form-control" name="share_stocks" value="{{ 0 if inventory.get('share_stocks') == None else inventory.get('share_stocks') }}">
                     </div>
                 </div>
 			</div>

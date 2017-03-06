@@ -76,3 +76,15 @@ $(function(){
 	})
 })
 
+//file
+$(function(){
+  //to change the text as the file uploaded
+  $(".file input").bind("change",function(){
+    var text=this.value;
+    var text_array=text.split("\\");
+    var file_name=text_array[text_array.length-1];
+    $(this).parent().find("label").html(file_name);
+    var format=file_name.split(".")[1];
+  })
+})
+

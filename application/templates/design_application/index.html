@@ -1,0 +1,74 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active = 'sale') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">产品设计申请列表</p>
+        <p class="contents-header-p text-sm">list of design applications</p>
+    </div>
+    <div class="separator"><span></span></div>
+    <form url="{{ url_for('design_application.index') }}" method="get" role="form" class="form form-horizontal" >
+        <div class="form-style form-default">
+            <div class="form-item-2 col-3">
+                <span>从</span>
+                <input class="form-control datetimePicker" name="from">
+            </div>
+            <div class="form-item-2 col-3">
+                <span>到</span>
+                <input class="form-control datetimePicker" name="to">
+            </div>
+            <div class="form-item-2 col-3">
+                <span>报备编号</span>
+                <input class="form-control" name="filing_no">
+            </div>
+            <div class="form-item-2 col-3">
+                <span>申请状态</span>
+                <select class="form-control" name="order_status"></select>
+            </div>
+            <div class="clearfix"></div>
+            <div class="text-right top-gap-2 right-gap-3">
+                <button class="btn btn-default my-btn">筛选条件</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="widget">
+        <div class="widget_header">
+            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;物料申请列表</h4>
+        </div>
+        <div class="widget_contents padding-0">
+            <table class="tables">
+                <thead>
+                    <tr>
+                        <th>报备编号</th>
+                        <th>申请日期</th>
+                        <th>申请状态</th>
+                        <th>设计图纸(微信端上传)</th>
+                        <th>设计文件(微信端下载)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                    <tr>
+                        <td><a href="{{ url_for('design_application.edit', id = application.id) }}" class="table-link">{{ application.filing_no }}</a></td>
+                        <td>{{ application.created_at.strftime('%F') }}</td>
+                        <td><span class="text-warning">{{ application.status }}</span></td>
+                        <td><a href="{{ url_for('design_application.ul_file', id = application.id) }}">点击下载</a></td>
+                        <td>
+                        {% if application.status == '申请通过' and application.dl_file %}
+                            <a href="{{ url_for('design_application.dl_file', id = application.id) }}">点击下载</a>
+                        {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

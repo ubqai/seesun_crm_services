@@ -1,0 +1,34 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('物流追踪') }}
+
+<div class="main-content">
+	<div class="text">
+		<p class="text-title">物流状态</p>
+	</div>
+	<div class="divider3" style="width:100%;background:#eee;margin-top:0px"></div>
+	<div class="tracking-block passed">
+		<p class="tracking-detail text-md">合同日期 ： {{ tracking_info.contract_date.strftime('%F') }}</p>
+	</div>
+	<div class="tracking-block passed">
+		<p class="tracking-detail text-md">项目联系人 ： {{ tracking_info.receiver_name }}</p>
+	</div>
+	<div class="tracking-block passed">
+		<p class="tracking-detail text-md">项目联系人电话 ： {{ tracking_info.receiver_tel }}</p>
+	</div>
+	<div class="tracking-block passed">
+		<p class="tracking-detail text-md">生产日期 ： {{ tracking_info.production_date.strftime('%F') }}</p>
+	</div>
+	<div class="tracking-block passed">
+		<p class="tracking-detail text-md">配送日期 ： {{ tracking_info.delivery_date.strftime('%F') }}</p>
+	</div>
+		<div class="tracking-block passed">
+		<p class="tracking-detail text-md">配送车牌号 ： {{ tracking_info.delivery_plate_no }}</p>
+	</div>
+	<div class="tracking-block passed">
+		<p class="tracking-detail text-md">司机电话 ： {{ tracking_info.delivery_man_tel }}</p>
+	</div>
+</div>
+
+{% endblock %}

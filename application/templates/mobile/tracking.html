@@ -1,0 +1,16 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('物流追踪') }}
+
+<div class="main-content">
+	<div class="wrappper top-gap-3">
+		<form action="{{ url_for('mobile_tracking') }}" method="post">
+			<input name="contract_no" class="form-control" placeholder="请输入合同号">
+			<input name="receiver_tel" class="form-control top-gap-3" placeholder="请输入手机号码">
+			<input value="查询" type="submit" class="btn btn-block btn-warning top-gap-3">
+		</form>
+	</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active = 'sale') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">审核项目报备申请</p>
+        <p class="contents-header-p text-sm">contracts</p>
+    </div>
+    <div class="separator"><span></span></div>
+    <form class="form form-horizontal" method="post" url="{{ url_for('project_report.audit', id=project_report.id) }}"
+          role="form" enctype="multipart/form-data">
+        <div class="widget_contents padding-0 item-wrapper">
+            <div class="form-item item-template">
+                <div class="form-item-2 col-3">
+                    <span>销售代表</span>
+                    <select class="form-control" name="sales_representative">
+                    <option value=""></option>
+                    <option value="张德全">张德全</option>
+                    <option value="李公朴">李公朴</option>
+                </select>
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>销售主管</span>
+                    <select class="form-control" name="sales_executive">
+                    <option value=""></option>
+                    <option value="张德全">张德全</option>
+                    <option value="李公朴">李公朴</option>
+                </select>
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>销售总监</span>
+                    <select class="form-control" name="sales_director">
+                    <option value=""></option>
+                    <option value="张德全">张德全</option>
+                    <option value="李公朴">李公朴</option>
+                </select>
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>是否开具授权</span>
+                    <input class="form-input form-control" name="is_authorized">
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>授权书日期</span>
+                    <input class="form-input form-control" name="authorization_date">
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>授权书编号</span>
+                    <input class="form-input form-control" name="authorization_no">
+                </div>
+
+
+                <div class="text-right top-gap-1">
+                    <button type="submit" class="btn btn-default my-btn">提交</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+

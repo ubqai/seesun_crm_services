@@ -7,6 +7,7 @@ from .models import *
 from .product.api import *
 import traceback
 from .forms import *
+from .helpers import save_upload_file
 from sqlalchemy import distinct
 
 PAGINATION_PAGE_NUMBER=2
@@ -129,14 +130,14 @@ def mobile_cart():
             for param in request.form:
                 if 'number' in param and request.form.get(param):
                     index = param.rsplit('_', 1)[1]
-                    order_content = {'product_name': request.form.get('product_name_%s' % index),
-                                     # should be optimized later
-                                     'sku_specification': request.form.get('sku_specification_%s' % index),
-                                     'sku_code': request.form.get('sku_code_%s' % index),
-                                     'sku_id': index,
-                                     'number': int(request.form.get('number_%s' % index)),
-                                     'square_num': "%.2f" % (0.3*int(request.form.get('number_%s' % index)))}
-                    order.append(order_content)
+                    if int(request.form.get('number_%s' % index)) > 0:
+                        order_content = {'product_name': request.form.get('product_name_%s' % index),
+                                         'sku_specification': request.form.get('sku_specification_%s' % index),
+                                         'sku_code': request.form.get('sku_code_%s' % index),
+                                         'sku_id': index,
+                                         'number': int(request.form.get('number_%s' % index)),
+                                         'square_num': "%.2f" % (0.3*int(request.form.get('number_%s' % index)))}
+                        order.append(order_content)
         session['order'] = order
         return redirect(url_for('mobile_cart'))
     return render_template('mobile/cart.html', order=order)
@@ -214,9 +215,32 @@ def mobile_project_lvl2():
 
 
 # --- Design ---
-@app.route('/mobile/design')
+@app.route('/mobile/design', methods = ['GET', 'POST'])
 def mobile_design():
+    if request.method == 'POST':
+        if request.form.get('filing_no') and request.files.get('ul_file'):
+            project_report = ProjectReport.query.filter_by(report_no = request.form.get('filing_no')).first()
+            if project_report:
+                file_path = save_upload_file(request.files.get('ul_file'))
+                user = User.query.first()
+                application = DesignApplication(filing_no = request.form.get('filing_no'), 
+                    ul_file = file_path, status = '新申请', applicant = user)
+                application.save
+                flash('产品设计申请提交成功', 'success')
+                return redirect(url_for('mobile_design_applications'))
+            else:
+                flash('项目报备编号不存在', 'danger')
+        else:
+            flash('项目报备编号和上传设计图纸不能为空', 'danger')
+        return redirect(url_for('mobile_design'))
     return render_template('mobile/design.html')
+
+
+@app.route('/mobile/design_applications')
+def mobile_design_applications():
+    # list design applications of current user
+    applications = DesignApplication.query.all()
+    return render_template('mobile/design_applications.html', applications = applications)
 
 
 # --- Material need ---
@@ -280,7 +304,7 @@ def mobile_material_application_show(id):
     return render_template('mobile/material_application_show.html', application = application)
 
 
-# --- Quick pay ---
+# --- Quick pay --- not be used anymore
 @app.route('/mobile/quick_pay')
 def mobile_quick_pay():
     return render_template('mobile/quick_pay.html')
@@ -292,18 +316,31 @@ def mobile_quick_pay_lvl2():
 
 
 # --- Tracking info ---
-@app.route('/mobile/tracking_lvl1')
-def mobile_tracking_lvl1():
-    return render_template('mobile/tracking_lvl1.html')
+@app.route('/mobile/tracking', methods = ['GET', 'POST'])
+def mobile_tracking():
+    if request.method == 'POST':
+        contract_no = request.form.get('contract_no').strip()
+        receiver_tel = request.form.get('receiver_tel').strip()
+        tracking_info = TrackingInfo.query.filter(
+            (TrackingInfo.contract_no == contract_no) &
+            (TrackingInfo.receiver_tel == receiver_tel)
+            ).first()
+        if tracking_info:
+            return redirect(url_for('mobile_tracking_info', id = tracking_info.id))
+        else:
+            flash('未找到对应物流信息', 'warning')
+            return redirect(url_for('mobile_tracking'))
+    return render_template('mobile/tracking.html')
 
 
-@app.route('/mobile/tracking_lvl2')
-def mobile_tracking_lvl2():
-    return render_template('mobile/tracking_lvl2.html')
+@app.route('/mobile/tracking_info/<int:id>')
+def mobile_tracking_info(id):
+    tracking_info = TrackingInfo.query.get_or_404(id)
+    return render_template('mobile/tracking_info.html', tracking_info = tracking_info)
 
 
 # --- Verification ---
-@app.route('/wechat/mobile/verification')
+@app.route('/mobile/verification')
 def mobile_verification():
     return render_template('mobile/verification.html')
 
@@ -644,3 +681,51 @@ def mobile_users_staffs_search(page=1):
     pagination = us.paginate(page, PAGINATION_PAGE_NUMBER, False) 
 
     return render_template('mobile/users_staffs_search.html',users_staffs=pagination.items,pagination=pagination,form=form)
+
+
+@app.route('/mobile/project_report/new', methods=['GET', 'POST'])
+def new_project_report():
+    if request.method == 'POST':
+        report_content = {"app_company": request.form.get("app_company"),
+                          "project_follower": request.form.get("project_follower"),
+                          "contract_phone": request.form.get("contract_phone"),
+                          "contract_fax": request.form.get("contract_fax"),
+                          "project_name": request.form.get("project_name"),
+                          "report_date": request.form.get("report_date"),
+                          "project_address": request.form.get("project_address"),
+                          "project_area": request.form.get("project_area"),
+                          "product_place": request.form.get("product_place"),
+                          "recommended_product_line": request.form.get("recommended_product_line"),
+                          "recommended_product_color": request.form.get("recommended_product_color"),
+                          "project_completion_time": request.form.get("project_completion_time"),
+                          "expected_order_time": request.form.get("expected_order_time"),
+                          "competitive_brand_situation": request.form.get("competitive_brand_situation"),
+                          "project_owner": request.form.get("project_owner"),
+                          "project_decoration_total": request.form.get("project_decoration_total"),
+                          "project_design_company": request.form.get("project_design_company"),
+                          "is_authorization_needed": request.form.get("is_authorization_needed"),
+                          "expected_authorization_date": request.form.get("expected_authorization_date"),
+                          "authorize_company_name": request.form.get('authorize_company_name')}
+        project_report = ProjectReport(
+            app_id=User.query.filter_by(user_or_origin=2).first().id,
+            status="新创建待审核",
+            report_no="PR%s" % datetime.datetime.now().strftime('%y%m%d%H%M%S'),
+            report_content=report_content
+        )
+        db.session.add(project_report)
+        db.session.commit()
+        return redirect(url_for('project_report_index'))
+    return render_template('mobile/project_report_new.html')
+
+
+@app.route('/mobile/project_report/index', methods=['GET'])
+def project_report_index():
+    project_reports = ProjectReport.query.all()
+    return render_template('mobile/project_report_index.html', project_reports=project_reports)
+
+
+@app.route('/mobile/project_report/<int:id>', methods=['GET'])
+def project_report_show(id):
+    project_report = ProjectReport.query.get_or_404(id)
+    return render_template('mobile/project_report_show.html', project_report=project_report)
+
