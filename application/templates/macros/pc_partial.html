@@ -3,10 +3,11 @@
 		<div id="sidebar">
 			<ul class="sidebar-menu">
 				<li class="{% if active == 'home' %}active{% endif %}"><a><i class="glyphicon glyphicon-dashboard"></i><span>首页</span></a></li>
-				<li class="sub-menu">
+				<li class="sub-menu {% if active == 'dealer' %}active{% endif %}">
 					<a><i class="glyphicon glyphicon-comment"></i><span>经销商视图</span><span class="dcjq-icon"></span></a>
 					<ul class="sub">
 						<li><a>经销商列表管理</a></li>
+                        <li><a href="{{ url_for('inventory.share_index') }}">库存共享</a></li>
 					</ul>
 				</li>
 				<li class="sub-menu {% if active == 'sale' %}active{% endif %}">
