@@ -679,3 +679,51 @@ def mobile_users_staffs_search(page=1):
     pagination = us.paginate(page, 10, False) 
 
     return render_template('mobile/users_staffs_search.html',users_staffs=pagination.items,pagination=pagination,form=form)
+
+
+@app.route('/mobile/project_report/new', methods=['GET', 'POST'])
+def new_project_report():
+    if request.method == 'POST':
+        report_content = {"app_company": request.form.get("app_company"),
+                          "project_follower": request.form.get("project_follower"),
+                          "contract_phone": request.form.get("contract_phone"),
+                          "contract_fax": request.form.get("contract_fax"),
+                          "project_name": request.form.get("project_name"),
+                          "report_date": request.form.get("report_date"),
+                          "project_address": request.form.get("project_address"),
+                          "project_area": request.form.get("project_area"),
+                          "product_place": request.form.get("product_place"),
+                          "recommended_product_line": request.form.get("recommended_product_line"),
+                          "recommended_product_color": request.form.get("recommended_product_color"),
+                          "project_completion_time": request.form.get("project_completion_time"),
+                          "expected_order_time": request.form.get("expected_order_time"),
+                          "competitive_brand_situation": request.form.get("competitive_brand_situation"),
+                          "project_owner": request.form.get("project_owner"),
+                          "project_decoration_total": request.form.get("project_decoration_total"),
+                          "project_design_company": request.form.get("project_design_company"),
+                          "is_authorization_needed": request.form.get("is_authorization_needed"),
+                          "expected_authorization_date": request.form.get("expected_authorization_date"),
+                          "authorize_company_name": request.form.get('authorize_company_name')}
+        project_report = ProjectReport(
+            app_id=User.query.filter_by(user_or_origin=2).first().id,
+            status="新创建待审核",
+            report_no="PR%s" % datetime.datetime.now().strftime('%y%m%d%H%M%S'),
+            report_content=report_content
+        )
+        db.session.add(project_report)
+        db.session.commit()
+        return redirect(url_for('project_report_index'))
+    return render_template('mobile/project_report_new.html')
+
+
+@app.route('/mobile/project_report/index', methods=['GET'])
+def project_report_index():
+    project_reports = ProjectReport.query.all()
+    return render_template('mobile/project_report_index.html', project_reports=project_reports)
+
+
+@app.route('/mobile/project_report/<int:id>', methods=['GET'])
+def project_report_show(id):
+    project_report = ProjectReport.query.get_or_404(id)
+    return render_template('mobile/project_report_show.html', project_report=project_report)
+
