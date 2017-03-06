@@ -737,6 +737,7 @@ td input{
     margin: 0px auto;
     width: 120px;
     box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.15);
+		background: #eee;
 }
 
 .file input {
@@ -745,8 +746,15 @@ td input{
     right: 0;
     top: 0;
     opacity: 0;
+		height: 100%;
+}
+.file label{
+  display:block;
+  padding-top:0.5em;
+	color:#888;
+	word-wrap: break-word;
 }
 .file a:hover {
-    background: #eee;
+    background: #ddd;
     text-decoration: none;
 }
