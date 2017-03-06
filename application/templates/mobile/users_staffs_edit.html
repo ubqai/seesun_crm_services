@@ -1,5 +1,6 @@
 {% extends 'mobile_base.html' %}
 {% from 'macros/mobile_partial.html' import header %}
+{% from 'macros/mobile_form_field_error.html' import render_form_field_error %}
 {% block content %}
 {{ header('员工管理') }}
 
@@ -8,74 +9,32 @@
 		<form action="{{ url_for('mobile_users_staffs_edit',user_id=user_id) }}" method="post">
 			{{ form.email.label }}
 			{{ form.email(class="form-control",placeholder="请输入email",readonly="readonly") }}
-			{% if form.email.errors %}
-			    <ul class="errors">
-			    	{% for error in form.email.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.email) }}
 
 			{{ form.name.label }}
 			{{ form.name(class="form-control top-gap-3",placeholder="请输入姓名") }}
-			{% if form.name.errors %}
-			    <ul class="errors">
-			    	{% for error in form.name.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.name) }}
 
 
 			{{ form.nickname.label }}
 			{{ form.nickname(class="form-control top-gap-3",placeholder="请输入昵称") }}
-			{% if form.nickname.errors %}
-			    <ul class="errors">
-			    	{% for error in form.nickname.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.nickname) }}
 
 			{{ form.address.label }}
 			{{ form.address(class="form-control top-gap-3",placeholder="请输入地址") }}
-			{% if form.address.errors %}
-			    <ul class="errors">
-			    	{% for error in form.address.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.address) }}
 
 			{{ form.phone.label }}
 			{{ form.phone(class="form-control top-gap-3",placeholder="请输入电话") }}
-			{% if form.phone.errors %}
-			    <ul class="errors">
-			    	{% for error in form.phone.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.phone) }}
 
 			{{ form.title.label }}
 			{{ form.title(class="form-control top-gap-3",placeholder="请输入title") }}
-			{% if form.title.errors %}
-			    <ul class="errors">
-			    	{% for error in form.title.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.title) }}
 
 			{{ form.dept_range.label }}
 			{{ form.dept_range(class="form-control top-gap-3",placeholder="选择所属部门") }}
-			{% if form.dept_range.errors %}
-			    <ul class="errors">
-			    	{% for error in form.dept_range.errors %}
-			    		<li>{{ error }}</li>
-			    	{% endfor %}
-			    </ul>
-			{% endif %}
+			{{ render_form_field_error(form.dept_range) }}
 			
 			<input type="submit" class="btn btn-block btn-warning top-gap-3" value="修改">
 		</form>

@@ -10,6 +10,8 @@ from .forms import *
 from .helpers import save_upload_file
 from sqlalchemy import distinct
 
+PAGINATION_PAGE_NUMBER=2
+
 @app.route('/mobile/index')
 def mobile_index():
     return render_template('mobile/index.html')
@@ -216,9 +218,9 @@ def mobile_project_lvl2():
 @app.route('/mobile/design', methods = ['GET', 'POST'])
 def mobile_design():
     if request.method == 'POST':
-        filing_no_exsits = True
         if request.form.get('filing_no') and request.files.get('ul_file'):
-            if filing_no_exsits:
+            project_report = ProjectReport.query.filter_by(report_no = request.form.get('filing_no')).first()
+            if project_report:
                 file_path = save_upload_file(request.files.get('ul_file'))
                 user = User.query.first()
                 application = DesignApplication(filing_no = request.form.get('filing_no'), 
@@ -550,11 +552,11 @@ def mobile_users_dealers_search(page=1):
     if form.name.data:
         us = us.filter(User.nickname.like("%"+form.name.data+"%"))
     #how to search in many-to-many
-    if form.sales_range.data and form.sales_range.data != ["-1"]:
+    if form.sales_range.data and form.sales_range.data != ["-1"] and form.sales_range.data != [""]:
         us=us.join(User.sales_areas).filter(SalesAreaHierarchy.id.in_(form.sales_range.data))
 
     us=User.query.filter(User.id.in_(us)).order_by(User.id)
-    pagination = us.paginate(page, 10, False) 
+    pagination = us.paginate(page, PAGINATION_PAGE_NUMBER, False) 
 
     return render_template('mobile/users_dealers_search.html',users_dealers=pagination.items,pagination=pagination,form=form)
 
@@ -672,11 +674,11 @@ def mobile_users_staffs_search(page=1):
     if form.name.data:
         us = us.filter(User.nickname.like("%"+form.name.data+"%"))
     #how to search in many-to-many
-    if form.dept_range.data and form.dept_range.data != "-1" :
+    if form.dept_range.data and form.dept_range.data != "-1" and form.dept_range.data != "None":
         us=us.join(User.departments).filter(DepartmentHierarchy.id==form.dept_range.data)
 
     us=User.query.filter(User.id.in_(us)).order_by(User.id)
-    pagination = us.paginate(page, 10, False) 
+    pagination = us.paginate(page, PAGINATION_PAGE_NUMBER, False) 
 
     return render_template('mobile/users_staffs_search.html',users_staffs=pagination.items,pagination=pagination,form=form)
 
@@ -727,3 +729,9 @@ def project_report_show(id):
     project_report = ProjectReport.query.get_or_404(id)
     return render_template('mobile/project_report_show.html', project_report=project_report)
 
+
+@app.route('/mobile/share_index', methods=['GET'])
+def stocks_share():
+    categories = load_categories()
+    user = User.query.filter_by(user_or_origin=2, nickname='普陀区经销商').first()
+    return render_template('mobile/share_index.html', categories=categories, user=user)

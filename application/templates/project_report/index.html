@@ -37,6 +37,7 @@
                 <thead>
 					<tr>
 						<th>报备编号</th>
+                        <th>申请人</th>
 						<th>申请公司名称</th>
 						<th>创建日期</th>
 						<th>项目名称</th>
@@ -49,6 +50,7 @@
                     {% for project_report in project_reports %}
                         <tr>
                             <td>{{ project_report.report_no }}</td>
+                            <td>{{ project_report.app_name }}</td>
                             <td>{{ project_report.report_content.get('app_company') }}</td>
                             <td>{{ project_report.created_at.strftime('%Y-%m-%d') }}</td>
                             <td>{{ project_report.report_content.get('project_name') }}</td>
