@@ -34,7 +34,7 @@ def audit(id):
         pr.status = '项目报备审核通过'
         db.session.add(pr)
         db.session.commit()
-        flash('项目报备申请审核成功', 'warning')
+        flash('项目报备申请审核成功', 'success')
         return redirect(url_for('project_report.index'))
     return render_template('project_report/audit.html', project_report=pr)
 
@@ -45,5 +45,5 @@ def cancel(id):
     pr.status = "报备已取消"
     db.session.add(pr)
     db.session.commit()
-    flash('项目报备申请取消成功', 'warning')
+    flash('项目报备申请取消成功', 'success')
     return redirect(url_for("project_report.index"))

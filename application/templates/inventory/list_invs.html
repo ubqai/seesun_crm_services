@@ -36,6 +36,7 @@
                                         <th width="15%">创建日期</th>
                                         <th width="15%">生产日期</th>
                                         <th width="10%">库存量</th>
+                                        <th width="10%">共享库存量</th>
                                         <th>操作</th>
                                     </tr>
                                 </thead>
@@ -47,7 +48,10 @@
                                             <td>{{ batch.get('production_date') }}</td>
                                             <td>{{ batch.get('stocks') }}</td>
                                             <td>
-                                                <a class="table-edit text-info" href="{{ url_for('inventory.edit', id = batch.get('inv_id')) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;修改</a>
+                                                {{ 0 if batch.get('share_stocks') == None else batch.get('share_stocks') }}
+                                            </td>
+                                            <td>
+                                                <a class="table-edit text-info" href="{{ url_for('inventory.edit', id = batch.get('inv_id'), from = 'company' ) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;修改</a>
                                                 <form action="{{ url_for('inventory.delete', id = batch.get('inv_id')) }}" method="post" style="display: inline;">
                                                     <button type="submit" data-confirm="Are you sure?" class="btn-link table-del" style="color: #843534; text-decoration: none; "><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除该批次</button>
                                                 </form>
