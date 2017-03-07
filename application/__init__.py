@@ -25,6 +25,8 @@ from .design_application.views import design_application
 app.register_blueprint(design_application, url_prefix='/design_application')
 from .project_report.views import project_report
 app.register_blueprint(project_report, url_prefix='/project_report')
+from .organization.views import organization
+app.register_blueprint(organization, url_prefix='/organization')
 
 from .inventory.api import load_products, load_skus, load_user_inventories
 app.add_template_global(load_products)

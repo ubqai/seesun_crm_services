@@ -57,6 +57,7 @@
 				<li class="sub-menu {% if active == 'organization' %}active{% endif %}">
 					<a><i class="glyphicon glyphicon-user"></i><span>系统组织架构</span><span class="dcjq-icon"></span></a>
 					<ul class="sub">
+						<li><a href="{{ url_for('organization.user_index') }}">用户管理</a></li>
 						<li><a>组织架构及权限组</a></li>
 						<li><a>区域管理和销售团队</a></li>
 					</ul>
