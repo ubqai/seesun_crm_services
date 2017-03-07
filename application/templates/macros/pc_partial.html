@@ -20,7 +20,6 @@
 							<a>工作流与审批<span class="dcjq-icon"></span></a>
 							<ul class="t-sub">
 								<li><a href="{{ url_for('content.material_application_index') }}">物料申请</a></li>
-								<li><a href="{{ url_for('design_application.index') }}">产品设计申请</a></li>
                                 <li><a href="{{ url_for('project_report.index') }}">项目报备申请</a></li>
 							</ul>
 						</li>
@@ -36,7 +35,7 @@
 				<li class="sub-menu {% if active == 'design' %}active{% endif %}">
 					<a><i class="glyphicon glyphicon-paperclip"></i><span>产品设计</span><span class="dcjq-icon"></span></a>
 					<ul class="sub">
-						<li><a>待设计列表</a></li>
+						<li><a href="{{ url_for('design_application.index') }}">待设计列表 &nbsp;&nbsp;<div class="badge badge-info"></div></a></li>
 					</ul>
 				</li>
 				<li class="sub-menu {% if active == 'file' %}active{% endif %}">

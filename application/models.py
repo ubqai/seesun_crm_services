@@ -348,3 +348,8 @@ class ProjectReport(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
+    @property
+    def app_name(self):
+        return User.query.get_or_404(self.app_id).nickname
+
+

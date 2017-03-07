@@ -453,3 +453,9 @@ def project_report_show(id):
     project_report = ProjectReport.query.get_or_404(id)
     return render_template('mobile/project_report_show.html', project_report=project_report)
 
+
+@app.route('/mobile/share_index', methods=['GET'])
+def stocks_share():
+    categories = load_categories()
+    user = User.query.filter_by(user_or_origin=2, nickname='普陀区经销商').first()
+    return render_template('mobile/share_index.html', categories=categories, user=user)

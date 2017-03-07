@@ -541,6 +541,22 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
     display: table-cell;
 	resize: none;
 }
+.sub-form-item {
+    float:left;
+    width: 33.3%;
+    color: #8f8f8f;
+    font-size: 13px;
+    text-shadow: 0 1px 0 #FFFFFF;
+    padding-left: 26px;
+}
+.sub-form-item>span:first-child {
+    float:left;
+    width: 34.3%;
+}.sub-form-item>span:last-child {
+    float:left;
+    width: 65.6%;
+		word-break:break-all;
+}
 textarea.form-input{
 	height:120px
 }

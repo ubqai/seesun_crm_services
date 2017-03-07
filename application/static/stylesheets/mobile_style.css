@@ -715,13 +715,30 @@ td input{
 		color:#7d7d7d;
 		line-height:1.9em;
 }
+.contract-table p.float {
+    display: block;
+		float:left;
+}
 .contract-footer {
     padding: 0.5em;
     border-radius: 0 0 0.4em 0.4em;
     border: 1px solid #ccc;
     border-top: none;
 }
-
+.contract-value{
+	  display: block;
+    margin-bottom: 0.5em;
+    margin-right: 1em;
+    color: #999;
+    padding-left:1em;
+		position:relative;
+}
+.contract-value:after {
+    content: "-";
+    position: absolute;
+    left: 0.3em;
+    top: -0.1em;
+}
 /*file*/
 .file a{
 		font-size: 0.75em;
