@@ -16,7 +16,7 @@
 				<p class="text-center light-font-md p-title">sku号 ：{{ sku.get('code') }}</p>
 				<div class="p-content">
 					<p class="light-font-sm">
-						库存 ：{{ sku.get('stocks') }}
+						库存 ：{{ int(sku.get('stocks')) - int(sku.get('stocks_for_order')) }}
 					</p>
 					<p class="light-font-sm">
 						价格 ：{{ sku.get('price') }}/m2
