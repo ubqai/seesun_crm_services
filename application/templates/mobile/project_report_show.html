@@ -6,102 +6,77 @@
 <div class="main-content">
 
 	<div class="wrapper">
-		<div class="text">
-			<p class="text-title">项目报备申请详情</p>
-            <p class="text-content text-sm left-gap-1">报备编号：{{ project_report.report_no }}</p>
-		</div>
-		<div class="table-responsive">
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>申请公司名称</th>
-						<th>项目跟进人</th>
-						<th>联系电话</th>
-						<th>联系传真</th>
-						<th>项目名称</th>
-                        <th>项目报备日期</th>
-						<th>项目地址</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>{{ project_report.report_content.get('app_company') }}</td>
-						<td>{{ project_report.report_content.get('project_follower') }}</td>
-						<td>{{ project_report.report_content.get('contract_phone') }}</td>
-						<td>{{ project_report.report_content.get('contract_fax') }}</td>
-						<td>{{ project_report.report_content.get('project_name') }}</td>
-                        <td>{{ project_report.report_content.get('report_date') }}</td>
-						<td>{{ project_report.report_content.get('project_address') }}</td>
-					</tr>
-				</tbody>
-                <thead>
-					<tr>
-						<th>项目面积</th>
-						<th>产品使用场所</th>
-						<th>推荐产品系列</th>
-						<th>推荐产品颜色</th>
-						<th>项目完工时间</th>
-                        <th>预计订购产品时间</th>
-						<th>竞争品牌情况</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>{{ project_report.report_content.get('project_area') }}</td>
-						<td>{{ project_report.report_content.get('product_place') }}</td>
-						<td>{{ project_report.report_content.get('recommended_product_line') }}</td>
-						<td>{{ project_report.report_content.get('recommended_product_color') }}</td>
-						<td>{{ project_report.report_content.get('project_completion_time') }}</td>
-                        <td>{{ project_report.report_content.get('expected_order_time') }}</td>
-						<td>{{ project_report.report_content.get('competitive_brand_situation') }}</td>
-					</tr>
-				</tbody>
-                <thead>
-					<tr>
-						<th>项目业主</th>
-						<th>项目装饰总包</th>
-						<th>项目设计公司</th>
-						<th>是否需要授权书</th>
-						<th>授权预计开具日期</th>
-                        <th>需授权公司名称</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>{{ project_report.report_content.get('project_owner') }}</td>
-						<td>{{ project_report.report_content.get('project_decoration_total') }}</td>
-						<td>{{ project_report.report_content.get('project_design_company') }}</td>
-						<td>{{ project_report.report_content.get('is_authorization_needed') }}</td>
-						<td>{{ project_report.report_content.get('expected_authorization_date') }}</td>
-                        <td>{{ project_report.report_content.get('authorize_company_name') }}</td>
-						<td></td>
-					</tr>
-				</tbody>
-                <thead>
-					<tr>
-						<th>销售代表</th>
-						<th>销售主管</th>
-						<th>销售总监</th>
-						<th>是否开具授权</th>
-						<th>授权书日期</th>
-                        <th>授权书编号</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>{{ project_report.audit_content.get('sales_representative') }}</td>
-						<td>{{ project_report.audit_content.get('sales_executive') }}</td>
-						<td>{{ project_report.audit_content.get('sales_director') }}</td>
-						<td>{{ project_report.audit_content.get('is_authorized') }}</td>
-						<td>{{ project_report.audit_content.get('authorization_date') }}</td>
-                        <td>{{ project_report.audit_content.get('authorization_no') }}</td>
-						<td></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+		<div class="text bot-gap-2">
+			<p class="text-title bot-gap-1">项目报备申请详情</p>
+			<div class="contract-block top-gap-3">
+				<div class="contract-header">
+					<p class="text-md text-center">报备编号</p>
+					<p class="text-sm text-center" style="color:#9d9d9d">{{ project_report.report_no }}</p>
+				</div>
+				<div class="contract-item">
+					<div class="contract-table">
+						<p class="text-sm float">申请公司：<span class="contract-value">{{ project_report.report_content.get('app_company') }}</span></p>
+						<p class="text-sm float">项目跟进人：<span class="contract-value">{{ project_report.report_content.get('project_follower') }}</span></p>
+					</div>
+					<div class="contract-table">
+						<p class="text-sm float">联系电话：<span class="contract-value">{{ project_report.report_content.get('contract_phone') }}</span></p>
+						<p class="text-sm float">联系传真：<span class="contract-value">{{ project_report.report_content.get('contract_fax') }}</span></p>
+					</div>
+					<div class="contract-table">
+						<p class="text-sm float">项目名称：<span class="contract-value">{{ project_report.report_content.get('project_name') }}</span></p>
+						<p class="text-sm float">项目报备日期：<span class="contract-value">{{ project_report.report_content.get('report_date') }}</span></p>
+					</div>
+					<div class="contract-table">
+						<p class="text-sm">项目地址：<span class="contract-value">{{ project_report.report_content.get('project_address') }}</span></p>
+					</div>
+				</div>
+				<div class="contract-item">
+					<div class="contract-table">
+						<p class="text-sm float">项目面积：<span class="contract-value">{{ project_report.report_content.get('project_area') }}</span></p>
+						<p class="text-sm float">产品使用场所：<span class="contract-value">{{ project_report.report_content.get('product_place') }}</span></p>
+					</div>
+					<div class="contract-table">
+						<p class="text-sm float">推荐产品系列：<span class="contract-value">{{ project_report.report_content.get('recommended_product_line') }}</span></p>
+						<p class="text-sm float">推荐产品颜色：<span class="contract-value">{{ project_report.report_content.get('recommended_product_color') }}</span></p>
+					</div>
+					<div class="contract-table">
+						<p class="text-sm float">项目完工时间：<span class="contract-value">{{ project_report.report_content.get('project_completion_time') }}</span></p>
+						<p class="text-sm float">预计订购时间：<span class="contract-value">{{ project_report.report_content.get('expected_order_time') }}</span></p>
+					</div>
+					<div class="contract-table">
+						<p class="text-sm">竞争品牌情况：<span class="contract-value">{{ project_report.report_content.get('competitive_brand_situation') }}</span></p>
+					</div>
+				</div>
+				<div class="contract-item">
+					<div class="contract-table">
+						<p class="text-sm">项目业主：<span class="contract-value">{{ project_report.report_content.get('project_owner') }}</span></p>
+						<p class="text-sm">项目装饰总包：<span class="contract-value">{{ project_report.report_content.get('project_decoration_total') }}</span></p>
+					</div>
+					<div class="contract-table">
+						<p class="text-sm">项目设计公司：<span class="contract-value">{{ project_report.report_content.get('project_design_company') }}</span></p>
+						<p class="text-sm">是否需要授权书：<span class="contract-value">{{ project_report.report_content.get('is_authorization_needed') }}</span></p>
+					</div>
+					<div class="contract-table">
+						<p class="text-sm">授权预计开具日期：<span class="contract-value">{{ project_report.report_content.get('expected_authorization_date') }}</span></p>
+						<p class="text-sm">需授权公司名称：<span class="contract-value">{{ project_report.report_content.get('authorize_company_name') }}</span></p>
+					</div>
+				</div>
+				<div class="contract-footer">
+					<div class="contract-table">
+						<p class="text-sm">销售代表：<span class="contract-value">{{ project_report.audit_content.get('sales_representative') }}</span></p>
+						<p class="text-sm">销售主管：<span class="contract-value">{{ project_report.audit_content.get('sales_executive') }}</span></p>
+					</div>
+					<div class="contract-table">
+						<p class="text-sm">销售总监：<span class="contract-value">{{ project_report.audit_content.get('sales_director') }}</span></p>
+						<p class="text-sm">是否开具授权：<span class="contract-value">{{ project_report.audit_content.get('is_authorized') }}</span></p>
+					</div>
+					<div class="contract-table">
+						<p class="text-sm">授权书日期：<span class="contract-value">{{ project_report.audit_content.get('authorization_date') }}</span></p>
+						<p class="text-sm">授权书编号：<span class="contract-value">{{ project_report.audit_content.get('authorization_no') }}</span></p>
+					</div>
+				</div>
+			</div>
+		</div>	
 	</div>
 
 	<div class="divider4 top-gap-1 bot-gap-1"></div>

@@ -1,0 +1,77 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('共享库存列表') }}
+
+<div class="main-content">
+
+	<div class="wrapper">
+		<div class="text">
+			<p class="text-title">{{ user.nickname }}</p>
+			<p class="text-content text-sm left-gap-1">联系人：{{ user.nickname }}</p>
+			<p class="text-content text-sm left-gap-1 bot-gap-1">Email：{{ user.email }}</p>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>产品目录</th>
+                        <th>产品-sku</th>
+                        <th>经销商</th>
+                        <th>批次号</th>
+                        <th>创建日期</th>
+                        <th>生产日期</th>
+                        <th>库存量</th>
+                        <th>共享库存量</th>
+                    </tr>
+                </thead>
+                <tbody>
+				{% for category in categories %}
+                    {% with products_json = load_products(category.get('category_id')) %}
+                        {% if len(products_json) > 0 %}
+                            {% for product_json in products_json %}
+                                {% with skus_json = load_skus(product_json.get('product_id')) %}
+                                    {% if len(skus_json.get('skus')) > 0 %}
+                                        {% for sku in skus_json.get('skus') %}
+                                            {% with invs = load_user_inventories(user.id,sku.get('sku_id')) %}
+                                                {% for inv in invs %}
+                                                    {% for batch in inv.get('batches') %}
+                                                        <tr>
+                                                            <td>{{ category.get('category_name') }}</td>
+                                                            <td>
+                                                                {{ product_json.get('name') }}--
+                                                                {% for option in sku.get('options') %}
+                                                                    {% for key, value in option.items() %}
+                                                                        {{ value }}
+                                                                    {% endfor %}
+                                                                {% endfor %}
+                                                            </td>
+                                                            <td>{{ inv.get('user_name') }}</td>
+                                                            <td>{{ batch.get('batch_no') }}</td>
+                                                            <td>{{ batch.get('created_at') }}</td>
+                                                            <td>{{ batch.get('production_date') }}</td>
+                                                            <td>{{ batch.get('stocks') }}</td>
+                                                            <td>
+                                                                {{ 0 if batch.get('share_stocks') == None else batch.get('share_stocks') }}
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                {% endfor %}
+                                            {% endwith %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="divider4 top-gap-1 bot-gap-1"></div>
+
+</div>
+
+{% endblock %}
