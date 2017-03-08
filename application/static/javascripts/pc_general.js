@@ -111,4 +111,16 @@ $(function(){
 	$(".pic-add").click(function(){
 		add_pic("image_file_");
 	});
+
+	//organization.user 
+	$("#select_user_type").change(function(){
+		if ($(this).children('option:selected').val()==3) {
+			$(this).parent().parent().children('#search_user_dept_ranges').css("display", "")
+			$(this).parent().parent().children('#search_user_sale_range').css("display", "none")
+		}
+		else {
+			$(this).parent().parent().children('#search_user_dept_ranges').css("display", "none")
+			$(this).parent().parent().children('#search_user_sale_range').css("display", "")
+		};
+	});
 })
