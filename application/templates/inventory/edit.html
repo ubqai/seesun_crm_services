@@ -35,10 +35,6 @@
                         <span>库存数量</span>
                         <input class="form-control" name="stocks" value="{{ inventory.get('stocks') }}">
                     </div>
-                    <div class="form-item-2 col-3">
-                        <span>共享库存数量</span>
-                        <input class="form-control" name="share_stocks" value="{{ 0 if inventory.get('share_stocks') == None else inventory.get('share_stocks') }}">
-                    </div>
                 </div>
 			</div>
 			<div class="text-right top-gap-1">
