@@ -40,26 +40,26 @@
                 <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;生产信息</h4>
             </div>
 
-                <div class="widget_contents padding-0 item-wrapper">
-                    <div class="form-item item-template">
-                        <div class="form-item-2 col-3">
-                            <span>{{ form.production_date.label }}</span>
-                            {{ form.production_date(class = 'form-input form-control') }}
-                        </div>
-                        <div class="form-item-2 col-3">
-                            <span>{{ form.delivery_date.label }}</span>
-                            {{ form.delivery_date(class = 'form-input form-control') }}
-                        </div>
-                        <div class="form-item-2 col-3">
-                            <span>{{ form.delivery_plate_no.label }}</span>
-                            {{ form.delivery_plate_no(class = 'form-input form-control') }}
-                        </div>
-                        <div class="form-item-2 col-3">
-                            <span>{{ form.delivery_man_tel.label }}</span>
-                            {{ form.delivery_man_tel(class = 'form-input form-control') }}
-                        </div>
+            <div class="widget_contents padding-0 item-wrapper">
+                <div class="form-item item-template">
+                    <div class="form-item-2 col-3">
+                        <span>{{ form.production_date.label }}</span>
+                        {{ form.production_date(class = 'form-input form-control') }}
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span>{{ form.production_manager.label }}</span>
+                        {{ form.production_manager(class = 'form-input form-control') }}
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span>{{ form.production_starts_at.label }}</span>
+                        {{ form.production_starts_at(class = 'form-input form-control') }}
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span>{{ form.production_ends_at.label }}</span>
+                        {{ form.production_ends_at(class = 'form-input form-control') }}
                     </div>
                 </div>
+            </div>
         </div>
 
         <div class="widget top-gap-1">
@@ -67,29 +67,34 @@
                 <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;物流信息</h4>
             </div>
 
-                <div class="widget_contents padding-0 item-wrapper">
-                    <div class="form-item item-template">
-                        <div class="form-item-2 col-3">
-                            <span>{{ form.production_date.label }}</span>
-                            {{ form.production_date(class = 'form-input form-control') }}
-                        </div>
-                        <div class="form-item-2 col-3">
-                            <span>{{ form.delivery_date.label }}</span>
-                            {{ form.delivery_date(class = 'form-input form-control') }}
-                        </div>
-                        <div class="form-item-2 col-3">
-                            <span>{{ form.delivery_plate_no.label }}</span>
-                            {{ form.delivery_plate_no(class = 'form-input form-control') }}
-                        </div>
-                        <div class="form-item-2 col-3">
-                            <span>{{ form.delivery_man_tel.label }}</span>
-                            {{ form.delivery_man_tel(class = 'form-input form-control') }}
-                        </div>
+            <div class="widget_contents padding-0 item-wrapper">
+                <div class="form-item item-template">
+                    <div class="form-item-2 col-3">
+                        <span>{{ form.delivery_date.label }}</span>
+                        {{ form.delivery_date(class = 'form-input form-control') }}
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span>{{ form.logistics_company.label }}</span>
+                        {{ form.logistics_company(class = 'form-input form-control') }}
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span>{{ form.delivery_man_name.label }}</span>
+                        {{ form.delivery_man_name(class = 'form-input form-control') }}
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span>{{ form.delivery_man_tel.label }}</span>
+                        {{ form.delivery_man_tel(class = 'form-input form-control') }}
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span>{{ form.delivery_plate_no.label }}</span>
+                        {{ form.delivery_plate_no(class = 'form-input form-control') }}
                     </div>
                 </div>
-                <div class="text-right top-gap-1">
-                    <button type="submit" class="btn btn-default my-btn">提交</button>
-                </div>
+            </div>
+            <div class="text-right top-gap-1">
+                <a href="{{ url_for('order_manage.tracking_infos') }}" class="btn btn-default my-btn">返回</a>
+                <button type="submit" class="btn btn-default my-btn">提交</button>
+            </div>
         </div>
     </form>
 
