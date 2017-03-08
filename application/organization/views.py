@@ -27,7 +27,8 @@ def user_login():
                 raise ValueError("用户名或密码错误")
 
             login_user(user)
-            return redirect(url_for('organization.user_index'))
+            UserSearchForm().process()
+            return redirect(request.args.get('next') or url_for('organization.user_index'))
         except Exception as e:
             flash(e)
     else:
@@ -45,6 +46,7 @@ def user_logout():
 @organization.route('/user/index/<int:page>')
 def user_index(page=1):
     form = UserSearchForm(request.args)
+    form.reset_select_field()
     app.logger.info("organization.user_index form: [%s]" % (form))
     if form.user_type.data=="None":
         form.user_type.data="3"
@@ -58,13 +60,14 @@ def user_index(page=1):
 
     app.logger.info("user_type [%s]" % form.user_type.data)
     if form.user_type.data=="3":
-        app.logger.info("into dept_ranges [%s]" % (form.dept_ranges.data))
-        if form.dept_ranges.data and form.dept_ranges.data != ["-1"] and form.dept_ranges.data != [""]:
-            us=us.join(User.departments).filter(DepartmentHierarchy.id.in_(form.dept_ranges.data))
+        if form.dept_ranges.data and form.dept_ranges.data != [""]:
+            dh_array=[]
+            for dh_data in form.dept_ranges.data:
+                dh_array.append(dh_data.id)
+            us=us.join(User.departments).filter(DepartmentHierarchy.id.in_(dh_array))
     else:
-        app.logger.info("into sale_range [%s]" % form.sale_range.data)
-        if form.sale_range.data and form.sale_range.data != "-1" and form.sale_range.data != "None":
-            us=us.join(User.sales_areas).filter(SalesAreaHierarchy.id==form.sale_range.data)
+        if form.sale_range.data and form.sale_range.data != "" and form.sale_range.data != "None":
+            us=us.join(User.sales_areas).filter(SalesAreaHierarchy.id==form.sale_range.data.id)
 
     us=User.query.filter(User.id.in_(us)).order_by(User.id)
     pagination = us.paginate(page, PAGINATION_PAGE_NUMBER, False) 
@@ -77,12 +80,15 @@ def user_new():
     if request.method == 'POST':
         try:
             form = UserForm(request.form)
-
+            form.reset_select_field()
+            
             if form.nickname.data=="":
                 form.nickname.data = form.name.data
 
             if form.validate()==False:
                 app.logger.info("form valid fail: [%s]" % (form.errors))
+                raise ValueError("")
+            if form.valid_select_field()==False:
                 raise ValueError("")
 
             if User.query.filter_by(email=form.email.data).count()>0:
@@ -95,13 +101,13 @@ def user_new():
             u.user_infos.append(ui)
 
             if form.user_type.data=="3":
-                for d_id in form.dept_ranges.data:
-                    dh =  DepartmentHierarchy.query.filter_by(id=int(d_id)).first()
+                for dh_data in form.dept_ranges.data:
+                    dh =  DepartmentHierarchy.query.filter_by(id=dh_data.id).first()
                     if dh == None:
                         raise ValueError("所属部门错误[%s]" % (sah_id))
                     u.departments.append(dh)
             else:
-                sah = SalesAreaHierarchy.query.filter_by(id=int(form.sale_range.data)).first()
+                sah = SalesAreaHierarchy.query.filter_by(id=form.sale_range.data.id).first()
                 if sah==None:
                     raise ValueError("销售区域错误[%s]" % (sah_id))
                 u.sales_areas.append(sah)
@@ -117,6 +123,7 @@ def user_new():
             return render_template('organization/user_new.html',form=form)
     else:
         form = UserForm()
+        form.reset_select_field()
         return render_template('organization/user_new.html',form=form)
 
 @organization.route('/user/update/<int:user_id>', methods=['GET', 'POST'])
@@ -128,6 +135,7 @@ def user_update(user_id):
     if request.method == 'POST':
         try:
             form = UserForm(request.form,user_type=u.user_or_origin)
+            form.reset_select_field()
 
             app.logger.info("user_type[%s] , password[%s]" % (form.user_type.data,form.password_confirm.data))
             if form.nickname.data=="":
@@ -135,6 +143,8 @@ def user_update(user_id):
 
             if form.validate()==False:
                 app.logger.info("form valid fail: [%s]" % (form.errors))
+                raise ValueError("")
+            if form.valid_select_field()==False:
                 raise ValueError("")
 
             u.email=form.email.data
@@ -154,15 +164,18 @@ def user_update(user_id):
                 u.user_infos.append(ui)
 
             if u.user_or_origin==3:
-                if sorted([str(i.id) for i in u.departments]) != sorted(form.dept_ranges.data):
+                dh_array=[]
+                for dh_data in form.dept_ranges.data:
+                    dh_array.append(dh_data.id)
+                if sorted([i.id for i in u.departments]) != sorted(dh_array):
                     for d in u.departments:
                         u.departments.remove(d)
-                    for d_id in form.dept_ranges.data:
-                        dh=DepartmentHierarchy.query.filter_by(id=int(d_id)).first()
+                    for d_id in dh_array:
+                        dh=DepartmentHierarchy.query.filter_by(id=d_id).first()
                         u.departments.append(dh)
             else:
-                if u.sales_areas.first().id != int(form.sale_range.data):
-                    sah=SalesAreaHierarchy.query.filter_by(id=int(form.sale_range.data)).first()
+                if u.sales_areas.first().id != form.sale_range.data.id:
+                    sah=SalesAreaHierarchy.query.filter_by(id=form.sale_range.data.id).first()
                     u.sales_areas.remove(u.sales_areas.first())
                     u.sales_areas.append(sah)
 
@@ -175,6 +188,7 @@ def user_update(user_id):
             return render_template('organization/user_update.html',form=form,user_id=u.id)
     else:
         form = UserForm(obj=u,user_type=u.user_or_origin)
+        form.reset_select_field()
         if len(u.user_infos)==0:
             pass
         else:
@@ -185,8 +199,8 @@ def user_update(user_id):
             form.title.data=ui.title
 
         if u.sales_areas.first()!=None:
-            form.sale_range.data=str(u.sales_areas.first().id)
+            form.sale_range.default=u.sales_areas.first().id
         if u.departments.first()!=None:
-            form.dept_ranges.data=[str(d.id) for d in u.departments]
+            form.dept_ranges.default=u.departments.all()
 
         return render_template('organization/user_update.html',form=form,user_id=u.id)

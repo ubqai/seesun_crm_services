@@ -61,6 +61,10 @@ for dh_name in dh_array:
 		db.session.commit()
 
 
-
+if User.query.filter_by(email="admin@hotmail.com"):
+	from flask_bcrypt import Bcrypt
+	bcrypt_seed = Bcrypt(app)
+	u=User(email="admin@hotmail.com",nickname="admin",user_or_origin=3,password_hash=bcrypt_seed.generate_password_hash('1qaz@WSX').decode('utf-8'))
+	u.save
 
 

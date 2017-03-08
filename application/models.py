@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 from . import db,login_manager,bcrypt
+from flask_login import *
 
 
 
@@ -350,6 +351,13 @@ class User(db.Model, Rails):
 
         return user
 
+    def get_max_level_grade(self):
+        max_level_grade=99
+        for d in self.departments:
+            if max_level_grade>d.level_grade:
+                max_level_grade=d.level_grade
+
+        return max_level_grade
     
 
 class UserInfo(db.Model):
@@ -375,6 +383,12 @@ class SalesAreaHierarchy(db.Model):
     name = db.Column(db.String(300), nullable=False)
     parent_id = db.Column(db.Integer)
     level_grade = db.Column(db.Integer)
+    def __repr__(self):
+            return 'SalesAreaHierarchy %r' % self.name
+    @classmethod
+    def get_dynamic_sale_range(cls):
+        sahs = SalesAreaHierarchy.query.filter_by(level_grade=4)
+        return sahs.all
 
 
 class DepartmentHierarchy(db.Model):
@@ -383,6 +397,19 @@ class DepartmentHierarchy(db.Model):
     name = db.Column(db.String(300), nullable=False)
     parent_id = db.Column(db.Integer)
     level_grade = db.Column(db.Integer)
+
+    @classmethod
+    def get_dynamic_dept_ranges(cls):
+        dhs = DepartmentHierarchy.query
+        if current_user==None:
+            max_depart_level = 99
+        else:
+            max_depart_level = current_user.get_max_level_grade()
+        dhs = dhs.filter(DepartmentHierarchy.level_grade>max_depart_level)
+        if not current_user==None:
+            dhs = dhs.union(current_user.departments)
+
+        return dhs.order_by(DepartmentHierarchy.id).all
 
 
 class ProjectReport(db.Model):
@@ -400,5 +427,3 @@ class ProjectReport(db.Model):
     @property
     def app_name(self):
         return User.query.get_or_404(self.app_id).nickname
-
-

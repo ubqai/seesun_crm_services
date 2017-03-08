@@ -6,7 +6,11 @@
 					<< 上一页
 				</a>
 			{% endif %} 
+			
+			{% if pagination.has_prev and pagination.has_next %}	
 				|
+			{% endif %}
+
 			{% if pagination.has_next %}
 				<a href="{{ next_url }}">
 					下一页 >>

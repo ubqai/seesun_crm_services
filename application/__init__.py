@@ -55,7 +55,6 @@ def setup_logging():
 #单个使用@login_required
 @app.before_request
 def login_check():
-    app.logger.info("request.path [%s]" % (request.path))
     if request.path == "/organization/user/login":
         pass
     elif request.path.startswith("/mobile/"):
