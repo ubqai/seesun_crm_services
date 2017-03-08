@@ -8,6 +8,7 @@
 	</div>
 
 	<form style="margin-top:2.5rem;" action="{{ url_for('mobile_cart') }}" method="post">
+        <input type="hidden" name="product_id" value="{{ product_id }}">
 		<div class="storage-block clearfix">
 		{% for sku in skus.get('skus') %}
 			<div class="col-6-gap storage-sku">

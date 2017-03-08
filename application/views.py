@@ -112,7 +112,7 @@ def mobile_storage_show(product_id):
     skus = load_skus(product_id)
     for sku in skus.get('skus'):
         sku['options'] = ','.join([','.join(list(option.values())) for option in sku.get('options')])
-    return render_template('mobile/storage_show.html', skus=skus)
+    return render_template('mobile/storage_show.html', skus=skus, product_id=product_id)
 
 
 @app.route('/mobile/cart', methods=['GET', 'POST'])
@@ -134,7 +134,8 @@ def mobile_cart():
                                          'square_num': "%.2f" % (0.3*int(request.form.get('number_%s' % index)))}
                         order.append(order_content)
         session['order'] = order
-        return redirect(url_for('mobile_cart'))
+        flash('成功加入购物车', 'success')
+        return redirect(url_for('mobile_storage_show', product_id=request.form.get('product_id')))
     return render_template('mobile/cart.html', order=order)
 
 
