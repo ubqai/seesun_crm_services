@@ -34,7 +34,7 @@
 				<li class="sub-menu {% if active == 'design' %}active{% endif %}">
 					<a><i class="glyphicon glyphicon-paperclip"></i><span>产品设计</span><span class="dcjq-icon"></span></a>
 					<ul class="sub">
-						<li><a href="{{ url_for('design_application.index') }}">待设计列表 &nbsp;&nbsp;<div class="badge badge-info"></div></a></li>
+						<li><a href="{{ url_for('design_application.index') }}">待设计列表 &nbsp;&nbsp;<div class="badge badge-info">{{ new_design_application_count if new_design_application_count > 0 else '' }}</div></a></li>
 					</ul>
 				</li>
 				<li class="sub-menu {% if active == 'file' %}active{% endif %}">
