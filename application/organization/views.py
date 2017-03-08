@@ -1,5 +1,5 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
-from .. import app, db , login_manager
+from .. import app, db , login_manager , bcrypt
 from ..models import *
 
 import traceback
@@ -91,7 +91,7 @@ def user_new():
             ui=UserInfo(name=form.name.data,telephone=form.phone.data,address=form.address.data,title=form.title.data)
 
             u=User(email=form.email.data,user_or_origin=int(form.user_type.data),nickname=form.nickname.data)
-
+            u.password_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
             u.user_infos.append(ui)
 
             if form.user_type.data=="3":

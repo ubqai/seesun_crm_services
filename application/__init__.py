@@ -3,6 +3,7 @@ import os
 from flask import Flask, g, render_template, redirect, url_for,request,flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import *
+from flask_bcrypt import Bcrypt
 
 from .config import config
 
@@ -15,6 +16,8 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "organization.user_login"
+
+bcrypt = Bcrypt(app)
 
 
 from .content.views import content
@@ -56,6 +59,13 @@ def login_check():
     if request.path == "/organization/user/login":
         pass
     elif request.path.startswith("/mobile/"):
+        #移动端
+        pass
+    elif request.path.startswith("/wechat/"):
+        #微信
+        pass
+    elif request.path.startswith("/static/"):
+        #静态文件
         pass
     else:
         if not current_user.is_authenticated:

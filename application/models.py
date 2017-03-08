@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
-from . import db,login_manager
+from . import db,login_manager,bcrypt
 
 
 
@@ -301,7 +301,8 @@ users_and_departments = db.Table(
 class User(db.Model, Rails):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(60), nullable=False)
+    password_hash = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(60), nullable=False, unique=True)
     nickname = db.Column(db.String(200))
     user_or_origin = db.Column(db.Integer)
     user_infos = db.relationship('UserInfo', backref='user')
@@ -330,7 +331,7 @@ class User(db.Model, Rails):
     def login_verification(cls,email,password,user_or_origin):
         user=User.query.filter_by(email=email,user_or_origin=user_or_origin).first()
         if user!=None:
-            if password!="1qaz@WSX":
+            if not bcrypt.check_password_hash(user.password_hash, password):
                 user=None
 
         return user
