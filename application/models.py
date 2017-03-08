@@ -213,21 +213,23 @@ class TrackingInfo(db.Model, Rails):
 
     def __repr__(self):
         return 'TrackingInfo(id: %s, contract_no: %s,...)' % (self.id, self.contract_no)
-
     @property
     def production_status(self):
         if self.production_date:
             if self.production_date < datetime.datetime.now():
                 return '已生产'
         return '未生产'
-
     @property
     def delivery_status(self):
         if self.delivery_date:
             if self.delivery_date < datetime.datetime.now():
                 return '已发货'
         return '未发货'
-
+    @property
+    def qrcode_image_path(self):
+        if self.qrcode_image:
+            return '/static/upload/qrcode/%s' % self.qrcode_image
+        return ''
 
 class TrackingInfoDetail(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)

@@ -6,7 +6,7 @@ from ..helpers import object_list, save_upload_file, delete_file
 from ..models  import DesignApplication, ProjectReport
 from .forms    import DesignApplicationForm
 
-app.add_template_global(len(DesignApplication.query.filter_by(status = '新申请').all()), 'new_design_application_count')
+#app.add_template_global(len(DesignApplication.query.filter_by(status = '新申请').all()), 'new_design_application_count')
 
 design_application = Blueprint('design_application', __name__, template_folder = 'templates')
 
