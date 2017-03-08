@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
-from flask import Flask, g, render_template, redirect, url_for
+from flask import Flask, g, render_template, redirect, url_for,request,flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import *
+from flask_bcrypt import Bcrypt
 
 from .config import config
 
@@ -10,6 +12,13 @@ import logging
 app = Flask(__name__)
 app.config.from_object(config[os.getenv('FLASK_ENV') or 'default'])
 db = SQLAlchemy(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "organization.user_login"
+
+bcrypt = Bcrypt(app)
+
 
 from .content.views import content
 app.register_blueprint(content, url_prefix='/content')
@@ -40,6 +49,29 @@ def setup_logging():
         # In production mode, add log handler to sys.stderr.
         app.logger.addHandler(logging.StreamHandler())
         app.logger.setLevel(logging.INFO)
+
+
+
+#单个使用@login_required
+@app.before_request
+def login_check():
+    app.logger.info("request.path [%s]" % (request.path))
+    if request.path == "/organization/user/login":
+        pass
+    elif request.path.startswith("/mobile/"):
+        #移动端
+        pass
+    elif request.path.startswith("/wechat/"):
+        #微信
+        pass
+    elif request.path.startswith("/static/"):
+        #静态文件
+        pass
+    else:
+        if not current_user.is_authenticated:
+            flash("请登入后操作")
+            return redirect(url_for('organization.user_login'))
+    return None
 
 @app.errorhandler(404)
 def page_not_found(error):

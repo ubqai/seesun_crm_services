@@ -35,6 +35,11 @@
                     {{ form.nickname(class = 'form-input form-control',placeholder="请输入昵称") }}
                     {{ render_form_field_error(form.nickname) }}
                 </div>
+                
+                 <div class="form-item-2 col-3" style="display:none">
+                    <input type="password" class="form-input form-control" id="password" name="password" value="valid_password">
+                    <input type="password" class="form-input form-control" id="password_confirm" name="password_confirm"  value="valid_password">
+                </div>
 
                  <div class="form-item-2 col-3">
                     <span>* {{ form.address.label }}</span>

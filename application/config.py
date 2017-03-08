@@ -14,15 +14,21 @@ class DevelopmentConfiguration(Configuration):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://seesun:123456@localhost/seesun_crm'
     PRODUCT_SERVER = 'http://localhost:5001'
+    WECHAT_TEST_MODE = True
+    WECHAT_HOOK_URL = "http://118.178.185.40"
 
 class TestConfiguration(Configuration):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://seesun:123456@localhost/seesun_crm'
     PRODUCT_SERVER = 'http://localhost:5001'
+    WECHAT_TEST_MODE = True
+    WECHAT_HOOK_URL = "http://118.178.185.40"
 
 class ProductionConfiguration(Configuration):
     SQLALCHEMY_DATABASE_URI = 'postgresql://seesun_db:sEEsUn2o17@rm-bp1ksn1m18154025j.pg.rds.aliyuncs.com:3433/seesun_crm_services_db'
     PRODUCT_SERVER = 'http://118.178.185.40:5000'
+    WECHAT_TEST_MODE = False
+    WECHAT_HOOK_URL = "http://118.178.185.40"
 
 config = {
     'default': DevelopmentConfiguration,

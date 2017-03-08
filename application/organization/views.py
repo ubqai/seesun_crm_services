@@ -1,14 +1,44 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
-from .. import app, db
+from .. import app, db , login_manager , bcrypt
 from ..models import *
 
 import traceback
 from .forms import *
 from sqlalchemy import distinct
+from flask_login import *
 
 PAGINATION_PAGE_NUMBER=20
 
 organization = Blueprint('organization', __name__, template_folder = 'templates')
+
+# -- login 
+#需要区分pc or wechat ?
+@organization.route('/user/login', methods=['GET', 'POST'])
+def user_login():
+    if request.method == 'POST':
+        try:
+            form = UserLoginForm(request.form)
+            if form.validate()==False:
+                raise ValueError("")
+
+            #后台只能员工登入
+            user=User.login_verification(form.email.data,form.password.data,3)
+            if user==None:
+                raise ValueError("用户名或密码错误")
+
+            login_user(user)
+            return redirect(url_for('organization.user_index'))
+        except Exception as e:
+            flash(e)
+    else:
+        form = UserLoginForm()
+
+    return render_template('organization/user_login.html',form=form)
+
+@organization.route('/user/logout')
+def user_logout():
+    logout_user()
+    return redirect(url_for('organization.user_login'))
 
 # --- user service ---
 @organization.route('/user/index')
@@ -61,7 +91,7 @@ def user_new():
             ui=UserInfo(name=form.name.data,telephone=form.phone.data,address=form.address.data,title=form.title.data)
 
             u=User(email=form.email.data,user_or_origin=int(form.user_type.data),nickname=form.nickname.data)
-
+            u.password_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
             u.user_infos.append(ui)
 
             if form.user_type.data=="3":
@@ -91,15 +121,13 @@ def user_new():
 
 @organization.route('/user/update/<int:user_id>', methods=['GET', 'POST'])
 def user_update(user_id):
+    u=User.query.filter_by(id=user_id).first()
+    if u==None:
+        return redirect(url_for('organization.user_search'))
+
     if request.method == 'POST':
         try:
-            u = User.query.filter_by(id=user_id).first()
-            if u==None:
-                raise ValueError("no user found!")
-
             form = UserForm(request.form,user_type=u.user_or_origin)
-            form.password.data="no_update"
-            form.password_confirm.data=form.password.data
 
             app.logger.info("user_type[%s] , password[%s]" % (form.user_type.data,form.password_confirm.data))
             if form.nickname.data=="":
@@ -144,14 +172,8 @@ def user_update(user_id):
             return render_template('organization/user_update.html',form=form,user_id=u.id)
         except Exception as e:
             flash(e)
-            print(traceback.print_exc())
-
-            if u==None:
-                return render_template('organization/user_search.html',form=form)
-            else:
-                return render_template('organization/user_update.html',form=form,user_id=u.id)
+            return render_template('organization/user_update.html',form=form,user_id=u.id)
     else:
-        u=User.query.filter_by(id=user_id).first()
         form = UserForm(obj=u,user_type=u.user_or_origin)
         if len(u.user_infos)==0:
             pass

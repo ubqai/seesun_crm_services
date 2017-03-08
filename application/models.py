@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
-from . import db
+from . import db,login_manager,bcrypt
 
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.filter_by(id=int(user_id)).first()
 
 class Rails(object):
     @property
@@ -324,7 +329,8 @@ users_and_departments = db.Table(
 class User(db.Model, Rails):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(60), nullable=False)
+    password_hash = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(60), nullable=False, unique=True)
     nickname = db.Column(db.String(200))
     user_or_origin = db.Column(db.Integer)
     user_infos = db.relationship('UserInfo', backref='user')
@@ -337,6 +343,28 @@ class User(db.Model, Rails):
                                   backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
     departments = db.relationship('DepartmentHierarchy', secondary=users_and_departments,
                                   backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
+    #用户的对象是否可认证 , 因为某些原因不允许被认证
+    def is_authenticated(self):
+        return True
+    #用户的对象是否有效 , 账号被禁止
+    def is_active(self):
+        return True
+    #为那些不被获准登录的用户返回True
+    def is_anonymous(self):
+        return False
+    #为用户返回唯一的unicode标识符
+    def get_id(self):
+        return str(self.id).encode("utf-8")
+    @classmethod
+    def login_verification(cls,email,password,user_or_origin):
+        user=User.query.filter_by(email=email,user_or_origin=user_or_origin).first()
+        if user!=None:
+            if not bcrypt.check_password_hash(user.password_hash, password):
+                user=None
+
+        return user
+
+    
 
 class UserInfo(db.Model):
     __tablename__ = 'user_infos'
