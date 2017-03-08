@@ -300,8 +300,13 @@ td input{
     padding-left: 0.4em;
     font-size: 0.6em;
 }
-.wrapper-inner-content span{
-    padding-left:1em;
+.wrapper-inner-content>p>span{
+    padding-left: 0.4em;
+    width: 100%;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .wrapper-inner-content p.set-1{
     width:100%
@@ -644,7 +649,7 @@ td input{
 }
 .storage-sku .p-content{
 	background:#f0f0f0;
-	padding: 0.25rem 0.35rem;
+	padding: 0.25em 0.35em;
 	border-top:1px solid #ddd;
 }
 .storage-sku:first-child{
