@@ -217,10 +217,11 @@ def mobile_project_lvl2():
 # --- Design ---
 @app.route('/mobile/design', methods = ['GET', 'POST'])
 def mobile_design():
+    project_reports = ProjectReport.query.filter_by(status='项目报备审核通过')
     if request.method == 'POST':
         if request.form.get('filing_no') and request.files.get('ul_file'):
             project_report = ProjectReport.query.filter_by(report_no = request.form.get('filing_no')).first()
-            if project_report:
+            if project_report in project_reports:
                 file_path = save_upload_file(request.files.get('ul_file'))
                 user = User.query.first()
                 application = DesignApplication(filing_no = request.form.get('filing_no'), 
@@ -233,7 +234,7 @@ def mobile_design():
         else:
             flash('项目报备编号和上传设计图纸不能为空', 'danger')
         return redirect(url_for('mobile_design'))
-    return render_template('mobile/design.html')
+    return render_template('mobile/design.html', project_reports = project_reports)
 
 
 @app.route('/mobile/design_applications')

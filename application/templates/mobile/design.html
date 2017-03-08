@@ -14,7 +14,12 @@
 				</a>
 			</div>
 			<div class="form-item">
-				<input placeholder="请输入报备编号" type="text" name="filing_no" id="filing_no" class="form-control">
+			<select name="filing_no" id="filing_no" class="form-control">
+				<option value=""></option>
+				{% for project_report in project_reports %}
+					<option value="{{ project_report.report_no }}">{{ project_report.report_no }}</option>
+				{% endfor %}
+			</select>
 			</div>
 			<button type="submit" class="btn btn-warning btn-block top-gap-3 text-lg">申请设计</button>
 		</form>
