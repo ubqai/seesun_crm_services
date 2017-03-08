@@ -267,6 +267,20 @@ class Contract(db.Model):
         return 'Contract(id: %s, contract_no: %s, contract_date: %s, order_id: %s, contract_status: %s, product_status: %s, shipment_status: %s, ...)' % (
             self.id, self.contract_no, self.contract_date, self.order_id, self.contract_status, self.product_status, self.shipment_status)
 
+    @property
+    def production_status(self):
+        tracking_info = TrackingInfo.query.filter_by(contract_no = self.contract_no).first()
+        if tracking_info:
+            return tracking_info.production_status
+        return '未生产'
+
+    @property
+    def delivery_status(self):
+        tracking_info = TrackingInfo.query.filter_by(contract_no = self.contract_no).first()
+        if tracking_info:
+            return tracking_info.delivery_status
+        return '未发货'
+
 
 class OrderContent(db.Model, Rails):
     __tablename__ = 'order_contents'

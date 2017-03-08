@@ -69,7 +69,8 @@
                         <td>{{ info.contract_date.strftime('%F') }}</td>
                         <td>{{ info.receiver_name }}</td>
                         <td>{{ info.receiver_tel }}</td>
-                        <td>{{ info.status }}</td>
+                        <td>{{ info.production_status }}</td>
+                        <td>{{ info.delivery_status }}</td>
                         <td><a href="{{ url_for('order_manage.tracking_info_edit', id = info.id) }}">仓库输入</a></td>
                     </tr>
                     {% endfor %}

@@ -114,17 +114,10 @@ def tracking_info_edit(id):
     contract = Contract.query.filter(Contract.contract_no == tracking_info.contract_no).first()
     if request.method == 'POST':
         form = TrackingInfoForm2(request.form)
-        if form.validate():
-            tracking_info = form.save(tracking_info)
-            tracking_info.status = '已出库'
-            db.session.add(tracking_info)
-            if contract:
-                contract.shipment_status = '已出库'
-                db.session.add(contract)
-            db.session.commit()
-            flash('物流状态更新成功', 'success')   
-        else:
-            flash('物流状态更新失败', 'danger')
+        tracking_info = form.save(tracking_info)
+        db.session.add(tracking_info)
+        db.session.commit()
+        flash('物流状态更新成功', 'success')   
         return redirect(url_for('order_manage.tracking_infos'))  
     else:
         form = TrackingInfoForm2(obj = tracking_info)
