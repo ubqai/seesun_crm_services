@@ -1,0 +1,22 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_form_field_error.html' import render_form_field_error %}
+{% block main_content %}
+<form class="form form-horizontal" method="post" url="{{ url_for('organization.user_index') }}" role="form">
+    <div class="form-style form-default">
+        <div class="form-item-2">
+            <span>用户名</span>
+            {{ form.email(class="form-input form-control",placeholder="请输入email") }}
+            {{ render_form_field_error(form.email) }}
+        </div>
+        <div class="form-item-2">
+            <span>密码</span>
+            {{ form.password(class="form-input form-control",placeholder="请输入密码") }}
+            {{ render_form_field_error(form.password) }}
+        </div>
+        <div class="form-item-2">
+            <button type="submit" class="btn btn-default my-btn">登入</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

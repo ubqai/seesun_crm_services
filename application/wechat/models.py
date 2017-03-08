@@ -2,7 +2,7 @@
 import datetime,time
 import requests,json
 import string,json,hashlib,random
-from .. import db
+from .. import db,app
 
 WECHAT_SERVER_AUTHENTICATION_TOKEN="AUTH_TOKEN_135"
 WECHAT_APPID="wx05617a940b6ca40e"
@@ -11,8 +11,8 @@ WECHAT_APPSECRET="a0f13258cf8e959970260b24a9dea2de"
 WECHAT_TEST_APPID="wx7b03a1827461854d"
 WECHAT_TEST_APPSECRET="3c48165926a74837bfc6c61442925943"
 
-TEST_MODE=True
-HOOK_URL="http://118.178.185.40"
+TEST_MODE=app.config['WECHAT_TEST_MODE']
+HOOK_URL=app.config['WECHAT_HOOK_URL']
 
 
 
