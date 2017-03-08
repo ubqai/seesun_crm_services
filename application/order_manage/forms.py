@@ -21,10 +21,10 @@ class TrackingInfoForm1(Form):
 
 
 class TrackingInfoForm2(Form):
-    production_date = DateField('生产日期', validators=[DataRequired()])
-    delivery_date = DateField('配送日期', validators=[DataRequired()])
-    delivery_plate_no = StringField('配送车牌号', validators=[DataRequired()])
-    delivery_man_tel = StringField('配送人电话', validators=[DataRequired()])
+    production_date = DateField('生产日期', validators=[])
+    delivery_date = DateField('配送日期', validators=[])
+    delivery_plate_no = StringField('配送车牌号', validators=[])
+    delivery_man_tel = StringField('配送人电话', validators=[])
 
     def save(self, obj):
         self.populate_obj(obj)

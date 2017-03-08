@@ -1,13 +1,12 @@
 body{
 	background:#fff;
 	overflow-x:hidden;
-	
+	background: url(http://demo.ke01.com/public/images/bright_squares.png);
 }
 html.index-html {
     background-image: url(/static/images/timg.jpg);
     background-repeat: no-repeat;
     background-position: bottom;
-    min-height: 100%;
     background-size: 100% auto;
 }
 .index-body{
@@ -162,6 +161,9 @@ td input{
 	letter-spacing:0.8px;
 	line-height:1.6em;
 }
+.text-dark{
+	color:#444;
+}
 .text{
 	margin-top:20px;
 }
@@ -263,6 +265,69 @@ td input{
 	FONT-SIZE: 0.85em;
     color: #888;
 	line-height: 1.8em;
+}
+/*wrapper*/
+.wrapper-style{
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.15);
+}
+.wrapper-style.rect{
+    border-radius: 0px;
+}
+.wrapper-header {
+    padding: 0.5em;
+    font-size: 0.85em;
+    color: #888;
+    border-bottom: 1px solid #bbb;
+}
+.wrapper-inner {
+    padding: 0.7em;
+}
+.wrapper-inner-img {
+		width: 15%;
+    height: 100%;
+    float: left;
+}
+.wrapper-inner-content{
+    float: left;
+    width: 85%;
+}
+.wrapper-inner-content p{
+    float: left;
+    line-height: 2em;
+    color: #999;
+    padding-left: 0.4em;
+    font-size: 0.6em;
+}
+.wrapper-inner-content>p>span{
+    padding-left: 0.4em;
+    width: 100%;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.wrapper-inner-content p.set-1{
+    width:100%
+}
+.wrapper-inner-content p.set-2{
+    width:50%
+}
+.wrapper-header-title {
+    margin-left: 0.5em;
+    padding-left: 0.3em;
+}
+.wrapper-header-icon {
+    margin-right: 0.5em;
+    padding-right: 0.3em;
+		top: 0.26em;
+}
+.wrapper-footer {
+    padding: 0.5em;
+    font-size: 0.85em;
+    color: #888;
+    border-top: 1px solid #bbb;
 }
 /*nav*/
 .nav-tab {
@@ -397,6 +462,7 @@ td input{
 .btn-style-1 {
     border: 1px solid #F8B500;
     color: #F8B500;
+		BACKGROUND: #fff;
     padding: 0.3em 0.5em;
 }
 /*index*/
@@ -459,8 +525,8 @@ td input{
 .menu-ele a {
     display: block;
     text-align: center;
-    width: 50%;
-    margin: 0.9em auto;
+    width: 40%;
+    margin: 0.4em auto;
 }
 .menu-ele p{
     font-size: 0.75em;
@@ -583,7 +649,7 @@ td input{
 }
 .storage-sku .p-content{
 	background:#f0f0f0;
-	padding: 0.25rem 0.35rem;
+	padding: 0.25em 0.35em;
 	border-top:1px solid #ddd;
 }
 .storage-sku:first-child{
@@ -693,6 +759,9 @@ td input{
 	color:#fff;
 }
 /*合同*/
+.contract-block.top-gap-3 {
+    background: #fff;
+}
 .contract-header {
     padding: 0.5em;
     border-radius: 0.4em 0.4em 0 0;
