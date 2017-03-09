@@ -7,7 +7,9 @@ from .models import *
 from .product.api import *
 from .inventory.api import create_inventory
 from .helpers import save_upload_file
-from flask_login import current_user
+from flask_login import *
+from .organization.forms import UserLoginForm
+
 
 @app.route('/mobile/index')
 def mobile_index():
@@ -501,3 +503,35 @@ def new_share_inventory(id):
     return render_template('mobile/new_share_inventory.html', id=id)
 
 
+# --- mobile user---
+@app.route('/mobile/user/login', methods=['GET', 'POST'])
+def mobile_user_login():
+    #不运行前后端同时登入在一个WEB上
+    if current_user.is_authenticated:
+        if current_user.user_or_origin==2:
+            return redirect(request.args.get('next') or url_for('mobile_index'))
+        else:
+            app.logger.info("后台用户[%s]自动登出" % (current_user.nickname))
+            logout_user()
+
+    if request.method == 'POST':
+        try:
+            form = UserLoginForm(request.form)
+            if form.validate()==False:
+                raise ValueError("")
+
+            #后台只能员工登入
+            user=User.login_verification(form.email.data,form.password.data,2)
+            if user==None:
+                raise ValueError("用户名或密码错误")
+            if not user.is_active():
+                raise ValueError("用户异常,请联系管理员")
+                
+            login_user(user)
+            return redirect(request.args.get('next') or url_for('mobile_index'))
+        except Exception as e:
+            flash(e)
+    else:
+        form = UserLoginForm()
+
+    return render_template('mobile/user_login.html',form=form)
