@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
 from . import db,login_manager,bcrypt
-from flask_login import *
-
 
 
 @login_manager.user_loader
@@ -342,11 +340,20 @@ class User(db.Model, Rails):
     #为用户返回唯一的unicode标识符
     def get_id(self):
         return str(self.id).encode("utf-8")
+
+    @property
+    def password(self):
+        return self.password_hash
+
+    @password.setter
+    def password(self,value):
+        self.password_hash=bcrypt.generate_password_hash(value).decode('utf-8')
+
     @classmethod
     def login_verification(cls,email,password,user_or_origin):
         user=User.query.filter_by(email=email,user_or_origin=user_or_origin).first()
         if user!=None:
-            if not bcrypt.check_password_hash(user.password_hash, password):
+            if not bcrypt.check_password_hash(user.password, password):
                 user=None
 
         return user
@@ -385,10 +392,6 @@ class SalesAreaHierarchy(db.Model):
     level_grade = db.Column(db.Integer)
     def __repr__(self):
             return 'SalesAreaHierarchy %r' % self.name
-    @classmethod
-    def get_dynamic_sale_range(cls):
-        sahs = SalesAreaHierarchy.query.filter_by(level_grade=4)
-        return sahs.all
 
 
 class DepartmentHierarchy(db.Model):
@@ -397,19 +400,6 @@ class DepartmentHierarchy(db.Model):
     name = db.Column(db.String(300), nullable=False)
     parent_id = db.Column(db.Integer)
     level_grade = db.Column(db.Integer)
-
-    @classmethod
-    def get_dynamic_dept_ranges(cls):
-        dhs = DepartmentHierarchy.query
-        if current_user==None:
-            max_depart_level = 99
-        else:
-            max_depart_level = current_user.get_max_level_grade()
-        dhs = dhs.filter(DepartmentHierarchy.level_grade>max_depart_level)
-        if not current_user==None:
-            dhs = dhs.union(current_user.departments)
-
-        return dhs.order_by(DepartmentHierarchy.id).all
 
 
 class ProjectReport(db.Model):

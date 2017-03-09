@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime,time
 import requests,json
-import string,json,hashlib,random
+import string,hashlib,random
 from .. import db,app
 
 WECHAT_SERVER_AUTHENTICATION_TOKEN="AUTH_TOKEN_135"

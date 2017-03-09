@@ -1,6 +1,40 @@
 from wtforms import Form, StringField, SelectField, SelectMultipleField,PasswordField,validators
 from wtforms.ext.sqlalchemy.fields import QuerySelectField,QuerySelectMultipleField
 from ..models import *
+from flask_login import *
+
+
+#CUSTOM  VALIDATORS
+def valid_sale_range(form, field):
+    if form.user_type.data=="2" and form.sale_range.data==None:
+        raise validators.ValidationError('请选择销售范围')
+
+
+def valid_dept_ranges(form, field):
+    if form.user_type.data=="3" and form.dept_ranges.data==[]:
+        raise validators.ValidationError('请选择所属部门')      
+
+
+
+def get_dynamic_sale_range_query(level_grade,parent_id=None):
+    sahs = SalesAreaHierarchy.query.filter_by(level_grade=level_grade)
+    if not parent_id==None:
+        sahs = sahs.filter_by(parent_id=parent_id)
+
+    return sahs.order_by(SalesAreaHierarchy.id).all()
+
+
+def get_dynamic_dept_ranges_query():
+    dhs = DepartmentHierarchy.query
+    if current_user==None:
+        max_depart_level = 99
+    else:
+        max_depart_level = current_user.get_max_level_grade()
+    dhs = dhs.filter(DepartmentHierarchy.level_grade>max_depart_level)
+    if not current_user==None:
+        dhs = dhs.union(current_user.departments)
+
+    return dhs.order_by(DepartmentHierarchy.id).all()
 
 #BASE USER_LOGIN
 class UserLoginForm(Form):
@@ -8,9 +42,20 @@ class UserLoginForm(Form):
     password = PasswordField('password', validators=[
         validators.Length(min=8,max=20,message="字段长度必须大等于8小等于20"),
     ])
-    
+
+class BaseForm(Form):
+    def reset_select_field(self):
+        self.dept_ranges.query = get_dynamic_dept_ranges_query()
+        self.sale_range_province.query = get_dynamic_sale_range_query(3)
+        self.sale_range.query = get_dynamic_sale_range_query(4)
+
+    @classmethod
+    def get_sale_range_by_parent(cls,level_grade,parent_id):
+        return get_dynamic_sale_range_query(level_grade,parent_id)
+
+
 #BASE USER
-class UserForm(Form):
+class UserForm(BaseForm):
     email = StringField('email',[validators.Email(message="请填写正确格式的email")])
     name = StringField('name',[validators.Length(min=2,max=30,message="字段长度必须大等于2小等于30")])
     nickname = StringField('nickname',[validators.Length(min=2,max=30,message="字段长度必须大等于2小等于30")])
@@ -27,37 +72,17 @@ class UserForm(Form):
     user_type = SelectField('user_type',choices=[ ('3','员工'),('2','经销商') ],validators=[validators.Required(message="字段不可为空")])
     #dept_ranges = SelectMultipleField('dept_ranges',choices=[ ('-1','选择所属部门')] + [(str(dh.id),dh.name) for dh in DepartmentHierarchy.query.all() ])
     #sale_range = SelectField('sale_range',choices=[ ('-1','选择销售范围')] + [(str(sah.id),sah.name) for sah in SalesAreaHierarchy.query.filter_by(level_grade=4).all() ])
-    dept_ranges = QuerySelectMultipleField(u'dept_ranges',query_factory=DepartmentHierarchy.get_dynamic_dept_ranges(),get_label="name")
-    sale_range = QuerySelectField(u'sale_range', query_factory = SalesAreaHierarchy.get_dynamic_sale_range(),get_label="name",allow_blank=True)
-
-    def valid_sale_range(self):
-        if self.user_type.data=="2" and self.sale_range.data==None:
-            self.sale_range.errors.append("请选择销售范围")
-            return False
-        return True
-    def valid_dept_ranges(self):
-        if self.user_type.data=="3" and self.dept_ranges.data==[]:
-            self.dept_ranges.errors.append("请选择所属部门")
-            return False
-        return True
-
-    def valid_select_field(self):
-        return self.valid_sale_range() and self.valid_dept_ranges()
-
-    def reset_select_field(self):
-        self.sale_range.query = SalesAreaHierarchy.get_dynamic_sale_range()()
-        self.dept_ranges.query = DepartmentHierarchy.get_dynamic_dept_ranges()()
+    dept_ranges = QuerySelectMultipleField(u'dept_ranges',get_label="name",validators=[valid_dept_ranges])
+    sale_range_province = QuerySelectField(u'sale_range_province', get_label="name",allow_blank=True)
+    sale_range = QuerySelectField(u'sale_range', get_label="name",allow_blank=True,validators=[valid_sale_range])
 
 #BASE USER_SEARCH
-class UserSearchForm(Form):
+class UserSearchForm(BaseForm):
     email = StringField('email')
     name = StringField('name')    
     user_type = SelectField('user_type',choices=[ (3,'员工'),(2,'经销商') ],validators=[validators.Required(message="字段不可为空")])
     #dept_ranges = SelectMultipleField('dept_ranges',choices=[ (-1,'选择所属部门')] + [(str(dh.id),dh.name) for dh in DepartmentHierarchy.query.all() ])
     #sale_range = SelectField('sale_range',choices=[ (-1,'选择销售范围')] + [(str(sah.id),sah.name) for sah in SalesAreaHierarchy.query.filter_by(level_grade=3).all() ])
-    dept_ranges = QuerySelectMultipleField(u'dept_ranges',query_factory=DepartmentHierarchy.get_dynamic_dept_ranges(),get_label="name")
-    sale_range = QuerySelectField(u'sale_range', query_factory = SalesAreaHierarchy.get_dynamic_sale_range(),get_label="name",allow_blank=True)
-
-    def reset_select_field(self):
-        self.sale_range.query = SalesAreaHierarchy.get_dynamic_sale_range()()
-        self.dept_ranges.query = DepartmentHierarchy.get_dynamic_dept_ranges()()
+    dept_ranges = QuerySelectMultipleField(u'dept_ranges',get_label="name")
+    sale_range_province = QuerySelectField(u'sale_range_province', get_label="name",allow_blank=True)
+    sale_range = QuerySelectField(u'sale_range', get_label="name",allow_blank=True)
