@@ -521,7 +521,7 @@ def new_share_inventory(id):
             flash('库存共享成功', 'success')
         else:
             flash('库存共享失败', 'danger')
-        return redirect(url_for('stocks_share'))
+        return redirect(url_for('upload_share_index'))
     return render_template('mobile/new_share_inventory.html', id=id)
 
 
