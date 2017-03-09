@@ -82,6 +82,9 @@ td input{
 .right-gap-3{
 	margin-right:1.3em !important;
 }
+.inline-display{
+	display:inline !important;
+}
 .wrapper{
 	width:100%;
 }
@@ -107,6 +110,9 @@ td input{
     top: 0px;
     left: 0px;
     background: rgba(0,0,0,0.25);
+}
+.full{
+	width:100% !important;
 }
 .col-12{
 	padding:10px;
@@ -163,6 +169,9 @@ td input{
 }
 .text-dark{
 	color:#444;
+}
+.text-gray {
+    color: #666;
 }
 .text{
 	margin-top:20px;
@@ -300,7 +309,12 @@ td input{
     padding-left: 0.4em;
     font-size: 0.6em;
 }
-.wrapper-inner-content>p>span{
+.wrapper-inner-content>.wrapper-row:after{
+	display:table;
+	content:"";
+	clear:both;
+}
+.wrapper-inner-content>.wrapper-row>p>span{
     padding-left: 0.4em;
     width: 100%;
     display: block;
@@ -641,6 +655,9 @@ td input{
 	margin-top:15px;
 	position:relative;
 	box-shadow: 0px 0px 1px rgba(0,0,0,0.5);
+}
+.storage-sku>a{
+	background:#fff;
 }
 .storage-sku .p-title{
     background-color:#eee;

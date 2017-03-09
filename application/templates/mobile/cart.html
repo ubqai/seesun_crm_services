@@ -3,48 +3,47 @@
 {% block content %}
 {{ header('购物车') }}
 <div class="main-content">
-    <form action="{{ url_for('mobile_create_order') }}" method="get">
-	<div class="text bot-gap-2">
-		<p class="text-title bot-gap-1">购物车</p>
-		<p class="text-content text-sm">要约方(买方)：<input class="form-control" name="buyer"></p>
-		<div class="light-divider"></div>
-		<p class="text-content text-sm">收货单位：<input class="form-control" name="buyer_company"></p>
-		<div class="light-divider"></div>
-		<p class="text-content text-sm">收货地址：<input class="form-control" name="buyer_address"></p>
-		<div class="light-divider"></div>
-	</div>
-	<div class="bot-gap-2">
-		<a href="{{ url_for('mobile_created_orders') }}" class="btn btn-style-1 text-sm">订单列表</a>
-	</div>
-	<div class="expanded-table table-responsive">
-		<table class="table table-striped">
-			<thead>
-				<tr>
-				  <th>Product Name</th>
-				  <th>Sku Code</th>
-				  <th>Specification</th>
-				  <th>Number</th>
-				  <th>Square Num</th>
-				</tr>
-			</thead>
-			<tbody>
-			{% for order_content in order %}
-				<tr>
-				  <td>{{ order_content.get('product_name') }}</td>
-				  <td>{{ order_content.get('sku_code') }}</td>
-				  <td>{{ order_content.get('sku_specification') }}</td>
-				  <td>{{ order_content.get('number') }}</td>
-				  <td>{{ order_content.get('square_num') }}</td>
-				</tr>
-			{% endfor %}			
-			</tbody>
-		</table>
-	</div>
+  <form action="{{ url_for('mobile_create_order') }}" method="get">
+		<div class="text bot-gap-2">
+			<p class="text-title bot-gap-2">购物车</p>
+			<div class="bot-gap-2">
+				<a href="{{ url_for('mobile_created_orders') }}" class="btn btn-style-1 text-sm">订单列表</a>
+				<a href="{{ url_for('mobile_storage') }}" class="btn btn-style-1 text-sm">库存查询</a>
+			</div>
+			<p class="text-content text-sm">要约方(买方)：<input class="form-control" name="buyer"></p>
+			<div class="light-divider"></div>
+			<p class="text-content text-sm">收货单位：<input class="form-control" name="buyer_company"></p>
+			<div class="light-divider"></div>
+			<p class="text-content text-sm">收货地址：<input class="form-control" name="buyer_address"></p>
+			<div class="light-divider"></div>
+		</div>
+
 	
-	<div class="fixed-bot">
-        <button type="submit" class="col-12 orange">一键下单(生成订单)</button>
-	</div>
-    </form>
+		{% for order_content in order %}
+			<div class="wrapper-style rect top-gap-2">
+				<div class="wrapper-header"><span class="wrapper-header-title">{{ order_content.get('product_name') }}</span><span class="wrapper-header-icon glyphicon glyphicon-shopping-cart pull-right"></span></div>
+				<div class="wrapper-inner clearfix">
+					<div class="wrapper-inner-img"><img class="full-img" src="/static/images/doc.png"></div>
+					<div class="wrapper-inner-content clearfix">
+						<div class="wrapper-row">
+							<p class="set-1">Sku Code :<span class="text-gray inline-display">{{ order_content.get('sku_code') }}</span></p>
+						</div>
+						<div class="wrapper-row">
+							<p class="set-1">Specification :<span class="text-gray inline-display">{{ order_content.get('sku_specification') }}</span></p>
+						</div>
+						<div class="wrapper-row">
+							<p class="set-2">Number :<span class="text-dark inline-display"><span class="glyphicon glyphicon-tint text-gray"></span> {{ order_content.get('number') }}</span></p>
+							<p class="set-2">Square Num :<span class="text-dark inline-display"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ order_content.get('square_num') }}</span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	
+		<div class="fixed-bot">
+					<button type="submit" class="col-12 orange">一键下单(生成订单)</button>
+		</div>
+  </form>
 </div>
 
 {% endblock %}

@@ -9,18 +9,22 @@
 
 		{% for project_report in project_reports %}
 			<div class="wrapper-style rect top-gap-2">
-				<div class="wrapper-header"><span class="wrapper-header-title">{{ project_report.report_no }}</span></div>
+				<div class="wrapper-header"><span class="wrapper-header-title">{{ project_report.report_no }}</span><span class="wrapper-header-icon glyphicon glyphicon-book pull-right"></span></div>
 				<div class="wrapper-inner clearfix">
 					<div class="wrapper-inner-img"><img class="full-img" src="/static/images/doc.png"></div>
 					<div class="wrapper-inner-content clearfix">
-						<p class="set-2">申请公司名称 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-success"></span> {{ project_report.report_content.get('app_company') }}</span></p>
-						<p class="set-2">创建日期 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-success"></span> {{ project_report.created_at.strftime('%Y-%m-%d') }}</span></p>
-						<p class="set-2">项目名称 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-success"></span> {{ project_report.report_content.get('project_name') }}</span></p>
-						<p class="set-2">状态 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-success"></span> {{ project_report.status }}</span></p>
+						<div class="wrapper-row">
+							<p class="set-2">申请公司名称 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ project_report.report_content.get('app_company') }}</span></p>
+							<p class="set-2">创建日期 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ project_report.created_at.strftime('%Y-%m-%d') }}</span></p>
+						</div>
+						<div class="wrapper-row">
+							<p class="set-2">项目名称 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ project_report.report_content.get('project_name') }}</span></p>
+							<p class="set-2">状态 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ project_report.status }}</span></p>
+						</div>
 					</div>
 				</div>
 				<div class="wrapper-footer text-center">
-					<a href="{{ url_for('project_report_show', id=project_report.id) }}" class="text-warning text-sm">查看详情</a>
+					<a href="{{ url_for('project_report_show', id=project_report.id) }}" class="text-success">查看详情</a>
 				</div>
 			</div>
 		{% endfor %}
