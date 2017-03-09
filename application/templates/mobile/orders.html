@@ -20,10 +20,14 @@
 						<div class="wrapper-row">
 							<p class="set-2">订单日期 :<span class="text-dark inline-display">{{ order.created_at.strftime('%Y-%m-%d') }}</span></p>
 							<p class="set-2">经销商 :<span class="text-dark inline-display">{{ order.user.nickname }}</span></p>
+                            <p class="set-2">区域负责人 :<span class="text-dark inline-display">{{ order.user.sales_areas.all()[0].name }}</span></p>
+							<p class="set-2">订单状态 :<span class="text-dark inline-display"> {{ order.order_status }}</span></p>
 						</div>
 						<div class="wrapper-row">
-							<p class="set-2">区域负责人 :<span class="text-dark inline-display">{{ order.user.sales_areas.all()[0].name }}</span></p>
-							<p class="set-2">订单状态 :<span class="text-dark inline-display"> {{ order.order_status }}</span></p>
+							<p class="set-2">企业名称 :<span class="text-dark inline-display">{{ order.buyer_info['company_name'] }}</span></p>
+                            <p class="set-2">项目地址 :<span class="text-dark inline-display">{{ order.buyer_info['project_address'] }}</span></p>
+                            <p class="set-2">联系电话 :<span class="text-dark inline-display">{{ order.buyer_info['contact_phone'] }}</span></p>
+                            <p class="set-2">联系姓名 :<span class="text-dark inline-display">{{ order.buyer_info['contact_name'] }}</span></p>
 						</div>
 					</div>
 				</div>

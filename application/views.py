@@ -150,10 +150,16 @@ def mobile_create_order():
         buyer = request.args.get('buyer')
         buyer_company = request.args.get('buyer_company')
         buyer_address = request.args.get('buyer_address')
+        company_name = request.args.get('company_name')
+        project_address = request.args.get('project_address')
+        contact_phone = request.args.get('contact_phone')
+        contact_name = request.args.get('contact_name')
         order = Order(order_no=order_no, user=current_user, order_status='新订单',
                       order_memo=' ',
                       buyer_info={"buyer": buyer, "buyer_company": buyer_company,
-                                  "buyer_address": buyer_address})
+                                  "buyer_address": buyer_address, "contact_phone": contact_phone,
+                                  "contact_name": contact_name, "company_name": company_name,
+                                  "project_address": project_address})
         db.session.add(order)
         for order_content in session['order']:
             oc = OrderContent(order=order, product_name=order_content.get('product_name'),
