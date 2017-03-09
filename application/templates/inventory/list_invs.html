@@ -18,46 +18,35 @@
 			<table class="tables">
 				<thead>
 					<tr>
-						<th width="15%">经销商</th>
-						<th width="10%">库存量</th>
-                        <th>详情</th>
+						<th>经销商</th>
+						<th>库存量</th>
+						<th>批次号</th>
+						<th>创建日期</th>
+						<th>生产日期</th>
+						<th>库存量</th>
+						<th>操作</th>
 					</tr>
 				</thead>
 				<tbody>
 				{% for inv in invs %}
-					<tr>
-						<td>{{ inv.get('user_name') }}</td>
-						<td>{{ inv.get('total') }}</td>
-                        <td>
-                            <table class="tables">
-                                <thead>
-                                    <tr>
-                                        <th width="15%">批次号</th>
-                                        <th width="15%">创建日期</th>
-                                        <th width="15%">生产日期</th>
-                                        <th width="10%">库存量</th>
-                                        <th>操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for batch in inv.get('batches') %}
-                                        <tr>
-                                            <td>{{ batch.get('batch_no') }}</td>
-                                            <td>{{ batch.get('created_at') }}</td>
-                                            <td>{{ batch.get('production_date') }}</td>
-                                            <td>{{ batch.get('stocks') }}</td>
-                                            <td>
-                                                <a class="table-edit text-info" href="{{ url_for('inventory.edit', id = batch.get('inv_id'), from = 'company' ) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;修改</a>
-                                                <form action="{{ url_for('inventory.delete', id = batch.get('inv_id')) }}" method="post" style="display: inline;">
-                                                    <button type="submit" data-confirm="Are you sure?" class="btn-link table-del" style="color: #843534; text-decoration: none; "><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除该批次</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </td>
-					</tr>
+					{% for i in range(1,(inv.get("batches")|length+1)) %}
+						<tr>
+							{% if i==1 %}
+								<td rowspan={{inv.get("batches")|length}}>{{ inv.get('user_name') }}</td>
+								<td rowspan={{inv.get("batches")|length}}>{{ inv.get('total') }}</td>
+							{% endif %}
+							<td>{{ inv.get("batches")[i-1].get('batch_no') }}</td>
+							<td>{{ inv.get("batches")[i-1].get('created_at') }}</td>
+							<td>{{ inv.get("batches")[i-1].get('production_date') }}</td>
+							<td>{{ inv.get("batches")[i-1].get('stocks') }}</td>
+							<td>
+									<a class="table-edit text-info" href="{{ url_for('inventory.edit', id = inv.get('batches')[i-1].get('inv_id'), from = 'company' ) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;修改</a>
+									<form action="{{ url_for('inventory.delete', id = inv.get('batches')[i-1].get('inv_id')) }}" method="post" style="display: inline;">
+											<button type="submit" data-confirm="Are you sure?" class="btn-link table-del" style="color: #843534; text-decoration: none; "><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除该批次</button>
+									</form>
+							</td>
+						</tr>
+					{% endfor %}
 				{% endfor %}
 				</tbody>
 			</table>

@@ -4,28 +4,31 @@ $(function(){
 	$('#sidebar').metisMenu();
 })
 //to change the text as the file uploaded
+function preview1(file,ele) {
+		var img = new Image(), url = img.src = URL.createObjectURL(file)
+		var $img = $(img);
+		$img.addClass("full-img");
+		img.onload = function() {
+				URL.revokeObjectURL(url)
+				ele.replaceWith($img);
+		}
+}
+	
+function pre_pic(elem){
+	elem.bind("change",function(e){
+		var file = e.target.files[0];
+		var ele=$(this).next("img");
+		preview1(file,ele)	
+	})	
+}	
+	
 $(function(){
-	
-	function preview1(file,ele) {
-			var img = new Image(), url = img.src = URL.createObjectURL(file)
-			var $img = $(img);
-			$img.addClass("full-img");
-			img.onload = function() {
-					URL.revokeObjectURL(url)
-					ele.replaceWith($img);
-			}
-	}
-	
 	$(".file input").bind("change",function(e){
 		var file = e.target.files[0];
 		var ele=$(this).parent().parent().next(".pic-upload").children("img");
 		preview1(file,ele)	
 	})
-	$(".inbox-file").bind("change",function(e){
-		var file = e.target.files[0];
-		var ele=$(this).next("img");
-		preview1(file,ele)	
-	})	
+	pre_pic($(".inbox-file"))	
 })
 
 //添加和删除item
@@ -98,18 +101,22 @@ $(function(){
 	//增加item
 	function add_pic(_name){
 		var clone=$(".pic-template").clone();
+		clone.find("img").attr("src","/static/images/alt.jpg")
 		var name=clone.removeClass("pic-template").find("input[type=file]").attr("name");
 		clone.find("input[type=file]").remove();
 		var new_file=$("<input type='file'>")
 		new_file.attr("name",name)
 			.attr("id",name)
 			.addClass("inbox-file");
+		
+		pre_pic(new_file);		
+		
 		clone.prepend(new_file);
 		$(".pic-add").before(clone);
 		refresh(_name);	
 	}
 	$(".pic-add").click(function(){
-		add_pic("image_file_");
+		add_pic("image_file_");	
 	});
 
 	//organization.user 
