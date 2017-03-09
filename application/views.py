@@ -89,7 +89,8 @@ def mobile_share_storage_detail():
 
 @app.route('/mobile/share_storage_for_detail')
 def mobile_share_storage_for_detail():
-    return render_template('mobile/share_storage_for_detail.html')
+    areas = SalesAreaHierarchy.query.filter_by(level_grade=3).all()
+    return render_template('mobile/share_storage_for_detail.html', areas=areas)
 
 
 @app.route('/mobile/share_storage_for_upload')
@@ -148,14 +149,19 @@ def mobile_cart():
 def mobile_create_order():
     if 'order' in session and session['order']:
         order_no = 'SS' + datetime.datetime.now().strftime('%y%m%d%H%M%S')
-        user = current_user
         buyer = request.args.get('buyer')
         buyer_company = request.args.get('buyer_company')
         buyer_address = request.args.get('buyer_address')
-        order = Order(order_no=order_no, user=user, order_status='新订单',
+        company_name = request.args.get('company_name')
+        project_address = request.args.get('project_address')
+        contact_phone = request.args.get('contact_phone')
+        contact_name = request.args.get('contact_name')
+        order = Order(order_no=order_no, user=current_user, order_status='新订单',
                       order_memo=' ',
                       buyer_info={"buyer": buyer, "buyer_company": buyer_company,
-                                  "buyer_address": buyer_address})
+                                  "buyer_address": buyer_address, "contact_phone": contact_phone,
+                                  "contact_name": contact_name, "company_name": company_name,
+                                  "project_address": project_address})
         db.session.add(order)
         for order_content in session['order']:
             oc = OrderContent(order=order, product_name=order_content.get('product_name'),
@@ -224,9 +230,8 @@ def mobile_design():
             project_report = ProjectReport.query.filter_by(report_no = request.form.get('filing_no')).first()
             if project_report in project_reports:
                 file_path = save_upload_file(request.files.get('ul_file'))
-                user = current_user
                 application = DesignApplication(filing_no = request.form.get('filing_no'), 
-                    ul_file = file_path, status = '新申请', applicant = user)
+                    ul_file = file_path, status = '新申请', applicant = current_user)
                 application.save
                 flash('产品设计申请提交成功', 'success')
                 return redirect(url_for('mobile_design_applications'))
@@ -241,7 +246,7 @@ def mobile_design():
 @app.route('/mobile/design_applications')
 def mobile_design_applications():
     # list design applications of current user
-    applications = DesignApplication.query.all()
+    applications = current_user.design_applications #DesignApplication.query.all()
     return render_template('mobile/design_applications.html', applications = applications)
 
 
@@ -277,9 +282,8 @@ def mobile_material_application_new():
                     if int(request.form.get(param)) > 0:
                         app_contents.append([param.split('_',1)[1], request.form.get(param)])
         if app_contents:
-            user = current_user
             application = MaterialApplication(app_no = 'MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
-                user = user, status = '新申请')
+                user = current_user, status = '新申请')
             db.session.add(application)
             for app_content in app_contents:
                 content = MaterialApplicationContent(material_id = app_content[0], number = app_content[1], 
@@ -461,11 +465,16 @@ def project_report_show(id):
     return render_template('mobile/project_report_show.html', project_report=project_report)
 
 
-@app.route('/mobile/share_index', methods=['GET'])
-def stocks_share():
+@app.route('/mobile/share_index/<int:area_id>', methods=['GET'])
+def stocks_share(area_id):
     categories = load_categories()
-    user = current_user
-    return render_template('mobile/share_index.html', categories=categories, user=user)
+    area = SalesAreaHierarchy.query.get_or_404(area_id)
+    users = area.users.all()
+    for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
+        users.extend(sarea.users.all())
+        for ssarea in SalesAreaHierarchy.query.filter_by(parent_id=sarea.id).all():
+            users.extend(ssarea.users.all())
+    return render_template('mobile/share_index.html', categories=categories, users=users)
 
 
 @app.route('/mobile/upload_share_index', methods=['GET'])
@@ -474,7 +483,7 @@ def upload_share_index():
     return render_template('mobile/upload_share_index.html', categories=categories)
 
 
-@app.route('/new_share_inventory/<int:id>', methods=['GET', 'POST'])
+@app.route('/mobile/new_share_inventory/<int:id>', methods=['GET', 'POST'])
 def new_share_inventory(id):
     if request.method == 'POST':
         user_id = current_user.id

@@ -27,6 +27,24 @@
                 <input class="form-input form-control" value="{{ order.order_status }}" disabled/>
             </div>
             <div class="form-item inline-2">
+                <span class="form-label">要约方(买方)</span>
+                <input class="form-input form-control" value="{{ order.buyer_info['buyer'] }}" disabled/>
+                <span class="form-label">收货单位</span>
+                <input class="form-input form-control" value="{{ order.buyer_info['buyer_company'] }}" disabled/>
+                <span class="form-label">收货地址</span>
+                <input class="form-input form-control" value="{{ order.buyer_info['buyer_address'] }}" disabled/>
+            </div>
+            <div class="form-item inline-2">
+                <span class="form-label">企业名称</span>
+                <input class="form-input form-control" value="{{ order.buyer_info['company_name'] }}" disabled/>
+                <span class="form-label">项目地址</span>
+                <input class="form-input form-control" value="{{ order.buyer_info['project_address'] }}" disabled/>
+                <span class="form-label">联系电话</span>
+                <input class="form-input form-control" value="{{ order.buyer_info['contact_phone'] }}" disabled/>
+                <span class="form-label">联系姓名</span>
+                <input class="form-input form-control" value="{{ order.buyer_info['contact_name'] }}" disabled/>
+            </div>
+            <div class="form-item inline-2">
                 <span class="form-label">订单备注</span>
                 <input class="form-input form-control" value="{{ order.order_memo }}" disabled/>
             </div>

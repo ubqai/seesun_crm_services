@@ -57,7 +57,7 @@ def setup_logging():
 @app.before_request
 def login_check():
     app.logger.info("LOGIN_CHECK  request.path [%s]" % (request.path))
-    if request.path.startswith("/static/"):
+    if request.path.startswith("/static/") or request.path.startswith("/favicon.ico"):
         #静态文件
         pass
     elif request.path.startswith("/mobile/") or request.path.startswith("/wechat/mobile/"):

@@ -48,7 +48,7 @@
 					<div class="label-block">
 					{% for option in options %}
 					<div class="label-item">
-						<input id="option_{{ option.id }}" name="option_ids[]" value="{{ option.id }}" type="checkbox" class="chk_1"> 
+						<input id="option_{{ option.id }}" name="option_ids[]" value="{{ option.id }}" type="checkbox" class="chk_1"{% if request.args.get('option_id')|int == option.id %}checked=""{% endif %}> 
 						<label for="option_{{ option.id }}">{{ option.name }}</label> 
 					</div>
 					{% endfor %}

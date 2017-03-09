@@ -1,5 +1,6 @@
 {% extends 'pc_base.html' %}
 {% from 'macros/pc_partial.html' import sidebar %}
+{% from 'macros/pc_pagination.html' import paginate %}
 {% block main_content %}
 
 {{ sidebar(active = 'file') }}
@@ -8,7 +9,7 @@
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
 		<p class="contents-header-p">{{ category.name }}</p>
 		<p class="contents-header-p text-sm">list of contents</p>
-		<a class="new-one" href="{{ url_for('content.new', category_id = category.id) }}"><span class="glyphicon glyphicon-plus"></span></a>
+		<a class="new-one" href="{{ url_for('content.new', category_id = category.id) }}" title="新增内容"><span class="glyphicon glyphicon-plus"></span></a>
 	</div>
 	<div class="separator"><span></span></div>
 	<div class="widget">
@@ -26,7 +27,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				{% for content in contents %}
+				{% for content in object_list.items %}
 					<tr>
 						<td><a href="{{ url_for('content.show', id = content.id) }}" class="table-link">{{ content.name }}</a></td>
 						<td>{% for option in content.options %}{{ option.name }}, {% endfor %}</td>
@@ -42,6 +43,9 @@
 				</tbody>
 			</table>
 		</div>
+		<div style="text-align: center;">
+			{{ paginate(object_list) }}
+		</div>	
 	</div>
 </div>
 

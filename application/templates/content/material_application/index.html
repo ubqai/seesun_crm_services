@@ -8,6 +8,7 @@
         <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
         <p class="contents-header-p">物料申请列表</p>
         <p class="contents-header-p text-sm">list of material applications</p>
+        <a class="new-one" href="{{ url_for('content.material_index') }}" title="物料管理"><span class="glyphicon glyphicon-th-large"></span></a>
     </div>
     <div class="separator"><span></span></div>
     <form url="{{ url_for('content.material_application_index') }}" method="get" role="form" class="form form-horizontal" >

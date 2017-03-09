@@ -4,70 +4,67 @@
 {{ header('共享库存列表') }}
 
 <div class="main-content">
-
+    {% for user in users %}
 	<div class="wrapper">
 		<div class="text">
 			<p class="text-title">{{ user.nickname }}</p>
 			<p class="text-content text-sm left-gap-1">联系人：{{ user.nickname }}</p>
 			<p class="text-content text-sm left-gap-1 bot-gap-1">Email：{{ user.email }}</p>
 		</div>
-		<div class="table-responsive">
-			<table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>产品目录</th>
-                        <th>产品-sku</th>
-                        <th>经销商</th>
-                        <th>批次号</th>
-                        <th>创建日期</th>
-                        <th>生产日期</th>
-                        <th>库存量</th>
-                    </tr>
-                </thead>
-                <tbody>
-				{% for category in categories %}
-                    {% with products_json = load_products(category.get('category_id')) %}
-                        {% if len(products_json) > 0 %}
-                            {% for product_json in products_json %}
-                                {% with skus_json = load_skus(product_json.get('product_id')) %}
-                                    {% if len(skus_json.get('skus')) > 0 %}
-                                        {% for sku in skus_json.get('skus') %}
-                                            {% with invs = load_user_inventories(user.id,sku.get('sku_id')) %}
-                                                {% for inv in invs %}
-                                                    {% for batch in inv.get('batches') %}
-                                                        <tr>
-                                                            <td>{{ category.get('category_name') }}</td>
-                                                            <td>
-                                                                {{ product_json.get('name') }}--
-                                                                {% for option in sku.get('options') %}
-                                                                    {% for key, value in option.items() %}
-                                                                        {{ value }}
-                                                                    {% endfor %}
-                                                                {% endfor %}
-                                                            </td>
-                                                            <td>{{ inv.get('user_name') }}</td>
-                                                            <td>{{ batch.get('batch_no') }}</td>
-                                                            <td>{{ batch.get('created_at') }}</td>
-                                                            <td>{{ batch.get('production_date') }}</td>
-                                                            <td>{{ batch.get('stocks') }}</td>
-                                                        </tr>
-                                                    {% endfor %}
-                                                {% endfor %}
-                                            {% endwith %}
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                            {% endfor %}
-                        {% endif %}
-                    {% endwith %}
-				{% endfor %}
-				</tbody>
-			</table>
-		</div>
+<<<<<<< HEAD
+		
+		{% for category in categories %}
+				{% with products_json = load_products(category.get('category_id')) %}
+						{% if len(products_json) > 0 %}
+								{% for product_json in products_json %}
+										{% with skus_json = load_skus(product_json.get('product_id')) %}
+												{% if len(skus_json.get('skus')) > 0 %}
+														{% for sku in skus_json.get('skus') %}
+																{% with invs = load_user_inventories(user.id,sku.get('sku_id')) %}
+																		{% for inv in invs %}
+																				{% for batch in inv.get('batches') %}
+																					<div class="wrapper-style rect top-gap-2">
+																						<div class="wrapper-header"><span class="wrapper-header-title">{{ category.get('category_name') }}</span><span class="wrapper-header-icon glyphicon glyphicon-globe pull-right"></span></div>
+																						<div class="wrapper-inner clearfix">
+																							<div class="wrapper-inner-content full clearfix">
+																								<div class="wrapper-row">
+																									<p class="set-1">产品-sku :
+																										<span class="text-dark inline-display">
+																											{{ product_json.get('name') }}：
+																											{% for option in sku.get('options') %}
+																													{% for key, value in option.items() %}
+																															{{ value }}
+																													{% endfor %}
+																											{% endfor %}
+																										</span>
+																									</p>	
+																								</div>
+																								<div class="wrapper-row">
+																									<p class="set-2">经销商 :<span class="text-dark inline-display">{{ inv.get('user_name') }}</span></p>
+																									<p class="set-2">创建日期 :<span class="text-dark inline-display">{{ batch.get('created_at') }}</span></p>
+																								</div>
+																								<div class="wrapper-row">
+																									<p class="set-2">生产日期 :<span class="text-dark inline-display">{{ batch.get('production_date') }}</span></p>
+																									<p class="set-2">批次号 :<span class="text-dark inline-display">{{ batch.get('batch_no') }}</span></p>
+																								</div>
+																								<div class="wrapper-row">
+																									<p class="set-1">库存量 :<span class="text-dark inline-display"> {{ batch.get('stocks') }}</span></p>																								
+																								</div>
+																							</div>
+																						</div>
+																					</div>
+																			{% endfor %}
+																		{% endfor %}
+																{% endwith %}
+														{% endfor %}
+												{% endif %}
+										{% endwith %}
+								{% endfor %}
+						{% endif %}
+				{% endwith %}
+		{% endfor %}
 	</div>
-
-	<div class="divider4 top-gap-1 bot-gap-1"></div>
-
+    {% endfor %}
 </div>
 
 {% endblock %}

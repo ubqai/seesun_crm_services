@@ -27,13 +27,13 @@
 				{% for options in option_sorted %}
 					<p class="label label-bg label-default right-gap-2" style="font-size:15px">
 						{{ options[0].get('feature_name') }}：
-						{% for option in options %}{{ option.get('option_name') }}{% endfor %}
+						{% for option in options %}/{{ option.get('option_name') }}{% endfor %}
 					</p>
 				{% endfor %}
 			</div>
 			<div class="form-item">
 				<span class="form-label">产品描述</span>
-				<textarea class="form-input form-control" disabled>{{ product.get('description')|safe }}</textarea>
+				{{ product.get('description')|safe }}
 			</div>
 			<div class="form-item small-pic">
 				<span class="form-label">产品图片</span>
@@ -61,9 +61,11 @@
 			<div class="form-item">
 				<span class="form-label">关联案例</span>
 				{% for content in contents %}
-					<p><a href="{{ url_for('content.show', id = content.id) }}">{{ content.name }}</a></p>
+					<a href="{{ url_for('content.show', id = content.id) }}" class="label label-bg label-default right-gap-2" style="margin-bottom: 10px;">{{ content.name }}</a>
 				{% endfor %}
-				<a href="{{ url_for('product.relate_cases', product_id = product.get('product_id')) }}" class="btn btn-default my-btn">管理关联案例</a>
+				<div class=" top-gap-3">
+					<a href="{{ url_for('product.relate_cases', product_id = product.get('product_id')) }}" class="btn btn-default my-btn">管理关联案例</a>
+				</div>	
 			</div>
 		</div>
 	</div>
