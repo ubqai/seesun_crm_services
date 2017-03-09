@@ -6,6 +6,7 @@ from . import app
 from .models import *
 from .product.api import *
 from .helpers import save_upload_file
+from flask_login import current_user
 
 @app.route('/mobile/index')
 def mobile_index():
@@ -143,7 +144,7 @@ def mobile_cart():
 def mobile_create_order():
     if 'order' in session and session['order']:
         order_no = 'SS' + datetime.datetime.now().strftime('%y%m%d%H%M%S')
-        user = User.query.first()
+        user = current_user
         buyer = request.args.get('buyer')
         buyer_company = request.args.get('buyer_company')
         buyer_address = request.args.get('buyer_address')
@@ -177,7 +178,7 @@ def mobile_create_order():
 def mobile_orders():
     if 'order' in session and session['order']:
         return redirect(url_for('mobile_cart'))
-    orders = Order.query.all()
+    orders = Order.query.filter_by(user_id=current_user.id).all()
     return render_template('mobile/orders.html', orders=orders)
 
 
@@ -219,7 +220,7 @@ def mobile_design():
             project_report = ProjectReport.query.filter_by(report_no = request.form.get('filing_no')).first()
             if project_report in project_reports:
                 file_path = save_upload_file(request.files.get('ul_file'))
-                user = User.query.first()
+                user = current_user
                 application = DesignApplication(filing_no = request.form.get('filing_no'), 
                     ul_file = file_path, status = '新申请', applicant = user)
                 application.save
@@ -272,7 +273,7 @@ def mobile_material_application_new():
                     if int(request.form.get(param)) > 0:
                         app_contents.append([param.split('_',1)[1], request.form.get(param)])
         if app_contents:
-            user = User.query.first()
+            user = current_user
             application = MaterialApplication(app_no = 'MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
                 user = user, status = '新申请')
             db.session.add(application)
@@ -433,7 +434,7 @@ def new_project_report():
                           "expected_authorization_date": request.form.get("expected_authorization_date"),
                           "authorize_company_name": request.form.get('authorize_company_name')}
         project_report = ProjectReport(
-            app_id=User.query.filter_by(user_or_origin=2).first().id,
+            app_id=current_user.id,
             status="新创建待审核",
             report_no="PR%s" % datetime.datetime.now().strftime('%y%m%d%H%M%S'),
             report_content=report_content
@@ -446,7 +447,7 @@ def new_project_report():
 
 @app.route('/mobile/project_report/index', methods=['GET'])
 def project_report_index():
-    project_reports = ProjectReport.query.all()
+    project_reports = ProjectReport.query.filter_by(app_id=current_user.id).all()
     return render_template('mobile/project_report_index.html', project_reports=project_reports)
 
 
@@ -459,5 +460,5 @@ def project_report_show(id):
 @app.route('/mobile/share_index', methods=['GET'])
 def stocks_share():
     categories = load_categories()
-    user = User.query.filter_by(user_or_origin=2, nickname='普陀区经销商').first()
+    user = current_user
     return render_template('mobile/share_index.html', categories=categories, user=user)
