@@ -24,15 +24,14 @@ def edit(id):
 		form = DesignApplicationForm(request.form)
 		if request.form.get('status') == '申请通过':
 			application.status = '申请通过'
-			application.save
 			if request.files.get('dl_file'):
 				file_path = save_upload_file(request.files.get('dl_file'))
 				if file_path:
 					if application.dl_file:
 						delete_file(application.dl_file)
-						application.dl_file = file_path
+					application.dl_file = file_path
 			application.save
-			flash('申请通过', 'success')
+			flash('申请通过 %s' % str(request.files.get('dl_file').filename), 'success')
 		elif request.form.get('status') == '申请不通过':
 			application.status = '申请不通过'
 			application.save

@@ -1,5 +1,6 @@
 {% extends 'pc_base.html' %}
 {% from 'macros/pc_partial.html' import sidebar %}
+{% from 'macros/pc_pagination.html' import paginate %}
 {% block main_content %}
 
 {{ sidebar(active = 'file') }}
@@ -26,7 +27,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				{% for content in contents %}
+				{% for content in object_list.items %}
 					<tr>
 						<td><a href="{{ url_for('content.show', id = content.id) }}" class="table-link">{{ content.name }}</a></td>
 						<td>{% for option in content.options %}{{ option.name }}, {% endfor %}</td>
@@ -42,9 +43,9 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="text-right top-gap-1">
-			<a href="{{ url_for('content.category_index') }}" class="btn btn-default my-btn">返回目录列表</a>
-		</div>
+		<div style="text-align: center;">
+			{{ paginate(object_list) }}
+		</div>	
 	</div>
 </div>
 
