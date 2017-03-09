@@ -17,7 +17,7 @@ organization = Blueprint('organization', __name__, template_folder = 'templates'
 def user_login():
     if current_user.is_authenticated:
         if current_user.user_or_origin==3:
-            return redirect(request.args.get('next') or url_for('mobile_user_index'))
+            return redirect(url_for('mobile_user_index'))
 
     if request.method == 'POST':
         try:
@@ -37,7 +37,7 @@ def user_login():
                 raise ValueError("用户异常,请联系管理员")
                 
             login_user(user)
-            return redirect(request.args.get('next') or url_for('organization.user_index'))
+            return redirect(url_for('organization.user_index'))
         except Exception as e:
             flash(e)
     else:

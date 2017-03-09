@@ -518,7 +518,7 @@ def new_share_inventory(id):
 def mobile_user_login():
     if current_user.is_authenticated:
         if current_user.user_or_origin==2:
-            return redirect(request.args.get('next') or url_for('mobile_index'))
+            return redirect(url_for('mobile_index'))
 
     if request.method == 'POST':
         try:
@@ -540,7 +540,7 @@ def mobile_user_login():
                 
             login_user(user)
             app.logger.info("mobile login success [%s]" % (user.nickname))
-            return redirect(request.args.get('next') or url_for('mobile_index'))
+            return redirect(url_for('mobile_index'))
         except Exception as e:
             app.logger.info("mobile login failure [%s]" % (e))
             flash(e)
