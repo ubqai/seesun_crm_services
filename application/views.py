@@ -5,6 +5,7 @@ from flask import flash, redirect, render_template, request, url_for, session
 from . import app
 from .models import *
 from .product.api import *
+from .inventory.api import create_inventory
 from .helpers import save_upload_file
 from flask_login import current_user
 
@@ -462,3 +463,41 @@ def stocks_share():
     categories = load_categories()
     user = current_user
     return render_template('mobile/share_index.html', categories=categories, user=user)
+
+
+@app.route('/mobile/upload_share_index', methods=['GET'])
+def upload_share_index():
+    categories = load_categories()
+    return render_template('mobile/upload_share_index.html', categories=categories)
+
+
+@app.route('/new_share_inventory/<int:id>', methods=['GET', 'POST'])
+def new_share_inventory(id):
+    if request.method == 'POST':
+        user_id = current_user.id
+        production_date = request.form.get('production_date')
+        batch_no = request.form.get('batch_no')
+        stocks = request.form.get('stocks')
+        inv_type = 2
+        user_name = current_user.nickname
+        if stocks is None:
+            flash('库存数量不能为空', 'danger')
+            return render_template('mobile/new_share_inventory.html', id=id)
+        elif int(stocks) < 1:
+            flash('库存数量不能小于1', 'danger')
+            return render_template('mobile/new_share_inventory.html', id=id)
+        data = {'inventory_infos': [{"sku_id": id, "inventory": [{"type": inv_type, "user_id": user_id,
+                                                                  "user_name": user_name,
+                                                                  "production_date": production_date,
+                                                                  "valid_until": production_date,
+                                                                  "batch_no": batch_no,
+                                                                  "stocks": stocks}]}]}
+        response = create_inventory(data)
+        if response.status_code == 201:
+            flash('库存共享成功', 'success')
+        else:
+            flash('库存共享失败', 'danger')
+        return redirect(url_for('stocks_share'))
+    return render_template('mobile/new_share_inventory.html', id=id)
+
+
