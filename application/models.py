@@ -369,7 +369,7 @@ class User(db.Model, Rails):
 
     @classmethod
     def login_verification(cls,email,password,user_or_origin):
-        user=User.query.filter_by(email=email).first()
+        user=User.query.filter_by(email=email,user_or_origin=user_or_origin).first()
         if user!=None:
             if not bcrypt.check_password_hash(user.password, password):
                 user=None
