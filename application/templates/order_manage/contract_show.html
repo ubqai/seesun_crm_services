@@ -65,6 +65,7 @@
                         <th>数量</th>
                         <th>单价</th>
                         <th>总价</th>
+                        <th>需生产数量</th>
                         <th>备注</th>
                     </tr>
                 </thead>
@@ -77,8 +78,29 @@
                         <td>{{ content.number }}</td>
                         <td>{{ content.price }}</td>
                         <td>{{ content.amount }}</td>
+                        <td>{{ content.production_num }}</td>
                         <td>{{ content.memo }}</td>
                     </tr>
+                    <table class="tables">
+                        <thead>
+                            <tr>
+                                <th>经销商</th>
+                                <th>批次号</th>
+                                <th>生产日期</th>
+                                <th>数量</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for inv in content.inventory_choose %}
+                                <tr>
+                                    <td>{{ inv.get('username') }}</td>
+                                    <td>{{ inv.get('batch_no') }}</td>
+                                    <td>{{ inv.get('production_date') }}</td>
+                                    <td>{{ inv.get('num') }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                     {% endfor %}
                 </tbody>
             </table>
