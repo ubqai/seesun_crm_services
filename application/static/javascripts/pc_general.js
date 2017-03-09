@@ -160,3 +160,38 @@ $(function(){
 		});
 	});
 })
+
+//datetimePicker
+$(function(){
+	$(".datetimePicker").datetimepicker({
+		timepicker:false,
+		format:'Y-m-d'
+	});
+})
+
+$(function(){
+	// generate qrcode without refreshing page
+	$("#create_qrcode_btn").click(function(){
+		var tracking_info_id = $(this).attr('name');
+		$.ajax({
+			type: 'GET',
+			url: '/order_manage/tracking_info/'+ tracking_info_id + '/generate_qrcode',
+			dataType: 'json',
+			success: function(data) {
+				var hash = eval(data);
+				if(hash['status'] == 'success'){
+					$('#qrcode_field_wrapper').html(
+					'<a href="/order_manage/tracking_info/' + tracking_info_id + '/qrcode">' +
+                        '<img src="'+ hash['image_path'] +'">' +
+                    '</a>'
+					)
+				}else if(hash['status'] == 'error'){
+					alert(hash['message'])
+				}
+			},
+			error: function(xhr, type){
+				alert("Generate qrcode failed!")
+			}
+		})
+	})
+})
