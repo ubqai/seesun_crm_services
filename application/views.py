@@ -9,6 +9,7 @@ from .inventory.api import create_inventory
 from .helpers import save_upload_file
 from flask_login import *
 from .organization.forms import UserLoginForm
+from .forms import *
 
 
 @app.route('/mobile/index')
@@ -88,7 +89,8 @@ def mobile_share_storage_detail():
 
 @app.route('/mobile/share_storage_for_detail')
 def mobile_share_storage_for_detail():
-    return render_template('mobile/share_storage_for_detail.html')
+    areas = SalesAreaHierarchy.query.filter_by(level_grade=3).all()
+    return render_template('mobile/share_storage_for_detail.html', areas=areas)
 
 
 @app.route('/mobile/share_storage_for_upload')
@@ -459,11 +461,16 @@ def project_report_show(id):
     return render_template('mobile/project_report_show.html', project_report=project_report)
 
 
-@app.route('/mobile/share_index', methods=['GET'])
-def stocks_share():
+@app.route('/mobile/share_index/<int:area_id>', methods=['GET'])
+def stocks_share(area_id):
     categories = load_categories()
-    user = current_user
-    return render_template('mobile/share_index.html', categories=categories, user=user)
+    area = SalesAreaHierarchy.query.get_or_404(area_id)
+    users = area.users.all()
+    for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
+        users.extend(sarea.users.all())
+        for ssarea in SalesAreaHierarchy.query.filter_by(parent_id=sarea.id).all():
+            users.extend(ssarea.users.all())
+    return render_template('mobile/share_index.html', categories=categories, users=users)
 
 
 @app.route('/mobile/upload_share_index', methods=['GET'])
@@ -505,16 +512,17 @@ def new_share_inventory(id):
 # --- mobile user---
 @app.route('/mobile/user/login', methods=['GET', 'POST'])
 def mobile_user_login():
-    #不运行前后端同时登入在一个WEB上
     if current_user.is_authenticated:
         if current_user.user_or_origin==2:
-            return redirect(request.args.get('next') or url_for('mobile_index'))
-        else:
-            app.logger.info("后台用户[%s]自动登出" % (current_user.nickname))
-            logout_user()
+            return redirect(url_for('mobile_index'))
 
     if request.method == 'POST':
         try:
+            #不运行前后端同时登入在一个WEB上
+            if current_user.is_authenticated and current_user.user_or_origin!=3:
+                app.logger.info("后台用户[%s]自动登出" % (current_user.nickname))
+                logout_user()
+
             form = UserLoginForm(request.form)
             if form.validate()==False:
                 raise ValueError("")
@@ -527,10 +535,36 @@ def mobile_user_login():
                 raise ValueError("用户异常,请联系管理员")
                 
             login_user(user)
-            return redirect(request.args.get('next') or url_for('mobile_index'))
+            app.logger.info("mobile login success [%s]" % (user.nickname))
+            return redirect(url_for('mobile_index'))
         except Exception as e:
+            app.logger.info("mobile login failure [%s]" % (e))
             flash(e)
     else:
         form = UserLoginForm()
 
     return render_template('mobile/user_login.html',form=form)
+
+@app.route('/mobile/user/info/<int:user_id>')
+def mobile_user_info(user_id):
+    u=User.query.filter_by(id=user_id).first()
+    if u==None:
+        return redirect(url_for('mobile_index'))
+
+    form = UserInfoForm(obj=u,user_type=u.user_or_origin)
+
+    if len(u.user_infos)==0:
+        pass
+    else:
+        ui=u.user_infos[0]
+        form.name.data=ui.name
+        form.address.data=ui.address
+        form.phone.data=ui.telephone
+        form.title.data=ui.title
+
+    if u.sales_areas.first()!=None:
+        form.sale_range.data=u.sales_areas.first().name
+    if u.departments.first()!=None:
+        form.dept_ranges.data=",".join([d.name for d in u.departmets.all()])
+
+    return render_template('mobile/user_info.html',form=form)

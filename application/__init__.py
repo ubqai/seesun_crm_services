@@ -56,6 +56,7 @@ def setup_logging():
 #单个使用@login_required
 @app.before_request
 def login_check():
+    app.logger.info("LOGIN_CHECK  request.path [%s]" % (request.path))
     if request.path.startswith("/static/") or request.path.startswith("/favicon.ico"):
         #静态文件
         pass
