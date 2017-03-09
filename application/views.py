@@ -495,7 +495,7 @@ def upload_share_index():
     return render_template('mobile/upload_share_index.html', categories=categories)
 
 
-@app.route('/new_share_inventory/<int:id>', methods=['GET', 'POST'])
+@app.route('/mobile/new_share_inventory/<int:id>', methods=['GET', 'POST'])
 def new_share_inventory(id):
     if request.method == 'POST':
         user_id = current_user.id
