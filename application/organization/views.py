@@ -16,7 +16,11 @@ organization = Blueprint('organization', __name__, template_folder = 'templates'
 @organization.route('/user/login', methods=['GET', 'POST'])
 def user_login():
     if current_user.is_authenticated:
-        return redirect(request.args.get('next') or url_for('organization.user_index'))
+        if current_user.user_or_origin==3:
+            return redirect(request.args.get('next') or url_for('mobile_user_index'))
+        else:
+            app.logger.info("移动端用户[%s]自动登出" % (current_user.nickname))
+            logout_user()
 
     if request.method == 'POST':
         try:
@@ -28,9 +32,10 @@ def user_login():
             user=User.login_verification(form.email.data,form.password.data,3)
             if user==None:
                 raise ValueError("用户名或密码错误")
-
+            if not user.is_active:
+                raise ValueError("用户异常,请联系管理员")
+                
             login_user(user)
-            UserSearchForm().process()
             return redirect(request.args.get('next') or url_for('organization.user_index'))
         except Exception as e:
             flash(e)

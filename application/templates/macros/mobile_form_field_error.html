@@ -1,0 +1,9 @@
+{% macro render_form_field_error(form_field) %}
+	{% if form_field.errors %}
+	    <ul class="render_form_field_error_errors">
+	    	{% for error in form_field.errors %}
+	    		<li>{{ error }}</li>
+	    	{% endfor %}
+	    </ul>
+	{% endif %}
+{% endmacro %}

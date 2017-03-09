@@ -56,21 +56,29 @@ def setup_logging():
 #单个使用@login_required
 @app.before_request
 def login_check():
-    if request.path == "/organization/user/login":
+    if request.path.startswith("/static/"):
+        #静态文件
         pass
-    elif request.path.startswith("/mobile/"):
-        #移动端
-        pass
+    elif request.path.startswith("/mobile/") or request.path.startswith("/wechat/mobile/"):
+        if request.path == "/mobile/user/login":
+            pass
+        #移动端登入界面
+        elif not current_user.is_authenticated or current_user.user_or_origin!=2:
+            #后端界面
+            flash("请登入后操作")
+            return redirect(url_for('mobile_user_login'))
     elif request.path.startswith("/wechat/"):
         #微信
         pass
-    elif request.path.startswith("/static/"):
-        #静态文件
-        pass
     else:
-        if not current_user.is_authenticated:
+        if request.path == "/organization/user/login":
+        #后端登入界面
+            pass
+        elif not current_user.is_authenticated or current_user.user_or_origin!=3:
+            #后端界面
             flash("请登入后操作")
             return redirect(url_for('organization.user_login'))
+
     return None
 
 @app.errorhandler(404)
