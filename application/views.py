@@ -143,11 +143,10 @@ def mobile_cart():
 def mobile_create_order():
     if 'order' in session and session['order']:
         order_no = 'SS' + datetime.datetime.now().strftime('%y%m%d%H%M%S')
-        user = User.query.first()
         buyer = request.args.get('buyer')
         buyer_company = request.args.get('buyer_company')
         buyer_address = request.args.get('buyer_address')
-        order = Order(order_no=order_no, user=user, order_status='新订单',
+        order = Order(order_no=order_no, user=current_user, order_status='新订单',
                       order_memo=' ',
                       buyer_info={"buyer": buyer, "buyer_company": buyer_company,
                                   "buyer_address": buyer_address})
@@ -219,9 +218,8 @@ def mobile_design():
             project_report = ProjectReport.query.filter_by(report_no = request.form.get('filing_no')).first()
             if project_report in project_reports:
                 file_path = save_upload_file(request.files.get('ul_file'))
-                user = User.query.first()
                 application = DesignApplication(filing_no = request.form.get('filing_no'), 
-                    ul_file = file_path, status = '新申请', applicant = user)
+                    ul_file = file_path, status = '新申请', applicant = current_user)
                 application.save
                 flash('产品设计申请提交成功', 'success')
                 return redirect(url_for('mobile_design_applications'))
@@ -236,7 +234,7 @@ def mobile_design():
 @app.route('/mobile/design_applications')
 def mobile_design_applications():
     # list design applications of current user
-    applications = DesignApplication.query.all()
+    applications = current_user.design_applications #DesignApplication.query.all()
     return render_template('mobile/design_applications.html', applications = applications)
 
 
@@ -272,9 +270,8 @@ def mobile_material_application_new():
                     if int(request.form.get(param)) > 0:
                         app_contents.append([param.split('_',1)[1], request.form.get(param)])
         if app_contents:
-            user = User.query.first()
             application = MaterialApplication(app_no = 'MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
-                user = user, status = '新申请')
+                user = current_user, status = '新申请')
             db.session.add(application)
             for app_content in app_contents:
                 content = MaterialApplicationContent(material_id = app_content[0], number = app_content[1], 

@@ -77,13 +77,13 @@ $(function(){
 	})
 })
 //去除textarea的htmltag
-function delHtmlTag(str){
-    return str.replace(/<[^>]+>/g,"");
-}
-$(function(){
-	var str=$("textarea").val();
-	$("textarea").val(delHtmlTag(str));
-})
+//function delHtmlTag(str){
+//    return str.replace(/<[^>]+>/g,"");
+//}
+//$(function(){
+//	var str=$("textarea").val();
+//	$("textarea").val(delHtmlTag(str));
+//})
 
 //增加图片
 $(function(){

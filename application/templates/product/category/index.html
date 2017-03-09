@@ -26,8 +26,9 @@
 				<tbody>
 				{% for category in categories %}
 					<tr>
-						<td><a href="{{ url_for('product.index', category_id = category.get('category_id')) }}" class="table-link">{{ category.get('category_name') }}</a></td>
+						<td>{{ category.get('category_name') }}</td>
 						<td>
+							<a href="{{ url_for('product.index', category_id = category.get('category_id')) }}" class="table-del text-default"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;产品列表</a>
 							<a href="{{ url_for('product.category_show', id = category.get('category_id')) }}" class="table-del text-success"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;属性管理</a>
 							<a class="table-edit text-info" href="{{ url_for('product.category_edit', id = category.get('category_id')) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
 						</td>
