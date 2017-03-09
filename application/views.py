@@ -88,7 +88,8 @@ def mobile_share_storage_detail():
 
 @app.route('/mobile/share_storage_for_detail')
 def mobile_share_storage_for_detail():
-    return render_template('mobile/share_storage_for_detail.html')
+    areas = SalesAreaHierarchy.query.filter_by(level_grade=3).all()
+    return render_template('mobile/share_storage_for_detail.html', areas=areas)
 
 
 @app.route('/mobile/share_storage_for_upload')
@@ -463,11 +464,16 @@ def project_report_show(id):
     return render_template('mobile/project_report_show.html', project_report=project_report)
 
 
-@app.route('/mobile/share_index', methods=['GET'])
-def stocks_share():
+@app.route('/mobile/share_index/<int:area_id>', methods=['GET'])
+def stocks_share(area_id):
     categories = load_categories()
-    user = current_user
-    return render_template('mobile/share_index.html', categories=categories, user=user)
+    area = SalesAreaHierarchy.query.get_or_404(area_id)
+    users = area.users.all()
+    for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
+        users.extend(sarea.users.all())
+        for ssarea in SalesAreaHierarchy.query.filter_by(parent_id=sarea.id).all():
+            users.extend(ssarea.users.all())
+    return render_template('mobile/share_index.html', categories=categories, users=users)
 
 
 @app.route('/mobile/upload_share_index', methods=['GET'])
