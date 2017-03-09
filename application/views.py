@@ -516,6 +516,7 @@ def new_share_inventory(id):
 # --- mobile user---
 @app.route('/mobile/user/login', methods=['GET', 'POST'])
 def mobile_user_login():
+    app.logger.info("into mobile_user_login [%s] , [%s]" % (request.method , current_user.is_authenticated)
     if current_user.is_authenticated:
         if current_user.user_or_origin==2:
             return redirect(url_for('mobile_index'))
