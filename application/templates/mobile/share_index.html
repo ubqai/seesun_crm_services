@@ -11,6 +11,7 @@
 			<p class="text-content text-sm left-gap-1">联系人：{{ user.nickname }}</p>
 			<p class="text-content text-sm left-gap-1 bot-gap-1">Email：{{ user.email }}</p>
 		</div>
+<<<<<<< HEAD
 		
 		{% for category in categories %}
 				{% with products_json = load_products(category.get('category_id')) %}
@@ -47,8 +48,7 @@
 																									<p class="set-2">批次号 :<span class="text-dark inline-display">{{ batch.get('batch_no') }}</span></p>
 																								</div>
 																								<div class="wrapper-row">
-																									<p class="set-2">库存量 :<span class="text-dark inline-display"> {{ batch.get('stocks') }}</span></p>
-																									<p class="set-2">共享库存量 :<span class="text-dark inline-display">{{ 0 if batch.get('share_stocks') == None else batch.get('share_stocks') }}</span></p>
+																									<p class="set-1">库存量 :<span class="text-dark inline-display"> {{ batch.get('stocks') }}</span></p>																								
 																								</div>
 																							</div>
 																						</div>
@@ -63,7 +63,6 @@
 						{% endif %}
 				{% endwith %}
 		{% endfor %}
-		
 	</div>
 
 </div>

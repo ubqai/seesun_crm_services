@@ -124,33 +124,35 @@
 									<span>需授权公司名称:</span>
 									<span>{{ project_report.report_content.get('authorize_company_name') }}</span>
 								</div>
-								<div class="sub-form-item">
-									<span>销售代表:</span>
-									<span>{{ project_report.report_content.get('sales_representative') }}</span>
-								</div>
-            </div>
+
+                    </div>
 						<div class="form-item">
+                                <div class="sub-form-item">
+									<span>销售代表:</span>
+									<span>{{ project_report.audit_content.get('sales_representative') }}</span>
+								</div>
 								<div class="sub-form-item">
 									<span>销售主管:</span>
-									<span>{{ project_report.report_content.get('sales_executive') }}</span>
+									<span>{{ project_report.audit_content.get('sales_executive') }}</span>
 								</div>
 								<div class="sub-form-item">
 									<span>销售总监:</span>
-									<span>{{ project_report.report_content.get('sales_director') }}</span>
+									<span>{{ project_report.audit_content.get('sales_director') }}</span>
 								</div>
-								<div class="sub-form-item">
-									<span>是否开具授权:</span>
-									<span>{{ project_report.report_content.get('is_authorized') }}</span>
-								</div>
+
             </div>
 						<div class="form-item">
-								<div class="sub-form-item">
-									<span>授权书日期:</span>
-									<span>{{ project_report.report_content.get('authorization_date') }}</span>
+                                <div class="sub-form-item">
+									<span>是否开具授权:</span>
+									<span>{{ project_report.audit_content.get('is_authorized') }}</span>
 								</div>
 								<div class="sub-form-item">
-									<span>需授权授权书编号公司名称:</span>
-									<span>{{ project_report.report_content.get('authorization_no') }}</span>
+									<span>授权书日期:</span>
+									<span>{{ project_report.audit_content.get('authorization_date') }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>需授权授权书编号:</span>
+									<span>{{ project_report.audit_content.get('authorization_no') }}</span>
 								</div>
             </div>
         </div>

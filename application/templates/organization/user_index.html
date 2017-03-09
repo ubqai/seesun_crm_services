@@ -17,28 +17,34 @@
 	    <div class="form-style form-default">
 	        <div class="form-item-2 col-3">
 	            <span>用户类型</span>
-	            {{ form.user_type(class="form-control datetimePicker",id="select_user_type") }}
+	            {{ form.user_type(class="form-input form-control",id="select_user_type") }}
 	        </div>
 	        <div class="form-item-2 col-3">
 	            <span>email</span>
-	            {{ form.email(class="form-control datetimePicker",placeholder="请输入email") }}
+	            {{ form.email(class="form-input form-control",placeholder="请输入email") }}
 	        </div>
 	        <div class="form-item-2 col-3">
 	            <span>姓名</span>
-	            {{ form.name(class="form-control datetimePicker",placeholder="请输入姓名") }}
+	            {{ form.name(class="form-input form-control",placeholder="请输入姓名") }}
 	        </div>
 	        <div class="form-item-2 col-3" id="search_user_dept_ranges">
 	            <span style="vertical-align:middle">所属部门</span>
-	            {{ form.dept_ranges(class="form-control datetimePicker") }}
+	            {{ form.dept_ranges(class="form-input form-control") }}
+	        </div>
+	        <div class="form-item-2 col-3" id="search_user_sale_range_province" style="display:none">
+	            <span>销售范围(省)</span>
+	            {{ form.sale_range_province(class="form-input form-control",id="select_sale_range_province") }}
 	        </div>
 	        <div class="form-item-2 col-3" id="search_user_sale_range" style="display:none">
 	            <span>销售范围</span>
-	            {{ form.sale_range(class="form-control datetimePicker") }}
+	            {{ form.sale_range(class="form-input form-control",id="select_sale_range") }}
 	        </div>
+	        
 	        <div class="text-right top-gap-2 right-gap-3">
 	            <button class="btn btn-default my-btn">筛选条件</button>
 	        </div>
 	    </div>
+	    <div id="loading" style="display:none">加载中,请稍候</div>
 	</form>
 
    <div class="widget" style="margin-top: 100px;">

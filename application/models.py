@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 import datetime
-from . import db
+from . import db,login_manager,bcrypt
 
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.filter_by(id=int(user_id)).first()
 
 class Rails(object):
     @property
@@ -187,21 +191,44 @@ class DesignApplication(db.Model, Rails):
 class TrackingInfo(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(50))
-    contract_no = db.Column(db.String(50))
+    contract_no   = db.Column(db.String(50))
     contract_date = db.Column(db.DateTime)
     receiver_name = db.Column(db.String(200))
-    receiver_tel = db.Column(db.String(30))
-    production_date = db.Column(db.DateTime)
-    delivery_date = db.Column(db.DateTime)
+    receiver_tel  = db.Column(db.String(30))
+    production_date      = db.Column(db.DateTime)
+    production_manager   = db.Column(db.String(200))
+    production_starts_at = db.Column(db.DateTime)
+    production_ends_at   = db.Column(db.DateTime)
+    delivery_date     = db.Column(db.DateTime)
+    logistics_company = db.Column(db.String(200))
     delivery_plate_no = db.Column(db.String(100))
-    delivery_man_tel = db.Column(db.String(30))
+    delivery_man_name = db.Column(db.String(200))
+    delivery_man_tel  = db.Column(db.String(30))
+    qrcode_token = db.Column(db.String(128))
+    qrcode_image = db.Column(db.String(200))
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     details = db.relationship('TrackingInfoDetail', backref='tracking_info', lazy='dynamic')
 
     def __repr__(self):
         return 'TrackingInfo(id: %s, contract_no: %s,...)' % (self.id, self.contract_no)
-
+    @property
+    def production_status(self):
+        if self.production_date:
+            if self.production_date < datetime.datetime.now():
+                return '已生产'
+        return '未生产'
+    @property
+    def delivery_status(self):
+        if self.delivery_date:
+            if self.delivery_date < datetime.datetime.now():
+                return '已发货'
+        return '未发货'
+    @property
+    def qrcode_image_path(self):
+        if self.qrcode_image:
+            return '/static/upload/qrcode/%s' % self.qrcode_image
+        return ''
 
 class TrackingInfoDetail(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
@@ -246,6 +273,20 @@ class Contract(db.Model):
         return 'Contract(id: %s, contract_no: %s, contract_date: %s, order_id: %s, contract_status: %s, product_status: %s, shipment_status: %s, ...)' % (
             self.id, self.contract_no, self.contract_date, self.order_id, self.contract_status, self.product_status, self.shipment_status)
 
+    @property
+    def production_status(self):
+        tracking_info = TrackingInfo.query.filter_by(contract_no = self.contract_no).first()
+        if tracking_info:
+            return tracking_info.production_status
+        return '未生产'
+
+    @property
+    def delivery_status(self):
+        tracking_info = TrackingInfo.query.filter_by(contract_no = self.contract_no).first()
+        if tracking_info:
+            return tracking_info.delivery_status
+        return '未发货'
+
 
 class OrderContent(db.Model, Rails):
     __tablename__ = 'order_contents'
@@ -289,7 +330,8 @@ users_and_departments = db.Table(
 class User(db.Model, Rails):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(60), nullable=False)
+    password_hash = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(60), nullable=False, unique=True)
     nickname = db.Column(db.String(200))
     user_or_origin = db.Column(db.Integer)
     user_infos = db.relationship('UserInfo', backref='user')
@@ -302,6 +344,46 @@ class User(db.Model, Rails):
                                   backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
     departments = db.relationship('DepartmentHierarchy', secondary=users_and_departments,
                                   backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
+    #用户的对象是否可认证 , 因为某些原因不允许被认证
+    def is_authenticated(self):
+        return True
+    #用户的对象是否有效 , 账号被禁止
+    def is_active(self):
+        if self.user_or_origin==3 and self.departments.count()==0:
+            return False
+        return True
+    #为那些不被获准登录的用户返回True
+    def is_anonymous(self):
+        return False
+    #为用户返回唯一的unicode标识符
+    def get_id(self):
+        return str(self.id).encode("utf-8")
+
+    @property
+    def password(self):
+        return self.password_hash
+
+    @password.setter
+    def password(self,value):
+        self.password_hash=bcrypt.generate_password_hash(value).decode('utf-8')
+
+    @classmethod
+    def login_verification(cls,email,password,user_or_origin):
+        user=User.query.filter_by(email=email).first()
+        if user!=None:
+            if not bcrypt.check_password_hash(user.password, password):
+                user=None
+
+        return user
+
+    def get_max_level_grade(self):
+        max_level_grade=99
+        for d in self.departments:
+            if max_level_grade>d.level_grade:
+                max_level_grade=d.level_grade
+
+        return max_level_grade
+    
 
 class UserInfo(db.Model):
     __tablename__ = 'user_infos'
@@ -326,6 +408,8 @@ class SalesAreaHierarchy(db.Model):
     name = db.Column(db.String(300), nullable=False)
     parent_id = db.Column(db.Integer)
     level_grade = db.Column(db.Integer)
+    def __repr__(self):
+            return 'SalesAreaHierarchy %r' % self.name
 
 
 class DepartmentHierarchy(db.Model):
@@ -351,5 +435,3 @@ class ProjectReport(db.Model):
     @property
     def app_name(self):
         return User.query.get_or_404(self.app_id).nickname
-
-

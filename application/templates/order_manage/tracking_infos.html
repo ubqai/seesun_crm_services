@@ -2,7 +2,7 @@
 {% from 'macros/pc_partial.html' import sidebar %}
 {% block main_content %}
 
-{{ sidebar(active = 'sale') }}
+{{ sidebar(active = 'service') }}
 <div class="contents">
     <div class="contents-header">
         <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
@@ -57,6 +57,7 @@
                         <th>合同日期</th>
                         <th>对接人姓名</th>
                         <th>对接人电话</th>
+                        <th>生产状态</th>
                         <th>物流状态</th>
                         <th></th>
                     </tr>
@@ -68,8 +69,9 @@
                         <td>{{ info.contract_date.strftime('%F') }}</td>
                         <td>{{ info.receiver_name }}</td>
                         <td>{{ info.receiver_tel }}</td>
-                        <td>{{ info.status }}</td>
-                        <td><a href="{{ url_for('order_manage.tracking_info_edit', id = info.id) }}">仓库输入</a></td>
+                        <td>{{ info.production_status }}</td>
+                        <td>{{ info.delivery_status }}</td>
+                        <td><a href="{{ url_for('order_manage.tracking_info_edit', id = info.id) }}">更新</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>

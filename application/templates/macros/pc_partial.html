@@ -7,7 +7,6 @@
 					<a><i class="glyphicon glyphicon-comment"></i><span>经销商视图</span><span class="dcjq-icon"></span></a>
 					<ul class="sub">
 						<li><a>经销商列表管理</a></li>
-                        <li><a href="{{ url_for('inventory.share_index') }}">库存共享</a></li>
 					</ul>
 				</li>
 				<li class="sub-menu {% if active == 'sale' %}active{% endif %}">
@@ -15,7 +14,6 @@
 					<ul class="sub">
 						<li><a href="{{ url_for('order_manage.order_index') }}">订单列表</a></li>
 						<li><a href="{{ url_for('order_manage.contract_index') }}">合同列表</a></li>
-						<li><a href="{{ url_for('order_manage.tracking_infos') }}">物流状态列表</a></li>
 						<li>
 							<a>工作流与审批<span class="dcjq-icon"></span></a>
 							<ul class="t-sub">
@@ -48,6 +46,7 @@
 					<a><i class="glyphicon glyphicon-phone-alt"></i><span>售后服务</span><span class="dcjq-icon"></span></a>
 					<ul class="sub">
 						<li><a>生产合同列表</a></li>
+						<li><a href="{{ url_for('order_manage.tracking_infos') }}">物流状态列表</a></li>
 					</ul>
 				</li>
 				<li class="{% if active == 'statistics' %}active{% endif %}">

@@ -56,7 +56,7 @@ def new(id):
 
 @inventory.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
-    inventory = load_inventory(id)
+    inv = load_inventory(id)
     from_path = request.args.get('from')
     if request.method == 'POST':
         production_date = request.form.get('production_date')
@@ -65,19 +65,12 @@ def edit(id):
         stocks = request.form.get('stocks')
         if stocks is None or stocks == '':
             flash('库存数量不能为空', 'danger')
-            return render_template('inventory/edit.html', id=id, inventory=inventory)
+            return render_template('inventory/edit.html', id=id, inventory=inv)
         elif int(stocks) < 1:
             flash('库存数量不能小于1', 'danger')
-            return render_template('inventory/edit.html', id=id, inventory=inventory)
-        share_stocks = request.form.get('share_stocks')
-        current_app.logger.info(share_stocks)
-        if share_stocks is None or share_stocks == '':
-            share_stocks = '0'
-        if int(share_stocks) < 0:
-            flash('共享库存数量不能小于0', 'danger')
-            return render_template('inventory/edit.html', id=id, inventory=inventory)
+            return render_template('inventory/edit.html', id=id, inventory=inv)
         data = {"production_date": production_date, "valid_until": valid_until, "batch_no": batch_no,
-                "stocks": str(int(stocks)), "share_stocks": str(int(share_stocks))}
+                "stocks": str(int(stocks))}
         response = update_inventory(id, data)
         if response.status_code == 200:
             flash('库存修改成功', 'success')
@@ -87,7 +80,7 @@ def edit(id):
             return redirect(url_for('inventory.index'))
         elif from_path == 'dealer':
             return redirect(url_for('inventory.share_index'))
-    return render_template('inventory/edit.html', id=id, inventory=inventory, from_path=from_path)
+    return render_template('inventory/edit.html', id=id, inventory=inv, from_path=from_path)
 
 
 @inventory.route('/<int:id>/delete', methods=['POST'])

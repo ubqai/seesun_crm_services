@@ -117,10 +117,46 @@ $(function(){
 		if ($(this).children('option:selected').val()==3) {
 			$(this).parent().parent().children('#search_user_dept_ranges').css("display", "")
 			$(this).parent().parent().children('#search_user_sale_range').css("display", "none")
+			$(this).parent().parent().children('#search_user_sale_range_province').css("display", "none")
 		}
 		else {
 			$(this).parent().parent().children('#search_user_dept_ranges').css("display", "none")
 			$(this).parent().parent().children('#search_user_sale_range').css("display", "")
+			$(this).parent().parent().children('#search_user_sale_range_province').css("display", "")
 		};
+	});
+
+	//organization.user 
+	$("#select_sale_range_province").change(function(){
+		var province_id=$(this).children('option:selected').val()
+		var level_grade=4
+		var data = {
+			"parent_id":province_id,
+		};
+		$.ajax({
+			type: 'GET',
+			url: '/organization/user/get_sale_range_by_parent/'+level_grade,
+			data: data, 
+			dataType: 'json', 
+			beforeSend:function(){
+				$("#loading").css("display", "");
+				$("#select_sale_range").attr("disabled","disabled");
+			},
+			success: function(json_array) { 
+				var json = eval(json_array);
+				$("#select_sale_range option").remove()
+				$("#select_sale_range").append("<option selected value='__None'></option>");
+				$.each(json, function (key,value) {
+					$("#select_sale_range").append("<option value='"+key+"'>"+value+"</option>");
+				}); 
+			},
+			error: function(xhr, type) {
+				alert("级联销售范围获取失败,请直接选择")
+			},
+			complete: function(xhr, type) {
+				$("#loading").css("display", "none");
+				$("#select_sale_range").removeAttr("disabled");
+			}
+		});
 	});
 })

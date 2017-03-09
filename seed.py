@@ -5,13 +5,18 @@ Execute this file will create a bunch of sample data for mobile application disp
 """
 from application.models import *
 
+if not SalesAreaHierarchy.query.filter_by(name='上海市').first():
+	sa = SalesAreaHierarchy(name='上海市')
+	db.session.add(sa)
+	db.session.commit()
+
 sales_area = SalesAreaHierarchy.query.filter_by(name='上海市').first()
 if not User.query.filter(User.email=='abc@hotmail.con').first():
-	user1 = User(email='abc@hotmail.con', nickname='普陀区经销商', user_or_origin=2)
+	user1 = User(email='abc@hotmail.con', nickname='普陀区经销商', user_or_origin=2, password_hash = '$2b$12$4FCkZd8nJohWa7MfqrHmIec7JVYe/oiHOR4q.8.dYWnN3ahdQViF2')
 	user1.sales_areas.append(sales_area)
 	user1.save
 if not User.query.filter(User.email=='bcd@hotmail.con').first():
-	user2 = User(email='bcd@hotmail.con', nickname='长宁区经销商', user_or_origin=2)
+	user2 = User(email='bcd@hotmail.con', nickname='长宁区经销商', user_or_origin=2, password_hash = '$2b$12$4FCkZd8nJohWa7MfqrHmIec7JVYe/oiHOR4q.8.dYWnN3ahdQViF2')
 	user2.sales_areas.append(sales_area)
 	user2.save
 
@@ -61,6 +66,10 @@ for dh_name in dh_array:
 		db.session.commit()
 
 
-
+if User.query.filter_by(email="admin@hotmail.com"):
+	u=User(email="admin@hotmail.com",nickname="admin",user_or_origin=3,password='1qaz@WSX')
+	dh=DepartmentHierarchy().query.filter_by(level_grade=1).first()
+	u.departments.append(dh)
+	u.save
 
 

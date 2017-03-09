@@ -35,6 +35,11 @@
                     {{ form.nickname(class = 'form-input form-control',placeholder="请输入昵称") }}
                     {{ render_form_field_error(form.nickname) }}
                 </div>
+                
+                 <div class="form-item-2 col-3" style="display:none">
+                    <input type="password" class="form-input form-control" id="password" name="password" value="valid_password">
+                    <input type="password" class="form-input form-control" id="password_confirm" name="password_confirm"  value="valid_password">
+                </div>
 
                  <div class="form-item-2 col-3">
                     <span>* {{ form.address.label }}</span>
@@ -54,11 +59,19 @@
                  <div class="form-item-2 col-3" id="search_user_dept_ranges">
                     <span style="vertical-align:middle">* {{ form.dept_ranges.label }}</span>
                     {{ form.dept_ranges(class = 'form-input form-control') }}
+                    {% for dh_default in form.dept_ranges.default %}
+                        <input type="hidden" id="dept_ranges_hidden_{{dh_default.id}}" class="dept_ranges_hidden" value="{{dh_default.id}}">
+                    {% endfor %}
                     {{ render_form_field_error(form.dept_ranges) }}
                 </div>
-                 <div class="form-item-2 col-3" id="search_user_sale_range" style="display:none">
+                <div class="form-item-2 col-3" id="search_user_sale_range_province" style="display:none">
+                    <span>{{ form.sale_range.label }}</span>
+                    {{ form.sale_range_province(class="form-input form-control",id="select_sale_range_province") }}
+                </div>
+                <div class="form-item-2 col-3" id="search_user_sale_range" style="display:none">
                     <span>* {{ form.sale_range.label }}</span>
-                    {{ form.sale_range(class = 'form-input form-control') }}
+                    {{ form.sale_range(class="form-input form-control",id="select_sale_range") }}
+                    <input type="hidden" id="sale_range_hidden" class="sale_range_hidden" value="{{form.sale_range.default}}">
                     {{ render_form_field_error(form.sale_range) }}
                 </div>
 
@@ -68,12 +81,22 @@
 
             </div>
         </div>
+        <div id="loading" style="display:none">加载中,请稍候</div>
     </form>
 </div>
 
 <script>
 $(function(){  
-	$("#select_user_type").change()
+    $("#select_user_type").change()
+
+    var sale_range_hidden=document.getElementById("sale_range_hidden").value;
+    if (sale_range_hidden!="None"){
+        $("#select_sale_range option[value="+sale_range_hidden+"]").attr("selected","selected"); 
+    }
+
+    $(".dept_ranges_hidden").each(function(index){
+        $("#dept_ranges option[value="+this.value+"]").attr("selected","selected"); 
+    });
 });
 </script>
 
