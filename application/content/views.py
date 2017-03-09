@@ -19,7 +19,7 @@ def root():
 def index(category_id):
     category = ContentCategory.query.get_or_404(category_id)
     contents = Content.query.filter(Content.category_id == category_id).order_by(Content.created_at.desc())
-    return object_list('content/index.html', contents, paginate_by = 2, category = category)
+    return object_list('content/index.html', contents, paginate_by = 30, category = category)
 
 @content.route('/new/<int:category_id>', methods = ['GET', 'POST'])
 def new(category_id):
