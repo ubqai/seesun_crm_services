@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, SelectField, SelectMultipleField,PasswordField,validators
+from wtforms import Form, StringField, TextAreaField,SelectField, SelectMultipleField,PasswordField,validators
 from wtforms.ext.sqlalchemy.fields import QuerySelectField,QuerySelectMultipleField
 from ..models import *
 from flask_login import *
@@ -64,7 +64,7 @@ class UserForm(BaseForm):
         validators.EqualTo('password_confirm', message="两次输入密码不匹配")
     ])
     password_confirm = PasswordField('re_password')
-    address = StringField('address',[validators.Length(min=5,max=300,message="字段长度必须大等于5小等于300")])
+    address = TextAreaField('address',[validators.Length(min=5,max=300,message="字段长度必须大等于5小等于300")])
     #电话匹配规则 11位手机 or 3-4区号(可选)+7-8位固话+1-6分机号(可选)
     phone = StringField('phone',[validators.Regexp(r'(^\d{11})$|(^(\d{3,4}-)?\d{7,8}(-\d{1,5})?$)',message="请输入正确格式的电话")])
     title = StringField('title')

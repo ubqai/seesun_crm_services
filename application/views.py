@@ -9,6 +9,7 @@ from .inventory.api import create_inventory
 from .helpers import save_upload_file
 from flask_login import *
 from .organization.forms import UserLoginForm
+from .forms import *
 
 
 @app.route('/mobile/index')
@@ -535,3 +536,27 @@ def mobile_user_login():
         form = UserLoginForm()
 
     return render_template('mobile/user_login.html',form=form)
+
+@app.route('/mobile/user/info/<int:user_id>')
+def mobile_user_info(user_id):
+    u=User.query.filter_by(id=user_id).first()
+    if u==None:
+        return redirect(url_for('mobile_index'))
+
+    form = UserInfoForm(obj=u,user_type=u.user_or_origin)
+
+    if len(u.user_infos)==0:
+        pass
+    else:
+        ui=u.user_infos[0]
+        form.name.data=ui.name
+        form.address.data=ui.address
+        form.phone.data=ui.telephone
+        form.title.data=ui.title
+
+    if u.sales_areas.first()!=None:
+        form.sale_range.data=u.sales_areas.first().name
+    if u.departments.first()!=None:
+        form.dept_ranges.data=",".join([d.name for d in u.departmets.all()])
+
+    return render_template('mobile/user_info.html',form=form)
