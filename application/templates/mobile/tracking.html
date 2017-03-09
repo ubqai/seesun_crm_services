@@ -6,7 +6,12 @@
 <div class="main-content">
 	<div class="wrappper top-gap-3">
 		<form action="{{ url_for('mobile_tracking') }}" method="post">
-			<input name="contract_no" class="form-control" placeholder="请输入合同号">
+			<select name="contract_no" id="contract_no" class="form-control">
+					<option value="">请选择合同号</option>
+				{% for tracking_info in tracking_infos %}
+					<option value="{{ tracking_info.contract_no }}">{{ tracking_info.contract_no }}</option>
+				{% endfor %}
+			</select>
 			<input name="receiver_tel" class="form-control top-gap-3" placeholder="请输入手机号码">
 			<input value="查询" type="submit" class="btn btn-block btn-warning top-gap-3">
 		</form>
