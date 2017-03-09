@@ -212,21 +212,23 @@ class TrackingInfo(db.Model, Rails):
 
     def __repr__(self):
         return 'TrackingInfo(id: %s, contract_no: %s,...)' % (self.id, self.contract_no)
-
     @property
     def production_status(self):
         if self.production_date:
             if self.production_date < datetime.datetime.now():
                 return '已生产'
         return '未生产'
-
     @property
     def delivery_status(self):
         if self.delivery_date:
             if self.delivery_date < datetime.datetime.now():
                 return '已发货'
         return '未发货'
-
+    @property
+    def qrcode_image_path(self):
+        if self.qrcode_image:
+            return '/static/upload/qrcode/%s' % self.qrcode_image
+        return ''
 
 class TrackingInfoDetail(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
@@ -270,6 +272,20 @@ class Contract(db.Model):
     def __repr__(self):
         return 'Contract(id: %s, contract_no: %s, contract_date: %s, order_id: %s, contract_status: %s, product_status: %s, shipment_status: %s, ...)' % (
             self.id, self.contract_no, self.contract_date, self.order_id, self.contract_status, self.product_status, self.shipment_status)
+
+    @property
+    def production_status(self):
+        tracking_info = TrackingInfo.query.filter_by(contract_no = self.contract_no).first()
+        if tracking_info:
+            return tracking_info.production_status
+        return '未生产'
+
+    @property
+    def delivery_status(self):
+        tracking_info = TrackingInfo.query.filter_by(contract_no = self.contract_no).first()
+        if tracking_info:
+            return tracking_info.delivery_status
+        return '未发货'
 
 
 class OrderContent(db.Model, Rails):
@@ -351,7 +367,7 @@ class User(db.Model, Rails):
 
     @classmethod
     def login_verification(cls,email,password,user_or_origin):
-        user=User.query.filter_by(email=email,user_or_origin=user_or_origin).first()
+        user=User.query.filter_by(email=email).first()
         if user!=None:
             if not bcrypt.check_password_hash(user.password, password):
                 user=None

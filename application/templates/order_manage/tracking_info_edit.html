@@ -42,22 +42,37 @@
 
             <div class="widget_contents padding-0 item-wrapper">
                 <div class="form-item item-template">
-                    <div class="form-item-2 col-3">
+                <div style="width: 66%;">
+                    <div class="form-item-2 col-3" style="width: 50%;">
                         <span>{{ form.production_date.label }}</span>
                         {{ form.production_date(class = 'form-input form-control') }}
                     </div>
-                    <div class="form-item-2 col-3">
+                    <div class="form-item-2 col-3" style="width: 50%;">
                         <span>{{ form.production_manager.label }}</span>
                         {{ form.production_manager(class = 'form-input form-control') }}
                     </div>
-                    <div class="form-item-2 col-3">
+                    <div class="form-item-2 col-3" style="width: 50%;">
                         <span>{{ form.production_starts_at.label }}</span>
                         {{ form.production_starts_at(class = 'form-input form-control') }}
                     </div>
-                    <div class="form-item-2 col-3">
+                    <div class="form-item-2 col-3" style="width: 50%;">
                         <span>{{ form.production_ends_at.label }}</span>
                         {{ form.production_ends_at(class = 'form-input form-control') }}
+                    </div> 
+                </div>
+
+                <div style="width: 33%; display: inline;">
+                    <div class="form-item-2">
+                    {% if tracking_info.qrcode_image %}
+                        <a href="{{ url_for('order_manage.tracking_info_qrcode', id = tracking_info.id) }}">
+                            <img src="{{ tracking_info.qrcode_image_path }}">
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('order_manage.tracking_info_generate_qrcode', id = tracking_info.id) }}" class="btn btn-info">生成二维码</a>
+                    {% endif %}
                     </div>
+                </div>
+
                 </div>
             </div>
         </div>

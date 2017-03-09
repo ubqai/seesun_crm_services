@@ -75,8 +75,8 @@
                             <td>{{ contract.order.user.sales_areas.all()[0].name }}</td>
                             <td>{{ contract.order.user.nickname }}</td>
                             <td><span class="text-warning">{{ contract.contract_status }}</span></td>
-                            <td><span class="text-warning">{{ contract.product_status }}</span></td>
-                            <td><span class="text-warning">{{ contract.shipment_status }}</span></td>
+                            <td><span class="text-warning">{{ contract.production_status }}</span></td>
+                            <td><span class="text-warning">{{ contract.delivery_status }}</span></td>
                             <td><a class="new-one" href="{{ url_for('order_manage.contract_offer', id=contract.id) }}">查看订货要约</a></td>
                             <td>
                             {% if contract.shipment_status == '未出库' %}

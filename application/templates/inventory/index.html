@@ -20,8 +20,9 @@
 					<tr>
 						<th width="15%">产品目录</th>
 						<th width="15%">产品</th>
-						<th width="35%">Sku</th>
+						<th width="25%">Sku</th>
 						<th width="10%">库存</th>
+                        <th width="10%">已下单数量</th>
 						<th width="25%">操作</th>
 					</tr>
 				</thead>
@@ -29,7 +30,7 @@
 				{% for category in categories %}
 					<tr>
 						<td>{{ category.get('category_name') }}</td>
-						<td colspan="4">
+						<td colspan="5">
                             {% with products_json = load_products(category.get('category_id')) %}
                                 {% if len(products_json) > 0 %}
                                     <table class="tables noPadding condensed">
@@ -43,27 +44,29 @@
                                             {% for product_json in products_json %}
                                                 <tr>
                                                     <td style="width:17.64%">{{ product_json.get('name') }}</td>
-                                                    <td colspan="3">{% with skus_json = load_skus(product_json.get('product_id')) %}
+                                                    <td colspan="4">{% with skus_json = load_skus(product_json.get('product_id')) %}
                                                             {% if len(skus_json.get('skus')) > 0 %}
                                                                 <table class="tables noPadding condensed">
                                                                     <thead class="hidden">
                                                                         <tr>
                                                                             <th width="40%">Sku</th>
-                                                                            <th width="15%">库存</th>
+                                                                            <th width="10%">库存</th>
+                                                                            <th width="10%">已下单数量</th>
                                                                             <th>操作</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
                                                                         {% for sku in skus_json.get('skus') %}
                                                                             <tr>
-                                                                                <td style="width:50.17%">
+                                                                                <td style="width:36%">
                                                                                     {% for option in sku.get('options') %}
                                                                                         {% for key, value in option.items() %}
                                                                                             {{ value }}
                                                                                         {% endfor %}
                                                                                     {% endfor %}
                                                                                 </td>
-                                                                                <td style="width:14.4%">{{ sku.get('stocks') }}</td>
+                                                                                <td style="width:14%">{{ sku.get('stocks') }}</td>
+                                                                                <td style="width:14%">{{ sku.get('stocks_for_order') }}</td>
                                                                                 <td style="">
                                                                                     <a class="table-edit text-info" href="{{ url_for('inventory.list_invs', id = sku.get('sku_id')) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;查看详情</a>
                                                                                     <a href="{{ url_for('inventory.new', id = sku.get('sku_id')) }}" class="table-del text-success"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;新增库存</a>
