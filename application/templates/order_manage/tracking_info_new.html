@@ -31,6 +31,71 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="widget">
+            <div class="widget_header">
+                <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;选择库存及填写生产数量</h4>
+            </div>
+            <div class="widget_contents padding-0 bot-gap-3">
+                <div class="form-item inline-2">
+                    {% for order_content in contract.order.order_contents %}
+                        <div class="form-item">
+                            <div class="sub-form-item">
+                                <span>产品名--SKU:</span>
+                                <span>{{ order_content.product_name }}:{{ order_content.sku_specification }}</span>
+                            </div>
+                            <div class="sub-form-item">
+                                <span>订单数量:</span>
+                                <span>{{ order_content.number }}</span>
+                            </div>
+                            <div class="sub-form-item">
+                                <span>需生产数量:</span>
+                                <span><input class="form-control" name="{{ order_content.sku_code }}_production_num"></span>
+                            </div>
+                        </div>
+                        <div class="widget_contents padding-0">
+                            <table class="tables">
+                                <thead>
+                                    <tr>
+                                        <th>经销商</th>
+                                        <th>库存量</th>
+                                        <th>批次号</th>
+                                        <th>创建日期</th>
+                                        <th>生产日期</th>
+                                        <th>库存量</th>
+                                        <th>填写库存</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for inv in load_inventories_by_code(order_content.sku_code) %}
+                                    {% for i in range(1,(inv.get("batches")|length+1)) %}
+                                        <tr>
+                                            {% if i==1 %}
+                                                <td rowspan={{inv.get("batches")|length}}>{{ inv.get('user_name') }}</td>
+                                                <td rowspan={{inv.get("batches")|length}}>{{ inv.get('total') }}</td>
+                                            {% endif %}
+                                            <td>{{ inv.get("batches")[i-1].get('batch_no') }}</td>
+                                            <td>{{ inv.get("batches")[i-1].get('created_at') }}</td>
+                                            <td>{{ inv.get("batches")[i-1].get('production_date') }}</td>
+                                            <td>{{ inv.get("batches")[i-1].get('stocks') }}</td>
+                                            <td><input class="form-control" name="{{ order_content.sku_code }}_{{ inv.get("batches")[i-1].get('inv_id') }}_num"></td>
+                                            <input type="hidden" name="{{ order_content.sku_code }}_{{ inv.get("batches")[i-1].get('inv_id') }}_username" value="{{ inv.get('user_name') }}">
+                                            <input type="hidden" name="{{ order_content.sku_code }}_{{ inv.get("batches")[i-1].get('inv_id') }}_batch_no" value="{{ inv.get("batches")[i-1].get('batch_no') }}">
+                                            <input type="hidden" name="{{ order_content.sku_code }}_{{ inv.get("batches")[i-1].get('inv_id') }}_production_date" value="{{ inv.get("batches")[i-1].get('production_date') }}">
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+
+
         <div class="text-right top-gap-1">
             <button type="submit" class="btn btn-default my-btn">提交</button>
         </div>
