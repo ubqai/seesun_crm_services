@@ -63,7 +63,9 @@
 		<div class="text">
 			<p class="text-title">产品描述</p>
 		</div>
- 		{{ product.get('description')|safe }}
+		<div class="ck-wrapper">
+			{{ product.get('description')|safe }}
+		</div>
  	</div>
 	
 	<div class="wrapper">

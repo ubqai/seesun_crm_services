@@ -3,7 +3,8 @@ $(function(){
 	$(".my-nav").niceScroll({cursorwidth: '0',cursorborder: '0'});
 	$('#sidebar').metisMenu();
 })
-//to change the text as the file uploaded
+
+//预览图片
 function preview1(file,ele) {
 		var img = new Image(), url = img.src = URL.createObjectURL(file)
 		var $img = $(img);
@@ -13,7 +14,7 @@ function preview1(file,ele) {
 				ele.replaceWith($img);
 		}
 }
-	
+//绑定图片
 function pre_pic(elem){
 	elem.bind("change",function(e){
 		var file = e.target.files[0];
@@ -202,3 +203,4 @@ $(function(){
 		})
 	})
 })
+

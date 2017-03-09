@@ -94,6 +94,16 @@ td input{
   content: " ";
 	clear:both;
 }
+.ck-wrapper{
+	padding-left:20px;
+	padding-right:20px;
+}
+.ck-wrapper>p {
+    line-height: 1.8em;
+    letter-spacing: 0.75px;
+    font-size: 0.8em;
+    color: #666;
+}
 .text-indent-1{
 	text-indent:20px;
 }

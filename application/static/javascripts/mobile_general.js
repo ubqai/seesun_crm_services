@@ -96,3 +96,10 @@ $(function(){
 	});
 })
 
+//调整ckedit的图片大小
+$(function(){
+	$(".ck-wrapper").find("img").each(function(index,ele){
+		var max_width=$(".ck-wrapper>p").width(); 
+		$(ele).width()>max_width? $(ele).css("max-width","100%").css("height","auto"):"";
+	})
+})
