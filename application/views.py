@@ -523,7 +523,7 @@ def mobile_user_login():
     if request.method == 'POST':
         try:
             #不运行前后端同时登入在一个WEB上
-            if current_user.is_authenticated and current_user.user_or_origin!=3
+            if current_user.is_authenticated and current_user.user_or_origin!=3:
                 app.logger.info("后台用户[%s]自动登出" % (current_user.nickname))
                 logout_user()
 

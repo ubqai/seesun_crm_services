@@ -21,7 +21,7 @@ def user_login():
 
     if request.method == 'POST':
         try:
-            if current_user.is_authenticated and current_user.user_or_origin!=3
+            if current_user.is_authenticated and current_user.user_or_origin!=3:
                     app.logger.info("移动端用户[%s]自动登出" % (current_user.nickname))
                     logout_user()
 
