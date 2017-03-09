@@ -26,13 +26,12 @@ def get_dynamic_sale_range_query(level_grade,parent_id=None):
 
 def get_dynamic_dept_ranges_query():
     dhs = DepartmentHierarchy.query
-    if current_user==None:
-        max_depart_level = 99
-    else:
-        max_depart_level = current_user.get_max_level_grade()
+    if current_user==None or current_user.is_active==False or current_user.user_or_origin==2:
+        return dhs.order_by(DepartmentHierarchy.id).all()
+
+    max_depart_level = current_user.get_max_level_grade()
     dhs = dhs.filter(DepartmentHierarchy.level_grade>max_depart_level)
-    if not current_user==None:
-        dhs = dhs.union(current_user.departments)
+    dhs = dhs.union(current_user.departments)
 
     return dhs.order_by(DepartmentHierarchy.id).all()
 
