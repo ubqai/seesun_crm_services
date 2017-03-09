@@ -349,7 +349,7 @@ class User(db.Model, Rails):
         return True
     #用户的对象是否有效 , 账号被禁止
     def is_active(self):
-        if self.user_or_origin==3 and self.departments()==0:
+        if self.user_or_origin==3 and self.departments.count()==0:
             return False
         return True
     #为那些不被获准登录的用户返回True
