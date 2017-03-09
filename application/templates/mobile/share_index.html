@@ -22,7 +22,6 @@
                         <th>创建日期</th>
                         <th>生产日期</th>
                         <th>库存量</th>
-                        <th>共享库存量</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,9 +50,6 @@
                                                             <td>{{ batch.get('created_at') }}</td>
                                                             <td>{{ batch.get('production_date') }}</td>
                                                             <td>{{ batch.get('stocks') }}</td>
-                                                            <td>
-                                                                {{ 0 if batch.get('share_stocks') == None else batch.get('share_stocks') }}
-                                                            </td>
                                                         </tr>
                                                     {% endfor %}
                                                 {% endfor %}

@@ -42,6 +42,7 @@ app.add_template_global(load_products)
 app.add_template_global(load_skus)
 app.add_template_global(load_user_inventories)
 app.add_template_global(len)
+app.add_template_global(int)
 
 @app.before_first_request
 def setup_logging():
@@ -55,7 +56,6 @@ def setup_logging():
 #单个使用@login_required
 @app.before_request
 def login_check():
-    app.logger.info("request.path [%s]" % (request.path))
     if request.path == "/organization/user/login":
         pass
     elif request.path.startswith("/mobile/"):

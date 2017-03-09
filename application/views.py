@@ -5,7 +5,9 @@ from flask import flash, redirect, render_template, request, url_for, session
 from . import app
 from .models import *
 from .product.api import *
+from .inventory.api import create_inventory
 from .helpers import save_upload_file
+from flask_login import current_user
 
 @app.route('/mobile/index')
 def mobile_index():
@@ -176,7 +178,7 @@ def mobile_create_order():
 def mobile_orders():
     if 'order' in session and session['order']:
         return redirect(url_for('mobile_cart'))
-    orders = Order.query.all()
+    orders = Order.query.filter_by(user_id=current_user.id).all()
     return render_template('mobile/orders.html', orders=orders)
 
 
@@ -430,7 +432,7 @@ def new_project_report():
                           "expected_authorization_date": request.form.get("expected_authorization_date"),
                           "authorize_company_name": request.form.get('authorize_company_name')}
         project_report = ProjectReport(
-            app_id=User.query.filter_by(user_or_origin=2).first().id,
+            app_id=current_user.id,
             status="新创建待审核",
             report_no="PR%s" % datetime.datetime.now().strftime('%y%m%d%H%M%S'),
             report_content=report_content
@@ -443,7 +445,7 @@ def new_project_report():
 
 @app.route('/mobile/project_report/index', methods=['GET'])
 def project_report_index():
-    project_reports = ProjectReport.query.all()
+    project_reports = ProjectReport.query.filter_by(app_id=current_user.id).all()
     return render_template('mobile/project_report_index.html', project_reports=project_reports)
 
 
@@ -456,5 +458,43 @@ def project_report_show(id):
 @app.route('/mobile/share_index', methods=['GET'])
 def stocks_share():
     categories = load_categories()
-    user = User.query.filter_by(user_or_origin=2, nickname='普陀区经销商').first()
+    user = current_user
     return render_template('mobile/share_index.html', categories=categories, user=user)
+
+
+@app.route('/mobile/upload_share_index', methods=['GET'])
+def upload_share_index():
+    categories = load_categories()
+    return render_template('mobile/upload_share_index.html', categories=categories)
+
+
+@app.route('/new_share_inventory/<int:id>', methods=['GET', 'POST'])
+def new_share_inventory(id):
+    if request.method == 'POST':
+        user_id = current_user.id
+        production_date = request.form.get('production_date')
+        batch_no = request.form.get('batch_no')
+        stocks = request.form.get('stocks')
+        inv_type = 2
+        user_name = current_user.nickname
+        if stocks is None:
+            flash('库存数量不能为空', 'danger')
+            return render_template('mobile/new_share_inventory.html', id=id)
+        elif int(stocks) < 1:
+            flash('库存数量不能小于1', 'danger')
+            return render_template('mobile/new_share_inventory.html', id=id)
+        data = {'inventory_infos': [{"sku_id": id, "inventory": [{"type": inv_type, "user_id": user_id,
+                                                                  "user_name": user_name,
+                                                                  "production_date": production_date,
+                                                                  "valid_until": production_date,
+                                                                  "batch_no": batch_no,
+                                                                  "stocks": stocks}]}]}
+        response = create_inventory(data)
+        if response.status_code == 201:
+            flash('库存共享成功', 'success')
+        else:
+            flash('库存共享失败', 'danger')
+        return redirect(url_for('stocks_share'))
+    return render_template('mobile/new_share_inventory.html', id=id)
+
+

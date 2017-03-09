@@ -3,7 +3,6 @@ import datetime
 from . import db,login_manager,bcrypt
 
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.filter_by(id=int(user_id)).first()
@@ -350,6 +349,8 @@ class User(db.Model, Rails):
         return True
     #用户的对象是否有效 , 账号被禁止
     def is_active(self):
+        if self.user_or_origin==3 and self.departments.count()==0:
+            return False
         return True
     #为那些不被获准登录的用户返回True
     def is_anonymous(self):
@@ -357,15 +358,31 @@ class User(db.Model, Rails):
     #为用户返回唯一的unicode标识符
     def get_id(self):
         return str(self.id).encode("utf-8")
+
+    @property
+    def password(self):
+        return self.password_hash
+
+    @password.setter
+    def password(self,value):
+        self.password_hash=bcrypt.generate_password_hash(value).decode('utf-8')
+
     @classmethod
     def login_verification(cls,email,password,user_or_origin):
-        user=User.query.filter_by(email=email,user_or_origin=user_or_origin).first()
+        user=User.query.filter_by(email=email).first()
         if user!=None:
-            if not bcrypt.check_password_hash(user.password_hash, password):
+            if not bcrypt.check_password_hash(user.password, password):
                 user=None
 
         return user
 
+    def get_max_level_grade(self):
+        max_level_grade=99
+        for d in self.departments:
+            if max_level_grade>d.level_grade:
+                max_level_grade=d.level_grade
+
+        return max_level_grade
     
 
 class UserInfo(db.Model):
@@ -391,6 +408,8 @@ class SalesAreaHierarchy(db.Model):
     name = db.Column(db.String(300), nullable=False)
     parent_id = db.Column(db.Integer)
     level_grade = db.Column(db.Integer)
+    def __repr__(self):
+            return 'SalesAreaHierarchy %r' % self.name
 
 
 class DepartmentHierarchy(db.Model):
@@ -416,5 +435,3 @@ class ProjectReport(db.Model):
     @property
     def app_name(self):
         return User.query.get_or_404(self.app_id).nickname
-
-
