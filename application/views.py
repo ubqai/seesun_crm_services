@@ -480,12 +480,15 @@ def project_report_show(id):
 @app.route('/mobile/share_index/<int:area_id>', methods=['GET'])
 def stocks_share(area_id):
     categories = load_categories()
-    area = SalesAreaHierarchy.query.get_or_404(area_id)
-    users = area.users.all()
-    for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
-        users.extend(sarea.users.all())
-        for ssarea in SalesAreaHierarchy.query.filter_by(parent_id=sarea.id).all():
-            users.extend(ssarea.users.all())
+    if area_id == 0:
+        users = [current_user]
+    else:
+        area = SalesAreaHierarchy.query.get_or_404(area_id)
+        users = area.users.all()
+        for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
+            users.extend(sarea.users.all())
+            for ssarea in SalesAreaHierarchy.query.filter_by(parent_id=sarea.id).all():
+                users.extend(ssarea.users.all())
     return render_template('mobile/share_index.html', categories=categories, users=users)
 
 
@@ -521,7 +524,7 @@ def new_share_inventory(id):
             flash('库存共享成功', 'success')
         else:
             flash('库存共享失败', 'danger')
-        return redirect(url_for('upload_share_index'))
+        return redirect(url_for('stocks_share', area_id=0))
     return render_template('mobile/new_share_inventory.html', id=id)
 
 
