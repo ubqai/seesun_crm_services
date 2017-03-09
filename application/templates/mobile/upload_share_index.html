@@ -6,52 +6,52 @@
 <div class="main-content">
 
 	<div class="wrapper">
-		<div class="table-responsive">
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>产品目录</th>
-						<th>产品</th>
-						<th>Sku</th>
-						<th>库存</th>
-                        <th>已下单数量</th>
-						<th>操作</th>
-					</tr>
-				</thead>
-				<tbody>
-				{% for category in categories %}
-                    {% with products_json = load_products(category.get('category_id')) %}
-                        {% if len(products_json) > 0 %}
-                            {% for product_json in products_json %}
-                                {% with skus_json = load_skus(product_json.get('product_id')) %}
-                                    {% if len(skus_json.get('skus')) > 0 %}
-                                        {% for sku in skus_json.get('skus') %}
-                                            <tr>
-                                                <td>{{ category.get('category_name') }}</td>
-                                                <td>{{ product_json.get('name') }}</td>
-                                                <td>
-                                                    {% for option in sku.get('options') %}
-                                                        {% for key, value in option.items() %}
-                                                            {{ value }}
-                                                        {% endfor %}
-                                                    {% endfor %}
-                                                </td>
-                                                <td>{{ sku.get('stocks') }}</td>
-                                                <td >{{ sku.get('stocks_for_order') }}</td>
-                                                <td>
-                                                    <a href="{{ url_for('new_share_inventory', id = sku.get('sku_id')) }}" class="table-del text-success"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;共享库存</a>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                            {% endfor %}
-                        {% endif %}
-                    {% endwith %}
-				{% endfor %}
-                </tbody>
-            </table>
-		</div>
+	
+	{% for category in categories %}
+						{% with products_json = load_products(category.get('category_id')) %}
+								{% if len(products_json) > 0 %}
+										{% for product_json in products_json %}
+												{% with skus_json = load_skus(product_json.get('product_id')) %}
+														{% if len(skus_json.get('skus')) > 0 %}
+																{% for sku in skus_json.get('skus') %}
+																<div class="wrapper-style rect top-gap-2">
+																	<div class="wrapper-header"><span class="wrapper-header-title">{{ category.get('category_name') }}</span><span class="wrapper-header-icon glyphicon glyphicon-shopping-cart pull-right"></span></div>
+																	<div class="wrapper-inner clearfix">
+																		<div class="wrapper-inner-img"><img class="full-img" src="/static/images/doc.png"></div>
+																		<div class="wrapper-inner-content clearfix">
+																			<div class="wrapper-row">
+																				<p class="set-1">产品 :<span class="text-gray inline-display">{{ product_json.get('name') }}</span></p>
+																			</div>
+																			<div class="wrapper-row">
+																				<p class="set-1">Sku :
+																					<span class="text-gray inline-display">
+																						{% for option in sku.get('options') %}
+																								{% for key, value in option.items() %}
+																										{{ value }}
+																								{% endfor %}
+																						{% endfor %}
+																					</span>
+																				</p>
+																			</div>
+																			<div class="wrapper-row">
+																				<p class="set-2">库存 :<span class="text-dark inline-display"><span class="glyphicon glyphicon-tint text-gray"></span> {{ sku.get('stocks') }}</span></p>
+																				<p class="set-2">已下单数量 :<span class="text-dark inline-display"><span class="glyphicon glyphicon-tint text-gray"></span> {{ sku.get('stocks_for_order') }}</span></p>
+																				
+																			</div>
+																		</div>
+																	</div>
+																	<div class="wrapper-footer text-right">
+																			<a href="{{ url_for('new_share_inventory', id = sku.get('sku_id')) }}" class="text-success"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;共享库存</a>
+																	</div>
+																</div>
+													{% endfor %}
+												{% endif %}
+										{% endwith %}
+								{% endfor %}
+						{% endif %}
+				{% endwith %}
+		{% endfor %}
+			
 	</div>
 </div>
 

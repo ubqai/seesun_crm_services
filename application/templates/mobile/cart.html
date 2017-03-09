@@ -10,22 +10,34 @@
 				<a href="{{ url_for('mobile_created_orders') }}" class="btn btn-style-1 text-sm">订单列表</a>
 				<a href="{{ url_for('mobile_storage') }}" class="btn btn-style-1 text-sm">库存查询</a>
 			</div>
-			<p class="text-content text-sm">要约方(买方)：<input class="form-control" name="buyer"></p>
-			<div class="light-divider"></div>
-			<p class="text-content text-sm">收货单位：<input class="form-control" name="buyer_company"></p>
-			<div class="light-divider"></div>
-			<p class="text-content text-sm">收货地址：<input class="form-control" name="buyer_address"></p>
-			<div class="light-divider"></div>
-            <p class="text-content text-sm">企业名称：<input class="form-control" name="company_name"></p>
-			<div class="light-divider"></div>
-            <p class="text-content text-sm">项目地址：<input class="form-control" name="project_address"></p>
-			<div class="light-divider"></div>
-            <p class="text-content text-sm">联系电话：<input class="form-control" name="contact_phone"></p>
-			<div class="light-divider"></div>
-            <p class="text-content text-sm">联系姓名：<input class="form-control" name="contact_name"></p>
-			<div class="light-divider"></div>
-            <p class="text-content text-sm">备注：<input class="form-control" name="order_memo"></p>
-			<div class="light-divider"></div>
+			
+			<div class="wrapper-style top-gap-3">
+				<div class="wrapper-header"><span class="wrapper-header-title">FIRST STEP</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
+				<div class="wrapper-inner">
+					<p class="text-content text-sm"><input class="form-control" name="buyer" placeholder="要约方(买方)"></p>
+					<div class="light-divider"></div>
+					<p class="text-content text-sm"><input class="form-control" name="buyer_company" placeholder="收货单位"></p>
+					<div class="light-divider"></div>
+					<p class="text-content text-sm"><input class="form-control" name="buyer_address" placeholder="收货地址"></p>
+					<div class="light-divider"></div>
+					<p class="text-content text-sm"><input class="form-control" name="company_name" placeholder="企业名称"></p>
+					<div class="light-divider"></div>
+				</div>
+			</div>
+
+			<div class="wrapper-style top-gap-3">
+				<div class="wrapper-header"><span class="wrapper-header-title">SECOND STEP</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
+				<div class="wrapper-inner">
+            <p class="text-content text-sm"><input class="form-control" name="project_address" placeholder="项目地址"></p>
+						<div class="light-divider"></div>
+            <p class="text-content text-sm"><input class="form-control" name="contact_phone" placeholder="联系电话"></p>
+						<div class="light-divider"></div>
+            <p class="text-content text-sm"><input class="form-control" name="contact_name" placeholder="联系姓名"></p>
+						<div class="light-divider"></div>
+            <p class="text-content text-sm"><input class="form-control" name="order_memo" placeholder="备注："></p>
+						<div class="light-divider"></div>
+					</div>
+			</div>
 		</div>
 
 	
@@ -45,10 +57,10 @@
 							<p class="set-2">Number :<span class="text-dark inline-display"><span class="glyphicon glyphicon-tint text-gray"></span> {{ order_content.get('number') }}</span></p>
 							<p class="set-2">Square Num :<span class="text-dark inline-display"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ order_content.get('square_num') }}</span></p>
 						</div>
-                        <div class="wrapper-row">
-                            <a href="{{ url_for("cart_delete", sku_id=order_content.get('sku_id')) }}">删除</a>
-                        </div>
 					</div>
+				</div>
+				<div class="wrapper-footer text-right">
+						<a href="{{ url_for('cart_delete', sku_id=order_content.get('sku_id')) }}" class="text-danger"><span class="glyphicon glyphicon-remove"></span>删除</a>
 				</div>
 			</div>
 		{% endfor %}

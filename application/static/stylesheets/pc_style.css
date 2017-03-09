@@ -54,6 +54,26 @@
 .right-gap-3{
 	margin-right:20px !important;
 }
+.col-1{
+	width:100% !important;
+	float:left !important;
+}
+.col-2{
+	width:50% !important;
+	float:left !important;
+}
+.col-3{
+	width:33.3% !important;
+	float:left !important;
+}
+.col-4{
+	width:25% !important;
+	float:left !important;
+}
+.col-5{
+	width:20% !important;
+	float:left !important;
+}
 /*custom*/
 .left-gap-28{
 	margin-left:28px !important;
