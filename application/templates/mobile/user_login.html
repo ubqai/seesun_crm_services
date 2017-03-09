@@ -6,11 +6,15 @@
 <div class="main-content">
 	<div class="wrappper top-gap-3">
 		<form action="{{ url_for('mobile_user_login') }}" method="post">
-		                {{ form.email(class="form-control",placeholder="请输入email") }}
-		                {{ render_form_field_error(form.email) }}
-		                {{ form.password(class="form-control top-gap-3",placeholder="请输入密码") }}
-		                {{ render_form_field_error(form.password) }}
-		            <button type="submit" class="btn btn-block btn-warning top-gap-3">登入</button>
+			<div style="width:100%; position:relative">
+					{{ form.email(class="form-control",placeholder="请输入email") }}
+					{{ render_form_field_error(form.email) }}
+			</div>
+			<div style="width:100%; position:relative">
+					{{ form.password(class="form-control top-gap-3",placeholder="请输入密码") }}
+					{{ render_form_field_error(form.password) }}
+			</div>
+			<button type="submit" class="btn btn-block btn-warning top-gap-3">登入</button>
 		</form>
 	</div>
 </div>

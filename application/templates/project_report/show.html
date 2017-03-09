@@ -28,9 +28,15 @@
             </div>
         </div>
 				<div class="widget_header">
-            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;订单详情</h4>
+            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;详情列表</h4>
         </div>
+				
+				
         <div class="widget_contents padding-0 bot-gap-3">
+						<div class="title-style">
+							<span>DETAILS</span>
+							<i class="pull-right	glyphicon glyphicon-list-alt"></i>
+						</div>
             <div class="form-item">
 								<div class="sub-form-item">
 									<span>申请公司名称:</span>
@@ -73,6 +79,10 @@
 									<span>{{ project_report.report_content.get('product_place') }}</span>
 								</div>
             </div>
+						<div class="title-style">
+							<span>DETAILS</span>
+							<i class="pull-right	glyphicon glyphicon-list-alt"></i>
+						</div>
 						<div class="form-item">
 								<div class="sub-form-item">
 									<span>推荐产品系列:</span>
@@ -126,6 +136,10 @@
 								</div>
 
                     </div>
+						<div class="title-style">
+							<span>DETAILS</span>
+							<i class="pull-right	glyphicon glyphicon-list-alt"></i>
+						</div>
 						<div class="form-item">
                                 <div class="sub-form-item">
 									<span>销售代表:</span>
@@ -156,6 +170,8 @@
 								</div>
             </div>
         </div>
+				
+				
         {% if project_report.status=="新创建待审核" %}
             <div class="text-right top-gap-3">
                 <a class="btn btn-default my-btn right-gap-2" href="{{ url_for('project_report.audit', id=project_report.id) }}">填写审核信息</a>

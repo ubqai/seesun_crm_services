@@ -62,7 +62,9 @@
                             </td>
                             <td>
                                 {% if project_report.status == '新创建待审核' %}
-                                    <a href="{{ url_for('project_report.audit', id=project_report.id) }}" class="text-success">审核</a>
+                                    <a href="{{ url_for('project_report.audit', id=project_report.id) }}" class="text-danger">审核</a>
+																{% else %}
+																		<a class="text-success">已审核</a>
                                 {% endif %}
                             </td>
                         </tr>

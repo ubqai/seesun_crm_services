@@ -160,3 +160,10 @@ $(function(){
 		});
 	});
 })
+//datetimePicker
+$(function(){
+	$(".datetimePicker").datetimepicker({
+		timepicker:false,
+		format:'Y/m/d'
+	});
+})

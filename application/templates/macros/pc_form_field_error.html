@@ -1,9 +1,10 @@
 {% macro render_form_field_error(form_field) %}
 	{% if form_field.errors %}
-	    <ul class="render_form_field_error_errors">
-	    	{% for error in form_field.errors %}
-	    		<li>{{ error }}</li>
+			<div class="popover bottom">
+				<div class="arrow"></div>
+	    	{% for error in form_field.errors %}				
+					<h3 class="popover-title">{{ error }}</h3>
 	    	{% endfor %}
-	    </ul>
+	    </div>
 	{% endif %}
 {% endmacro %}
