@@ -1,0 +1,72 @@
+body{
+  background: url("/static/images/login_bgx.gif");
+}
+.my-main {
+	margin-left:0px;
+}
+#bm_login_page{
+    width: 403px;
+    margin: 0 auto;
+    height: 375px;
+    margin-top: 98px;
+}
+#bm_login_page>.login_title{
+	font-size:20px;
+	color:#999;
+	font-weight:700;
+}
+#bm_login_page>.login_border{
+    background: url(/static/images/login_m_bg.png) no-repeat;
+    height: 302px;
+    overflow: hidden;
+}
+#bm_login_page .login_panel{
+    padding: 28px 47px 20px 47px;
+}
+#bm_login_page .login_panel>h2{
+    color: #4f5d80;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: normal;
+    margin-bottom: 11px;
+}
+#bm_login_page .login_panel .form-control{
+    margin-bottom:20px;
+	background-color:rgb(247,247,247);
+	height:38px;
+}
+#bm_login_page .login_panel .forgot{
+    font-size: 11px;
+    text-align: right;
+    margin-bottom: 15px;
+}
+#bm_login_page .login_panel #iforget{
+    color: #8c8e91;
+}
+#bm_login_page .login_panel #iforget:hover{
+    color: #00b3ff;
+}
+#bm_login_page .login_panel .rem_me{
+    float: left;
+    font-size: 12px;
+    height: 33px;
+    line-height: 33px;
+}
+#bm_login_page .login_panel .rem_me>label{
+	font-weight:500;
+	color: #8c8e91;
+}
+#bm_login_page .login_panel input[type="submit"]{
+    float: right;
+    width: 122px;
+    height: 32px;
+    background-color:#0093dd;
+    border: none;
+    color: #FFF;
+    padding-bottom: 2px;
+    font-size: 14px;
+    font-weight: bold;
+}
+#bm_login_page .login_panel input[type="submit"]:hover{
+    background-color:#00b3ff;
+}

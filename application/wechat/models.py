@@ -179,7 +179,7 @@ class WechatCall:
     def createMenu(cls,is_test=TEST_MODE):
         print("createMenu is_test: %s" % (is_test))
         url="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s" % (WechatAccessToken.getTokenByType("access_token",is_test))
-        crm_services_url=HOOK_URL+"/mobile/index"
+        crm_services_url=HOOK_URL+"/mobile/user/login"
         headers = {'content-type': 'application/json'}
         post_params=json.dumps({
             "button":[
