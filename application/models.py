@@ -263,6 +263,7 @@ class Contract(db.Model):
     contract_no = db.Column(db.String(30), unique=True)
     contract_date = db.Column(db.DateTime, default=datetime.datetime.now)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
     contract_status = db.Column(db.String(50))
     product_status = db.Column(db.String(50))
@@ -335,7 +336,8 @@ class User(db.Model, Rails):
     nickname = db.Column(db.String(200))
     user_or_origin = db.Column(db.Integer)
     user_infos = db.relationship('UserInfo', backref='user')
-    orders = db.relationship('Order', backref='user')
+    orders = db.relationship('Order', backref='user', lazy='dynamic')
+    contracts = db.relationship('Contract', backref='user', lazy='dynamic')
     material_applications = db.relationship('MaterialApplication', backref='user', lazy='dynamic')
     design_applications = db.relationship('DesignApplication', backref='applicant', lazy='dynamic')
     resources = db.relationship('Resource', secondary=users_and_resources,

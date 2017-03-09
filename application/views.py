@@ -150,16 +150,10 @@ def mobile_create_order():
         buyer = request.args.get('buyer')
         buyer_company = request.args.get('buyer_company')
         buyer_address = request.args.get('buyer_address')
-        company_name = request.args.get('company_name')
-        project_address = request.args.get('project_address')
-        contact_phone = request.args.get('contact_phone')
-        contact_name = request.args.get('contact_name')
         order = Order(order_no=order_no, user=current_user, order_status='新订单',
                       order_memo=' ',
                       buyer_info={"buyer": buyer, "buyer_company": buyer_company,
-                                  "buyer_address": buyer_address, "contact_phone": contact_phone,
-                                  "contact_name": contact_name, "company_name": company_name,
-                                  "project_address": project_address})
+                                  "buyer_address": buyer_address})
         db.session.add(order)
         for order_content in session['order']:
             oc = OrderContent(order=order, product_name=order_content.get('product_name'),
@@ -334,7 +328,9 @@ def mobile_tracking():
         else:
             flash('未找到对应物流信息', 'warning')
             return redirect(url_for('mobile_tracking'))
-    return render_template('mobile/tracking.html')
+    contracts = Contract.query.filter_by(user_id = current_user.id).all()
+    tracking_infos = TrackingInfo.query.filter(TrackingInfo.contract_no.in_([contract.contract_no for contract in contracts])).all()
+    return render_template('mobile/tracking.html', tracking_infos = tracking_infos)
 
 
 @app.route('/mobile/tracking_info/<int:id>')
@@ -476,7 +472,7 @@ def upload_share_index():
     return render_template('mobile/upload_share_index.html', categories=categories)
 
 
-@app.route('/mobile/new_share_inventory/<int:id>', methods=['GET', 'POST'])
+@app.route('/new_share_inventory/<int:id>', methods=['GET', 'POST'])
 def new_share_inventory(id):
     if request.method == 'POST':
         user_id = current_user.id
