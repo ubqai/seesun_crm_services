@@ -18,12 +18,13 @@ def user_login():
     if current_user.is_authenticated:
         if current_user.user_or_origin==3:
             return redirect(request.args.get('next') or url_for('mobile_user_index'))
-        else:
-            app.logger.info("移动端用户[%s]自动登出" % (current_user.nickname))
-            logout_user()
 
     if request.method == 'POST':
         try:
+            if current_user.is_authenticated and current_user.user_or_origin!=3
+                    app.logger.info("移动端用户[%s]自动登出" % (current_user.nickname))
+                    logout_user()
+
             form = UserLoginForm(request.form)
             if form.validate()==False:
                 raise ValueError("")

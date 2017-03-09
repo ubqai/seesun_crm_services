@@ -516,16 +516,17 @@ def new_share_inventory(id):
 # --- mobile user---
 @app.route('/mobile/user/login', methods=['GET', 'POST'])
 def mobile_user_login():
-    #不运行前后端同时登入在一个WEB上
     if current_user.is_authenticated:
         if current_user.user_or_origin==2:
             return redirect(request.args.get('next') or url_for('mobile_index'))
-        else:
-            app.logger.info("后台用户[%s]自动登出" % (current_user.nickname))
-            logout_user()
 
     if request.method == 'POST':
         try:
+            #不运行前后端同时登入在一个WEB上
+            if current_user.is_authenticated and current_user.user_or_origin!=3
+                app.logger.info("后台用户[%s]自动登出" % (current_user.nickname))
+                logout_user()
+
             form = UserLoginForm(request.form)
             if form.validate()==False:
                 raise ValueError("")
@@ -538,8 +539,10 @@ def mobile_user_login():
                 raise ValueError("用户异常,请联系管理员")
                 
             login_user(user)
+            app.logger.info("mobile login success [%s]" % (user.nickname))
             return redirect(request.args.get('next') or url_for('mobile_index'))
         except Exception as e:
+            app.logger.info("mobile login failure [%s]" % (e))
             flash(e)
     else:
         form = UserLoginForm()
