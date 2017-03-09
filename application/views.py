@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, datetime, random
 from flask.helpers import make_response
-from flask import flash, redirect, render_template, request, url_for, session
+from flask import flash, redirect, render_template, request, url_for, session, current_app
 from . import app
 from .models import *
 from .product.api import *
@@ -144,6 +144,22 @@ def mobile_cart():
     return render_template('mobile/cart.html', order=order)
 
 
+@app.route('/mobile/cart_delete/<int:sku_id>', methods=['GET', 'POST'])
+def cart_delete(sku_id):
+    sorders = session['order']
+    for order_content in sorders:
+        if order_content.get('sku_id') == str(sku_id):
+            current_app.logger.info("delete")
+            sorders.remove(order_content)
+    session['order'] = sorders
+    if len(session['order']) == 0:
+        session.pop('order', None)
+    if 'order' in session and session['order']:
+        return redirect(url_for('mobile_cart'))
+    orders = Order.query.filter_by(user_id=current_user.id).all()
+    return render_template('mobile/orders.html', orders=orders)
+
+
 @app.route('/mobile/create_order')
 def mobile_create_order():
     if 'order' in session and session['order']:
@@ -156,7 +172,7 @@ def mobile_create_order():
         contact_phone = request.args.get('contact_phone')
         contact_name = request.args.get('contact_name')
         order = Order(order_no=order_no, user=current_user, order_status='新订单',
-                      order_memo=' ',
+                      order_memo=request.args.get('order_memo'),
                       buyer_info={"buyer": buyer, "buyer_company": buyer_company,
                                   "buyer_address": buyer_address, "contact_phone": contact_phone,
                                   "contact_name": contact_name, "company_name": company_name,
@@ -167,7 +183,7 @@ def mobile_create_order():
                               sku_specification=order_content.get('sku_specification'),
                               sku_code=order_content.get('sku_code'), number=order_content.get('number'),
                               square_num=order_content.get('square_num'))
-            sku_id=order_content.get('sku_id')
+            sku_id = order_content.get('sku_id')
             from .inventory.api import update_sku
             data = {"stocks_for_order": order_content.get('number')}
             response = update_sku(sku_id, data)
