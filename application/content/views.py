@@ -15,11 +15,11 @@ content_image_size = (379, 226)
 def root():
     return redirect(url_for('content.index'))
 
-@content.route('/index/<int:category_id>')
+@content.route('/index/<int:category_id>/')
 def index(category_id):
     category = ContentCategory.query.get_or_404(category_id)
     contents = Content.query.filter(Content.category_id == category_id).order_by(Content.created_at.desc())
-    return render_template('content/index.html', category = category, contents = contents)
+    return object_list('content/index.html', contents, paginate_by = 2, category = category)
 
 @content.route('/new/<int:category_id>', methods = ['GET', 'POST'])
 def new(category_id):

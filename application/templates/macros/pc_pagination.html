@@ -19,3 +19,31 @@
 		</div>
 	{% endif %}
 {% endmacro %}
+
+{% macro paginate(pagination_object) %}
+	<ul class="pagination">
+		<li {% if not pagination_object.has_prev %} class="disabled" {% endif %}>
+			{% if pagination_object.has_prev %}
+				<a href="./?page={{ pagination_object.prev_num }}">&laquo;</a>
+			{% else %}
+				<a href="#">&laquo;</a>
+			{% endif %}
+		</li>
+		{% for page in pagination_object.iter_pages() %}
+			<li>
+				{% if page %}
+					<a {% if page == pagination_object.page %} class="active" {% endif %} href="./?page={{ page }}">{{ page }}</a>
+				{% else %}
+					<a class="disabled">...</a>
+				{% endif %}
+			</li>
+		{% endfor %}
+		<li {% if not pagination_object.has_next %} class="disabled" {% endif %}>
+			{% if pagination_object.has_next %}
+				<a href="./?page={{ pagination_object.next_num }}">&raquo;</a>
+			{% else %}
+				<a href="#">&raquo;</a>
+			{% endif %}
+		</li>
+	</ul>
+{% endmacro %}
