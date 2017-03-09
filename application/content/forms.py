@@ -33,3 +33,10 @@ class ContentClassificationOptionForm(wtforms.Form):
     def save(self, option):
         self.populate_obj(option)
         return option
+
+class MaterialForm(wtforms.Form):
+    name = wtforms.StringField('物料名称', validators = [DataRequired(message = 'material name is necessary')])
+
+    def save(self, obj):
+        self.populate_obj(obj)
+        return obj

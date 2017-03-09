@@ -8,6 +8,7 @@
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
 		<p class="contents-header-p">三级目录</p>
 		<p class="contents-header-p text-sm">Option</p>
+		<a class="new-one" href="{{ url_for('content.new', category_id = option.classification.category_id, option_id = option.id) }}"><span class="glyphicon glyphicon-plus"></span></a>
 	</div>
 	<div class="separator"><span></span></div>
 	<div class="widget">

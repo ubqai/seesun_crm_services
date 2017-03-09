@@ -46,7 +46,8 @@ def contract_new(id):
             contract_status="新合同",
             product_status="未生产",
             shipment_status="未出库",
-            contract_content=contract_content
+            contract_content=contract_content,
+            user = order.user
         )
         order.order_status = '生成合同'
         for order_content in order.order_contents:

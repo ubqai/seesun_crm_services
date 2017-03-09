@@ -1,6 +1,14 @@
 {% macro header(name) %}
 	<header class="header">
-		<div class="header-logo"><a href="{{ url_for('mobile_user_login') }}"><img class="img-responsive" src="/static/images/logo.png"></a></div>
-		<div class="header-title">{{ name }}</div>
+		<div class="header-logo"><a href="{{ url_for('mobile_index') }}"><img class="img-responsive" src="/static/images/logo.png"></a></div>
+
+		<div class="header-title">
+			{{ name }}
+		</div>
+		{% if current_user and current_user.is_authenticated %}
+			<div class="header-title">
+				经销商 {{ current_user.nickname }}
+			</div>
+		{% endif %}
 	</header>
 {% endmacro %}

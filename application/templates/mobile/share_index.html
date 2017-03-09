@@ -4,7 +4,7 @@
 {{ header('共享库存列表') }}
 
 <div class="main-content">
-
+    {% for user in users %}
 	<div class="wrapper">
 		<div class="text">
 			<p class="text-title">{{ user.nickname }}</p>
@@ -62,7 +62,7 @@
 				{% endwith %}
 		{% endfor %}
 	</div>
-
+    {% endfor %}
 </div>
 
 {% endblock %}

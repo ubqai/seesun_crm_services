@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, datetime, random
 from flask.helpers import make_response
-from flask import flash, redirect, render_template, request, url_for, session
+from flask import flash, redirect, render_template, request, url_for, session, current_app
 from . import app
 from .models import *
 from .product.api import *
@@ -9,6 +9,7 @@ from .inventory.api import create_inventory
 from .helpers import save_upload_file
 from flask_login import *
 from .organization.forms import UserLoginForm
+from .forms import *
 
 
 @app.route('/mobile/index')
@@ -88,7 +89,8 @@ def mobile_share_storage_detail():
 
 @app.route('/mobile/share_storage_for_detail')
 def mobile_share_storage_for_detail():
-    return render_template('mobile/share_storage_for_detail.html')
+    areas = SalesAreaHierarchy.query.filter_by(level_grade=3).all()
+    return render_template('mobile/share_storage_for_detail.html', areas=areas)
 
 
 @app.route('/mobile/share_storage_for_upload')
@@ -143,16 +145,31 @@ def mobile_cart():
     return render_template('mobile/cart.html', order=order)
 
 
+@app.route('/mobile/cart_delete/<int:sku_id>', methods=['GET', 'POST'])
+def cart_delete(sku_id):
+    sorders = session['order']
+    for order_content in sorders:
+        if order_content.get('sku_id') == str(sku_id):
+            current_app.logger.info("delete")
+            sorders.remove(order_content)
+    session['order'] = sorders
+    if len(session['order']) == 0:
+        session.pop('order', None)
+    if 'order' in session and session['order']:
+        return redirect(url_for('mobile_cart'))
+    orders = Order.query.filter_by(user_id=current_user.id).all()
+    return render_template('mobile/orders.html', orders=orders)
+
+
 @app.route('/mobile/create_order')
 def mobile_create_order():
     if 'order' in session and session['order']:
         order_no = 'SS' + datetime.datetime.now().strftime('%y%m%d%H%M%S')
-        user = current_user
         buyer = request.args.get('buyer')
         buyer_company = request.args.get('buyer_company')
         buyer_address = request.args.get('buyer_address')
-        order = Order(order_no=order_no, user=user, order_status='新订单',
-                      order_memo=' ',
+        order = Order(order_no=order_no, user=current_user, order_status='新订单',
+                      order_memo=request.args.get('order_memo'),
                       buyer_info={"buyer": buyer, "buyer_company": buyer_company,
                                   "buyer_address": buyer_address})
         db.session.add(order)
@@ -161,7 +178,7 @@ def mobile_create_order():
                               sku_specification=order_content.get('sku_specification'),
                               sku_code=order_content.get('sku_code'), number=order_content.get('number'),
                               square_num=order_content.get('square_num'))
-            sku_id=order_content.get('sku_id')
+            sku_id = order_content.get('sku_id')
             from .inventory.api import update_sku
             data = {"stocks_for_order": order_content.get('number')}
             response = update_sku(sku_id, data)
@@ -223,9 +240,8 @@ def mobile_design():
             project_report = ProjectReport.query.filter_by(report_no = request.form.get('filing_no')).first()
             if project_report in project_reports:
                 file_path = save_upload_file(request.files.get('ul_file'))
-                user = current_user
                 application = DesignApplication(filing_no = request.form.get('filing_no'), 
-                    ul_file = file_path, status = '新申请', applicant = user)
+                    ul_file = file_path, status = '新申请', applicant = current_user)
                 application.save
                 flash('产品设计申请提交成功', 'success')
                 return redirect(url_for('mobile_design_applications'))
@@ -240,7 +256,7 @@ def mobile_design():
 @app.route('/mobile/design_applications')
 def mobile_design_applications():
     # list design applications of current user
-    applications = DesignApplication.query.all()
+    applications = current_user.design_applications #DesignApplication.query.all()
     return render_template('mobile/design_applications.html', applications = applications)
 
 
@@ -276,9 +292,8 @@ def mobile_material_application_new():
                     if int(request.form.get(param)) > 0:
                         app_contents.append([param.split('_',1)[1], request.form.get(param)])
         if app_contents:
-            user = current_user
             application = MaterialApplication(app_no = 'MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
-                user = user, status = '新申请')
+                user = current_user, status = '新申请')
             db.session.add(application)
             for app_content in app_contents:
                 content = MaterialApplicationContent(material_id = app_content[0], number = app_content[1], 
@@ -331,7 +346,9 @@ def mobile_tracking():
         else:
             flash('未找到对应物流信息', 'warning')
             return redirect(url_for('mobile_tracking'))
-    return render_template('mobile/tracking.html')
+    contracts = Contract.query.filter_by(user_id = current_user.id).all()
+    tracking_infos = TrackingInfo.query.filter(TrackingInfo.contract_no.in_([contract.contract_no for contract in contracts])).all()
+    return render_template('mobile/tracking.html', tracking_infos = tracking_infos)
 
 
 @app.route('/mobile/tracking_info/<int:id>')
@@ -460,11 +477,16 @@ def project_report_show(id):
     return render_template('mobile/project_report_show.html', project_report=project_report)
 
 
-@app.route('/mobile/share_index', methods=['GET'])
-def stocks_share():
+@app.route('/mobile/share_index/<int:area_id>', methods=['GET'])
+def stocks_share(area_id):
     categories = load_categories()
-    user = current_user
-    return render_template('mobile/share_index.html', categories=categories, user=user)
+    area = SalesAreaHierarchy.query.get_or_404(area_id)
+    users = area.users.all()
+    for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
+        users.extend(sarea.users.all())
+        for ssarea in SalesAreaHierarchy.query.filter_by(parent_id=sarea.id).all():
+            users.extend(ssarea.users.all())
+    return render_template('mobile/share_index.html', categories=categories, users=users)
 
 
 @app.route('/mobile/upload_share_index', methods=['GET'])
@@ -506,16 +528,18 @@ def new_share_inventory(id):
 # --- mobile user---
 @app.route('/mobile/user/login', methods=['GET', 'POST'])
 def mobile_user_login():
-    #不运行前后端同时登入在一个WEB上
+    app.logger.info("into mobile_user_login [%s] , [%s]" % (request.method , current_user.is_authenticated))
     if current_user.is_authenticated:
         if current_user.user_or_origin==2:
-            return redirect(request.args.get('next') or url_for('mobile_index'))
-        else:
-            app.logger.info("后台用户[%s]自动登出" % (current_user.nickname))
-            logout_user()
+            return redirect(url_for('mobile_index'))
 
     if request.method == 'POST':
         try:
+            #不运行前后端同时登入在一个WEB上
+            if current_user.is_authenticated and current_user.user_or_origin!=3:
+                app.logger.info("后台用户[%s]自动登出" % (current_user.nickname))
+                logout_user()
+
             form = UserLoginForm(request.form)
             if form.validate()==False:
                 raise ValueError("")
@@ -528,10 +552,36 @@ def mobile_user_login():
                 raise ValueError("用户异常,请联系管理员")
                 
             login_user(user)
-            return redirect(request.args.get('next') or url_for('mobile_index'))
+            app.logger.info("mobile login success [%s]" % (user.nickname))
+            return redirect(url_for('mobile_index'))
         except Exception as e:
+            app.logger.info("mobile login failure [%s]" % (e))
             flash(e)
     else:
         form = UserLoginForm()
 
     return render_template('mobile/user_login.html',form=form)
+
+@app.route('/mobile/user/info/<int:user_id>')
+def mobile_user_info(user_id):
+    u=User.query.filter_by(id=user_id).first()
+    if u==None:
+        return redirect(url_for('mobile_index'))
+
+    form = UserInfoForm(obj=u,user_type=u.user_or_origin)
+
+    if len(u.user_infos)==0:
+        pass
+    else:
+        ui=u.user_infos[0]
+        form.name.data=ui.name
+        form.address.data=ui.address
+        form.phone.data=ui.telephone
+        form.title.data=ui.title
+
+    if u.sales_areas.first()!=None:
+        form.sale_range.data=u.sales_areas.first().name
+    if u.departments.first()!=None:
+        form.dept_ranges.data=",".join([d.name for d in u.departmets.all()])
+
+    return render_template('mobile/user_info.html',form=form)

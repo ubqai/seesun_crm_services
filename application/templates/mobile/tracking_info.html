@@ -17,18 +17,31 @@
 	<div class="tracking-block passed">
 		<p class="tracking-detail text-md">项目联系人电话 ： {{ tracking_info.receiver_tel }}</p>
 	</div>
-	<div class="tracking-block passed">
-		<p class="tracking-detail text-md">生产日期 ： {{ tracking_info.production_date.strftime('%F') }}</p>
-	</div>
-	<div class="tracking-block passed">
-		<p class="tracking-detail text-md">配送日期 ： {{ tracking_info.delivery_date.strftime('%F') }}</p>
-	</div>
+	{% if tracking_info.production_date %}
 		<div class="tracking-block passed">
-		<p class="tracking-detail text-md">配送车牌号 ： {{ tracking_info.delivery_plate_no }}</p>
-	</div>
-	<div class="tracking-block passed">
-		<p class="tracking-detail text-md">司机电话 ： {{ tracking_info.delivery_man_tel }}</p>
-	</div>
+			<p class="tracking-detail text-md">生产日期 ： {{ tracking_info.production_date.strftime('%F') }}</p>
+		</div>
+	{% endif %}
+	{% if tracking_info.delivery_date %}
+		<div class="tracking-block passed">
+			<p class="tracking-detail text-md">配送日期 ： {{ tracking_info.delivery_date.strftime('%F') }}</p>
+		</div>
+	{% endif %}
+	{% if tracking_info.delivery_plate_no %}
+		<div class="tracking-block passed">
+			<p class="tracking-detail text-md">配送车牌号 ： {{ tracking_info.delivery_plate_no }}</p>
+		</div>
+	{% endif %}
+	{% if tracking_info.delivery_man_name %}
+		<div class="tracking-block passed">
+			<p class="tracking-detail text-md">司机姓名 ： {{ tracking_info.delivery_man_name }}</p>
+		</div>
+	{% endif %}
+	{% if tracking_info.delivery_man_tel %}
+		<div class="tracking-block passed">
+			<p class="tracking-detail text-md">司机电话 ： {{ tracking_info.delivery_man_tel }}</p>
+		</div>
+	{% endif %}
 </div>
 
 {% endblock %}

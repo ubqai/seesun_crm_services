@@ -59,7 +59,7 @@
                         <th>对接人电话</th>
                         <th>生产状态</th>
                         <th>物流状态</th>
-                        <th></th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,7 +71,9 @@
                         <td>{{ info.receiver_tel }}</td>
                         <td>{{ info.production_status }}</td>
                         <td>{{ info.delivery_status }}</td>
-                        <td><a href="{{ url_for('order_manage.tracking_info_edit', id = info.id) }}">更新</a></td>
+                        <td>
+                            <a class="table-del text-default" href="{{ url_for('order_manage.tracking_info_edit', id = info.id) }}"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;更新</a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

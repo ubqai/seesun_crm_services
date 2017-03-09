@@ -4,7 +4,7 @@ from flask import Blueprint, flash, g, redirect, render_template, request, url_f
 
 from ..     import app, db
 from ..helpers import object_list, save_upload_file, delete_file, clip_image
-from ..models  import Content, ContentCategory, ContentClassification, ContentClassificationOption, MaterialApplication
+from ..models  import Content, ContentCategory, ContentClassification, ContentClassificationOption, MaterialApplication, Material
 from .forms    import *
 
 content = Blueprint('content', __name__, template_folder = 'templates')
@@ -15,11 +15,11 @@ content_image_size = (379, 226)
 def root():
     return redirect(url_for('content.index'))
 
-@content.route('/index/<int:category_id>')
+@content.route('/index/<int:category_id>/')
 def index(category_id):
     category = ContentCategory.query.get_or_404(category_id)
     contents = Content.query.filter(Content.category_id == category_id).order_by(Content.created_at.desc())
-    return render_template('content/index.html', category = category, contents = contents)
+    return object_list('content/index.html', contents, paginate_by = 30, category = category)
 
 @content.route('/new/<int:category_id>', methods = ['GET', 'POST'])
 def new(category_id):
@@ -253,3 +253,38 @@ def material_application_reject(id):
     application.status = '拒绝申请'
     application.save
     return redirect(url_for('content.material_application_index'))
+
+@content.route('/material/index')
+def material_index():
+    materials = Material.query.all()
+    return render_template('content/material_application/material_index.html', materials = materials)
+
+@content.route('/material/new', methods = ['GET', 'POST'])
+def material_new():
+    if request.method == 'POST':
+        form = MaterialForm(request.form)
+        if form.validate():
+            material = form.save(Material())
+            material.save
+            flash('material created successfully', 'success')
+        else:
+            flash('material created failure', 'danger')
+        return redirect(url_for('content.material_index'))
+    form = MaterialForm()
+    return render_template('content/material_application/material_new.html', form = form)
+
+@content.route('/material/<int:id>/edit', methods = ['GET', 'POST'])
+def material_edit(id):
+    material = Material.query.get_or_404(id)
+    if request.method == 'POST':
+        form = MaterialForm(request.form)
+        if form.validate():
+            material = form.save(material)
+            material.save
+            flash('material has been updated successfully', 'success')
+        else:
+            flash('material updated failure', 'danger')
+        return redirect(url_for('content.material_index'))
+    else:
+        form = MaterialForm(obj = material)
+    return render_template('content/material_application/material_edit.html', material = material, form = form)

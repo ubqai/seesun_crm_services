@@ -21,6 +21,7 @@
 		<!-- 这部分版面需要优化下 -->
 		<div class="widget_contents padding-0">
 			<div class="form-item">
+				<span class="form-label"><label>内容标签</label></span>
 				<div class="label-block">
 				{% for option in content.options %}
 					<a href="{{ url_for('content.option_show', id = option.id) }}">
@@ -31,7 +32,14 @@
 				</div>
 			</div>
 			<div class="form-item">
-			{{ content.description|safe }}
+				<span class="form-label"><label>内容描述</label></span>
+				{{ content.description|safe }}
+			</div>
+			<div class="form-item">
+				<span class="form-label"><label>内容图片</label></span>	
+				{% for image in content.image_links %}
+					<img src="{{ image }}" class="right-gap-1 top-gap-1"/>
+				{% endfor %}
 			</div>
 		</div>
 	</div>
