@@ -32,14 +32,18 @@
 					{{ form.description(class = 'form-input form-control ckeditor') }}
 				</div>
 
-				<div class="form-item small-pic">
+				<div class="form-item small-pic  pic-wrapper">
 					<span class="form-label">内容图片</span>
 					{% for image in content.image_links %}
-					<div class="pic-upload top-gap-1">
-						<input type="file" name="image_file_{{ content.image_links.index(image) }}" id="image_file_{{ content.image_links.index(image) }}" class="inbox-file">
-						<img class="full-img" src="{{ image or '/static/images/alt.jpg' }}">
-					</div>
-					{% endfor %}			
+						
+						<div class="pic-upload top-gap-1 left-gap-28 {% if content.image_links.index(image)==0 %}pic-template{% endif %}">
+							<input type="file" name="image_file_{{ content.image_links.index(image) }}" id="image_file_{{ content.image_links.index(image) }}" class="inbox-file">
+							<img class="full-img" src="{{ image or '/static/images/alt.jpg' }}">
+						</div>
+					{% endfor %}	
+					<div class="pic-upload top-gap-1 left-gap-28 pic-add">
+						<img class="fixed-height-img-1" src="http://58pic.ooopic.com/58pic/15/31/24/55s58PICyC3.jpg">
+					</div>						
 				</div>
 
 				<div class="form-item">
