@@ -1,0 +1,39 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% from 'macros/pc_pagination.html' import render_pagination %}
+{% block main_content %}
+
+{{ sidebar(active = 'organization') }}
+
+<div class="contents">
+	<div class="contents-header">
+		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+		<p class="contents-header-p">区域管理和销售团队</p>
+		<p class="contents-header-p text-sm">regional_and_team management</p>
+	</div>
+	<div class="separator"><span></span></div>
+	<form class="form form-horizontal" url="{{url_for('organization.regional_manage_team',sah_id=sah_id,leader_id=leader_id)}}" role="form" method="post">
+	    <div class="form-style form-default">
+	        <div class="form-item-2">
+	            <span>团队员工选择</span>
+	            <br>
+	        </div>
+	        <div class="form-item-2">
+		{% for u in user_infos %}
+			{% if user_infos[u]['choose'] ==1 %}
+	        			<input type="checkbox" name="user_id" value="{{u}}" checked="{{user_infos[u]['choose']}}" />{{user_infos[u]['name']}}
+	        		{% else %}	        			
+	        			<input type="checkbox" name="user_id" value="{{u}}" />{{user_infos[u]['name']}}
+	        		{% endif %}
+			<br>
+		{% endfor %}	
+	        </div>
+
+	        <div class="text-right top-gap-2 right-gap-3">
+	            <button class="btn btn-default my-btn">提交</button>
+	        </div>
+	    </div>
+	</form>
+</div>
+
+{% endblock %}

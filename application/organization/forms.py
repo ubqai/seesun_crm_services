@@ -87,3 +87,10 @@ class UserSearchForm(BaseForm):
     dept_ranges = QuerySelectMultipleField(u'所属部门',get_label="name")
     sale_range_province = QuerySelectField(u'销售范围(省)', get_label="name",allow_blank=True)
     sale_range = QuerySelectField(u'销售范围', get_label="name",allow_blank=True)
+
+
+class RegionalSearchForm(Form):
+    regional = QuerySelectMultipleField(u'区域', get_label="name")
+
+    def reset_select_field(self):
+        self.regional.query = get_dynamic_sale_range_query(2)
