@@ -302,7 +302,7 @@ class OrderContent(db.Model, Rails):
     amount = db.Column(db.Float, default=0)
     memo = db.Column(db.String(100))
     production_num = db.Column(db.Integer, default=0)
-    inventory_choose = db.Column(db.JSON)
+    inventory_choose = db.Column(db.JSON, default=[])
 
     def __repr__(self):
         return 'OrderContent(id: %s, order_id: %s, product_name: %s, sku_specification: %s, sku_code: %s, number: %s, square_num: %s)' % (
