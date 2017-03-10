@@ -13,7 +13,7 @@ order_manage = Blueprint('order_manage', __name__, template_folder='templates')
 
 @order_manage.route("/orders", methods=['GET'])
 def order_index():
-    orders = Order.query.all()
+    orders = Order.query.order_by(Order.created_at.desc())
     return render_template('order_manage/index.html', orders=orders)
 
 
@@ -66,7 +66,7 @@ def contract_new(id):
 
 @order_manage.route("/contracts_index", methods=['GET'])
 def contract_index():
-    contracts = Contract.query.all()
+    contracts = Contract.query.order_by(Contract.created_at.desc())
     return render_template('order_manage/contracts_index.html', contracts=contracts)
 
 
