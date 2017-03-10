@@ -274,7 +274,7 @@ def regional_manage_leader(sah_id):
 		for uasa in UserAndSaleArea.query.filter_by(sales_area_id=sah.id,parent_id=None):
 			if uasa.user_id in add_user_array:
 				app.logger.info("has existed user[%s] not proc" % (uasa.user_id))
-				add_user_array.remove(u_exists.id)
+				add_user_array.remove(uasa.id)
 			else:
 				app.logger.info("delete existed user[%s] proc" % (uasa.user_id))
 				uasa.delete
@@ -330,7 +330,7 @@ def regional_manage_team(sah_id,leader_id):
 		for uasa in UserAndSaleArea.query.filter_by(sales_area_id=sah.id,parent_id=leader.id):
 			if uasa.user_id in add_user_array:
 				app.logger.info("has existed user[%s] not proc" % (uasa.user_id))
-				add_user_array.remove(u_exists.id)
+				add_user_array.remove(uasa.id)
 			else:
 				app.logger.info("delete existed user[%s] proc" % (uasa.user_id))
 				uasa.delete
