@@ -93,7 +93,7 @@ def update_sku(sku_id, data={}):
     return response   # 200
 
 
-def update_sku_by_code(sku_code, data={}):
-    url = '%s/%s/product_skus/%s/edit_by_code' % (site, version, sku_code)
+def update_sku_by_code(data={}):
+    url = '%s/%s/product_skus/edit_by_code' % (site, version)
     response = requests.put(url, json=data, headers=headers)
     return response   # 200
