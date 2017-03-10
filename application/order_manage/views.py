@@ -154,7 +154,7 @@ def tracking_info_edit(id):
         return redirect(url_for('order_manage.tracking_infos'))  
     else:
         form = TrackingInfoForm2(obj = tracking_info)
-    return render_template('order_manage/tracking_info_edit.html', tracking_info = tracking_info, form = form)
+    return render_template('order_manage/tracking_info_edit.html', tracking_info = tracking_info, form = form, contract = contract)
 
 
 @order_manage.route('/tracking_info/<int:id>/generate_qrcode')
