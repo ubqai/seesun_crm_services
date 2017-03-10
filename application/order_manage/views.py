@@ -6,6 +6,7 @@ from .. import app
 from ..models import *
 from ..helpers import gen_qrcode 
 from .forms import ContractForm, TrackingInfoForm1, TrackingInfoForm2
+from ..inventory.api import load_inventories_by_code, update_inventory, update_sku_by_code
 
 order_manage = Blueprint('order_manage', __name__, template_folder='templates')
 
@@ -102,6 +103,33 @@ def tracking_info_new(contract_id):
             db.session.add(tracking_info)
             contract.shipment_status = '区域总监确认'
             db.session.add(contract)
+            data_sku = []
+            for order_content in contract.order.order_contents:
+                if request.form.get('%s_production_num' % order_content.sku_code):
+                    order_content.production_num = request.form.get('%s_production_num' % order_content.sku_code)
+                inventory_choose = []
+                batches = []
+                sub_num = 0
+                for inv in load_inventories_by_code(order_content.sku_code):
+                    for i in range(1, (len(inv.get("batches")) + 1)):
+                        if request.form.get('%s_%s_num' % (order_content.sku_code, inv.get("batches")[i-1].get('inv_id'))):
+                            num = int(request.form.get('%s_%s_num' % (order_content.sku_code, inv.get("batches")[i-1].get('inv_id'))))
+                            sub_num += num
+                            inv_id = inv.get("batches")[i-1].get('inv_id')
+                            inventory_choose.append({"username": inv.get('user_name'),
+                                                     "batch_no": inv.get("batches")[i-1].get('batch_no'),
+                                                     "production_date": inv.get("batches")[i-1].get('production_date'),
+                                                     "inv_id": inv_id,
+                                                     "num": num})
+                            batches.append({"inv_id": inv_id, "sub_stocks": str(num)})
+                data_sku.append({"code": order_content.sku_code, "stocks_for_order": str(-order_content.number), "batches": batches})
+                order_content.inventory_choose = inventory_choose
+                db.session.add(order_content)
+            response = update_sku_by_code({"sku_infos": data_sku})
+            if not response.status_code == 200:
+                db.session.rollback()
+                flash('物流状态创建失败', 'danger')
+                return redirect(url_for('order_manage.tracking_info_new', contract_id=contract.id))
             db.session.commit()
             flash('物流状态创建成功', 'success')
             return redirect(url_for('order_manage.tracking_infos'))

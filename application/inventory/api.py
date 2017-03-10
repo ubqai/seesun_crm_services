@@ -48,6 +48,15 @@ def load_inventories(sku_id):
         return []
 
 
+def load_inventories_by_code(code):
+    url = '%s/%s/sku/%s/inventories_by_code' % (site, version, code)
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return []
+
+
 def load_user_inventories(user_id, sku_id):
     url = '%s/%s/sku/%s/%s/inventories' % (site, version, user_id, sku_id)
     response = requests.get(url)
@@ -80,5 +89,11 @@ def load_inventory(inv_id):
 
 def update_sku(sku_id, data={}):
     url = '%s/%s/product_skus/%s/edit' % (site, version, sku_id)
+    response = requests.put(url, json=data, headers=headers)
+    return response   # 200
+
+
+def update_sku_by_code(data={}):
+    url = '%s/%s/product_skus/edit_by_code' % (site, version)
     response = requests.put(url, json=data, headers=headers)
     return response   # 200

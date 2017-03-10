@@ -45,8 +45,8 @@
 											{% set num2=skus_json.get('skus')|length %}
 											
 											<tr>
-												{% if skus_json.get('skus').index(sku)==0 and products_json.index(product_json)==0 %}
-													<td rowspan={{num1*num2}}>{{ category.get('category_name') }}</td>
+												{% if skus_json.get('skus').index(sku)==0 %}
+													<td rowspan={{num2}}>{{ category.get('category_name') }}</td>
 												{% endif %}
 												
 												{% if skus_json.get('skus').index(sku)==0 %}

@@ -37,10 +37,11 @@ app.register_blueprint(project_report, url_prefix='/project_report')
 from .organization.views import organization
 app.register_blueprint(organization, url_prefix='/organization')
 
-from .inventory.api import load_products, load_skus, load_user_inventories
+from .inventory.api import load_products, load_skus, load_user_inventories, load_inventories_by_code
 app.add_template_global(load_products)
 app.add_template_global(load_skus)
 app.add_template_global(load_user_inventories)
+app.add_template_global(load_inventories_by_code)
 app.add_template_global(len)
 app.add_template_global(int)
 
