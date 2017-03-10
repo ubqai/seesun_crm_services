@@ -33,6 +33,53 @@
         </div>
     </div>
 
+    <div class="widget_contents padding-0">
+        <table class="tables">
+            <thead>
+                <tr>
+                    <th>产品名</th>
+                    <th>规格</th>
+                    <th>平方数</th>
+                    <th>数量</th>
+                    <th>单价</th>
+                    <th>总价</th>
+                    <th>需生产数量</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for content in contract.order.order_contents %}
+                <tr>
+                    <td rowspan="{{ content.inventory_choose|length + 2 }}"><a class="table-link">{{ content.product_name }}</a></td>
+                    <td rowspan="{{ content.inventory_choose|length + 2 }}">{{ content.sku_specification }}</td>
+                    <td rowspan="{{ content.inventory_choose|length + 2 }}">{{ content.square_num }}</td>
+                    <td rowspan="{{ content.inventory_choose|length + 2 }}">{{ content.number }}</td>
+                    <td>{{ content.price }}</td>
+                    <td>{{ content.amount }}</td>
+                    <td>{{ content.production_num }}</td>
+                    <td>{{ content.memo }}</td>
+                </tr>
+
+                        <tr>
+                            <th>所选择库存经销商</th>
+                            <th>所选择库存批次号</th>
+                            <th>所选择库存生产日期</th>
+                            <th>所选择库存数量</th>
+                        </tr>
+                        {% if content.inventory_choose %}
+                            {% for inv in content.inventory_choose %}
+                                <tr>
+                                    <td>{{ inv.get('username') }}</td>
+                                    <td>{{ inv.get('batch_no') }}</td>
+                                    <td>{{ inv.get('production_date') }}</td>
+                                    <td>{{ inv.get('num') }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <form url="{{ url_for('order_manage.tracking_info_edit', id = tracking_info.id) }}" enctype="multipart/form-data" method="post" class="form form-horizontal" >
         <div class="widget top-gap-1">
