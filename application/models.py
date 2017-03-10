@@ -334,7 +334,7 @@ users_and_departments = db.Table(
 class UserAndSaleArea(db.Model,Rails):
     __tablename__ = 'users_and_sales_areas'
     __table_args__ = {"useexisting": True}
-    user_id=db.Column('user_id', db.Integer, db.ForeignKey('users.id'),primary_key=True),
+    user_id=db.Column('user_id', db.Integer, db.ForeignKey('users.id'),primary_key=True)
     sales_area_id=db.Column('sales_area_id', db.Integer, db.ForeignKey('sales_area_hierarchies.id'),primary_key=True)
     parent_id=db.Column('parent_id', db.Integer)
     parent_time=db.Column('parent_time', db.DateTime)
