@@ -57,7 +57,7 @@
                 </div>
                  <div class="form-item-2 col-3">
                     <span>{{ form.title.label }}</span>
-                    {{ form.title(class = 'form-input form-control',placeholder="请输入title") }}
+                    {{ form.title(class = 'form-input form-control',placeholder="请输入头衔") }}
                     {{ render_form_field_error(form.title) }}
                 </div>
                  <div class="form-item-2 col-3" id="search_user_dept_ranges">
@@ -66,7 +66,7 @@
                     {{ render_form_field_error(form.dept_ranges) }}
                 </div>
                 <div class="form-item-2 col-3" id="search_user_sale_range_province" style="display:none">
-                    <span>{{ form.sale_range.label }}</span>
+                    <span>{{ form.sale_range_province.label }}</span>
                     {{ form.sale_range_province(class="form-input form-control",id="select_sale_range_province") }}
                 </div>
                 <div class="form-item-2 col-3" id="search_user_sale_range" style="display:none">

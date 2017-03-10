@@ -16,27 +16,27 @@
 	<form class="form form-horizontal" method="get" url="{{ url_for('organization.user_index') }}" role="form">
 	    <div class="form-style form-default">
 	        <div class="form-item-2 col-3">
-	            <span>用户类型</span>
+	            <span>{{ form.user_type.label }}</span>
 	            {{ form.user_type(class="form-input form-control",id="select_user_type") }}
 	        </div>
 	        <div class="form-item-2 col-3">
-	            <span>email</span>
-	            {{ form.email(class="form-input form-control",placeholder="请输入email") }}
+	            <span>{{ form.email.label }}</span>
+	            {{ form.email(class="form-input form-control",placeholder="请输入邮箱") }}
 	        </div>
 	        <div class="form-item-2 col-3">
-	            <span>姓名</span>
+	            <span>{{ form.name.label }}</span>
 	            {{ form.name(class="form-input form-control",placeholder="请输入姓名") }}
 	        </div>
 	        <div class="form-item-2 col-3" id="search_user_dept_ranges">
-	            <span style="vertical-align:middle">所属部门</span>
+	            <span style="vertical-align:middle">{{ form.dept_ranges.label }}</span>
 	            {{ form.dept_ranges(class="form-input form-control") }}
 	        </div>
 	        <div class="form-item-2 col-3" id="search_user_sale_range_province" style="display:none">
-	            <span>销售范围(省)</span>
+	            <span>{{ form.sale_range_province.label }}</span>
 	            {{ form.sale_range_province(class="form-input form-control",id="select_sale_range_province") }}
 	        </div>
 	        <div class="form-item-2 col-3" id="search_user_sale_range" style="display:none">
-	            <span>销售范围</span>
+	            <span>{{ form.sale_range.label }}</span>
 	            {{ form.sale_range(class="form-input form-control",id="select_sale_range") }}
 	        </div>
 	        

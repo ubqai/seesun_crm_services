@@ -319,7 +319,9 @@ users_and_resources = db.Table(
 users_and_sales_areas = db.Table(
     'users_and_sales_areas',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-    db.Column('sales_area_id', db.Integer, db.ForeignKey('sales_area_hierarchies.id'))
+    db.Column('sales_area_id', db.Integer, db.ForeignKey('sales_area_hierarchies.id')),
+    db.Column('parent_id', db.Integer),
+    db.Column('parent_time', db.DateTime)
 )
 
 
@@ -328,6 +330,14 @@ users_and_departments = db.Table(
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
     db.Column('dep_id', db.Integer, db.ForeignKey('department_hierarchies.id'))
 )
+
+class UserAndSaleArea(db.Model,Rails):
+    __tablename__ = 'users_and_sales_areas'
+    __table_args__ = {"useexisting": True}
+    user_id=db.Column('user_id', db.Integer, db.ForeignKey('users.id'),primary_key=True),
+    sales_area_id=db.Column('sales_area_id', db.Integer, db.ForeignKey('sales_area_hierarchies.id'),primary_key=True)
+    parent_id=db.Column('parent_id', db.Integer)
+    parent_time=db.Column('parent_time', db.DateTime)
 
 
 class User(db.Model, Rails):
@@ -353,8 +363,6 @@ class User(db.Model, Rails):
         return True
     #用户的对象是否有效 , 账号被禁止
     def is_active(self):
-        if self.user_or_origin==3 and self.departments.count()==0:
-            return False
         return True
     #为那些不被获准登录的用户返回True
     def is_anonymous(self):
@@ -362,6 +370,11 @@ class User(db.Model, Rails):
     #为用户返回唯一的unicode标识符
     def get_id(self):
         return str(self.id).encode("utf-8")
+    def check_can_login(self):
+        if self.user_or_origin==3 and self.departments.count()==0:
+            return "用户部门异常,请联系管理员"
+
+        return ""
 
     @property
     def password(self):

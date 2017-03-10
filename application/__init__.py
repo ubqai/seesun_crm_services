@@ -58,16 +58,16 @@ def setup_logging():
 @app.before_request
 def login_check():
     #url_rule
-    app.logger.info("LOGIN_CHECK  request.path [%s] , [%s]" % (request.path,request.endpoint))
     if request.endpoint=="static" or request.path.startswith("/static/") or request.path.startswith("/favicon.ico"):
         #静态文件
-        app.logger.info("static pass")
+        # app.logger.info("static pass")
         pass
     elif request.path.startswith("/mobile/") or request.path.startswith("/wechat/mobile/"):
         if request.path == "/mobile/user/login":
             pass
         #移动端登入界面
         elif not current_user.is_authenticated or current_user.user_or_origin!=2:
+            app.logger.info("LOGIN_CHECK INTO MOBILE  request.path [%s] , [%s]" % (request.path,request.endpoint))
             #后端界面
             flash("请登入后操作")
             return redirect(url_for('mobile_user_login'))
@@ -79,6 +79,7 @@ def login_check():
         #后端登入界面
             pass
         elif not current_user.is_authenticated or current_user.user_or_origin!=3:
+            app.logger.info("LOGIN_CHECK INTO BACK END request.path [%s] , [%s]" % (request.path,request.endpoint))
             #后端界面
             flash("请登入后操作")
             return redirect(url_for('organization.user_login'))

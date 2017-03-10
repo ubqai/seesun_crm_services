@@ -18,13 +18,13 @@ def user_login():
     if current_user.is_authenticated:
         if current_user.user_or_origin==3:
             return redirect(url_for('mobile_user_index'))
+        else:
+            #不运行前后端同时登入在一个WEB上
+            app.logger.info("移动端用户[%s]自动登出,[%s][%s]" % (current_user.nickname,request.path,request.endpoint))
+            logout_user()
 
     if request.method == 'POST':
         try:
-            if current_user.is_authenticated and current_user.user_or_origin!=3:
-                    app.logger.info("移动端用户[%s]自动登出" % (current_user.nickname))
-                    logout_user()
-
             form = UserLoginForm(request.form)
             if form.validate()==False:
                 raise ValueError("")
@@ -33,12 +33,16 @@ def user_login():
             user=User.login_verification(form.email.data,form.password.data,3)
             if user==None:
                 raise ValueError("用户名或密码错误")
-            if not user.is_active:
-                raise ValueError("用户异常,请联系管理员")
-                
+
+            login_valid_errmsg=user.check_can_login()
+            if not login_valid_errmsg=="":
+                raise ValueError(login_valid_errmsg)
+
             login_user(user)
+            app.logger.info("后端用户[%s][%s]登入成功" % (user.email,user.nickname))
             return redirect(url_for('organization.user_index'))
         except Exception as e:
+            app.logger.info("后端用户登入失败[%s]" % (e))
             flash(e)
     else:
         form = UserLoginForm()
