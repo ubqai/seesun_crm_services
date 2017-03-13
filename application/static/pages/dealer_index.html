@@ -1,0 +1,206 @@
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0;">
+	<link rel="stylesheet" href="../stylesheets/bootstrap.min.css">
+	<link rel="stylesheet" href="../stylesheets/init.css">
+	<link rel="stylesheet" href="../stylesheets/pc_style.css">
+	<script src="../javascripts/jquery.min.js"></script>
+	<script src="../javascripts/bootstrap.min.js"></script>
+	<script src="../javascripts/echarts.common.min.js"></script>
+	<script src="../javascripts/dark.js"></script>	
+	<style>
+		#cn-map{
+			float:left;
+		}
+	</style>
+</head>
+<div class="my-main">
+
+	<div class="contents">
+		<div id="cn-map" style="width:60%; height: 500px"></div>
+		<div id="map-result" style="width:40%; height: 500px; float:left">
+			<table class="table table-hover" style=" margin-top:50px;">
+				<thead>
+					<tr>
+						<th>经销商</th>
+						<th>库存</th>
+						<th>销售额</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>长宁区经销商</td>
+						<td>1000</td>
+						<td>1000</td>
+					</tr>
+					<tr>
+						<td>长宁区经销商</td>
+						<td>1000</td>
+						<td>1000</td>
+					</tr>
+					<tr>
+						<td>长宁区经销商</td>
+						<td>1000</td>
+						<td>1000</td>
+					</tr>
+					<tr>
+						<td>长宁区经销商</td>
+						<td>1000</td>
+						<td>1000</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="clearfix"></div>
+		<div class="separator bot-gap-3"><span></span></div>
+		<div id="chart" style="width:100%; height:600px"></div>
+	</div>
+	
+	<script>
+		//map
+		$.get('china.json', function (chinaJson) {
+				echarts.registerMap('china', chinaJson);
+				var map = echarts.init(document.getElementById('cn-map'));
+				option = {
+					title: {
+						text: '经销商视图',
+						subtext: 'Data from seesun',
+						left: '5%'
+					},
+					tooltip: {
+						trigger: 'item',
+						showDelay: 0,
+						transitionDuration: 0.2,
+						formatter: function (params) {
+							var value = (params.value + '').split('.');
+							value = value[0].replace(/(\d{1,3})(?=(?:\d{3})+(?!\d))/g, '$1,');
+							return params.name;
+						}
+					},
+					series: [{
+						type: 'map',
+						map: 'china',
+						label:{
+							normal:{
+								show:false
+							},
+							emphasis:{
+								show:false
+							}
+						},
+						itemStyle:{
+							emphasis:{
+								areaColor:"#999",
+							}
+						}
+					}]
+				};
+				map.setOption(option);
+				map.on('click', function (params) {
+					var name=params.name;
+					//todo--ajax or local data
+					console.log(params);
+				});
+		});
+		
+		(function(){
+				var chart = echarts.init(document.getElementById('chart'), 'dark');
+				option = {
+					backgroundColor: "#344b58",
+					title: {
+							text: '各级经销商销售额',
+							subtext: 'BY SEESUN',
+							left:"4%"
+					},
+					tooltip: {
+							trigger: 'axis',
+							axisPointer: {
+									type: 'shadow'
+							}
+					},
+					legend: {
+							x: '4%',
+							top: '11%',
+							textStyle: {
+									color: '#90979c',
+							},
+							data: ['2017年'],
+							selected: {
+									'2016年': false,
+									'2017年': true
+							}
+					},
+					grid: {
+							left: '4%',
+							borderWidth: 0,
+							top: 110,
+							containLabel: true
+					},
+					xAxis: {
+							type: 'value',
+							boundaryGap: [0, 0.01],
+							axisLine:{
+								lineStyle:{
+									color:"#90979c",
+									shadowColor: 'rgba(0, 0, 0, 0.5)',
+									shadowBlur: 0,
+									width:1
+								}
+							},
+							axisTick: {
+								show: false
+							},
+							splitLine: {
+								show: false
+							}
+					},
+					yAxis: {
+							type: 'category',
+							data: ['北京','东北','江苏','上海','浙江','福建'],
+							axisLine:{
+								lineStyle:{
+									color:"#90979c",
+									shadowColor: 'rgba(0, 0, 0, 0.5)',
+									shadowBlur: 0,
+									width:1,					
+								}
+							},
+							minInterval: 20,
+							axisTick: {
+								show: false
+							},
+							splitLine: {
+								show: false
+							}
+					},
+					series: [
+							{
+									name: '2017年',
+									type: 'bar',
+									data: [19325, 23438, 31000, 121594, 134141, 51807],
+									barMaxWidth: 20,
+									label:{
+										normal:{
+											show:true
+										}
+									}
+							},
+							{
+									name: '2017年',
+									type: 'line',
+									symbolSize:20,
+									symbol:'circle',
+									data: [19325, 23438, 31000, 121594, 134141, 51807],
+									barMaxWidth: 20
+							}
+					]
+				};
+
+				chart.setOption(option);
+		})()
+	</script>
+
+
+
+
+</div>
