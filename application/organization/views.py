@@ -277,12 +277,12 @@ def regional_manage_leader(sah_id):
 				return redirect(url_for('organization.regional_manage_leader',sah_id=sah.id))
 	
 			#删除所有销售团队信息
-			for regional_info in SalesAreaHierarchy.query.filter_by(parent_id=sah.id).all():
-				team_info = UserAndSaleArea.query.filter(UserAndSaleArea.parent_idone,UserAndSaleArea.sales_area_id==regional_info.id).first()
-				if not team_info==None:
-					db.session.delete(team_info)
-			
 			if not leader_info==None:
+				for regional_info in SalesAreaHierarchy.query.filter_by(parent_id=sah.id).all():
+					team_info = UserAndSaleArea.query.filter(UserAndSaleArea.parent_id==leader_info.user_id,UserAndSaleArea.sales_area_id==regional_info.id).first()
+					if not team_info==None:
+						db.session.delete(team_info)
+						
 				db.session.delete(leader_info)
 			
 			# add data proc
@@ -374,7 +374,7 @@ def regional_manage_team(sah_id, leader_id,region_province_id):
 				continue
 			
 			choose = 0
-			if u.sales_areas.filter(SalesAreaHierarchy.id == sah.id).count() > 0:
+			if u.sales_areas.filter(SalesAreaHierarchy.id == region_province_id).count() > 0:
 				choose = 1
 
 			user_infos[u.id] = {"choose":choose, "name":u.nickname}
