@@ -20,7 +20,6 @@ class Rails(object):
         db.session.commit()
         return self
 
-
 # Contents_and_options: id, content_id, content_classification_option_id
 contents_and_options = db.Table('contents_and_options',
                                 db.Column('content_id', db.Integer, db.ForeignKey('content.id')),
@@ -427,8 +426,24 @@ class SalesAreaHierarchy(db.Model):
     level_grade = db.Column(db.Integer)
     def __repr__(self):
             return 'SalesAreaHierarchy %r' % self.name
-
-
+    
+    @classmethod
+    def get_team_info_by_regional(cls,regional_id):
+        regional_province={}
+        for regional_info in SalesAreaHierarchy.query.filter_by(parent_id=regional_id).all():
+            #每个省份只有一个销售员
+            team=()
+            team_info = UserAndSaleArea.query.filter(UserAndSaleArea.parent_id!=None,UserAndSaleArea.sales_area_id==regional_info.id).first()
+            if team_info==None:
+                team=(-1, "无")
+            else:
+                u = User.query.filter(User.id==team_info.user_id).first()
+                team=(u.id, u.nickname)
+            regional_province[regional_info.id]={"regional_province_name": regional_info.name,"team_info": team}
+        
+        return regional_province
+    
+    
 class DepartmentHierarchy(db.Model):
     __tablename__ = 'department_hierarchies'
     id = db.Column(db.Integer, primary_key=True)
