@@ -272,7 +272,7 @@ def regional_manage_leader(sah_id):
 		try:
 			user_id = int(request.form.get("user_id"))
 			leader_info = UserAndSaleArea.query.filter_by(sales_area_id=sah.id, parent_id=None).first()
-			if leader_info.user_id == user_id:
+			if not leader_info==None and leader_info.user_id == user_id:
 				flash("未修改区域负责人请确认" )
 				return redirect(url_for('organization.regional_manage_leader',sah_id=sah.id))
 	
@@ -281,8 +281,9 @@ def regional_manage_leader(sah_id):
 				team_info = UserAndSaleArea.query.filter(UserAndSaleArea.parent_idone,UserAndSaleArea.sales_area_id==regional_info.id).first()
 				if not team_info==None:
 					db.session.delete(team_info)
-					
-			db.session.delete(leader_info)
+			
+			if not leader_info==None:
+				db.session.delete(leader_info)
 			
 			# add data proc
 			app.logger.info("add new user[%s] proc" % (user_id))

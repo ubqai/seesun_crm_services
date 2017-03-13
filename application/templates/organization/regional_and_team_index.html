@@ -62,13 +62,17 @@
                     		<td>{{ sah_infos[sah]["leader_info"][1] }}</td>
                     		<td>{{ sah_infos[sah]["regional_province_infos"][region_province]["team_info"][1]}}</td>
                     		<td>
-                    			<a href="{{ url_for('organization.regional_manage_team',
-                    								sah_id=sah,
-                    								leader_id=sah_infos[sah]['leader_info'][0],
-                    								region_province_id=region_province)
-                    								}}">
-                    				团队管理
-                    			</a>
+                    			{% if sah_infos[sah]["leader_info"][0]==-1 %}
+                    				无负责人
+                    			{% else %}
+	                    			<a href="{{ url_for('organization.regional_manage_team',
+	                    								sah_id=sah,
+	                    								leader_id=sah_infos[sah]['leader_info'][0],
+	                    								region_province_id=region_province)
+	                    								}}">
+	                    				团队管理
+	                    			</a>
+                    			{% endif }
                     		</td>
                     	</tr>
                     {% endfor %}
