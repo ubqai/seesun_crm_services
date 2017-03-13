@@ -30,8 +30,15 @@
                     {{ form.name(class = 'form-input form-control',placeholder="请输入姓名") }}
                     {{ render_form_field_error(form.name) }}
                 </div>
+
+                <div class="form-item-2 col-3">
+                    <span>{{ form.title.label }}</span>
+                    {{ form.title(class = 'form-input form-control',placeholder="请输入头衔") }}
+                    {{ render_form_field_error(form.title) }}
+                </div>
+                
                  <div class="form-item-2 col-3">
-                    <span>{{ form.nickname.label }}</span>
+                    <span>{{ form.nickname.label(id='label_nickname') }}</span>
                     {{ form.nickname(class = 'form-input form-control',placeholder="请输入昵称") }}
                     {{ render_form_field_error(form.nickname) }}
                 </div>
@@ -40,22 +47,18 @@
                     <input type="password" class="form-input form-control" id="password" name="password" value="valid_password">
                     <input type="password" class="form-input form-control" id="password_confirm" name="password_confirm"  value="valid_password">
                 </div>
-
                  <div class="form-item-2 col-3">
+                    <span>* {{ form.phone.label(id='label_phone') }}</span>
+                    {{ form.phone(class = 'form-input form-control',placeholder="请输入电话") }}
+                    {{ render_form_field_error(form.phone) }}
+                </div>
+
+                <div class="form-item-2 col-3">
                     <span>* {{ form.address.label }}</span>
                     {{ form.address(class = 'form-input form-control',placeholder="请输入地址") }}
                     {{ render_form_field_error(form.address) }}
                 </div>
-                 <div class="form-item-2 col-3">
-                    <span>* {{ form.phone.label }}</span>
-                    {{ form.phone(class = 'form-input form-control',placeholder="请输入电话") }}
-                    {{ render_form_field_error(form.phone) }}
-                </div>
-                 <div class="form-item-2 col-3">
-                    <span>{{ form.title.label }}</span>
-                    {{ form.title(class = 'form-input form-control',placeholder="请输入头衔") }}
-                    {{ render_form_field_error(form.title) }}
-                </div>
+                
                  <div class="form-item-2 col-3" id="search_user_dept_ranges">
                     <span style="vertical-align:middle">* {{ form.dept_ranges.label }}</span>
                     {{ form.dept_ranges(class = 'form-input form-control') }}

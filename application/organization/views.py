@@ -1,45 +1,46 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
+
 from .. import app, db , login_manager
 from ..models import *
 
-import traceback,json,datetime
+import traceback, json, datetime
 from .forms import *
 from sqlalchemy import distinct
 from flask_login import *
 
-PAGINATION_PAGE_NUMBER=20
+PAGINATION_PAGE_NUMBER = 20
 
-organization = Blueprint('organization', __name__, template_folder = 'templates')
+organization = Blueprint('organization', __name__, template_folder='templates')
 
 # -- login 
-#需要区分pc or wechat ?
+# 需要区分pc or wechat ?
 @organization.route('/user/login', methods=['GET', 'POST'])
 def user_login():
 	if current_user.is_authenticated:
-		if current_user.user_or_origin==3:
+		if current_user.user_or_origin == 3:
 			return redirect(url_for('organization.user_index'))
 		else:
-			#不运行前后端同时登入在一个WEB上
-			app.logger.info("移动端用户[%s]自动登出,[%s][%s]" % (current_user.nickname,request.path,request.endpoint))
+			# 不运行前后端同时登入在一个WEB上
+			app.logger.info("移动端用户[%s]自动登出,[%s][%s]" % (current_user.nickname, request.path, request.endpoint))
 			logout_user()
 
 	if request.method == 'POST':
 		try:
 			form = UserLoginForm(request.form)
-			if form.validate()==False:
+			if form.validate() == False:
 				raise ValueError("")
 
-			#后台只能员工登入
-			user=User.login_verification(form.email.data,form.password.data,3)
-			if user==None:
+			# 后台只能员工登入
+			user = User.login_verification(form.email.data, form.password.data, 3)
+			if user == None:
 				raise ValueError("用户名或密码错误")
 
-			login_valid_errmsg=user.check_can_login()
-			if not login_valid_errmsg=="":
+			login_valid_errmsg = user.check_can_login()
+			if not login_valid_errmsg == "":
 				raise ValueError(login_valid_errmsg)
 
 			login_user(user)
-			app.logger.info("后端用户[%s][%s]登入成功" % (user.email,user.nickname))
+			app.logger.info("后端用户[%s][%s]登入成功" % (user.email, user.nickname))
 			return redirect(url_for('organization.user_index'))
 		except Exception as e:
 			app.logger.info("后端用户登入失败[%s]" % (e))
@@ -47,7 +48,7 @@ def user_login():
 	else:
 		form = UserLoginForm()
 
-	return render_template('organization/user_login.html',form=form)
+	return render_template('organization/user_login.html', form=form)
 
 @organization.route('/user/logout')
 def user_logout():
@@ -60,29 +61,29 @@ def user_logout():
 def user_index(page=1):
 	form = UserSearchForm(request.args)
 	form.reset_select_field()
-	if form.user_type.data=="None":
-		form.user_type.data="3"
+	if form.user_type.data == "None":
+		form.user_type.data = "3"
 
-	us = db.session.query(distinct(User.id)).filter(User.user_or_origin==form.user_type.data)
+	us = db.session.query(distinct(User.id)).filter(User.user_or_origin == form.user_type.data)
 	if form.email.data:
-		us = us.filter(User.email.like(form.email.data+"%"))
+		us = us.filter(User.email.like(form.email.data + "%"))
 	if form.name.data:
-		us = us.filter(User.nickname.like("%"+form.name.data+"%"))
+		us = us.filter(User.nickname.like("%" + form.name.data + "%"))
 
-	if form.user_type.data=="3":
+	if form.user_type.data == "3":
 		if form.dept_ranges.data and form.dept_ranges.data != [""]:
-			dh_array=[dh_data.id for dh_data in form.dept_ranges.data]
+			dh_array = [dh_data.id for dh_data in form.dept_ranges.data]
 		else:
-			dh_array=[dh_data.id for dh_data in form.dept_ranges.query]
-		us=us.join(User.departments).filter(DepartmentHierarchy.id.in_(dh_array))
+			dh_array = [dh_data.id for dh_data in form.dept_ranges.query]
+		us = us.join(User.departments).filter(DepartmentHierarchy.id.in_(dh_array))
 	else:
 		if form.sale_range.data and form.sale_range.data != "" and form.sale_range.data != "None":
-			us=us.join(User.sales_areas).filter(SalesAreaHierarchy.id==form.sale_range.data.id)
+			us = us.join(User.sales_areas).filter(SalesAreaHierarchy.id == form.sale_range.data.id)
 
-	us=User.query.filter(User.id.in_(us)).order_by(User.id)
+	us = User.query.filter(User.id.in_(us)).order_by(User.id)
 	pagination = us.paginate(page, PAGINATION_PAGE_NUMBER, False) 
 
-	return render_template('organization/user_index.html',user_type=form.user_type.data,user_infos=pagination.items,pagination=pagination,form=form)
+	return render_template('organization/user_index.html', user_type=form.user_type.data, user_infos=pagination.items, pagination=pagination, form=form)
 
 
 @organization.route('/user/new', methods=['GET', 'POST'])
@@ -92,136 +93,138 @@ def user_new():
 			form = UserForm(request.form)
 			form.reset_select_field()
 			
-			if form.nickname.data=="":
+			if form.nickname.data == "":
 				form.nickname.data = form.name.data
 
-			if form.validate()==False:
+			if form.validate() == False:
 				app.logger.info("form valid fail: [%s]" % (form.errors))
 				raise ValueError("")
 
-			if User.query.filter_by(email=form.email.data).count()>0:
+			if User.query.filter_by(email=form.email.data).count() > 0:
 				raise ValueError("邮箱[%s]已被注册,请更换!" % (form.email.data))
 
-			ui=UserInfo(name=form.name.data,telephone=form.phone.data,address=form.address.data,title=form.title.data)
+			ui = UserInfo(name=form.name.data, telephone=form.phone.data, address=form.address.data, title=form.title.data)
 
-			u=User(email=form.email.data,user_or_origin=int(form.user_type.data),nickname=form.nickname.data)
+			u = User(email=form.email.data, user_or_origin=int(form.user_type.data), nickname=form.nickname.data)
 			u.password = form.password.data
 			u.user_infos.append(ui)
 
-			if form.user_type.data=="3":
+			if form.user_type.data == "3":
 				app.logger.info("into 3 : [%s]" % (form.dept_ranges.data))
 				for dh_data in form.dept_ranges.data:
-					dh =  DepartmentHierarchy.query.filter_by(id=dh_data.id).first()
+					dh = DepartmentHierarchy.query.filter_by(id=dh_data.id).first()
 					if dh == None:
 						raise ValueError("所属部门错误[%s]" % (sah_id))
 					u.departments.append(dh)
 			else:
 				app.logger.info("into 2 : [%s]" % (form.sale_range.data.id))
 				sah = SalesAreaHierarchy.query.filter_by(id=form.sale_range.data.id).first()
-				if sah==None:
+				if sah == None:
 					raise ValueError("销售区域错误[%s]" % (sah_id))
 				u.sales_areas.append(sah)
 
 			u.save
 
-			flash("添加经销商 %s,%s 成功" % (u.email,u.nickname))
-			return render_template('organization/user_new.html',form=form)
+			flash("添加经销商 %s,%s 成功" % (u.email, u.nickname))
+			return render_template('organization/user_new.html', form=form)
 		except Exception as e:
 			flash(e)
 			app.logger.info("organization.user_new exception [%s]" % (traceback.print_exc()))
 
-			return render_template('organization/user_new.html',form=form)
+			return render_template('organization/user_new.html', form=form)
 	else:
 		form = UserForm()
 		form.reset_select_field()
-		return render_template('organization/user_new.html',form=form)
+		return render_template('organization/user_new.html', form=form)
+
 
 @organization.route('/user/update/<int:user_id>', methods=['GET', 'POST'])
 def user_update(user_id):
-	u=User.query.filter_by(id=user_id).first()
-	if u==None:
+	u = User.query.filter_by(id=user_id).first()
+	if u == None:
 		return redirect(url_for('organization.user_search'))
 
 	if request.method == 'POST':
 		try:
-			form = UserForm(request.form,user_type=u.user_or_origin)
+			form = UserForm(request.form, user_type=u.user_or_origin)
 			form.reset_select_field()
 
-			app.logger.info("user_type[%s] , password[%s]" % (form.user_type.data,form.password_confirm.data))
-			if form.nickname.data=="":
+			app.logger.info("user_type[%s] , password[%s]" % (form.user_type.data, form.password_confirm.data))
+			if form.nickname.data == "":
 				form.nickname.data = form.name.data
 
-			if form.validate()==False:
+			if form.validate() == False:
 				app.logger.info("form valid fail: [%s]" % (form.errors))
 				raise ValueError("")
 
-			u.email=form.email.data
-			u.nickname=form.nickname.data
+			u.email = form.email.data
+			u.nickname = form.nickname.data
 
-			if len(u.user_infos)==0:
+			if len(u.user_infos) == 0:
 				ui = UserInfo()
 			else:
 				ui = u.user_infos[0]
 
-			ui.name=form.name.data
-			ui.telephone=form.phone.data
-			ui.address=form.address.data
-			ui.title=form.title.data
+			ui.name = form.name.data
+			ui.telephone = form.phone.data
+			ui.address = form.address.data
+			ui.title = form.title.data
 
-			if len(u.user_infos)==0:
+			if len(u.user_infos) == 0:
 				u.user_infos.append(ui)
 
-			if u.user_or_origin==3:
-				dh_array=[dh_data.id for dh_data in form.dept_ranges.data]
+			if u.user_or_origin == 3:
+				dh_array = [dh_data.id for dh_data in form.dept_ranges.data]
 				if sorted([i.id for i in u.departments]) != sorted(dh_array):
 					for d in u.departments:
 						u.departments.remove(d)
 					for d_id in dh_array:
 						u.departments.extend(form.dept_ranges.data)
 			else:
-				if u.sales_areas.first().id != form.sale_range.data.id:
-					sah=SalesAreaHierarchy.query.filter_by(id=form.sale_range.data.id).first()
-					u.sales_areas.remove(u.sales_areas.first())
+				if u.sales_areas.count() == 0 or u.sales_areas.first().id != form.sale_range.data.id:
+					if not u.sales_areas.count() == 0:
+						u.sales_areas.remove(u.sales_areas.first())
+					sah = SalesAreaHierarchy.query.filter_by(id=form.sale_range.data.id).first()
 					u.sales_areas.append(sah)
 
 			u.save
 
-			flash("修改经销商 %s,%s 成功" % (u.email,u.nickname))
-			return render_template('organization/user_update.html',form=form,user_id=u.id)
-		except Exception as e:
+			flash("修改经销商 %s,%s 成功" % (u.email, u.nickname))
+			return render_template('organization/user_update.html', form=form, user_id=u.id)
+		except ValueError as e:
 			flash(e)
-			return render_template('organization/user_update.html',form=form,user_id=u.id)
+			return render_template('organization/user_update.html', form=form, user_id=u.id)
 	else:
-		form = UserForm(obj=u,user_type=u.user_or_origin)
+		form = UserForm(obj=u, user_type=u.user_or_origin)
 		form.reset_select_field()
-		if len(u.user_infos)==0:
+		if len(u.user_infos) == 0:
 			pass
 		else:
-			ui=u.user_infos[0]
-			form.name.data=ui.name
-			form.address.data=ui.address
-			form.phone.data=ui.telephone
-			form.title.data=ui.title
+			ui = u.user_infos[0]
+			form.name.data = ui.name
+			form.address.data = ui.address
+			form.phone.data = ui.telephone
+			form.title.data = ui.title
 
-		if u.sales_areas.first()!=None:
-			form.sale_range.default=u.sales_areas.first().id
-		if u.departments.first()!=None:
-			form.dept_ranges.default=u.departments.all()
+		if u.sales_areas.first() != None:
+			form.sale_range.default = u.sales_areas.first().id
+		if u.departments.first() != None:
+			form.dept_ranges.default = u.departments.all()
 
-		return render_template('organization/user_update.html',form=form,user_id=u.id)
+		return render_template('organization/user_update.html', form=form, user_id=u.id)
 
 @organization.route('/user/get_sale_range_by_parent/<int:level_grade>')
 def get_sale_range_by_parent(level_grade):
 	parent_id = request.args.get('parent_id', '__None')
-	if parent_id=="__None":
-		parent_id=None
+	if parent_id == "__None":
+		parent_id = None
 	else:
-		parent_id=int(parent_id)
+		parent_id = int(parent_id)
 
-	sa_array={}
-	for sa in BaseForm.get_sale_range_by_parent(level_grade,parent_id):
-		sa_array[sa.id]=sa.name
-	json_data=json.dumps(sa_array)
+	sa_array = {}
+	for sa in BaseForm.get_sale_range_by_parent(level_grade, parent_id):
+		sa_array[sa.id] = sa.name
+	json_data = json.dumps(sa_array)
 	app.logger.info("return from get_sale_range_by_province [%s]" % (json_data))
 	
 	return json_data
@@ -234,131 +237,146 @@ def regional_and_team_index():
 	form = RegionalSearchForm(request.args)
 	form.reset_select_field()
 
-	sah_infos={}
+	sah_infos = {}
 	app.logger.info("regional.data [%s]" % (form.regional.data))
-	if form.regional.data==[]:
-		sah_search=form.regional.query
+	if form.regional.data == []:
+		sah_search = form.regional.query
 	else:
-		sah_search=form.regional.data
-
+		sah_search = form.regional.data
+		
+		
 	for sah in (sah_search):
-		regional_info=[(sah_child.id,sah_child.name) for sah_child in SalesAreaHierarchy.query.filter_by(parent_id=sah.id).all()]
-		leader_info=[]
-		if len(regional_info)==0:
-			regional_info.append( (-1,"无") )
-			leader_info.append( (-1,"无") )
+		#每个区域只有一个总监
+		leader=()
+		leader_info = UserAndSaleArea.query.filter(UserAndSaleArea.parent_id==None,UserAndSaleArea.sales_area_id==sah.id).first()
+		if leader_info==None:
+			leader=(-1, "无")
 		else:
-			us = db.session.query(User).join(UserAndSaleArea) \
-				.filter(UserAndSaleArea.parent_id==None) \
-				.filter(UserAndSaleArea.sales_area_id==sah.id) \
-				.order_by(User.id) \
-				.all()
-			leader_info=[(u.id,u.nickname) for u in us]
-			if len(leader_info)==0:
-				leader_info.append( (-1,"无") )
-		sah_infos[sah.id]={"name": sah.name , "regional_info":regional_info ,"leader_info":leader_info}
+			u = User.query.filter(User.id==leader_info.user_id).first()
+			leader=(u.id, u.nickname)
+		
+		sah_infos[sah.id] = {"regional_name": sah.name , "leader_info":leader , "regional_province_infos":SalesAreaHierarchy.get_team_info_by_regional(sah.id)}		
 
-	return render_template('organization/regional_and_team_index.html',form=form,sah_infos=sah_infos)
+		app.logger.info("return sah_infos [%s]" % (sah_infos))
+	return render_template('organization/regional_and_team_index.html', form=form, sah_infos=sah_infos)
 
-@organization.route('/user/regional/manage_leader/<int:sah_id>',methods=['GET', 'POST'])
+
+@organization.route('/user/regional/manage_leader/<int:sah_id>', methods=['GET', 'POST'])
 def regional_manage_leader(sah_id):
-	sah=SalesAreaHierarchy.query.filter_by(id=sah_id).first()
-	if sah==None:
+	sah = SalesAreaHierarchy.query.filter_by(id=sah_id).first()
+	if sah == None:
 		flash("非法区域id[%d]" % (sah_id))
 		return redirect(url_for('organization.regional_and_team_index'))
 
 	if request.method == 'POST':
-		add_user_array = [int(user_id) for user_id in request.form.getlist("user_id")]
-		app.logger.info("proc all user [%s] for regional[%s]" % (add_user_array,sah.name))
-		#exists data proc
-		for uasa in UserAndSaleArea.query.filter_by(sales_area_id=sah.id,parent_id=None):
-			if uasa.user_id in add_user_array:
-				app.logger.info("has existed user[%s] not proc" % (uasa.user_id))
-				add_user_array.remove(uasa.user_id)
-			else:
-				app.logger.info("delete existed user[%s] proc" % (uasa.user_id))
-				uasa.delete
-
-		#add data proc
-		for user_id in add_user_array:
+		try:
+			user_id = int(request.form.get("user_id"))
+			leader_info = UserAndSaleArea.query.filter_by(sales_area_id=sah.id, parent_id=None).first()
+			if not leader_info==None and leader_info.user_id == user_id:
+				flash("未修改区域负责人请确认" )
+				return redirect(url_for('organization.regional_manage_leader',sah_id=sah.id))
+	
+			#删除所有销售团队信息
+			if not leader_info==None:
+				for regional_info in SalesAreaHierarchy.query.filter_by(parent_id=sah.id).all():
+					team_info = UserAndSaleArea.query.filter(UserAndSaleArea.parent_id==leader_info.user_id,UserAndSaleArea.sales_area_id==regional_info.id).first()
+					if not team_info==None:
+						db.session.delete(team_info)
+						
+				db.session.delete(leader_info)
+			
+			# add data proc
 			app.logger.info("add new user[%s] proc" % (user_id))
 			u_add = User.query.filter_by(id=user_id).first()
 			u_add.sales_areas.append(sah)
-			u_add.save
-
-		flash("区域[%s] 负责人修改成功" % (sah.name))
-		return redirect(url_for('organization.regional_and_team_index'))
+			db.session.add(u_add)
+	
+			db.session.commit()
+			flash("区域[%s] 负责人修改成功" % (sah.name))
+			return redirect(url_for('organization.regional_and_team_index'))
+		except Exception as e:
+			flash("区域[%s] 负责人修改失败:[%s]" % (sah.name,e))
+			db.session.rollback()
+			return redirect(url_for('organization.regional_manage_leader',sah_id=sah.id))
 	else:
 		us = db.session.query(User).join(User.departments) \
-			.filter(User.user_or_origin==3) \
-			.filter(DepartmentHierarchy.name=="销售部") \
+			.filter(User.user_or_origin == 3) \
+			.filter(DepartmentHierarchy.name == "销售部") \
 			.order_by(User.id)
 		app.logger.info("regional_manage_leader us get count: [%d]" % (us.count()))
-		user_infos={}
+		user_infos = {}
 		for u in us.all():
-			uasa = UserAndSaleArea.query.filter(UserAndSaleArea.user_id==u.id,UserAndSaleArea.parent_id!=None).first()
-			if not uasa==None:
+			uasa = UserAndSaleArea.query.filter(UserAndSaleArea.user_id == u.id, UserAndSaleArea.parent_id != None).first()
+			if not uasa == None:
 				continue
 
-			choose=0
-			if u.sales_areas.filter(SalesAreaHierarchy.id==sah.id).count()>0:
-				choose=1
+			choose = 0
+			if u.sales_areas.filter(SalesAreaHierarchy.id == sah.id).count() > 0:
+				choose = 1
 
-			user_infos[u.id]={"choose":choose,"name":u.nickname}
+			user_infos[u.id] = {"choose":choose, "name":u.nickname}
+				
+		return render_template('organization/regional_manage_leader.html', user_infos=user_infos, sah_id=sah.id,regional_province_infos=SalesAreaHierarchy.get_team_info_by_regional(sah.id))
 
-		return render_template('organization/regional_manage_leader.html',user_infos=user_infos,sah_id=sah.id)
 
-
-@organization.route('/user/regional/manage_team/<int:sah_id>-<int:leader_id>',methods=['GET', 'POST'])
-def regional_manage_team(sah_id,leader_id):
-	app.logger.info("regional_manage_team [%d],[%d]" % (sah_id,leader_id))
-
-	sah=SalesAreaHierarchy.query.filter_by(id=sah_id).first()
-	if sah==None:
+@organization.route('/user/regional/manage_team/<int:sah_id>-<int:leader_id>-<int:region_province_id>', methods=['GET', 'POST'])
+def regional_manage_team(sah_id, leader_id,region_province_id):
+	app.logger.info("regional_manage_team [%d],[%d],[%d]" % (sah_id, leader_id,region_province_id))
+	sah = SalesAreaHierarchy.query.filter_by(id=sah_id).first()
+	if sah == None:
 		flash("非法区域id[%d]" % (sah_id))
 		return redirect(url_for('organization.regional_and_team_index'))
 
-	leader=User.query.filter_by(id=leader_id).first()
-	if leader==None:
+	leader = User.query.filter_by(id=leader_id).first()
+	if leader == None:
 		flash("非法负责人id[%d]" % (leader_id))
 		return redirect(url_for('organization.regional_and_team_index'))
 
 	if request.method == 'POST':
-		add_user_array = [int(user_id) for user_id in request.form.getlist("user_id")]
-		app.logger.info("proc all user [%s] for team[%s]" % (add_user_array,sah.name))
-		#exists data proc
-		for uasa in UserAndSaleArea.query.filter_by(sales_area_id=sah.id,parent_id=leader.id):
-			if uasa.user_id in add_user_array:
-				app.logger.info("has existed user[%s] not proc" % (uasa.user_id))
-				add_user_array.remove(uasa.user_id)
-			else:
-				app.logger.info("delete existed user[%s] proc" % (uasa.user_id))
-				uasa.delete
-
-		#add data proc
-		for user_id in add_user_array:
+		try:
+			user_id=int(request.form.get("user_id"))
+			team_info = UserAndSaleArea.query.filter(UserAndSaleArea.sales_area_id==region_province_id, UserAndSaleArea.parent_id!=None).first()
+			if not team_info==None and team_info.user_id == user_id:
+				flash("未修改销售团队请确认" )
+				return redirect(url_for('organization.regional_manage_team',sah_id=sah.id,leader_id=leader_id,region_province_id=region_province_id))
+			
+			# exists data proc
+			if not team_info==None:
+				db.session.delete(team_info)
+				
 			app.logger.info("add new user[%s] proc" % (user_id))
-			uasa=UserAndSaleArea(user_id=user_id,sales_area_id=sah.id,parent_id=leader.id,parent_time=datetime.datetime.now())
-			uasa.save
-
-		flash("区域[%s] 负责人[%s] 团队员工修改成功" % (sah.name,leader.nickname))
-		return redirect(url_for('organization.regional_and_team_index'))
+			uasa = UserAndSaleArea(user_id=user_id, sales_area_id=region_province_id, parent_id=leader.id, parent_time=datetime.datetime.now())
+			db.session.add(uasa)
+	
+			db.session.commit()
+			flash("区域[%s] 负责人[%s] 销售团队修改成功" % (sah.name, leader.nickname))
+			return redirect(url_for('organization.regional_and_team_index'))
+		except Exception as e:
+			flash("区域[%s] 负责人[%s] 销售团队修改成功:[%s]" % (sah.name,leader.nickname,e))
+			db.session.rollback()
+			return redirect(url_for('organization.regional_manage_team',sah_id=sah.id,leader_id=leader_id,region_province_id=region_province_id))
 	else:
 		us = db.session.query(User).join(User.departments) \
-			.filter(User.user_or_origin==3) \
-			.filter(DepartmentHierarchy.name=="销售部") \
+			.filter(User.user_or_origin == 3) \
+			.filter(DepartmentHierarchy.name == "销售部") \
 			.order_by(User.id)
 		app.logger.info("regional_manage_team us get count: [%d]" % (us.count()))
-		user_infos={}
+		user_infos = {}
 		for u in us.all():
-			uasa = UserAndSaleArea.query.filter(UserAndSaleArea.user_id==u.id,UserAndSaleArea.parent_id==None).first()
-			if not uasa==None:
+			#排除负责人
+			uasa = UserAndSaleArea.query.filter(UserAndSaleArea.user_id == u.id, UserAndSaleArea.parent_id == None).first()
+			if not uasa == None:
 				continue
+			
+			#排除其他负责人的团队成员
+			uasa = UserAndSaleArea.query.filter(UserAndSaleArea.user_id == u.id, UserAndSaleArea.parent_id != leader.id).first()
+			if not uasa == None:
+				continue
+			
+			choose = 0
+			if u.sales_areas.filter(SalesAreaHierarchy.id == region_province_id).count() > 0:
+				choose = 1
 
-			choose=0
-			if u.sales_areas.filter(SalesAreaHierarchy.id==sah.id).count()>0:
-				choose=1
+			user_infos[u.id] = {"choose":choose, "name":u.nickname}
 
-			user_infos[u.id]={"choose":choose,"name":u.nickname}
-
-		return render_template('organization/regional_manage_team.html',user_infos=user_infos,sah_id=sah.id,leader_id=leader.id)
+		return render_template('organization/regional_manage_team.html', user_infos=user_infos, sah_id=sah.id, leader_id=leader.id,region_province_id=region_province_id)

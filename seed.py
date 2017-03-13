@@ -73,3 +73,7 @@ if User.query.filter_by(email="admin@hotmail.com"):
 	u.save
 
 
+for u in User.query.filter_by(user_or_origin=3):
+	for sa in u.sales_areas:
+		u.sales_areas.remove(sa)
+	u.save
