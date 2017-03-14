@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
-from flask import Flask, g, render_template, redirect, url_for,request,flash
+from flask import Flask, g, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import *
+from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
 
 from .config import config
@@ -45,6 +45,7 @@ app.add_template_global(load_inventories_by_code)
 app.add_template_global(len)
 app.add_template_global(int)
 
+
 @app.before_first_request
 def setup_logging():
     if not app.debug:
@@ -53,8 +54,7 @@ def setup_logging():
         app.logger.setLevel(logging.INFO)
 
 
-
-#单个使用@login_required
+# 单个使用@login_required
 @app.before_request
 def login_check():
     #url_rule

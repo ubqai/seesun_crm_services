@@ -47,11 +47,8 @@
                     <tr>
 						<td colspan=3> {{ sah_infos[sah]["regional_name"] }} </td>
 						<td> 
-							{% if  len(sah_infos[sah]["regional_province_infos"])==0 %}
-								无对应省份
-							{% else %}
-								<a href="{{url_for('organization.regional_manage_leader',sah_id=sah)}}">负责人管理 </a> 
-							{% endif %}
+							<a href="{{url_for('organization.regional_manage_province',sah_id=sah)}}">省份管理, </a> 
+							<a href="{{url_for('organization.regional_manage_leader',sah_id=sah)}}">负责人管理 </a> 
 						</td>
                     </tr>
                     
@@ -63,7 +60,7 @@
                     		<td>{{ sah_infos[sah]["regional_province_infos"][region_province]["team_info"][1]}}</td>
                     		<td>
                     			{% if sah_infos[sah]["leader_info"][0]==-1 %}
-                    				无负责人
+                    				
                     			{% else %}
 	                    			<a href="{{ url_for('organization.regional_manage_team',
 	                    								sah_id=sah,

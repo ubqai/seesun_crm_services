@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
-from . import db,login_manager,bcrypt
+from . import db, login_manager, bcrypt
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.filter_by(id=int(user_id)).first()
+
 
 class Rails(object):
     @property
@@ -24,8 +25,7 @@ class Rails(object):
 contents_and_options = db.Table('contents_and_options',
                                 db.Column('content_id', db.Integer, db.ForeignKey('content.id')),
                                 db.Column('content_classification_option_id', db.Integer,
-                                          db.ForeignKey('content_classification_option.id'))
-    )
+                                          db.ForeignKey('content_classification_option.id')))
 
 
 # Contents: id, name,description,content_thumbnail,reference_info(json{name,value})
@@ -78,7 +78,7 @@ class ContentCategory(db.Model, Rails):
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
-    contents = db.relationship('Content', backref='category', lazy='dynamic' )
+    contents = db.relationship('Content', backref='category', lazy='dynamic')
     classifications = db.relationship('ContentClassification', backref='category', lazy='dynamic')
 
     def __repr__(self):
@@ -147,10 +147,10 @@ class Material(db.Model, Rails):
 
 
 class MaterialApplication(db.Model, Rails):
-    id         = db.Column(db.Integer, primary_key=True)
-    app_no     = db.Column(db.String(30), unique=True)
-    status     = db.Column(db.String(50))
-    memo       = db.Column(db.String(200))
+    id = db.Column(db.Integer, primary_key=True)
+    app_no = db.Column(db.String(30), unique=True)
+    status = db.Column(db.String(50))
+    memo = db.Column(db.String(200))
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -161,11 +161,11 @@ class MaterialApplication(db.Model, Rails):
 
 
 class MaterialApplicationContent(db.Model, Rails):
-    id          = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     material_id = db.Column(db.Integer, db.ForeignKey('material.id'))
-    number      = db.Column(db.Integer)
-    created_at  = db.Column(db.DateTime, default=datetime.datetime.now)
-    updated_at  = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    number = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     application_id = db.Column(db.Integer, db.ForeignKey('material_application.id'))
 
     def __repr__(self):
@@ -179,7 +179,7 @@ class DesignApplication(db.Model, Rails):
     ul_file = db.Column(db.String(200))
     dl_file = db.Column(db.String(200))
     applicant_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    operator_id  = db.Column(db.Integer)
+    operator_id = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
@@ -190,19 +190,19 @@ class DesignApplication(db.Model, Rails):
 class TrackingInfo(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(50))
-    contract_no   = db.Column(db.String(50))
+    contract_no = db.Column(db.String(50))
     contract_date = db.Column(db.DateTime)
     receiver_name = db.Column(db.String(200))
-    receiver_tel  = db.Column(db.String(30))
-    production_date      = db.Column(db.DateTime)
-    production_manager   = db.Column(db.String(200))
+    receiver_tel = db.Column(db.String(30))
+    production_date = db.Column(db.DateTime)
+    production_manager = db.Column(db.String(200))
     production_starts_at = db.Column(db.DateTime)
-    production_ends_at   = db.Column(db.DateTime)
-    delivery_date     = db.Column(db.DateTime)
+    production_ends_at = db.Column(db.DateTime)
+    delivery_date = db.Column(db.DateTime)
     logistics_company = db.Column(db.String(200))
     delivery_plate_no = db.Column(db.String(100))
     delivery_man_name = db.Column(db.String(200))
-    delivery_man_tel  = db.Column(db.String(30))
+    delivery_man_tel = db.Column(db.String(30))
     qrcode_token = db.Column(db.String(128))
     qrcode_image = db.Column(db.String(200))
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
@@ -211,23 +211,27 @@ class TrackingInfo(db.Model, Rails):
 
     def __repr__(self):
         return 'TrackingInfo(id: %s, contract_no: %s,...)' % (self.id, self.contract_no)
+
     @property
     def production_status(self):
         if self.production_date:
             if self.production_date < datetime.datetime.now():
                 return '已生产'
         return '未生产'
+
     @property
     def delivery_status(self):
         if self.delivery_date:
             if self.delivery_date < datetime.datetime.now():
                 return '已发货'
         return '未发货'
+
     @property
     def qrcode_image_path(self):
         if self.qrcode_image:
             return '/static/upload/qrcode/%s' % self.qrcode_image
         return ''
+
 
 class TrackingInfoDetail(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
@@ -330,13 +334,14 @@ users_and_departments = db.Table(
     db.Column('dep_id', db.Integer, db.ForeignKey('department_hierarchies.id'))
 )
 
-class UserAndSaleArea(db.Model,Rails):
+
+class UserAndSaleArea(db.Model, Rails):
     __tablename__ = 'users_and_sales_areas'
     __table_args__ = {"useexisting": True}
-    user_id=db.Column('user_id', db.Integer, db.ForeignKey('users.id'),primary_key=True)
-    sales_area_id=db.Column('sales_area_id', db.Integer, db.ForeignKey('sales_area_hierarchies.id'),primary_key=True)
-    parent_id=db.Column('parent_id', db.Integer)
-    parent_time=db.Column('parent_time', db.DateTime)
+    user_id = db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    sales_area_id = db.Column('sales_area_id', db.Integer, db.ForeignKey('sales_area_hierarchies.id'), primary_key=True)
+    parent_id = db.Column('parent_id', db.Integer)
+    parent_time = db.Column('parent_time', db.DateTime)
 
 
 class User(db.Model, Rails):
@@ -357,20 +362,25 @@ class User(db.Model, Rails):
                                   backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
     departments = db.relationship('DepartmentHierarchy', secondary=users_and_departments,
                                   backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
-    #用户的对象是否可认证 , 因为某些原因不允许被认证
+
+    # 用户的对象是否可认证 , 因为某些原因不允许被认证
     def is_authenticated(self):
         return True
-    #用户的对象是否有效 , 账号被禁止
+
+    # 用户的对象是否有效 , 账号被禁止
     def is_active(self):
         return True
-    #为那些不被获准登录的用户返回True
+
+    # 为那些不被获准登录的用户返回True
     def is_anonymous(self):
         return False
-    #为用户返回唯一的unicode标识符
+
+    # 为用户返回唯一的unicode标识符
     def get_id(self):
         return str(self.id).encode("utf-8")
+
     def check_can_login(self):
-        if self.user_or_origin==3 and self.departments.count()==0:
+        if self.user_or_origin == 3 and self.departments.count() == 0:
             return "用户部门异常,请联系管理员"
 
         return ""
@@ -380,26 +390,26 @@ class User(db.Model, Rails):
         return self.password_hash
 
     @password.setter
-    def password(self,value):
-        self.password_hash=bcrypt.generate_password_hash(value).decode('utf-8')
+    def password(self, value):
+        self.password_hash = bcrypt.generate_password_hash(value).decode('utf-8')
 
     @classmethod
-    def login_verification(cls,email,password,user_or_origin):
-        user=User.query.filter_by(email=email,user_or_origin=user_or_origin).first()
-        if user!=None:
+    def login_verification(cls, email, password, user_or_origin):
+        user = User.query.filter(User.email == email, User.user_or_origin == user_or_origin).first()
+        if user is not None:
             if not bcrypt.check_password_hash(user.password, password):
-                user=None
+                user = None
 
         return user
 
     def get_max_level_grade(self):
-        max_level_grade=99
+        max_level_grade = 99
         for d in self.departments:
-            if max_level_grade>d.level_grade:
-                max_level_grade=d.level_grade
+            if max_level_grade > d.level_grade:
+                max_level_grade = d.level_grade
 
         return max_level_grade
-    
+
 
 class UserInfo(db.Model):
     __tablename__ = 'user_infos'
@@ -424,26 +434,30 @@ class SalesAreaHierarchy(db.Model):
     name = db.Column(db.String(300), nullable=False)
     parent_id = db.Column(db.Integer)
     level_grade = db.Column(db.Integer)
+
     def __repr__(self):
             return 'SalesAreaHierarchy %r' % self.name
-    
+
     @classmethod
-    def get_team_info_by_regional(cls,regional_id):
-        regional_province={}
+    def get_team_info_by_regional(cls, regional_id):
+        regional_province = {}
         for regional_info in SalesAreaHierarchy.query.filter_by(parent_id=regional_id).all():
-            #每个省份只有一个销售员
-            team=()
-            team_info = UserAndSaleArea.query.filter(UserAndSaleArea.parent_id!=None,UserAndSaleArea.sales_area_id==regional_info.id).first()
-            if team_info==None:
-                team=(-1, "无")
+            # 每个省份只有一个销售员
+            team = ()
+            team_info = UserAndSaleArea.query.filter(UserAndSaleArea.parent_id != None, UserAndSaleArea.sales_area_id == regional_info.id).first()
+            if team_info is None:
+                team = (-1, "无")
             else:
-                u = User.query.filter(User.id==team_info.user_id).first()
-                team=(u.id, u.nickname)
-            regional_province[regional_info.id]={"regional_province_name": regional_info.name,"team_info": team}
-        
+                u = User.query.filter(User.id == team_info.user_id).first()
+                team = (u.id, u.nickname)
+            regional_province[regional_info.id] = {"regional_province_name": regional_info.name, "team_info": team}
+
+        if regional_province == {}:
+            regional_province[-1] = {"regional_province_name": "无", "team_info": (-1, "无")}
+            
         return regional_province
-    
-    
+
+
 class DepartmentHierarchy(db.Model):
     __tablename__ = 'department_hierarchies'
     id = db.Column(db.Integer, primary_key=True)

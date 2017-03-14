@@ -12,27 +12,30 @@
 		<p class="contents-header-p text-sm">regional_and_team management</p>
 	</div>
 	<div class="separator"><span></span></div>
-	<form class="form form-horizontal" url="{{url_for('organization.regional_manage_leader',sah_id=sah_id)}}" role="form" method="post">
+	<form class="form form-horizontal" url="{{url_for('organization.regional_manage_province',sah_id=sah_id)}}" role="form" method="post">
 	    <div class="form-style form-default">
 	        <div class="widget_contents padding-0">
 	        	<table class="tables">
 	        		<tr>
-	        			<th colspan=2>负责人选择</th>
+	        			<th>选择</th>
+	        			<th>区域(省)</th>
+	        			<th>现对应区域</th>
 	        		</tr>
-					{% for use_info in sorted_user_infos %}
+					{% for province_info in sorted_province_info %}
 						<tr>
 							<td>
-								{% if use_info[1]['choose'] ==1 %}
-				        			<input type="radio" name="user_id" value="{{use_info[0]}}" checked="{{use_info[1]['choose']}}" />
+								{% if province_info[1]['choose'] == 1 %}
+				        			<input type="checkbox" name="province_id" value="{{province_info[0]}}" checked="{{province_info[1]['choose']}}" />
 				        		{% else %}	        			
-				        			<input type="radio" name="user_id" value="{{use_info[0]}}" />
+				        			<input type="checkbox" name="province_id" value="{{province_info[0]}}" />
 				        		{% endif %}
 				        	</td>
-				        	<td>{{use_info[1]['name']}}
-				        		{% if use_info[1]['choose'] == 1 %}
+				        	<td>{{province_info[1]["name"]}}
+				        		{% if province_info[1]['choose'] == 1 %}
 				        			(现系统值)
 				        		{% endif %}
 				        	</td>
+				        	<td>{{province_info[1]["up_name"]}}</td>
 						</tr>
 					{% endfor %}	
 				</table>
@@ -40,27 +43,13 @@
 
 	        <div class="text-right top-gap-2 right-gap-3">
 	            <button class="btn btn-default my-btn" onclick="{
-	            if(confirm('修改区域负责人将会重置此区域下所有销售团队,请知晓')){
+	            if(confirm('修改区域(省)将会重置此次变更省份所对应的销售团队,请知晓')){
 				  this.document.formname.submit();
 				  return true;}return false;
 				 }">提交</button>
 	        </div>
 	    </div>
 	</form>
-	
-    <div class="widget_contents padding-0">
-    	<table class="tables">
-    		<tr>
-    			<th colspan=2>现销售团队信息</th>
-    		</tr>
-			{% for regional_province in regional_province_infos %}
-				<tr>
-                		<td>{{ regional_province_infos[regional_province]["regional_province_name"] }}</td>
-                		<td>{{ regional_province_infos[regional_province]["team_info"][1] }}</td>
-				</tr>
-			{% endfor %}	
-		</table>
-    </div>
 </div>
 
 {% endblock %}
