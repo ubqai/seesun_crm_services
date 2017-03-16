@@ -67,7 +67,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for contract in contracts %}
+                    {% for contract in contracts.items %}
                         <tr>
                             <td><a href="{{ url_for('order_manage.contract_show', id=contract.id) }}" class="table-link">{{ contract.contract_no }}</a></td>
                             <td>{{ contract.contract_date.strftime('%Y%m%d') }}</td>
@@ -88,6 +88,32 @@
                 </tbody>
             </table>
         </div>
+        <ul class="pagination">
+            <li>
+                {% if contracts.has_prev %}
+                    <a href="{{ url_for('order_manage.contract_index', page = contracts.prev_num) }}">上一页</a>
+                {% endif %}
+            </li>
+
+            {%- for page in contracts.iter_pages() %}
+              <li>
+                  {% if page %}
+                    {% if page != contracts.page %}
+                      <a href="{{ url_for('order_manage.contract_index', page=page) }}">{{ page }}</a>
+                    {% else %}
+                      <span class="page-number current">{{ page }}</span>
+                    {% endif %}
+                  {% else %}
+                    <span class=ellipsis>…</span>
+                  {% endif %}
+              </li>
+            {%- endfor %}
+             <li>
+                {% if contracts.has_next %}
+                    <a href="{{ url_for('order_manage.contract_index', page = contracts.next_num) }}">下一页 </a>
+                {% endif %}
+            </li>
+	    </ul>
     </div>
 </div>
 

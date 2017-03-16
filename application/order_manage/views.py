@@ -52,7 +52,7 @@ def contract_new(id):
             product_status="未生产",
             shipment_status="未出库",
             contract_content=contract_content,
-            user = order.user
+            user=order.user
         )
         order.order_status = '生成合同'
         for order_content in order.order_contents:
@@ -69,7 +69,10 @@ def contract_new(id):
 
 @order_manage.route("/contracts_index", methods=['GET'])
 def contract_index():
-    contracts = Contract.query.order_by(Contract.created_at.desc())
+    page_size = int(request.args.get('page_size', 10))
+    page_index = int(request.args.get('page', 1))
+    contracts = Contract.query.order_by(Contract.created_at.desc())\
+        .paginate(page_index, per_page=page_size, error_out=True)
     return render_template('order_manage/contracts_index.html', contracts=contracts)
 
 
