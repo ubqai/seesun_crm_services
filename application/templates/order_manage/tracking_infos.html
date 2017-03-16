@@ -63,7 +63,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for info in tracking_infos %}
+                    {% for info in tracking_infos.items %}
                     <tr>
                         <td>{{ info.contract_no }}</td>
                         <td>{{ info.contract_date.strftime('%F') }}</td>
@@ -79,6 +79,32 @@
                 </tbody>
             </table>
         </div>
+        <ul class="pagination">
+            <li>
+                {% if tracking_infos.has_prev %}
+                    <a href="{{ url_for('order_manage.tracking_infos', page = tracking_infos.prev_num) }}">上一页</a>
+                {% endif %}
+            </li>
+
+            {%- for page in tracking_infos.iter_pages() %}
+              <li>
+                  {% if page %}
+                    {% if page != tracking_infos.page %}
+                      <a href="{{ url_for('order_manage.tracking_infos', page=page) }}">{{ page }}</a>
+                    {% else %}
+                      <span class="page-number current">{{ page }}</span>
+                    {% endif %}
+                  {% else %}
+                    <span class=ellipsis>…</span>
+                  {% endif %}
+              </li>
+            {%- endfor %}
+             <li>
+                {% if tracking_infos.has_next %}
+                    <a href="{{ url_for('order_manage.tracking_infos', page = tracking_infos.next_num) }}">下一页 </a>
+                {% endif %}
+            </li>
+	    </ul>
     </div>
 </div>
 

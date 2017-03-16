@@ -89,9 +89,12 @@ def contract_offer(id):
 
 
 @order_manage.route('/tracking_infos')
-def tracking_infos(): 
-    tracking_infos = TrackingInfo.query.order_by(TrackingInfo.created_at.desc())
-    return render_template('order_manage/tracking_infos.html', tracking_infos = tracking_infos)
+def tracking_infos():
+    page_size = int(request.args.get('page_size', 10))
+    page_index = int(request.args.get('page', 1))
+    tracking_infos = TrackingInfo.query.order_by(TrackingInfo.created_at.desc())\
+        .paginate(page_index, per_page=page_size, error_out=True)
+    return render_template('order_manage/tracking_infos.html', tracking_infos=tracking_infos)
 
 
 @order_manage.route('/tracking_info/new/<int:contract_id>', methods = ['GET', 'POST'])
@@ -103,7 +106,7 @@ def tracking_info_new(contract_id):
     if request.method == 'POST':
         form = TrackingInfoForm1(request.form)
         if form.validate():
-            tracking_info = form.save(TrackingInfo(status = '区域总监确认'))
+            tracking_info = form.save(TrackingInfo(status='区域总监确认'))
             tracking_info.contract_no = contract.contract_no
             tracking_info.contract_date = contract.contract_date
             db.session.add(tracking_info)
@@ -187,6 +190,7 @@ def tracking_info_generate_qrcode(id):
         'status': 'success',
         'image_path': tracking_info.qrcode_image_path
         })
+
 
 # download qrcode image
 @order_manage.route('/tracking_info/<int:id>/qrcode')
