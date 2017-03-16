@@ -15,6 +15,7 @@
     <form class="form form-horizontal" method="post" url="{{ url_for('organization.user_new') }}" role="form">
         <div class="widget_contents padding-0 item-wrapper">
             <div class="form-item item-template">
+		    	{{ form.csrf_token }}
                 <div class="form-item-2 col-3">
                     <span>{{ form.user_type.label }}</span>
                     {{ form.user_type(class = 'form-input form-control',id="select_user_type") }}
@@ -31,9 +32,9 @@
                     {{ render_form_field_error(form.name) }}
                 </div>
                  <div class="form-item-2 col-3">
-                    <span>{{ form.nickname.label }}</span>
-                    {{ form.nickname(class = 'form-input form-control',placeholder="请输入昵称") }}
-                    {{ render_form_field_error(form.nickname) }}
+                    <span>{{ form.title.label }}</span>
+                    {{ form.title(class = 'form-input form-control',placeholder="请输入头衔") }}
+                    {{ render_form_field_error(form.title) }}
                 </div>
                  <div class="form-item-2 col-3">
                     <span>* {{ form.password.label }}</span>
@@ -47,18 +48,18 @@
                 </div>
                  <div class="form-item-2 col-3">
                     <span>* {{ form.address.label }}</span>
-                    {{ form.address(class = 'form-input form-control',placeholder="请输入地址") }}
+                    {{ form.address(class = 'form-input form-control',placeholder="请输入地址")|safe }}
                     {{ render_form_field_error(form.address) }}
                 </div>
                  <div class="form-item-2 col-3">
-                    <span>* {{ form.phone.label }}</span>
-                    {{ form.phone(class = 'form-input form-control',placeholder="请输入电话") }}
-                    {{ render_form_field_error(form.phone) }}
+                    <span>{{ form.nickname.label(id='label_nickname') }}</span>
+                    {{ form.nickname(class = 'form-input form-control',placeholder="请输入昵称") }}
+                    {{ render_form_field_error(form.nickname) }}
                 </div>
                  <div class="form-item-2 col-3">
-                    <span>{{ form.title.label }}</span>
-                    {{ form.title(class = 'form-input form-control',placeholder="请输入头衔") }}
-                    {{ render_form_field_error(form.title) }}
+                    <span>* {{ form.phone.label(id='label_phone') }}</span>
+                    {{ form.phone(class = 'form-input form-control',placeholder="请输入电话") }}
+                    {{ render_form_field_error(form.phone) }}
                 </div>
                  <div class="form-item-2 col-3" id="search_user_dept_ranges">
                     <span style="vertical-align:middle">* {{ form.dept_ranges.label }}</span>
@@ -77,6 +78,7 @@
 
                 <div class="text-right top-gap-1">
                     <button type="submit" class="btn btn-default my-btn">新增</button>
+		    		{{ render_form_field_error(form.csrf_token) }}
                 </div>
                 <div id="loading" style="display:none">加载中,请稍候</div>
             </div>

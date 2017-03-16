@@ -15,7 +15,7 @@
 	<form class="form form-horizontal" method="get" url="{{ url_for('organization.regional_and_team_index') }}" role="form">
 	    <div class="form-style form-default">
 	        <div class="form-item-2 col-3">
-	            <span>{{ form.regional.label }}</span>
+	            <span style="vertical-align:middle">{{ form.regional.label }}</span>
 	            {{ form.regional(class="form-input form-control") }}
 	        </div>
 	        
@@ -36,37 +36,44 @@
             <table class="tables">
                 <thead>
                     <tr>
-                        <th>区域名(第一行)</th>
-                        <th>区域范围(第二行)</th>
-                        <th>区域总监(第三行)</th>
+                        <th>区域(省)</th>
+                        <th>区域总监</th>
+                        <th>团队成员</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for sah in sah_infos %}
                     <tr>
-		<td colspan=2> {{ sah_infos[sah]["name"] }} </td>
-		<td> <a href="{{url_for('organization.regional_manage_leader',sah_id=sah)}}">负责人管理</a> </td>
+						<td colspan=3> {{ sah_infos[sah]["regional_name"] }} </td>
+						<td> 
+							<a href="{{url_for('organization.regional_manage_province',sah_id=sah)}}">省份管理, </a> 
+							<a href="{{url_for('organization.regional_manage_leader',sah_id=sah)}}">负责人管理 </a> 
+						</td>
                     </tr>
-                    <tr>
-                    	<td colspan=3>
-                    		{% for region in sah_infos[sah]["regional_info"]%}
-                    			{{ region[1] }} ,
-                    		{% endfor %}
-                    	</td>
-                    </tr>
-                    <tr>
-                    	<td colspan=3>
-                    		{% for leader in sah_infos[sah]["leader_info"]%}
-                    			{% if not leader[0]==-1 %}
-				<a href="{{url_for('organization.regional_manage_team',sah_id=sah,leader_id=leader[0])}}">
-					{{leader[1]}} ,
-				</a>
-				{% else %}
-					{{leader[1]}} ,
-				{% endif %}
-                    		{% endfor %}
-                    	</td>
-                    </tr>
+                    
+                    
+                    {% for region_province in sah_infos[sah]["regional_province_infos"] %}
+                    	<tr>
+                    		<td>{{ sah_infos[sah]["regional_province_infos"][region_province]["regional_province_name"] }}</td>
+                    		<td>{{ sah_infos[sah]["leader_info"][1] }}</td>
+                    		<td>{{ sah_infos[sah]["regional_province_infos"][region_province]["team_info"][1]}}</td>
+                    		<td>
+                    			{% if sah_infos[sah]["leader_info"][0]==-1 %}
+                    				
+                    			{% else %}
+	                    			<a href="{{ url_for('organization.regional_manage_team',
+	                    								sah_id=sah,
+	                    								leader_id=sah_infos[sah]['leader_info'][0],
+	                    								region_province_id=region_province)
+	                    								}}">
+	                    				团队管理
+	                    			</a>
+                    			{% endif %}
+                    		</td>
+                    	</tr>
+                    {% endfor %}
+                   
                     {% endfor %}
                 </tbody>
             </table>
