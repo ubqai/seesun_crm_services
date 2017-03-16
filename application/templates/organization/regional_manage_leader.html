@@ -15,6 +15,7 @@
 	<form class="form form-horizontal" url="{{url_for('organization.regional_manage_leader',sah_id=sah_id)}}" role="form" method="post">
 	    <div class="form-style form-default">
 	        <div class="widget_contents padding-0">
+	        	{{ form.csrf_token }}
 	        	<table class="tables">
 	        		<tr>
 	        			<th colspan=2>负责人选择</th>

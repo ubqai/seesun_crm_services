@@ -2,6 +2,7 @@ from wtforms import Form, StringField, TextAreaField, SelectField, PasswordField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from flask_login import current_user
 from ..models import SalesAreaHierarchy, DepartmentHierarchy
+from ..forms import BaseCsrfForm
 
 
 def valid_sale_range(form, field):
@@ -56,7 +57,7 @@ class BaseForm(Form):
 
 
 # BASE USER
-class UserForm(BaseForm):
+class UserForm(BaseForm, BaseCsrfForm):
     email = StringField('邮箱', [validators.Email(message="请填写正确格式的email")])
     name = StringField('姓名', [validators.Length(min=2, max=30, message="字段长度必须大等于2小等于30")])
     nickname = StringField('昵称', [validators.Length(min=2, max=30, message="字段长度必须大等于2小等于30")])

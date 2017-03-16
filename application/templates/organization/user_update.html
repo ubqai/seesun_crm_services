@@ -15,6 +15,7 @@
     <form class="form form-horizontal" method="post" url="{{ url_for('organization.user_new') }}" role="form">
         <div class="widget_contents padding-0 item-wrapper">
             <div class="form-item item-template">
+		    	{{ form.csrf_token }}
                 <div class="form-item-2 col-3">
                     <span>{{ form.user_type.label }}</span>
                     {{ form.user_type(class = 'form-input form-control',id="select_user_type",disabled="disabled") }}
@@ -55,7 +56,7 @@
 
                 <div class="form-item-2 col-3">
                     <span>* {{ form.address.label }}</span>
-                    {{ form.address(class = 'form-input form-control',placeholder="请输入地址") }}
+                    {{ form.address(class = 'form-input form-control',placeholder="请输入地址")|safe }}
                     {{ render_form_field_error(form.address) }}
                 </div>
                 
@@ -80,6 +81,7 @@
 
                 <div class="text-right top-gap-1">
                     <button type="submit" class="btn btn-default my-btn">修改</button>
+		    		{{ render_form_field_error(form.csrf_token) }}
                 </div>
 
             </div>

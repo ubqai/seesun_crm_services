@@ -15,6 +15,7 @@
 	<form class="form form-horizontal" url="{{url_for('organization.regional_manage_province',sah_id=sah_id)}}" role="form" method="post">
 	    <div class="form-style form-default">
 	        <div class="widget_contents padding-0">
+	        	{{ form.csrf_token }}
 	        	<table class="tables">
 	        		<tr>
 	        			<th>选择</th>

@@ -57,34 +57,35 @@ def setup_logging():
 # 单个使用@login_required
 @app.before_request
 def login_check():
-    #url_rule
-    if request.endpoint=="static" or request.path.startswith("/static/") or request.path.startswith("/favicon.ico"):
-        #静态文件
+    # url_rule
+    if request.endpoint == "static" or request.path.startswith("/static/") or request.path.startswith("/favicon.ico"):
+        # 静态文件
         # app.logger.info("static pass")
         pass
     elif request.path.startswith("/mobile/") or request.path.startswith("/wechat/mobile/"):
         if request.path == "/mobile/user/login":
             pass
-        #移动端登入界面
-        elif not current_user.is_authenticated or current_user.user_or_origin!=2:
-            app.logger.info("LOGIN_CHECK INTO MOBILE  request.path [%s] , [%s]" % (request.path,request.endpoint))
-            #后端界面
+        # 移动端登入界面
+        elif not current_user.is_authenticated or current_user.user_or_origin != 2:
+            app.logger.info("LOGIN_CHECK INTO MOBILE  request.path [%s] , [%s]" % (request.path, request.endpoint))
+            # 后端界面
             flash("请登入后操作")
             return redirect(url_for('mobile_user_login'))
     elif request.path.startswith("/wechat/"):
-        #微信
+        # 微信
         pass
     else:
         if request.path == "/organization/user/login":
-        #后端登入界面
+            # 后端登入界面
             pass
-        elif not current_user.is_authenticated or current_user.user_or_origin!=3:
-            app.logger.info("LOGIN_CHECK INTO BACK END request.path [%s] , [%s]" % (request.path,request.endpoint))
-            #后端界面
+        elif not current_user.is_authenticated or current_user.user_or_origin != 3:
+            app.logger.info("LOGIN_CHECK INTO BACK END request.path [%s] , [%s]" % (request.path, request.endpoint))
+            # 后端界面
             flash("请登入后操作")
             return redirect(url_for('organization.user_login'))
 
     return None
+
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -99,6 +100,7 @@ def internal_server_error(error):
 @app.route('/')
 def root():
     return redirect(url_for('mobile_index'))
+
 
 @app.route('/admin')
 def admin():

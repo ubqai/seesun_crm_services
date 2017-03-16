@@ -1,4 +1,16 @@
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
+from wtforms.csrf.session import SessionCSRF
+from datetime import timedelta
+from . import app
+
+
+# BASE CSRF FORM
+class BaseCsrfForm(Form):
+    class Meta:
+        csrf = True
+        csrf_class = SessionCSRF
+        csrf_secret = bytes(app.config['SECRET_KEY'], 'ascii')
+        csrf_time_limit = timedelta(minutes=20)
 
 
 class UserInfoForm(Form):

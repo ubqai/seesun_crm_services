@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, redirect, render_template, request, url_for, session
 
 from .. import app, db
 from ..models import UserAndSaleArea, User, UserInfo, DepartmentHierarchy, SalesAreaHierarchy
@@ -6,7 +6,7 @@ from ..models import UserAndSaleArea, User, UserInfo, DepartmentHierarchy, Sales
 import traceback
 import json
 import datetime
-from .forms import BaseForm, UserForm, UserSearchForm, UserLoginForm, RegionalSearchForm
+from .forms import BaseForm, UserForm, UserSearchForm, UserLoginForm, RegionalSearchForm, BaseCsrfForm
 from sqlalchemy import distinct
 from flask_login import logout_user, login_user, current_user
 
@@ -95,7 +95,7 @@ def user_index(page=1):
 def user_new():
 	if request.method == 'POST':
 		try:
-			form = UserForm(request.form)
+			form = UserForm(request.form, meta={'csrf_context': session})
 			form.reset_select_field()
 
 			if form.nickname.data == "":
@@ -138,7 +138,7 @@ def user_new():
 
 			return render_template('organization/user_new.html', form=form)
 	else:
-		form = UserForm()
+		form = UserForm(meta={'csrf_context': session})
 		form.reset_select_field()
 		return render_template('organization/user_new.html', form=form)
 
@@ -151,7 +151,7 @@ def user_update(user_id):
 
 	if request.method == 'POST':
 		try:
-			form = UserForm(request.form, user_type=u.user_or_origin)
+			form = UserForm(request.form, user_type=u.user_or_origin, meta={'csrf_context': session})
 			form.reset_select_field()
 
 			app.logger.info("user_type[%s] , password[%s]" % (form.user_type.data, form.password_confirm.data))
@@ -183,8 +183,9 @@ def user_update(user_id):
 				if sorted([i.id for i in u.departments]) != sorted(dh_array):
 					for d in u.departments:
 						u.departments.remove(d)
-					for d.id in dh_array:
-						u.departments.extend(form.dept_ranges.data)
+					# for d_id in dh_array:
+						# u.departments.append(DepartmentHierarchy.query.filter_by(id=d_id).first())
+					u.departments.extend(form.dept_ranges.data)
 			else:
 				if u.sales_areas.count() == 0 or u.sales_areas.first().id != form.sale_range.data.id:
 					if not u.sales_areas.count() == 0:
@@ -200,7 +201,7 @@ def user_update(user_id):
 			flash(e)
 			return render_template('organization/user_update.html', form=form, user_id=u.id)
 	else:
-		form = UserForm(obj=u, user_type=u.user_or_origin)
+		form = UserForm(obj=u, user_type=u.user_or_origin, meta={'csrf_context': session})
 		form.reset_select_field()
 		if len(u.user_infos) == 0:
 			pass
@@ -273,6 +274,11 @@ def regional_manage_leader(sah_id):
 
 	if request.method == 'POST':
 		try:
+			form = BaseCsrfForm(request.form, meta={'csrf_context': session})
+			if form.validate() == False:
+				flash("非法提交 [%s]" % (form.errors))
+				return redirect(url_for('organization.regional_and_team_index'))
+
 			user_id = int(request.form.get("user_id"))
 			leader_info = UserAndSaleArea.query.filter_by(sales_area_id=sah.id, parent_id=None).first()
 			if leader_info is not None and leader_info.user_id == user_id:
@@ -302,6 +308,7 @@ def regional_manage_leader(sah_id):
 			db.session.rollback()
 			return redirect(url_for('organization.regional_manage_leader', sah_id=sah.id))
 	else:
+		form = BaseCsrfForm(meta={'csrf_context': session})
 		us = db.session.query(User).join(User.departments) \
 			.filter(User.user_or_origin == 3) \
 			.filter(DepartmentHierarchy.name == "销售部") \
@@ -322,7 +329,7 @@ def regional_manage_leader(sah_id):
 		sorted_user_infos = sorted(user_infos.items(), key=lambda p: p[1]["choose"], reverse=True)
 		app.logger.info("sorted_user_infos [%s]" % (sorted_user_infos))
 
-		return render_template('organization/regional_manage_leader.html', sorted_user_infos=sorted_user_infos, sah_id=sah.id, regional_province_infos=SalesAreaHierarchy.get_team_info_by_regional(sah.id))
+		return render_template('organization/regional_manage_leader.html', sorted_user_infos=sorted_user_infos, sah_id=sah.id, regional_province_infos=SalesAreaHierarchy.get_team_info_by_regional(sah.id), form=form)
 
 
 @organization.route('/user/regional/manage_team/<int:sah_id>-<int:leader_id>-<int:region_province_id>', methods=['GET', 'POST'])
@@ -340,6 +347,11 @@ def regional_manage_team(sah_id, leader_id, region_province_id):
 
 	if request.method == 'POST':
 		try:
+			form = BaseCsrfForm(request.form, meta={'csrf_context': session})
+			if form.validate() == False:
+				flash("非法提交 [%s]" % (form.errors))
+				return redirect(url_for('organization.regional_and_team_index'))
+
 			user_id = int(request.form.get("user_id"))
 			team_info = UserAndSaleArea.query.filter(UserAndSaleArea.sales_area_id == region_province_id, UserAndSaleArea.parent_id != None).first()
 			if team_info is not None and team_info.user_id == user_id:
@@ -362,6 +374,7 @@ def regional_manage_team(sah_id, leader_id, region_province_id):
 			db.session.rollback()
 			return redirect(url_for('organization.regional_manage_team', sah_id=sah.id, leader_id=leader_id, region_province_id=region_province_id))
 	else:
+		form = BaseCsrfForm(meta={'csrf_context': session})
 		us = db.session.query(User).join(User.departments) \
 			.filter(User.user_or_origin == 3) \
 			.filter(DepartmentHierarchy.name == "销售部") \
@@ -388,7 +401,7 @@ def regional_manage_team(sah_id, leader_id, region_province_id):
 		sorted_user_infos = sorted(user_infos.items(), key=lambda p: p[1]["choose"], reverse=True)
 		app.logger.info("sorted_user_infos [%s]" % (sorted_user_infos))
 
-		return render_template('organization/regional_manage_team.html', sorted_user_infos=sorted_user_infos, sah_id=sah.id, leader_id=leader.id, region_province_id=region_province_id)
+		return render_template('organization/regional_manage_team.html', sorted_user_infos=sorted_user_infos, sah_id=sah.id, leader_id=leader.id, region_province_id=region_province_id, form=form)
 
 
 @organization.route('/user/regional/manage_province/<int:sah_id>', methods=['GET', 'POST'])
@@ -400,6 +413,11 @@ def regional_manage_province(sah_id):
 
 	if request.method == 'POST':
 		try:
+			form = BaseCsrfForm(request.form, meta={'csrf_context': session})
+			if form.validate() == False:
+				flash("非法提交 [%s]" % (form.errors))
+				return redirect(url_for('organization.regional_and_team_index'))
+
 			province_id_array = request.form.getlist("province_id")
 			app.logger.info("choose province_arrays: [%s]" % (province_id_array))
 			delete_exists_count = 0
@@ -445,6 +463,7 @@ def regional_manage_province(sah_id):
 			db.session.rollback()
 			return redirect(url_for('organization.regional_manage_province', sah_id=sah.id))
 	else:
+		form = BaseCsrfForm(meta={'csrf_context': session})
 		province_info = {}
 		for sah_province in BaseForm().get_sale_range_by_parent(3, None):
 			if sah_province.parent_id == sah.id:
@@ -462,4 +481,4 @@ def regional_manage_province(sah_id):
 
 		sorted_province_info = sorted(province_info.items(), key=lambda p: p[1]["choose"], reverse=True)
 		app.logger.info("sorted_province_info [%s]" % (sorted_province_info))
-		return render_template('organization/regional_manage_province.html', sah_id=sah.id, sorted_province_info=sorted_province_info)
+		return render_template('organization/regional_manage_province.html', sah_id=sah.id, sorted_province_info=sorted_province_info, form=form)
