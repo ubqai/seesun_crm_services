@@ -13,8 +13,11 @@ order_manage = Blueprint('order_manage', __name__, template_folder='templates')
 
 @order_manage.route("/orders", methods=['GET'])
 def order_index():
-    orders = Order.query.order_by(Order.created_at.desc())
-    return render_template('order_manage/index.html', orders=orders)
+    page_size = int(request.args.get('page_size', 10))
+    page_index = int(request.args.get('page', 1))
+    orders_page = Order.query.order_by(Order.created_at.desc())\
+        .paginate(page_index, per_page=page_size, error_out=True)
+    return render_template('order_manage/index.html', orders_page=orders_page)
 
 
 @order_manage.route("/orders/<int:id>", methods=['GET'])
