@@ -182,10 +182,11 @@ def tracking_info_generate_qrcode(id):
         'image_path': tracking_info.qrcode_image_path
         })
 
+
 # download qrcode image
 @order_manage.route('/tracking_info/<int:id>/qrcode')
 def tracking_info_qrcode(id):
     tracking_info = TrackingInfo.query.get_or_404(id)
-    response = make_response(send_file(app.config['STATIC_DIR'] + '/upload/qrcode/'  + tracking_info.qrcode_image))
+    response = make_response(send_file(app.config['STATIC_DIR'] + '/upload/qrcode/' + tracking_info.qrcode_image))
     response.headers['Content-Disposition'] = 'attachment; filename = %s' % tracking_info.qrcode_image
     return response

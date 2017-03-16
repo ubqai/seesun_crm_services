@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
-import os
-from flask import Blueprint, flash, g, redirect, render_template, request, url_for
-from .. import app, db
+from flask import Blueprint, flash, redirect, render_template, request, url_for
+from .. import db
 from ..helpers import save_upload_file, delete_file, clip_image
 from .api import *
 from ..models import Content, ContentCategory
 
-product = Blueprint('product', __name__, template_folder = 'templates')
+product = Blueprint('product', __name__, template_folder='templates')
 
 product_image_size = (379, 226)
 sku_image_size = (290, 290)
+
 
 @product.route('/index/<int:category_id>')
 def index(category_id):
     products = load_products(category_id)
     category = load_category(category_id)
-    return render_template('product/index.html', products = products , category = category)
+    return render_template('product/index.html', products=products, category=category)
 
-@product.route('/new/<int:category_id>', methods = ['GET', 'POST'])
+
+@product.route('/new/<int:category_id>', methods=['GET', 'POST'])
 def new(category_id):
     if request.method == 'POST':
         option_ids = request.form.getlist('option_ids[]')
@@ -27,42 +28,43 @@ def new(category_id):
             if image_file:
                 image_path = save_upload_file(image_file)
                 if image_path:
-                    clip_image((app.config['APPLICATION_DIR'] + image_path), size = product_image_size)
+                    clip_image((app.config['APPLICATION_DIR'] + image_path), size=product_image_size)
             else:
                 image_path = ''
             product_image_links.append(image_path)
         product_info = {
-        'name': request.form.get('name'),
-        'code': request.form.get('code'),
-        'description': request.form.get('description'),
-        'product_image_links': product_image_links,
-        'case_ids': [],
-        'options_id': [ str(id) for id in option_ids ]
+            'name': request.form.get('name'),
+            'code': request.form.get('code'),
+            'description': request.form.get('description'),
+            'product_image_links': product_image_links,
+            'case_ids': [],
+            'options_id': [str(option_id) for option_id in option_ids]
         }
         data = {
-        'product_category_id': str(category_id),
-        'product_info': product_info
+            'product_category_id': str(category_id),
+            'product_info': product_info
         }
         response = create_product(data)
         if response.status_code == 201:
-            return redirect(url_for('product.sku_index', product_id = int(response.json().get('product_id'))))
-        return redirect(url_for('product.index', category_id = category_id))
+            return redirect(url_for('product.sku_index', product_id=int(response.json().get('product_id'))))
+        return redirect(url_for('product.index', category_id=category_id))
     category = load_category(category_id)
     features = load_features(category_id)
-    return render_template('product/new.html', category = category, features = features)
+    return render_template('product/new.html', category=category, features=features)
 
-@product.route('/relate_cases/<int:product_id>', methods = ['GET', 'POST'])
+
+@product.route('/relate_cases/<int:product_id>', methods=['GET', 'POST'])
 def relate_cases(product_id):
-    product = load_product(product_id)
+    _product = load_product(product_id)
     contents = ContentCategory.query.filter(ContentCategory.name == '案例展示').first().contents
     if request.method == 'POST':
-        case_ids = [int(id) for id in request.form.getlist('case_ids[]')]
-        data = { 'case_ids': case_ids }
-        response = update_product(product.get('product_id'), data = data)
+        case_ids = [int(case_id) for case_id in request.form.getlist('case_ids[]')]
+        data = {'case_ids': case_ids}
+        response = update_product(_product.get('product_id'), data=data)
         if response.status_code == 200:
             for content in contents:
                 if content.id in case_ids:
-                    if not product_id in content.product_ids:
+                    if product_id not in content.product_ids:
                         temp = list(content.product_ids)
                         temp.append(product_id)
                         content.product_ids = temp
@@ -78,57 +80,61 @@ def relate_cases(product_id):
         else:
             flash('关联案例修改失败', 'danger')
         return redirect(url_for('product.category_index'))
-    return render_template('product/relate_cases.html', product = product, contents = contents)
+    return render_template('product/relate_cases.html', product=_product, contents=contents)
+
 
 @product.route('/<int:id>')
 def show(id):
-    product = load_product(id, option_sorted = True)
-    skus     = load_skus(id)
-    contents = Content.query.filter(Content.id.in_(product.get('case_ids')))
-    option_sorted = product.get('option_sorted')
-    return render_template('product/show.html', product = product, skus = skus, contents = contents,
-        option_sorted = option_sorted)
+    _product = load_product(id, option_sorted=True)
+    skus = load_skus(id)
+    contents = Content.query.filter(Content.id.in_(_product.get('case_ids')))
+    option_sorted = _product.get('option_sorted')
+    return render_template('product/show.html', product=_product, skus=skus, contents=contents,
+                           option_sorted=option_sorted)
 
-@product.route('/<int:id>/edit', methods = ['GET', 'POST'])
+
+@product.route('/<int:id>/edit', methods=['GET', 'POST'])
 def edit(id):
     category_id = request.args.get('category_id')
     if not category_id:
         return redirect(url_for('product.category_index'))
-    product = load_product(id)
+    _product = load_product(id)
     category = load_category(category_id)
     features = load_features(category_id)
-    option_ids = [x.get('option_id') for x in product.get('options')]
+    option_ids = [x.get('option_id') for x in _product.get('options')]
     if request.method == 'POST':
         option_ids = request.form.getlist('option_ids[]')
-        product_image_links = product.get('images') or []
+        product_image_links = _product.get('images') or []
         if request.files:
             for param in request.files:
                 if 'image_file' in param and request.files.get(param):
-                    index = int(param.rsplit('_',1)[1])
-                    if len(product_image_links) < index + 1:
-                        for i in range(index+1-len(product_image_links)):
+                    _index = int(param.rsplit('_', 1)[1])
+                    if len(product_image_links) < _index + 1:
+                        for i in range(_index+1-len(product_image_links)):
                             product_image_links.append('')
                     image_path = save_upload_file(request.files.get(param))
                     if image_path:
-                        clip_image((app.config['APPLICATION_DIR'] + image_path), size = product_image_size)
-                        if product_image_links[index]:
-                            delete_file(product_image_links[index])
-                        product_image_links[index] = image_path
+                        clip_image((app.config['APPLICATION_DIR'] + image_path), size=product_image_size)
+                        if product_image_links[_index]:
+                            delete_file(product_image_links[_index])
+                        product_image_links[_index] = image_path
         data = {
-        'name': request.form.get('name'),
-        'description': request.form.get('description'),
-        'product_image_links': product_image_links,
-        'options_id': [ str(id) for id in option_ids ]
+            'name': request.form.get('name'),
+            'description': request.form.get('description'),
+            'product_image_links': product_image_links,
+            'options_id': [str(option_id) for option_id in option_ids]
         }
-        response = update_product(id, data = data)
+        response = update_product(id, data=data)
         if response.status_code == 200:
             flash('产品修改成功', 'success')
         else:
             flash('产品修改失败: %s' % response.json(), 'danger')
-        return redirect(url_for('product.index', category_id = category_id))
-    return render_template('product/edit.html', product = product, category = category, features = features, option_ids = option_ids)
+        return redirect(url_for('product.index', category_id=category_id))
+    return render_template('product/edit.html', product=_product, category=category, features=features,
+                           option_ids=option_ids)
 
-@product.route('/<int:id>/delete', methods = ['POST'])
+
+@product.route('/<int:id>/delete', methods=['POST'])
 def delete(id):
     if request.method == 'POST':
         category_id = request.args.get('category_id')
@@ -138,15 +144,17 @@ def delete(id):
         else:
             flash('产品删除失败', 'danger')
         if category_id:
-            return redirect(url_for('product.index', category_id = category_id))
+            return redirect(url_for('product.index', category_id=category_id))
         return redirect(url_for('product.category_index'))
+
 
 @product.route('/sku/index/<int:product_id>')
 def sku_index(product_id):
     skus = load_skus(product_id)
-    return render_template('product/sku/index.html', skus = skus, product_id = product_id)
+    return render_template('product/sku/index.html', skus=skus, product_id=product_id)
 
-@product.route('/sku/new/<int:product_id>', methods = ['GET', 'POST'])
+
+@product.route('/sku/new/<int:product_id>', methods=['GET', 'POST'])
 def sku_new(product_id):
     if request.method == 'POST':
         option_ids = request.form.getlist('option_ids[]')
@@ -154,72 +162,74 @@ def sku_new(product_id):
         if image_file:
             image_path = save_upload_file(image_file)
             if image_path:
-                clip_image((app.config['APPLICATION_DIR'] + image_path), size = sku_image_size)
+                clip_image((app.config['APPLICATION_DIR'] + image_path), size=sku_image_size)
         else:
             image_path = ''
         sku_infos = []
         sku_info = {
-        'code': str(request.form.get('code')),
-        'price': str(request.form.get('price')),
-        'barcode': str(request.form.get('barcode')),
-        'hscode': str(request.form.get('hscode')),
-        'weight': str(request.form.get('weight')),
-        'thumbnail': image_path,
-        'options_id': [str(id) for id in option_ids]
+            'code': str(request.form.get('code')),
+            'price': str(request.form.get('price')),
+            'barcode': str(request.form.get('barcode')),
+            'hscode': str(request.form.get('hscode')),
+            'weight': str(request.form.get('weight')),
+            'thumbnail': image_path,
+            'options_id': [str(option_id) for option_id in option_ids]
         }
         sku_infos.append(sku_info)
         data = {
-        'product_id': str(product_id),
-        'sku_infos': sku_infos
+            'product_id': str(product_id),
+            'sku_infos': sku_infos
         }
         response = create_sku(data)
         if response.status_code == 201:
             flash('SKU创建成功', 'success')
         else:
             flash('SKU创建失败', 'danger')
-        return redirect(url_for('product.sku_index', product_id = product_id))
-    product = load_product(product_id, option_sorted = True)
-    option_sorted = product.get('option_sorted')
-    return render_template('product/sku/new.html', product = product, option_sorted = option_sorted)
+        return redirect(url_for('product.sku_index', product_id=product_id))
+    _product = load_product(product_id, option_sorted=True)
+    option_sorted = _product.get('option_sorted')
+    return render_template('product/sku/new.html', product=_product, option_sorted=option_sorted)
 
-@product.route('/sku/<int:id>/edit', methods = ['GET', 'POST'])
+
+@product.route('/sku/<int:id>/edit', methods=['GET', 'POST'])
 def sku_edit(id):
     product_id = request.args.get('product_id')
     if not product_id:
         return redirect(url_for('product.category_index'))
-    product = load_product(product_id)
-    sku = load_sku(product_id = product_id, sku_id = id)
+    _product = load_product(product_id)
+    sku = load_sku(product_id=product_id, sku_id=id)
     if request.method == 'POST':
         image_file = request.files.get('image_file')
         if image_file:
             image_path = save_upload_file(image_file)
             if image_path:
-                clip_image((app.config['APPLICATION_DIR'] + image_path), size = sku_image_size)
+                clip_image((app.config['APPLICATION_DIR'] + image_path), size=sku_image_size)
                 if sku.get('thumbnail'):
                     delete_file(sku.get('thumbnail'))
         else: 
             image_path = sku.get('thumbnail')
-        data ={
-        'barcode': request.form.get('barcode'),
-        'hscode': request.form.get('hscode'),
-        'weight': request.form.get('weight'),
-        'thumbnail': image_path
+        data = {
+            'barcode': request.form.get('barcode'),
+            'hscode': request.form.get('hscode'),
+            'weight': request.form.get('weight'),
+            'thumbnail': image_path
         }
         if not request.form.get('code') == sku.get('code'):
             data['code'] = request.form.get('code')
-        response = update_sku(sku_id = id, data = data)
+        response = update_sku(sku_id=id, data=data)
         if response.status_code == 200:
             flash('SKU修改成功', 'success')
         else:
             flash('SKU修改失败', 'danger')
-        return redirect(url_for('product.sku_index', product_id = product_id))
+        return redirect(url_for('product.sku_index', product_id=product_id))
     option_set = []
     for option in sku.get('options'):
         for key in option:
             option_set.append([key, option[key]])
-    return render_template('product/sku/edit.html', sku = sku, product = product, option_set = option_set)
+    return render_template('product/sku/edit.html', sku=sku, product=_product, option_set=option_set)
 
-@product.route('/sku/<int:id>/delete', methods = ['POST'])
+
+@product.route('/sku/<int:id>/delete', methods=['POST'])
 def sku_delete(id):
     product_id = request.args.get('product_id')
     if request.method == 'POST':
@@ -229,7 +239,7 @@ def sku_delete(id):
         else:
             flash('SKU删除失败', 'danger')
         if product_id:
-            return redirect(url_for('product.sku_index', product_id = product_id))
+            return redirect(url_for('product.sku_index', product_id=product_id))
         return redirect(url_for('product.category_index'))
 
 """
@@ -298,12 +308,14 @@ def sku_batch_new(product_id):
     return render_template('product/sku/batch_new.html', product = product, option_combinations = option_combinations)
 """
 
+
 @product.route('/category/index')
 def category_index():
     categories = load_categories()
-    return render_template('product/category/index.html', categories = categories)
+    return render_template('product/category/index.html', categories=categories)
 
-@product.route('/category/new', methods = ['GET', 'POST'])
+
+@product.route('/category/new', methods=['GET', 'POST'])
 def category_new():
     if request.method == 'POST':
         category_names = request.form.getlist('names[]')
@@ -311,7 +323,7 @@ def category_new():
             if len(name) == 0:
                 flash('Please input correct names', 'danger')
                 return render_template('product/category/new.html')
-        data = { 'category_names': category_names }
+        data = {'category_names': category_names}
         response = create_category(data)
         if response.status_code == 201:
             flash('产品目录创建成功', 'success')
@@ -320,47 +332,51 @@ def category_new():
         return redirect(url_for('product.category_index'))
     return render_template('product/category/new.html')
 
+
 @product.route('/category/<int:id>')
 def category_show(id):
     category = load_category(id)
-    return render_template('product/category/show.html', category = category)
+    return render_template('product/category/show.html', category=category)
 
-@product.route('/category/<int:id>/edit', methods = ['GET', 'POST'])
+
+@product.route('/category/<int:id>/edit', methods=['GET', 'POST'])
 def category_edit(id):
     category = load_category(id)
     if request.method == 'POST':
         name = request.form.get('name')
-        data = { 'category_name': name }
-        response = update_category(category.get('category_id'), data = data)
+        data = {'category_name': name}
+        response = update_category(category.get('category_id'), data=data)
         if response.status_code == 200:
             flash('产品目录修改成功', 'success')
         else:
             flash('产品目录修改失败', 'danger')
         return redirect(url_for('product.category_index'))
-    return render_template('product/category/edit.html', category = category)
+    return render_template('product/category/edit.html', category=category)
 
-@product.route('/feature/new/<int:category_id>', methods = ['GET', 'POST'])
+
+@product.route('/feature/new/<int:category_id>', methods=['GET', 'POST'])
 def feature_new(category_id):
     if request.method == 'POST':
         feature_names = request.form.getlist('names[]')
         for name in feature_names:
             if len(name) == 0:
                 flash('Please input correct names', 'danger')
-                return render_template('product/feature/new.html', category_id = category_id)
+                return render_template('product/feature/new.html', category_id=category_id)
         feature_infos = []
         for name in feature_names:
-            feature_infos.append({ 'name': name, 'description': name })
+            feature_infos.append({'name': name, 'description': name})
         data = {
-        'product_category_id': str(category_id),
-        'feature_infos': feature_infos
+            'product_category_id': str(category_id),
+            'feature_infos': feature_infos
         }
         response = create_feature(data)
         if response.status_code == 201:
             flash('产品属性创建成功', 'success')
         else:
             flash('产品属性创建失败', 'danger')
-        return redirect(url_for('product.category_show', id = category_id))
-    return render_template('product/feature/new.html', category_id = category_id)
+        return redirect(url_for('product.category_show', id=category_id))
+    return render_template('product/feature/new.html', category_id=category_id)
+
 
 @product.route('/feature/<int:id>')
 def feature_show(id):
@@ -369,28 +385,30 @@ def feature_show(id):
         return redirect('product.category_index')
     category = load_category(category_id)
     feature = load_feature(id)
-    return render_template('product/feature/show.html', feature = feature, category = category)
+    return render_template('product/feature/show.html', feature=feature, category=category)
 
-@product.route('/feature/<int:id>/edit', methods = ['GET', 'POST'])
+
+@product.route('/feature/<int:id>/edit', methods=['GET', 'POST'])
 def feature_edit(id):
     feature = load_feature(id)
     category_id = request.args.get('category_id')
     if request.method == 'POST':
         data = {
-        'name': request.form.get('name'),
-        'description': request.form.get('description')
+            'name': request.form.get('name'),
+            'description': request.form.get('description')
         }
-        response = update_feature(feature.get('feature_id'), data = data)
+        response = update_feature(feature.get('feature_id'), data=data)
         if response.status_code == 200:
             flash('产品属性修改成功', 'success')
         else:
             flash('产品属性修改失败', 'danger')
         if category_id:
-            return redirect(url_for('product.category_show', id = category_id))
+            return redirect(url_for('product.category_show', id=category_id))
         return redirect(url_for('product.category_index'))      
-    return render_template('product/feature/edit.html', feature = feature)
+    return render_template('product/feature/edit.html', feature=feature)
 
-@product.route('/option/new/<int:feature_id>', methods = ['GET', 'POST'])
+
+@product.route('/option/new/<int:feature_id>', methods=['GET', 'POST'])
 def option_new(feature_id):
     category_id = request.args.get('category_id')
     if request.method == 'POST':
@@ -398,10 +416,10 @@ def option_new(feature_id):
         for name in option_names:
             if len(name) == 0:
                 flash('Please input correct names', 'danger')
-                return render_template('product/option/new.html', feature_id = feature_id)
+                return render_template('product/option/new.html', feature_id=feature_id)
         data = {
-        'sku_feature_id': str(feature_id),
-        'names': option_names
+            'sku_feature_id': str(feature_id),
+            'names': option_names
         }
         response = create_option(data)
         if response.status_code == 201:
@@ -409,21 +427,22 @@ def option_new(feature_id):
         else:
             flash('产品属性值创建失败', 'danger')
         if category_id:
-            return redirect(url_for('product.category_show', id = category_id))
-        return redirect(url_for('product.feature_show', id = feature_id))
-    return render_template('product/option/new.html', feature_id = feature_id)
+            return redirect(url_for('product.category_show', id=category_id))
+        return redirect(url_for('product.feature_show', id=feature_id))
+    return render_template('product/option/new.html', feature_id=feature_id)
 
-@product.route('/option/<int:id>/edit', methods = ['GET', 'POST'])
+
+@product.route('/option/<int:id>/edit', methods=['GET', 'POST'])
 def option_edit(id):
     category_id = request.args.get('category_id')
     if request.method == 'POST':
-        data = { 'name': request.form.get('name') }
-        response = update_option(id , data = data)
+        data = {'name': request.form.get('name')}
+        response = update_option(id, data=data)
         if response.status_code == 200:
             flash('产品属性值修改成功', 'success')
         else:
             flash('产品属性值修改失败', 'danger')
         if category_id:
-            return redirect(url_for('product.category_show', id = category_id))
+            return redirect(url_for('product.category_show', id=category_id))
         return redirect(url_for('product.category_index'))
-    return render_template('product/option/edit.html', option_id = id)
+    return render_template('product/option/edit.html', option_id=id)
