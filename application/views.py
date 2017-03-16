@@ -203,14 +203,16 @@ def mobile_create_order():
 def mobile_orders():
     if 'order' in session and session['order']:
         return redirect(url_for('mobile_cart'))
-    orders = Order.query.filter_by(user_id=current_user.id).order_by(Order.created_at.desc())
-    return render_template('mobile/orders.html', orders=orders)
+    return redirect(url_for('mobile_created_orders'))
 
 
 @app.route('/mobile/created_orders')
 def mobile_created_orders():
-    orders = Order.query.filter_by(user_id=current_user.id).order_by(Order.created_at.desc())
-    return render_template('mobile/orders.html', orders=orders)
+    page_size = int(request.args.get('page_size', 5))
+    page_index = int(request.args.get('page', 1))
+    orders_page = Order.query.filter_by(user_id=current_user.id).order_by(Order.created_at.desc())\
+        .paginate(page_index, per_page=page_size, error_out=True)
+    return render_template('mobile/orders.html', orders_page=orders_page)
 
 
 @app.route('/mobile/contract/<int:id>')

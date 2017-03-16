@@ -10,7 +10,7 @@
 	<div class="text bot-gap-2">
 		<p class="text-title bot-gap-1">订单列表</p>
 		
-		{% for order in orders %}
+		{% for order in orders_page.items %}
 			<div class="wrapper-style rect top-gap-2">
 				<div class="wrapper-header"><span class="wrapper-header-title">{{ order.order_no }}</span><span class="wrapper-header-icon glyphicon glyphicon-list-alt pull-right"></span></div>
 				<div class="wrapper-inner clearfix">
@@ -45,6 +45,32 @@
 		{% endfor %}
 
 	</div>
+    <ul class="pagination">
+	    <li>
+	        {% if orders_page.has_prev %}
+	            <a href="{{ url_for('mobile_created_orders', page = orders_page.prev_num) }}">上一页</a>
+	        {% endif %}
+        </li>
+
+        {%- for page in orders_page.iter_pages() %}
+          <li>
+              {% if page %}
+                {% if page != orders_page.page %}
+                  <a href="{{ url_for('mobile_created_orders', page=page) }}">{{ page }}</a>
+                {% else %}
+                  <span class="page-number current">{{ page }}</span>
+                {% endif %}
+              {% else %}
+                <span class=ellipsis>…</span>
+              {% endif %}
+          </li>
+        {%- endfor %}
+         <li>
+            {% if orders_page.has_next %}
+                <a href="{{ url_for('mobile_created_orders', page = orders_page.next_num) }}">下一页 </a>
+            {% endif %}
+        </li>
+	</ul>
 </div>
 
 {% endblock %}
