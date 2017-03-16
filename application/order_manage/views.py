@@ -59,6 +59,7 @@ def contract_new(id):
             contract_status="新合同",
             product_status="未生产",
             shipment_status="未出库",
+            payment_status='未付款',
             contract_content=contract_content,
             user=order.user
         )
@@ -87,6 +88,15 @@ def assign_sale_contact(id):
     return render_template('order_manage/assign_sale_contact.html', order=order)
 
 
+@order_manage.route("/payment_status_update/<int:contract_id>", methods=['GET'])
+def payment_status_update(contract_id):
+    contract = Contract.query.get_or_404(contract_id)
+    contract.payment_status = '已付款'
+    db.session.add(contract)
+    db.session.commit()
+    return redirect(url_for('order_manage.finance_contract_index'))
+
+
 @order_manage.route("/contracts_index", methods=['GET'])
 def contract_index():
     page_size = int(request.args.get('page_size', 10))
@@ -94,6 +104,15 @@ def contract_index():
     contracts = Contract.query.order_by(Contract.created_at.desc())\
         .paginate(page_index, per_page=page_size, error_out=True)
     return render_template('order_manage/contracts_index.html', contracts=contracts)
+
+
+@order_manage.route("/finance_contracts_index", methods=['GET'])
+def finance_contract_index():
+    page_size = int(request.args.get('page_size', 10))
+    page_index = int(request.args.get('page', 1))
+    contracts = Contract.query.order_by(Contract.created_at.desc())\
+        .paginate(page_index, per_page=page_size, error_out=True)
+    return render_template('order_manage/finance_contracts_index.html', contracts=contracts)
 
 
 @order_manage.route("/contracts/<int:id>", methods=['GET'])

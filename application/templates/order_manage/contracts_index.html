@@ -63,6 +63,7 @@
                         <th>合同状态</th>
                         <th>生产状况</th>
                         <th>物流状态</th>
+                        <th>付款状态</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -79,6 +80,7 @@
                             <td><span class="text-warning">{{ contract.contract_status }}</span></td>
                             <td><span class="text-warning">{{ contract.production_status }}</span></td>
                             <td><span class="text-warning">{{ contract.delivery_status }}</span></td>
+                            <td><span class="text-warning">{{ contract.payment_status }}</span></td>
                             <td><a class="new-one" href="{{ url_for('order_manage.contract_offer', id=contract.id) }}">查看订货要约</a></td>
                             <td>
                             {% if contract.shipment_status == '未出库' %}

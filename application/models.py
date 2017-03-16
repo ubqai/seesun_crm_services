@@ -273,6 +273,7 @@ class Contract(db.Model):
     contract_status = db.Column(db.String(50))
     product_status = db.Column(db.String(50))
     shipment_status = db.Column(db.String(50))
+    payment_status = db.Column(db.String(50), default='未付款')
     contract_content = db.Column(db.JSON)
 
     def __repr__(self):
