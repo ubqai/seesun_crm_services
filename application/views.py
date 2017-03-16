@@ -136,8 +136,7 @@ def mobile_cart():
                                          'sku_specification': request.form.get('sku_specification_%s' % index),
                                          'sku_code': request.form.get('sku_code_%s' % index),
                                          'sku_id': index,
-                                         'number': int(request.form.get('number_%s' % index)),
-                                         'square_num': "%.2f" % (0.3*int(request.form.get('number_%s' % index)))}
+                                         'number': int(request.form.get('number_%s' % index))}
                         order.append(order_content)
         session['order'] = order
         flash('成功加入购物车', 'success')
@@ -168,16 +167,22 @@ def mobile_create_order():
         buyer = request.args.get('buyer')
         buyer_company = request.args.get('buyer_company')
         buyer_address = request.args.get('buyer_address')
+        contact_phone = request.args.get('contact_phone')
+        contact_name = request.args.get('contact_name')
+        project_name = request.args.get('project_name')
+        dealer_name = request.args.get('dealer_name')
         order = Order(order_no=order_no, user=current_user, order_status='新订单',
                       order_memo=request.args.get('order_memo'),
                       buyer_info={"buyer": buyer, "buyer_company": buyer_company,
-                                  "buyer_address": buyer_address})
+                                  "buyer_address": buyer_address, "contact_phone": contact_phone,
+                                  "contact_name": contact_name, "project_name": project_name,
+                                  "dealer_name": dealer_name})
         db.session.add(order)
         for order_content in session['order']:
             oc = OrderContent(order=order, product_name=order_content.get('product_name'),
                               sku_specification=order_content.get('sku_specification'),
                               sku_code=order_content.get('sku_code'), number=order_content.get('number'),
-                              square_num=order_content.get('square_num'))
+                              square_num=order_content.get('number'))
             sku_id = order_content.get('sku_id')
             from .inventory.api import update_sku
             data = {"stocks_for_order": order_content.get('number')}
@@ -198,13 +203,13 @@ def mobile_create_order():
 def mobile_orders():
     if 'order' in session and session['order']:
         return redirect(url_for('mobile_cart'))
-    orders = Order.query.filter_by(user_id=current_user.id).all()
+    orders = Order.query.filter_by(user_id=current_user.id).order_by(Order.created_at.desc())
     return render_template('mobile/orders.html', orders=orders)
 
 
 @app.route('/mobile/created_orders')
 def mobile_created_orders():
-    orders = Order.query.all()
+    orders = Order.query.filter_by(user_id=current_user.id).order_by(Order.created_at.desc())
     return render_template('mobile/orders.html', orders=orders)
 
 
