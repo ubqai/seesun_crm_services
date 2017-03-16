@@ -252,6 +252,8 @@ class Order(db.Model, Rails):
     order_status = db.Column(db.String(50))
     order_memo = db.Column(db.Text)
     buyer_info = db.Column(db.JSON)
+    sale_contract = db.Column(db.String(200))
+    sale_contract_id = db.Column(db.Integer)
     contracts = db.relationship('Contract', backref='order', lazy='dynamic')
     order_contents = db.relationship('OrderContent', backref='order')
 
