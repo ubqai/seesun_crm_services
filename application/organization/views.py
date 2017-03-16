@@ -147,7 +147,12 @@ def user_new():
 def user_update(user_id):
 	u = User.query.filter_by(id=user_id).first()
 	if u is None:
-		return redirect(url_for('organization.user_search'))
+		flash("非法用户id")
+		return redirect(url_for('organization.user_index'))
+	auth_msg = current_user.authority_control_to_user(u)
+	if auth_msg is not None:
+		flash(auth_msg)
+		return redirect(url_for('organization.user_index'))
 
 	if request.method == 'POST':
 		try:

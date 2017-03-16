@@ -279,14 +279,14 @@ class Contract(db.Model):
 
     @property
     def production_status(self):
-        tracking_info = TrackingInfo.query.filter_by(contract_no = self.contract_no).first()
+        tracking_info = TrackingInfo.query.filter_by(contract_no=self.contract_no).first()
         if tracking_info:
             return tracking_info.production_status
         return '未生产'
 
     @property
     def delivery_status(self):
-        tracking_info = TrackingInfo.query.filter_by(contract_no = self.contract_no).first()
+        tracking_info = TrackingInfo.query.filter_by(contract_no=self.contract_no).first()
         if tracking_info:
             return tracking_info.delivery_status
         return '未发货'
@@ -384,6 +384,22 @@ class User(db.Model, Rails):
             return "用户部门异常,请联系管理员"
 
         return ""
+
+    # 前台查询,新增,修改用户权限控制
+    def authority_control_to_user(self, other_user):
+        # 可操作任意经销商
+        if other_user is None or other_user.user_or_origin == 2:
+            return None
+        # 等级权限高 - 董事长
+        if self.get_max_level_grade() < other_user.get_max_level_grade():
+            return None
+        # 所属部门是否有交集
+        self_d_array = [d.id for d in self.departments.all()]
+        other_d_array = [d.id for d in other_user.departments.all()]
+        if list(set(self_d_array).intersection(set(other_d_array))) != []:
+            return None
+
+        return "当前用户[%s] 无权限操作用户[%s]" % (self.nickname, other_user.nickname)
 
     @property
     def password(self):
