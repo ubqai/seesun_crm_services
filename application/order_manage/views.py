@@ -44,7 +44,15 @@ def contract_new(id):
         contract_content = {"amount": request.form.get("amount"),
                             "delivery_time": request.form.get("delivery_time"),
                             "offer_no": request.form.get("offer_no"),
-                            "sale_contract": request.form.get('sale_contract')}
+                            "logistics_costs": request.form.get('logistics_costs'),
+                            "live_floor_costs": request.form.get('live_floor_costs'),
+                            "self_leveling_costs": request.form.get('self_leveling_costs'),
+                            "crossed_line_costs": request.form.get('crossed_line_costs'),
+                            "sticky_costs": request.form.get('sticky_costs'),
+                            "full_adhesive_costs": request.form.get('full_adhesive_costs'),
+                            "material_loss": request.form.get('material_loss'),
+                            "other_costs": request.form.get('other_costs'),
+                            "tax_costs": request.form.get('tax_costs')}
         contract = Contract(
             contract_no=contract_no,
             order=order,
@@ -65,6 +73,18 @@ def contract_new(id):
         db.session.commit()
         return redirect(url_for('order_manage.contract_index'))
     return render_template('order_manage/contract_new.html', form=form, order=order)
+
+
+@order_manage.route("/orders/<int:id>/assign_sale_contact", methods=['GET', 'POST'])
+def assign_sale_contact(id):
+    order = Order.query.get_or_404(id)
+    if request.method == 'POST':
+        order.sale_contract = request.form.get('sale_contact')
+        order.sale_contract_id = 1
+        db.session.add(order)
+        db.session.commit()
+        return redirect(url_for('order_manage.order_index'))
+    return render_template('order_manage/assign_sale_contact.html', order=order)
 
 
 @order_manage.route("/contracts_index", methods=['GET'])

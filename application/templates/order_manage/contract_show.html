@@ -54,6 +54,31 @@
                 <span class="form-label">交货时间</span>
                 <input class="form-input form-control" value="{{ contract.contract_content.get('delivery_time') }}" disabled/>
             </div>
+
+            <div class="form-item inline-2">
+                <span class="form-label">物流费用</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('logistics_costs') }}" disabled/>
+                <span class="form-label">原料损耗</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('material_loss') }}" disabled/>
+                <span class="form-label">税点</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('tax_costs') }}" disabled/>
+            </div>
+            <div class="form-item inline-2">
+                <span class="form-label">活铺费用</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('live_floor_costs') }}" disabled/>
+                <span class="form-label">自流平费用</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('self_leveling_costs') }}" disabled/>
+                <span class="form-label">划线费用</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('crossed_line_costs') }}" disabled/>
+            </div>
+            <div class="form-item inline-2">
+                <span class="form-label">点粘费用</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('sticky_costs') }}" disabled/>
+                <span class="form-label">全胶粘费用</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('full_adhesive_costs') }}" disabled/>
+                <span class="form-label">其他费用</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('other_costs') }}" disabled/>
+            </div>
         </div>
         <div class="widget_contents padding-0">
             <table class="tables">
@@ -62,7 +87,6 @@
                         <th>产品名</th>
                         <th>规格</th>
                         <th>平方数</th>
-                        <th>数量</th>
                         <th>单价</th>
                         <th>总价</th>
                         <th>需生产数量</th>
@@ -75,7 +99,6 @@
                         <tr>
                             <td rowspan="{{ content.inventory_choose|length + 2 }}"><a class="table-link">{{ content.product_name }}</a></td>
                             <td rowspan="{{ content.inventory_choose|length + 2 }}">{{ content.sku_specification }}</td>
-                            <td rowspan="{{ content.inventory_choose|length + 2 }}">{{ content.square_num }}</td>
                             <td rowspan="{{ content.inventory_choose|length + 2 }}">{{ content.number }}</td>
                             <td>{{ content.price }}</td>
                             <td>{{ content.amount }}</td>
@@ -102,7 +125,6 @@
                         <tr>
                             <td><a class="table-link">{{ content.product_name }}</a></td>
                             <td>{{ content.sku_specification }}</td>
-                            <td>{{ content.square_num }}</td>
                             <td>{{ content.number }}</td>
                             <td>{{ content.price }}</td>
                             <td>{{ content.amount }}</td>
