@@ -169,16 +169,22 @@ def mobile_create_order():
         buyer = request.args.get('buyer')
         buyer_company = request.args.get('buyer_company')
         buyer_address = request.args.get('buyer_address')
+        contact_phone = request.args.get('contact_phone')
+        contact_name = request.args.get('contact_name')
+        project_name = request.args.get('project_name')
+        dealer_name = request.args.get('dealer_name')
         order = Order(order_no=order_no, user=current_user, order_status='新订单',
                       order_memo=request.args.get('order_memo'),
                       buyer_info={"buyer": buyer, "buyer_company": buyer_company,
-                                  "buyer_address": buyer_address})
+                                  "buyer_address": buyer_address, "contact_phone": contact_phone,
+                                  "contact_name": contact_name, "project_name": project_name,
+                                  "dealer_name": dealer_name})
         db.session.add(order)
         for order_content in session['order']:
             oc = OrderContent(order=order, product_name=order_content.get('product_name'),
                               sku_specification=order_content.get('sku_specification'),
                               sku_code=order_content.get('sku_code'), number=order_content.get('number'),
-                              square_num=order_content.get('square_num'))
+                              square_num=order_content.get('number'))
             sku_id = order_content.get('sku_id')
             from .inventory.api import update_sku
             data = {"stocks_for_order": order_content.get('number')}
@@ -199,14 +205,16 @@ def mobile_create_order():
 def mobile_orders():
     if 'order' in session and session['order']:
         return redirect(url_for('mobile_cart'))
-    orders = Order.query.filter_by(user_id=current_user.id).all()
-    return render_template('mobile/orders.html', orders=orders)
+    return redirect(url_for('mobile_created_orders'))
 
 
 @app.route('/mobile/created_orders')
 def mobile_created_orders():
-    orders = Order.query.all()
-    return render_template('mobile/orders.html', orders=orders)
+    page_size = int(request.args.get('page_size', 5))
+    page_index = int(request.args.get('page', 1))
+    orders_page = Order.query.filter_by(user_id=current_user.id).order_by(Order.created_at.desc())\
+        .paginate(page_index, per_page=page_size, error_out=True)
+    return render_template('mobile/orders.html', orders_page=orders_page)
 
 
 @app.route('/mobile/contract/<int:id>')
@@ -457,29 +465,18 @@ def ckupload():
     response.headers['Content-Type'] = 'text/html'
     return response
 
+
 @app.route('/mobile/project_report/new', methods=['GET', 'POST'])
 def new_project_report():
     if request.method == 'POST':
-        report_content = {"app_company": request.form.get("app_company"),
-                          "project_follower": request.form.get("project_follower"),
-                          "contract_phone": request.form.get("contract_phone"),
-                          "contract_fax": request.form.get("contract_fax"),
+        report_content = {"buyer": request.form.get("buyer"),
+                          "buyer_company": request.form.get("buyer_company"),
+                          "buyer_address": request.form.get("buyer_address"),
                           "project_name": request.form.get("project_name"),
-                          "report_date": request.form.get("report_date"),
-                          "project_address": request.form.get("project_address"),
-                          "project_area": request.form.get("project_area"),
-                          "product_place": request.form.get("product_place"),
-                          "recommended_product_line": request.form.get("recommended_product_line"),
-                          "recommended_product_color": request.form.get("recommended_product_color"),
-                          "project_completion_time": request.form.get("project_completion_time"),
-                          "expected_order_time": request.form.get("expected_order_time"),
-                          "competitive_brand_situation": request.form.get("competitive_brand_situation"),
-                          "project_owner": request.form.get("project_owner"),
-                          "project_decoration_total": request.form.get("project_decoration_total"),
-                          "project_design_company": request.form.get("project_design_company"),
-                          "is_authorization_needed": request.form.get("is_authorization_needed"),
-                          "expected_authorization_date": request.form.get("expected_authorization_date"),
-                          "authorize_company_name": request.form.get('authorize_company_name')}
+                          "product_series": request.form.get("product_series"),
+                          "contact_phone": request.form.get("contact_phone"),
+                          "contact_name": request.form.get("contact_name"),
+                          "project_memo": request.form.get("project_memo")}
         project_report = ProjectReport(
             app_id=current_user.id,
             status="新创建待审核",
@@ -494,7 +491,10 @@ def new_project_report():
 
 @app.route('/mobile/project_report/index', methods=['GET'])
 def project_report_index():
-    project_reports = ProjectReport.query.filter_by(app_id=current_user.id).all()
+    page_size = int(request.args.get('page_size', 5))
+    page_index = int(request.args.get('page', 1))
+    project_reports = ProjectReport.query.filter_by(app_id=current_user.id).order_by(ProjectReport.created_at.desc())\
+        .paginate(page_index, per_page=page_size, error_out=True)
     return render_template('mobile/project_report_index.html', project_reports=project_reports)
 
 

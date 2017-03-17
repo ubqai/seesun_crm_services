@@ -10,7 +10,7 @@
 	<div class="text bot-gap-2">
 		<p class="text-title bot-gap-1">订单列表</p>
 		
-		{% for order in orders %}
+		{% for order in orders_page.items %}
 			<div class="wrapper-style rect top-gap-2">
 				<div class="wrapper-header"><span class="wrapper-header-title">{{ order.order_no }}</span><span class="wrapper-header-icon glyphicon glyphicon-list-alt pull-right"></span></div>
 				<div class="wrapper-inner clearfix">
@@ -28,11 +28,39 @@
 							<p class="set-2">订单状态 :<span class="text-dark inline-display"> {{ order.order_status }}</span></p>
 						</div>
 						<div class="wrapper-row">
-							<p class="set-2">企业名称 :<span class="text-dark inline-display">{{ order.buyer_info['company_name'] }}</span></p>
-                            <p class="set-2">项目地址 :<span class="text-dark inline-display">{{ order.buyer_info['project_address'] }}</span></p>
+							<p class="set-2">项目名称 :<span class="text-dark inline-display">{{ order.buyer_info['project_name'] }}</span></p>
                             <p class="set-2">联系电话 :<span class="text-dark inline-display">{{ order.buyer_info['contact_phone'] }}</span></p>
                             <p class="set-2">联系姓名 :<span class="text-dark inline-display">{{ order.buyer_info['contact_name'] }}</span></p>
-						</div>
+                            <p class="set-2">销售联系人 :<span class="text-dark inline-display">{{ order.sale_contract }}</span></p>
+                        </div>
+                        {% if not order.contracts.all == [] %}
+                            <div class="wrapper-row">
+                                <p class="set-2">总金额 :<span class="text-dark inline-display">{{ order.contracts[0].contract_content.get('amount') }}</span></p>
+                                <p class="set-2">物流费用 :<span class="text-dark inline-display">{{ order.contracts[0].contract_content.get('logistics_costs') }}</span></p>
+                                <p class="set-2">原料损耗 :<span class="text-dark inline-display">{{ order.contracts[0].contract_content.get('material_loss') }}</span></p>
+                                {% if not order.contracts[0].contract_content.get('tax_costs') == None %}
+                                    <p class="set-2">税点 :<span class="text-dark inline-display">{{ order.contracts[0].contract_content.get('tax_costs') }}</span></p>
+                                {% endif %}
+                                {% if not order.contracts[0].contract_content.get('live_floor_costs') == None %}
+                                    <p class="set-2">活铺费用 :<span class="text-dark inline-display">{{ order.contracts[0].contract_content.get('live_floor_costs') }}</span></p>
+                                {% endif %}
+                                {% if not order.contracts[0].contract_content.get('self_leveling_costs') == None %}
+                                    <p class="set-2">自流平费用 :<span class="text-dark inline-display">{{ order.contracts[0].contract_content.get('self_leveling_costs') }}</span></p>
+                                {% endif %}
+                                {% if not order.contracts[0].contract_content.get('crossed_line_costs') == None %}
+                                    <p class="set-2">划线费用 :<span class="text-dark inline-display">{{ order.contracts[0].contract_content.get('crossed_line_costs') }}</span></p>
+                                {% endif %}
+                                {% if not order.contracts[0].contract_content.get('sticky_costs') == None %}
+                                    <p class="set-2">点粘费用 :<span class="text-dark inline-display">{{ order.contracts[0].contract_content.get('sticky_costs') }}</span></p>
+                                {% endif %}
+                                {% if not order.contracts[0].contract_content.get('full_adhesive_costs') == None %}
+                                    <p class="set-2">全胶粘费用 :<span class="text-dark inline-display">{{ order.contracts[0].contract_content.get('full_adhesive_costs') }}</span></p>
+                                {% endif %}
+                                {% if not order.contracts[0].contract_content.get('other_costs') == None %}
+                                    <p class="set-2">其他费用 :<span class="text-dark inline-display">{{ order.contracts[0].contract_content.get('other_costs') }}</span></p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
 					</div>
 				</div>
 				<div class="wrapper-footer text-center">
@@ -46,6 +74,32 @@
 		{% endfor %}
 
 	</div>
+    <ul class="pagination">
+	    <li>
+	        {% if orders_page.has_prev %}
+	            <a href="{{ url_for('mobile_created_orders', page = orders_page.prev_num) }}">上一页</a>
+	        {% endif %}
+        </li>
+
+        {%- for page in orders_page.iter_pages() %}
+          <li>
+              {% if page %}
+                {% if page != orders_page.page %}
+                  <a href="{{ url_for('mobile_created_orders', page=page) }}">{{ page }}</a>
+                {% else %}
+                  <span class="page-number current">{{ page }}</span>
+                {% endif %}
+              {% else %}
+                <span class=ellipsis>…</span>
+              {% endif %}
+          </li>
+        {%- endfor %}
+         <li>
+            {% if orders_page.has_next %}
+                <a href="{{ url_for('mobile_created_orders', page = orders_page.next_num) }}">下一页 </a>
+            {% endif %}
+        </li>
+	</ul>
 </div>
 
 {% endblock %}
