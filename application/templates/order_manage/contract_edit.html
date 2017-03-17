@@ -1,0 +1,107 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active = 'sale') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">修改合同</p>
+        <p class="contents-header-p text-sm">contracts</p>
+    </div>
+    <div class="separator"><span></span></div>
+		<div class="widget">
+    <form class="form form-horizontal" method="post" url="{{ url_for('order_manage.contract_edit', id=contract.id) }}"
+          role="form" enctype="multipart/form-data">
+        <div class="widget_contents padding-0 item-wrapper">
+            <div class="form-item item-template">
+                <div class="form-item-2 col-3">
+                    <span>{{ form.amount.label }}</span>
+                    {{ form.amount(class = 'form-input form-control') }}
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>{{ form.delivery_time.label }}</span>
+                    {{ form.delivery_time(class = 'form-input form-control datetimePicker') }}
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>{{ form.offer_no.label }}</span>
+                    {{ form.offer_no(class = 'form-input form-control') }}
+                </div>
+
+            <div class="form-item-2 col-3">
+                    <span>{{ form.logistics_costs.label }}</span>
+                    {{ form.logistics_costs(class = 'form-input form-control') }}
+                </div>
+            <div class="form-item-2 col-3">
+                    <span>{{ form.live_floor_costs.label }}</span>
+                    {{ form.live_floor_costs(class = 'form-input form-control') }}
+                </div>
+            <div class="form-item-2 col-3">
+                    <span>{{ form.self_leveling_costs.label }}</span>
+                    {{ form.self_leveling_costs(class = 'form-input form-control') }}
+                </div>
+            <div class="form-item-2 col-3">
+                    <span>{{ form.crossed_line_costs.label }}</span>
+                    {{ form.crossed_line_costs(class = 'form-input form-control') }}
+                </div>
+            <div class="form-item-2 col-3">
+                    <span>{{ form.sticky_costs.label }}</span>
+                    {{ form.sticky_costs(class = 'form-input form-control') }}
+                </div>
+            <div class="form-item-2 col-3">
+                    <span>{{ form.full_adhesive_costs.label }}</span>
+                    {{ form.full_adhesive_costs(class = 'form-input form-control') }}
+                </div>
+            <div class="form-item-2 col-3">
+                    <span>{{ form.material_loss_percent.label }}</span>
+                    {{ form.material_loss_percent(class = 'form-input form-control') }}
+                </div>
+            <div class="form-item-2 col-3">
+                    <span>{{ form.other_costs.label }}</span>
+                    {{ form.other_costs(class = 'form-input form-control') }}
+                </div>
+            <div class="form-item-2 col-3">
+                    <span>{{ form.tax_costs.label }}</span>
+                    {{ form.tax_costs(class = 'form-input form-control') }}
+                </div>
+
+								<br/>
+								<div class="clearfix"></div>
+								<div class="widget_contents padding-0 top-gap-2">
+									<table class="tables">
+											<thead>
+													<tr>
+															<th>产品名</th>
+															<th>规格</th>
+															<th>数量(㎡)</th>
+															<th>单价</th>
+															<th>总价</th>
+															<th>备注</th>
+													</tr>
+											</thead>
+											<tbody>
+													{% for content in order.order_contents %}
+													<tr>
+															<td><a class="table-link">{{ content.product_name }}</a></td>
+															<td>{{ content.sku_specification }}</td>
+															<td>{{ content.number }}</td>
+															<td><input class="form-control" name="{{ content.id }}price" value="{{ content.price }}"></td>
+															<td><input class="form-control" name="{{ content.id }}amount" value="{{ content.amount }}"></td>
+															<td><input class="form-control" name="{{ content.id }}memo" value="{{ content.memo }}"></td>
+													</tr>
+													{% endfor %}
+											</tbody>
+									</table>
+								</div>
+
+								<div class="text-right top-gap-1">
+										<button type="submit" class="btn btn-default my-btn">提交</button>
+								</div>
+            </div>
+        </div>
+    </form>
+		</div>
+</div>
+
+{% endblock %}
+

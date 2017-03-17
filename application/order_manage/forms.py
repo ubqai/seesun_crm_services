@@ -5,8 +5,8 @@ from wtforms.validators import *
 
 class ContractForm(Form):
     amount = StringField('总金额', validators=[DataRequired(message='总金额必须输入')])
-    delivery_time = DateField('交货期', validators=[DataRequired(message='交货期必须输入')])
-    offer_no = DateField('要约NO.', validators=[DataRequired(message='要约NO必须输入')])
+    delivery_time = StringField('交货期', validators=[DataRequired(message='交货期必须输入')])
+    offer_no = StringField('要约NO.', validators=[DataRequired(message='要约NO必须输入')])
     logistics_costs = StringField('物流费用', validators=[DataRequired(message='物流费用必须输入')])
     live_floor_costs = StringField('活铺费用')
     self_leveling_costs = StringField('自流平费用')
