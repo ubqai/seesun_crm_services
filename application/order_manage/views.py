@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import json
-from flask import Blueprint, flash, redirect, render_template, url_for, request, send_file
+from flask import Blueprint, flash, redirect, render_template, url_for, request, send_file, current_app
 from flask.helpers import make_response
 from .. import app
 from ..models import *
 from ..helpers import gen_qrcode 
 from .forms import ContractForm, TrackingInfoForm1, TrackingInfoForm2
-from ..inventory.api import load_inventories_by_code, update_inventory, update_sku_by_code
+from ..inventory.api import load_inventories_by_code, update_sku_by_code
+from .utils import is_number
+from decimal import Decimal
 
 order_manage = Blueprint('order_manage', __name__, template_folder='templates')
 
@@ -40,7 +42,39 @@ def contract_new(id):
     order = Order.query.get_or_404(id)
     form = ContractForm()
     if request.method == 'POST':
+        if not is_number(request.form.get("amount")):
+            flash('总金额必须为数字', 'warning')
+            return render_template('order_manage/contract_new.html', form=form, order=order)
+        current_app.logger.info(request.form.get("delivery_time"))
+        if request.form.get("delivery_time") is None or request.form.get("delivery_time") == '':
+            flash('交货期必须填写', 'warning')
+            return render_template('order_manage/contract_new.html', form=form, order=order)
+        if request.form.get("offer_no") is None or request.form.get("offer_no") == '':
+            flash('要约NO.必须填写', 'warning')
+            return render_template('order_manage/contract_new.html', form=form, order=order)
+        if not is_number(request.form.get("logistics_costs")):
+            flash('物流费用必须为数字', 'warning')
+            return render_template('order_manage/contract_new.html', form=form, order=order)
+        if not is_number(request.form.get("material_loss_percent")):
+            flash('耗损百分比必须为0-100之间的数字', 'warning')
+            return render_template('order_manage/contract_new.html', form=form, order=order)
+        if Decimal(request.form.get("material_loss_percent")) > Decimal("100") or Decimal(request.form.get("material_loss_percent")) < Decimal("0"):
+            flash('耗损百分比必须为0-100之间的数字', 'warning')
+            return render_template('order_manage/contract_new.html', form=form, order=order)
         contract_no = "SSCONTR%s" % datetime.datetime.now().strftime('%y%m%d%H%M%S')
+        total_amount = Decimal("0")
+        for order_content in order.order_contents:
+            if not is_number(request.form.get("%sprice" % order_content.id)):
+                flash('产品单价必须为数字', 'warning')
+                return render_template('order_manage/contract_new.html', form=form, order=order)
+            if not is_number(request.form.get("%samount" % order_content.id)):
+                flash('产品总价必须为数字', 'warning')
+                return render_template('order_manage/contract_new.html', form=form, order=order)
+            total_amount += Decimal(request.form.get("%samount" % order_content.id))
+            order_content.price = request.form.get("%sprice" % order_content.id)
+            order_content.amount = request.form.get("%samount" % order_content.id)
+            order_content.memo = request.form.get("%smemo" % order_content.id)
+            db.session.add(order_content)
         contract_content = {"amount": request.form.get("amount"),
                             "delivery_time": request.form.get("delivery_time"),
                             "offer_no": request.form.get("offer_no"),
@@ -50,7 +84,9 @@ def contract_new(id):
                             "crossed_line_costs": request.form.get('crossed_line_costs'),
                             "sticky_costs": request.form.get('sticky_costs'),
                             "full_adhesive_costs": request.form.get('full_adhesive_costs'),
-                            "material_loss": request.form.get('material_loss'),
+                            "material_loss_percent": request.form.get('material_loss_percent'),
+                            "material_loss": str(total_amount * Decimal(request.form.get("material_loss_percent")) /
+                                                 Decimal("100")),
                             "other_costs": request.form.get('other_costs'),
                             "tax_costs": request.form.get('tax_costs')}
         contract = Contract(
@@ -64,16 +100,82 @@ def contract_new(id):
             user=order.user
         )
         order.order_status = '生成合同'
-        for order_content in order.order_contents:
-            order_content.price = request.form.get("%sprice" % order_content.id)
-            order_content.amount = request.form.get("%samount" % order_content.id)
-            order_content.memo = request.form.get("%smemo" % order_content.id)
-            db.session.add(order_content)
         db.session.add(contract)
         db.session.add(order)
         db.session.commit()
         return redirect(url_for('order_manage.contract_index'))
     return render_template('order_manage/contract_new.html', form=form, order=order)
+
+
+@order_manage.route("/contracts/<int:id>/edit_contract", methods=['GET', 'POST'])
+def contract_edit(id):
+    contract = Contract.query.get_or_404(id)
+    order = contract.order
+    form = ContractForm(amount=contract.contract_content.get('amount'),
+                        delivery_time=contract.contract_content.get('delivery_time'),
+                        offer_no=contract.contract_content.get('offer_no'),
+                        logistics_costs=contract.contract_content.get('logistics_costs'),
+                        live_floor_costs=contract.contract_content.get('live_floor_costs'),
+                        self_leveling_costs=contract.contract_content.get('self_leveling_costs'),
+                        crossed_line_costs=contract.contract_content.get('crossed_line_costs'),
+                        sticky_costs=contract.contract_content.get('sticky_costs'),
+                        full_adhesive_costs=contract.contract_content.get('full_adhesive_costs'),
+                        material_loss_percent=contract.contract_content.get('material_loss_percent'),
+                        other_costs=contract.contract_content.get('other_costs'),
+                        tax_costs=contract.contract_content.get('tax_costs'))
+    if request.method == 'POST':
+        if not is_number(request.form.get("amount")):
+            flash('总金额必须为数字', 'warning')
+            return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
+        current_app.logger.info(request.form.get("delivery_time"))
+        if request.form.get("delivery_time") is None or request.form.get("delivery_time") == '':
+            flash('交货期必须填写', 'warning')
+            return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
+        if request.form.get("offer_no") is None or request.form.get("offer_no") == '':
+            flash('要约NO.必须填写', 'warning')
+            return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
+        if not is_number(request.form.get("logistics_costs")):
+            flash('物流费用必须为数字', 'warning')
+            return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
+        if not is_number(request.form.get("material_loss_percent")):
+            flash('耗损百分比必须为0-100之间的数字', 'warning')
+            return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
+        if Decimal(request.form.get("material_loss_percent")) > Decimal("100") or Decimal(request.form.get("material_loss_percent")) < Decimal("0"):
+            flash('耗损百分比必须为0-100之间的数字', 'warning')
+            return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
+        total_amount = Decimal("0")
+        for order_content in order.order_contents:
+            if not is_number(request.form.get("%sprice" % order_content.id)):
+                flash('产品单价必须为数字', 'warning')
+                return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
+            if not is_number(request.form.get("%samount" % order_content.id)):
+                flash('产品总价必须为数字', 'warning')
+                return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
+            total_amount += Decimal(request.form.get("%samount" % order_content.id))
+            order_content.price = request.form.get("%sprice" % order_content.id)
+            order_content.amount = request.form.get("%samount" % order_content.id)
+            order_content.memo = request.form.get("%smemo" % order_content.id)
+            db.session.add(order_content)
+        contract_content = {"amount": request.form.get("amount"),
+                            "delivery_time": request.form.get("delivery_time"),
+                            "offer_no": request.form.get("offer_no"),
+                            "logistics_costs": request.form.get('logistics_costs'),
+                            "live_floor_costs": request.form.get('live_floor_costs'),
+                            "self_leveling_costs": request.form.get('self_leveling_costs'),
+                            "crossed_line_costs": request.form.get('crossed_line_costs'),
+                            "sticky_costs": request.form.get('sticky_costs'),
+                            "full_adhesive_costs": request.form.get('full_adhesive_costs'),
+                            "material_loss_percent": request.form.get('material_loss_percent'),
+                            "material_loss": str(total_amount * Decimal(request.form.get("material_loss_percent")) /
+                                                 Decimal("100")),
+                            "other_costs": request.form.get('other_costs'),
+                            "tax_costs": request.form.get('tax_costs')}
+        contract.contract_content = contract_content
+        db.session.add(contract)
+        db.session.add(order)
+        db.session.commit()
+        return redirect(url_for('order_manage.contract_index'))
+    return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
 
 
 @order_manage.route("/orders/<int:id>/assign_sale_contact", methods=['GET', 'POST'])

@@ -6,12 +6,12 @@
 <div class="contents">
     <div class="contents-header">
         <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
-        <p class="contents-header-p">生成合同</p>
+        <p class="contents-header-p">修改合同</p>
         <p class="contents-header-p text-sm">contracts</p>
     </div>
     <div class="separator"><span></span></div>
 		<div class="widget">
-    <form class="form form-horizontal" method="post" url="{{ url_for('order_manage.contract_new', id=order.id) }}"
+    <form class="form form-horizontal" method="post" url="{{ url_for('order_manage.contract_edit', id=contract.id) }}"
           role="form" enctype="multipart/form-data">
         <div class="widget_contents padding-0 item-wrapper">
             <div class="form-item item-template">
@@ -85,9 +85,9 @@
 															<td><a class="table-link">{{ content.product_name }}</a></td>
 															<td>{{ content.sku_specification }}</td>
 															<td>{{ content.number }}</td>
-															<td><input class="form-control" name="{{ content.id }}price"></td>
-															<td><input class="form-control" name="{{ content.id }}amount"></td>
-															<td><input class="form-control" name="{{ content.id }}memo"></td>
+															<td><input class="form-control" name="{{ content.id }}price" value="{{ content.price }}"></td>
+															<td><input class="form-control" name="{{ content.id }}amount" value="{{ content.amount }}"></td>
+															<td><input class="form-control" name="{{ content.id }}memo" value="{{ content.memo }}"></td>
 													</tr>
 													{% endfor %}
 											</tbody>

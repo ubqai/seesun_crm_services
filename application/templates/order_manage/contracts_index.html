@@ -66,6 +66,7 @@
                         <th>付款状态</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,6 +82,11 @@
                             <td><span class="text-warning">{{ contract.production_status }}</span></td>
                             <td><span class="text-warning">{{ contract.delivery_status }}</span></td>
                             <td><span class="text-warning">{{ contract.payment_status }}</span></td>
+                            <td>
+                            {% if not contract.payment_status == '已付款' %}
+                                <a class="new-one" href="{{ url_for('order_manage.contract_edit', id=contract.id) }}">修改合同</a>
+                            {% endif %}
+                            </td>
                             <td><a class="new-one" href="{{ url_for('order_manage.contract_offer', id=contract.id) }}">查看订货要约</a></td>
                             <td>
                             {% if contract.shipment_status == '未出库' %}
