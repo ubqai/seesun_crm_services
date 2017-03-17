@@ -49,6 +49,8 @@
 	<div class="wrapper">
 		<div class="text">
 			<p class="text-title">产品属性</p>
+			<p class="text-content text-indent-1 text-sm">长度： {{ product.get('length') }} m</p>
+			<p class="text-content text-indent-1 text-sm">宽度： {{ product.get('width') }} m</p>
 			{% for options in option_sorted %}
 				<p class="text-content text-indent-1 text-sm">
 					{{ options[0].get('feature_name') }}：

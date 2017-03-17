@@ -1,7 +1,8 @@
 __pycache__
 application/static/upload
 venv
-
+.idea
 .project
 .pydevproject
 .settings/
+

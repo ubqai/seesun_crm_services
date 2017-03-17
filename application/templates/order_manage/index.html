@@ -57,11 +57,12 @@
                         <th>合同号</th>
                         <th>区域负责人</th>
                         <th>经销商</th>
+                        <th>销售联系人</th>
                         <th>订单状态</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for order in orders %}
+                    {% for order in orders_page.items %}
                     <tr>
                         <td><a href="{{ url_for("order_manage.order_show", id=order.id) }}" class="table-link">{{ order.order_no }}</a></td>
                         <td>{{ order.created_at.strftime('%Y%m%d') }}</td>
@@ -72,12 +73,39 @@
                         </td>
                         <td>{{ order.user.sales_areas.all()[0].name }}</td>
                         <td>{{ order.user.nickname }}</td>
+                        <td>{{ order.sale_contract }}</td>
                         <td><span class="text-warning">{{ order.order_status }}</span></td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+        <ul class="pagination">
+            <li>
+                {% if orders_page.has_prev %}
+                    <a href="{{ url_for('order_manage.order_index', page = orders_page.prev_num) }}">上一页</a>
+                {% endif %}
+            </li>
+
+            {%- for page in orders_page.iter_pages() %}
+              <li>
+                  {% if page %}
+                    {% if page != orders_page.page %}
+                      <a href="{{ url_for('order_manage.order_index', page=page) }}">{{ page }}</a>
+                    {% else %}
+                      <span class="page-number current">{{ page }}</span>
+                    {% endif %}
+                  {% else %}
+                    <span class=ellipsis>…</span>
+                  {% endif %}
+              </li>
+            {%- endfor %}
+             <li>
+                {% if orders_page.has_next %}
+                    <a href="{{ url_for('order_manage.order_index', page = orders_page.next_num) }}">下一页 </a>
+                {% endif %}
+            </li>
+	    </ul>
     </div>
 </div>
 

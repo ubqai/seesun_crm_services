@@ -23,6 +23,8 @@
 					<tr>
 						<th>产品名称</th>
 						<th>产品编码</th>
+						<th>长度</th>
+						<th>宽度</th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -31,6 +33,8 @@
 					<tr>
 						<td><a href="{{ url_for('product.show', id = product.get('product_id'), category_id = category.get('category_id')) }}" class="table-link">{{ product.get('name') }}</a></td>
 						<td>{{ product.get('code') }}</td>
+						<td>{{ product.get('length') }} m</td>
+						<td>{{ product.get('width') }} m</td>
 						<td>
 							<a class="table-del text-warning" href="{{ url_for('product.sku_index', product_id = product.get('product_id')) }}"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;管理SKU</a>
 							<a class="table-del text-success" href="{{ url_for('product.relate_cases', product_id = product.get('product_id')) }}"><span class="glyphicon glyphicon-link"></span>&nbsp;&nbsp;关联案例</a>

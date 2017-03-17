@@ -20,7 +20,7 @@
 					<div class="light-divider"></div>
 					<p class="text-content text-sm"><input class="form-control" name="buyer_address" placeholder="收货地址"></p>
 					<div class="light-divider"></div>
-					<p class="text-content text-sm"><input class="form-control" name="company_name" placeholder="企业名称"></p>
+					<p class="text-content text-sm"><input class="form-control" name="project_name" placeholder="项目名称"></p>
 					<div class="light-divider"></div>
 				</div>
 			</div>
@@ -28,11 +28,11 @@
 			<div class="wrapper-style top-gap-3">
 				<div class="wrapper-header"><span class="wrapper-header-title">SECOND STEP</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
 				<div class="wrapper-inner">
-            <p class="text-content text-sm"><input class="form-control" name="project_address" placeholder="项目地址"></p>
+            <p class="text-content text-sm"><input class="form-control" name="dealer_name" value="{{ current_user.nickname }}" readonly="readonly"></p>
 						<div class="light-divider"></div>
-            <p class="text-content text-sm"><input class="form-control" name="contact_phone" placeholder="联系电话"></p>
+            <p class="text-content text-sm"><input class="form-control" name="contact_phone" value="{{ current_user.user_infos[0].telephone }}"></p>
 						<div class="light-divider"></div>
-            <p class="text-content text-sm"><input class="form-control" name="contact_name" placeholder="联系姓名"></p>
+            <p class="text-content text-sm"><input class="form-control" name="contact_name" value="{{ current_user.user_infos[0].name }}"></p>
 						<div class="light-divider"></div>
             <p class="text-content text-sm"><input class="form-control" name="order_memo" placeholder="备注："></p>
 						<div class="light-divider"></div>
@@ -45,7 +45,7 @@
 			<div class="wrapper-style rect top-gap-2">
 				<div class="wrapper-header"><span class="wrapper-header-title">{{ order_content.get('product_name') }}</span><span class="wrapper-header-icon glyphicon glyphicon-shopping-cart pull-right"></span></div>
 				<div class="wrapper-inner clearfix">
-					<div class="wrapper-inner-img"><img class="full-img" src="/static/images/doc.png"></div>
+					<div class="wrapper-inner-img"><img class="full-img" src="{{ order_content.get('sku_thumbnail') or '/static/images/doc.png' }}"></div>
 					<div class="wrapper-inner-content clearfix">
 						<div class="wrapper-row">
 							<p class="set-1">Sku Code :<span class="text-gray inline-display">{{ order_content.get('sku_code') }}</span></p>
@@ -54,8 +54,8 @@
 							<p class="set-1">Specification :<span class="text-gray inline-display">{{ order_content.get('sku_specification') }}</span></p>
 						</div>
 						<div class="wrapper-row">
-							<p class="set-2">Number :<span class="text-dark inline-display"><span class="glyphicon glyphicon-tint text-gray"></span> {{ order_content.get('number') }}</span></p>
-							<p class="set-2">Square Num :<span class="text-dark inline-display"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ order_content.get('square_num') }}</span></p>
+							<p class="set-2">&nbsp;<!--Number :<span class="text-dark inline-display"><span class="glyphicon glyphicon-tint text-gray"></span> {# { order_content.get('number') } #} </span>--></p>
+							<p class="set-2">Square Num :<span class="text-dark inline-display"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ order_content.get('number') }}㎡</span></p>
 						</div>
 					</div>
 				</div>

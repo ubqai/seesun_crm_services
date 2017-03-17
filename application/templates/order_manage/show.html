@@ -52,12 +52,12 @@
             </div>
 						<div class="form-item">
 								<div class="sub-form-item">
-									<span>企业名称:</span>
-									<span>{{ order.buyer_info['company_name'] }}</span>
+									<span>项目名称:</span>
+									<span>{{ order.buyer_info['project_name'] }}</span>
 								</div>
 								<div class="sub-form-item">
-									<span>项目地址:</span>
-									<span>{{ order.buyer_info['project_address'] }}</span>
+									<span>联系姓名:</span>
+									<span>{{ order.buyer_info['contact_name'] }}</span>
 								</div>
 								<div class="sub-form-item">
 									<span>联系电话:</span>
@@ -69,10 +69,7 @@
 							<i class="pull-right	glyphicon glyphicon-list-alt"></i>
 						</div>
 						<div class="form-item">
-								<div class="sub-form-item">
-									<span>联系姓名:</span>
-									<span>{{ order.buyer_info['contact_name'] }}</span>
-								</div>
+
 								<div class="sub-form-item">
 									<span>经销商:</span>
 									<span>{{ order.user.nickname }}</span>
@@ -80,6 +77,10 @@
 								<div class="sub-form-item">
 									<span>经销商所属区域:</span>
 									<span>{{ order.user.sales_areas.all()[0].name }}</span>
+								</div>
+                                <div class="sub-form-item">
+									<span>销售联系人:</span>
+									<span>{{ order.sale_contract }}</span>
 								</div>
             </div>
 						
@@ -116,6 +117,7 @@
         </div>
         {% if order.order_status=="新订单" %}
             <div class="text-right top-gap-3">
+                <a class="btn btn-default my-btn right-gap-2" href="{{ url_for('order_manage.assign_sale_contact', id=order.id) }}">指定销售联系人</a>
                 <a class="btn btn-default my-btn right-gap-2" href="{{ url_for('order_manage.contract_new', id=order.id) }}">同意生成合同</a>
                 <a class="btn btn-default my-btn" href="{{ url_for('order_manage.order_cancel', id=order.id) }}">取消订单</a>
             </div>

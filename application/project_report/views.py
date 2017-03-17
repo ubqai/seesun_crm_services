@@ -8,7 +8,10 @@ project_report = Blueprint('project_report', __name__, template_folder='template
 
 @project_report.route("/index", methods=['GET'])
 def index():
-    project_reports = ProjectReport.query.all()
+    page_size = int(request.args.get('page_size', 10))
+    page_index = int(request.args.get('page', 1))
+    project_reports = ProjectReport.query.order_by(ProjectReport.created_at.desc())\
+        .paginate(page_index, per_page=page_size, error_out=True)
     return render_template('project_report/index.html', project_reports=project_reports)
 
 
@@ -22,16 +25,7 @@ def show(id):
 def audit(id):
     pr = ProjectReport.query.get_or_404(id)
     if request.method == 'POST':
-        audit_content = {
-            'sales_representative': request.form.get("sales_representative"),
-            'sales_executive': request.form.get("sales_executive"),
-            'sales_director': request.form.get("sales_director"),
-            'is_authorized': request.form.get("is_authorized"),
-            'authorization_date': request.form.get("authorization_date"),
-            'authorization_no': request.form.get("authorization_no"),
-        }
-        pr.audit_content = audit_content
-        pr.status = '项目报备审核通过'
+        pr.status = request.form.get("status")
         db.session.add(pr)
         db.session.commit()
         flash('项目报备申请审核成功', 'success')

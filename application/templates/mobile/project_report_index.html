@@ -7,14 +7,14 @@
 		<p class="text-title bot-gap-1">项目报备列表</p>
 				
 
-		{% for project_report in project_reports %}
+		{% for project_report in project_reports.items %}
 			<div class="wrapper-style rect top-gap-2">
 				<div class="wrapper-header"><span class="wrapper-header-title">{{ project_report.report_no }}</span><span class="wrapper-header-icon glyphicon glyphicon-book pull-right"></span></div>
 				<div class="wrapper-inner clearfix">
 					<div class="wrapper-inner-img"><img class="full-img" src="/static/images/doc.png"></div>
 					<div class="wrapper-inner-content clearfix">
 						<div class="wrapper-row">
-							<p class="set-2">申请公司名称 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ project_report.report_content.get('app_company') }}</span></p>
+							<p class="set-2">要约方(买方) :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ project_report.report_content.get('buyer') }}</span></p>
 							<p class="set-2">创建日期 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ project_report.created_at.strftime('%Y-%m-%d') }}</span></p>
 						</div>
 						<div class="wrapper-row">
@@ -30,6 +30,32 @@
 		{% endfor %}
 	
 	</div>
+    <ul class="pagination">
+	    <li>
+	        {% if project_reports.has_prev %}
+	            <a href="{{ url_for('project_report_index', page = project_reports.prev_num) }}">上一页</a>
+	        {% endif %}
+        </li>
+
+        {%- for page in project_reports.iter_pages() %}
+          <li>
+              {% if page %}
+                {% if page != project_reports.page %}
+                  <a href="{{ url_for('project_report_index', page=page) }}">{{ page }}</a>
+                {% else %}
+                  <span class="page-number current">{{ page }}</span>
+                {% endif %}
+              {% else %}
+                <span class=ellipsis>…</span>
+              {% endif %}
+          </li>
+        {%- endfor %}
+         <li>
+            {% if project_reports.has_next %}
+                <a href="{{ url_for('project_report_index', page = project_reports.next_num) }}">下一页 </a>
+            {% endif %}
+        </li>
+	</ul>
 </div>
 
 {% endblock %}

@@ -38,33 +38,33 @@
 					<tr>
 						<th>报备编号</th>
                         <th>申请人</th>
-						<th>申请公司名称</th>
 						<th>创建日期</th>
+                        <th>要约方(买方)</th>
+						<th>收货单位</th>
 						<th>项目名称</th>
-						<th>状态</th>
-						<th>详情</th>
+						<th>产品系列</th>
+                        <th>报备状态</th>
 						<th>审核</th>
 					</tr>
 				</thead>
 				<tbody>
-                    {% for project_report in project_reports %}
+                    {% for project_report in project_reports.items %}
                         <tr>
-                            <td>{{ project_report.report_no }}</td>
+                            <td><a href="{{ url_for('project_report.show', id=project_report.id) }}" class="text-danger">{{ project_report.report_no }}</a></td>
                             <td>{{ project_report.app_name }}</td>
-                            <td>{{ project_report.report_content.get('app_company') }}</td>
                             <td>{{ project_report.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ project_report.report_content.get('buyer') }}</td>
+                            <td>{{ project_report.report_content.get('buyer_company') }}</td>
                             <td>{{ project_report.report_content.get('project_name') }}</td>
+                            <td>{{ project_report.report_content.get('product_series') }}</td>
                             <td>
                                 {{ project_report.status }}
                             </td>
                             <td>
-                                <a href="{{ url_for('project_report.show', id=project_report.id) }}" class="text-success">查看详情</a>
-                            </td>
-                            <td>
                                 {% if project_report.status == '新创建待审核' %}
                                     <a href="{{ url_for('project_report.audit', id=project_report.id) }}" class="text-danger">审核</a>
-																{% else %}
-																		<a class="text-success">已审核</a>
+								{% else %}
+									<a class="text-success">已审核</a>
                                 {% endif %}
                             </td>
                         </tr>
@@ -72,6 +72,32 @@
 				</tbody>
             </table>
         </div>
+    <ul class="pagination">
+	    <li>
+	        {% if project_reports.has_prev %}
+	            <a href="{{ url_for('project_report.index', page = project_reports.prev_num) }}">上一页</a>
+	        {% endif %}
+        </li>
+
+        {%- for page in project_reports.iter_pages() %}
+          <li>
+              {% if page %}
+                {% if page != project_reports.page %}
+                  <a href="{{ url_for('project_report.index', page=page) }}">{{ page }}</a>
+                {% else %}
+                  <span class="page-number current">{{ page }}</span>
+                {% endif %}
+              {% else %}
+                <span class=ellipsis>…</span>
+              {% endif %}
+          </li>
+        {%- endfor %}
+         <li>
+            {% if project_reports.has_next %}
+                <a href="{{ url_for('project_report.index', page = project_reports.next_num) }}">下一页 </a>
+            {% endif %}
+        </li>
+	</ul>
     </div>
 </div>
 

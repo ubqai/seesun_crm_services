@@ -14,8 +14,11 @@
             {% for content in application.application_contents %}
                 <div class="contract-item">
                     <div class="contract-table">
-                        <p class="text-sm">物料名称：{{ content.material.name }}</p>
+                        <p class="text-sm">物料名称：{{ content.material_name }}</p>
                         <p class="text-sm">物料数量：{{ content.number }}</p>
+						{% if content.available_number %}
+							<p class="text-sm">可用数量：{{ content.available_number }}</p>
+						{% endif %}
                     </div>
                 </div>
             {% endfor %}
@@ -26,7 +29,16 @@
 				<div class="contract-table">
 					<p class="text-sm">申请状态： {{ application.status }}</p>
 				</div>
+				{% if application.memo %}
+				<div class="contract-table">
+					<p class="text-sm">审核备注： {{ application.memo }}</p>
+				</div>
+				{% endif %}
 			</div>
+			{% if application.status == '等待经销商再次确认' %}
+			<a class="btn btn-warning btn-block text-lg top-gap-1" href="{{ url_for('mobile_material_application_reconfirm_accept', id=application.id) }}">确认审核结果</a>
+			<a class="btn btn-default btn-block text-lg" href="{{ url_for('mobile_material_application_cancel', id=application.id) }}">取消申请</a>
+			{% endif %}
 		</div>
 	</div>
 

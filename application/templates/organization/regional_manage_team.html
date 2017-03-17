@@ -15,20 +15,25 @@
 	<form class="form form-horizontal" url="{{url_for('organization.regional_manage_team',sah_id=sah_id,leader_id=leader_id,region_province_id=region_province_id)}}" role="form" method="post">
 	    <div class="form-style form-default">
 	        <div class="widget_contents padding-0">
+	        	{{ form.csrf_token }}
 	        	<table class="tables">
 	        		<tr>
 	        			<th colspan=2>销售团队选择</th>
 	        		</tr>
-					{% for u in user_infos %}
+					{% for user_info in sorted_user_infos %}
 						<tr>
 							<td>
-								{% if user_infos[u]['choose'] ==1 %}
-				        			<input type="radio" name="user_id" value="{{u}}" checked="{{user_infos[u]['choose']}}" />
+								{% if user_info[1]['choose'] ==1 %}
+				        			<input type="radio" name="user_id" value="{{user_info[0]}}" checked="{{user_info[1]['choose']}}" />
 				        		{% else %}	        			
-				        			<input type="radio" name="user_id" value="{{u}}" />
+				        			<input type="radio" name="user_id" value="{{user_info[0]}}" />
 				        		{% endif %}
 				        	</td>
-				        	<td>{{user_infos[u]['name']}}</td>
+				        	<td>{{user_info[1]['name']}}
+				        		{% if user_info[1]['choose'] ==1 %}
+				        			(现系统值)
+				        		{% endif %}
+				        	</td>
 						</tr>
 					{% endfor %}	
 				</table>
