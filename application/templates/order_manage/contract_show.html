@@ -15,7 +15,7 @@
 
     <div class="widget">
         <div class="widget_header">
-            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;订单详情</h4>
+            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;合同详情</h4>
         </div>
         <div class="widget_contents padding-0 bot-gap-3">
             <div class="form-item inline-2">
@@ -58,10 +58,10 @@
             <div class="form-item inline-2">
                 <span class="form-label">物流费用</span>
                 <input class="form-input form-control" value="{{ contract.contract_content.get('logistics_costs') }}" disabled/>
-                <span class="form-label">原料损耗</span>
+                <span class="form-label">原料损耗费用</span>
                 <input class="form-input form-control" value="{{ contract.contract_content.get('material_loss') }}" disabled/>
-                <span class="form-label">税点</span>
-                <input class="form-input form-control" value="{{ contract.contract_content.get('tax_costs') }}" disabled/>
+                <span class="form-label">原料耗损百分比</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('material_loss_percent') }}%" disabled/>
             </div>
             <div class="form-item inline-2">
                 <span class="form-label">活铺费用</span>
@@ -78,6 +78,10 @@
                 <input class="form-input form-control" value="{{ contract.contract_content.get('full_adhesive_costs') }}" disabled/>
                 <span class="form-label">其他费用</span>
                 <input class="form-input form-control" value="{{ contract.contract_content.get('other_costs') }}" disabled/>
+            </div>
+            <div class="form-item inline-2">
+                <span class="form-label">税点</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('tax_costs') }}" disabled/>
             </div>
         </div>
         <div class="widget_contents padding-0">

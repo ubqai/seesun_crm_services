@@ -13,7 +13,7 @@ class ContractForm(Form):
     crossed_line_costs = StringField('划线费用')
     sticky_costs = StringField('点粘费用')
     full_adhesive_costs = StringField('全胶粘费用')
-    material_loss = StringField('原料耗损', validators=[DataRequired(message='原料耗损必须输入')])
+    material_loss_percent = StringField('耗损百分比', validators=[DataRequired(message='耗损百分比必须输入')])
     other_costs = StringField('其他费用')
     tax_costs = StringField('税点')
 
