@@ -62,7 +62,7 @@
                 <tbody>
                     {% for application in applications %}
                     <tr>
-                        <td><a href="{{ url_for('content.material_application_show', id = application.id) }}" class="table-link">{{ application.app_no }}</a></td>
+                        <td><a href="{{ url_for('content.material_application_edit', id = application.id) }}" class="table-link">{{ application.app_no }}</a></td>
                         <td>{{ application.created_at.strftime('%F') }}</td>
                         <td>{{ application.user.sales_areas.all()[0].name }}</td>
                         <td>{{ application.user.nickname }}</td>

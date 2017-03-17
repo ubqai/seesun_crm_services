@@ -5,7 +5,7 @@ from flask import Blueprint, flash, g, redirect, render_template, request, url_f
 from .. import app, db
 from ..helpers import object_list, save_upload_file, delete_file, clip_image
 from ..models import Content, ContentCategory, ContentClassification, ContentClassificationOption
-from ..models import MaterialApplication, Material
+from ..models import Material, MaterialApplication, MaterialApplicationContent
 from .forms import *
 
 content = Blueprint('content', __name__, template_folder='templates')
@@ -96,14 +96,13 @@ def edit(id):
     return render_template('content/edit.html', form=form, content=content, options = options)
 
 
-@content.route('/<int:id>/delete', methods=['GET', 'POST'])
+@content.route('/<int:id>/delete', methods=['POST'])
 def delete(id):
     content = Content.query.get_or_404(id)
     if request.method == 'POST':
         content.delete
         flash('Content "{name}" has been deleted.'.format(name=content.name), 'success')
         return redirect(url_for('content.title_index'))
-    abort(404)
 
 
 # url -- /content/category/..
@@ -253,7 +252,7 @@ def option_delete(id):
 # --- Material need ---
 @content.route('/material_application/index')
 def material_application_index():
-    applications = MaterialApplication.query.all()
+    applications = MaterialApplication.query.order_by(MaterialApplication.created_at.desc())
     return render_template('content/material_application/index.html', applications=applications)
 
 
@@ -261,6 +260,29 @@ def material_application_index():
 def material_application_show(id):
     application = MaterialApplication.query.get_or_404(id)
     return render_template('content/material_application/show.html', application=application)
+
+
+@content.route('/material_application/<int:id>/edit', methods=['GET', 'POST'])
+def material_application_edit(id):
+    application = MaterialApplication.query.get_or_404(id)
+    if request.method == 'POST':
+        form = MaterialApplicationForm(request.form)
+        if form.validate():
+            application = form.save(application)
+            db.session.add(application)
+            if application.status == '等待经销商再次确认':
+                for param in request.form:
+                    if 'content' in param and request.form.get(param):
+                        content = MaterialApplicationContent.query.get(param.rsplit('_', 1)[1])
+                        content.available_number = request.form.get(param)
+                        db.session.add(content)
+            db.session.commit()
+            flash('审核成功', 'success')
+        else:
+            flash('审核失败', 'danger')
+        return redirect(url_for('content.material_application_index'))
+    form = MaterialApplicationForm(obj=application)
+    return render_template('content/material_application/edit.html', application=application, form=form)
 
 
 @content.route('/material_application/<int:id>/approve')
@@ -277,6 +299,29 @@ def material_application_reject(id):
     application.status = '拒绝申请'
     application.save
     return redirect(url_for('content.material_application_index'))
+
+
+@content.route('/material_application/<int:id>/reconfirm', methods=['POST'])
+def material_application_reconfirm(id):
+    application = MaterialApplication.query.get_or_404(id)
+    if request.method == 'POST':
+        if application.status == '等待经销商再次确认':
+            flash('非法操作', 'warning')
+            return redirect(url_for('content.material_application_index'))
+        if request.form:
+            application.status = '等待经销商再次确认'
+            application.memo = request.form.get('memo')
+            db.session.add(application)
+            for param in request.form:
+                if 'content' in param and request.form.get(param):
+                    content = MaterialApplicationContent.query.get(param.rsplit('_', 1)[1])
+                    content.available_number = request.form.get(param)
+                    db.session.add(content)
+            db.session.commit()
+            flash('操作成功,等待经销商再次确认', 'success')
+        else:
+            flash('params error', 'warning')
+        return redirect(url_for('content.material_application_index'))
 
 
 @content.route('/material/index')

@@ -43,3 +43,15 @@ class MaterialForm(wtforms.Form):
     def save(self, obj):
         self.populate_obj(obj)
         return obj
+
+
+class MaterialApplicationForm(wtforms.Form):
+    status = wtforms.SelectField(
+        '审核意见',
+        choices=[('同意申请', '同意申请'), ('等待经销商再次确认', '等待经销商再次确认'), ('拒绝申请', '拒绝申请')],
+        validators=[DataRequired(message='status is necessary')])
+    memo = wtforms.TextAreaField('审核备注')
+
+    def save(self, obj):
+        self.populate_obj(obj)
+        return obj

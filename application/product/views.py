@@ -35,6 +35,8 @@ def new(category_id):
         product_info = {
             'name': request.form.get('name'),
             'code': request.form.get('code'),
+            'length': request.form.get('length'),
+            'width': request.form.get('width'),
             'description': request.form.get('description'),
             'product_image_links': product_image_links,
             'case_ids': [],
@@ -120,6 +122,8 @@ def edit(id):
                         product_image_links[_index] = image_path
         data = {
             'name': request.form.get('name'),
+            'length': request.form.get('length'),
+            'width': request.form.get('width'),
             'description': request.form.get('description'),
             'product_image_links': product_image_links,
             'options_id': [str(option_id) for option_id in option_ids]

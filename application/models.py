@@ -140,8 +140,6 @@ class Material(db.Model, Rails):
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
-    application_contents = db.relationship('MaterialApplicationContent', backref='material', lazy='dynamic')
-
     def __repr__(self):
         return 'Material(id: %s, name: %s, ...)' % (self.id, self.name)
 
@@ -162,8 +160,9 @@ class MaterialApplication(db.Model, Rails):
 
 class MaterialApplicationContent(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
-    material_id = db.Column(db.Integer, db.ForeignKey('material.id'))
+    material_name = db.Column(db.String(100))
     number = db.Column(db.Integer)
+    available_number = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     application_id = db.Column(db.Integer, db.ForeignKey('material_application.id'))

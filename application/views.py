@@ -136,6 +136,7 @@ def mobile_cart():
                                          'sku_specification': request.form.get('sku_specification_%s' % index),
                                          'sku_code': request.form.get('sku_code_%s' % index),
                                          'sku_id': index,
+                                         'sku_thumbnail': request.form.get('sku_thumbnail_%s' % index),
                                          'number': int(request.form.get('number_%s' % index)),
                                          'square_num': "%.2f" % (0.3*int(request.form.get('number_%s' % index)))}
                         order.append(order_content)
@@ -272,17 +273,17 @@ def mobile_material_need():
 def mobile_material_need_options(classification_id):
     classification = ContentClassification.query.get_or_404(classification_id)
     options = classification.options
-    return render_template('mobile/material_need_options.html', options = options)
+    return render_template('mobile/material_need_options.html', options=options)
 
 
 @app.route('/mobile/material_need_contents/<int:option_id>')
 def mobile_material_need_contents(option_id):
     option = ContentClassificationOption.query.get_or_404(option_id)
     contents = option.contents
-    return render_template('mobile/material_need_contents.html', contents = contents)
+    return render_template('mobile/material_need_contents.html', contents=contents)
 
 
-@app.route('/mobile/material_application/new', methods = ['GET', 'POST'])
+@app.route('/mobile/material_application/new', methods=['GET', 'POST'])
 def mobile_material_application_new():
     if request.method == 'POST':
         app_contents = []
@@ -290,14 +291,14 @@ def mobile_material_application_new():
             for param in request.form:
                 if 'material' in param and request.form.get(param):
                     if int(request.form.get(param)) > 0:
-                        app_contents.append([param.split('_',1)[1], request.form.get(param)])
+                        app_contents.append([param.split('_', 1)[1], request.form.get(param)])
         if app_contents:
-            application = MaterialApplication(app_no = 'MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
-                user = current_user, status = '新申请')
+            application = MaterialApplication(app_no='MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
+                user=current_user, status='新申请')
             db.session.add(application)
             for app_content in app_contents:
-                content = MaterialApplicationContent(material_id = app_content[0], number = app_content[1], 
-                    application = application)
+                material = Material.query.get_or_404(app_content[0])
+                content = MaterialApplicationContent(material_name=material.name, number=app_content[1], application=application)
                 db.session.add(content)
             db.session.commit()
             flash('物料申请提交成功', 'success')
@@ -305,19 +306,45 @@ def mobile_material_application_new():
             flash('Please input correct number!', 'danger')
         return redirect(url_for('mobile_material_application_new'))
     materials = Material.query.all()
-    return render_template('mobile/material_application_new.html', materials = materials)
+    return render_template('mobile/material_application_new.html', materials=materials)
 
 
 @app.route('/mobile/material_applications')
 def mobile_material_applications():
-    applications = MaterialApplication.query.all()
-    return render_template('mobile/material_applications.html', applications = applications)
+    applications = current_user.material_applications.order_by(MaterialApplication.created_at.desc())
+    return render_template('mobile/material_applications.html', applications=applications)
 
 
 @app.route('/mobile/material_application/<int:id>')
 def mobile_material_application_show(id):
     application = MaterialApplication.query.get_or_404(id)
-    return render_template('mobile/material_application_show.html', application = application)
+    if not application.user == current_user:
+        return redirect(url_for('mobile_index'))
+    return render_template('mobile/material_application_show.html', application=application)
+
+
+@app.route('/mobile/material_application/<int:id>/reconfirm_accept')
+def mobile_material_application_reconfirm_accept(id):
+    application = MaterialApplication.query.get_or_404(id)
+    if application.user != current_user or application.status != '等待经销商再次确认':
+        return redirect(url_for('mobile_index'))
+    application.status = '经销商已确认'
+    db.session.add(application)
+    db.session.commit()
+    flash('已确认审核结果', 'success')
+    return redirect(url_for('mobile_material_applications'))
+
+
+@app.route('/mobile/material_application/<int:id>/cancel')
+def mobile_material_application_cancel(id):
+    application = MaterialApplication.query.get_or_404(id)
+    if not application.user == current_user:
+        return redirect(url_for('mobile_index'))
+    application.status = '已取消'
+    db.session.add(application)
+    db.session.commit()
+    flash('已取消申请', 'success')
+    return redirect(url_for('mobile_material_applications'))
 
 
 # --- Quick pay --- not be used anymore

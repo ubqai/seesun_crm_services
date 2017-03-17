@@ -45,7 +45,7 @@
 			<div class="wrapper-style rect top-gap-2">
 				<div class="wrapper-header"><span class="wrapper-header-title">{{ order_content.get('product_name') }}</span><span class="wrapper-header-icon glyphicon glyphicon-shopping-cart pull-right"></span></div>
 				<div class="wrapper-inner clearfix">
-					<div class="wrapper-inner-img"><img class="full-img" src="/static/images/doc.png"></div>
+					<div class="wrapper-inner-img"><img class="full-img" src="{{ order_content.get('sku_thumbnail') or '/static/images/doc.png' }}"></div>
 					<div class="wrapper-inner-content clearfix">
 						<div class="wrapper-row">
 							<p class="set-1">Sku Code :<span class="text-gray inline-display">{{ order_content.get('sku_code') }}</span></p>
