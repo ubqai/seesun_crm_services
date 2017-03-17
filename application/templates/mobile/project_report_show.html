@@ -31,7 +31,17 @@
 						<p class="text-sm float">备注：<span class="contract-value">{{ project_report.report_content.get('project_memo') }}</span></p>
 					</div>
                     <div class="contract-table">
-						<p class="text-sm float">报备状态：<span class="contract-value">{{ project_report.status }}</span></p>
+						<p class="text-sm float">报备状态：
+							<span class="contract-value">
+									{% if project_report.status == '新创建待审核' %}
+											<span class="text-primary">{{ project_report.status }}</span>
+									{% elif project_report.status == '申请通过，项目已被保护' or project_report.status == '项目报备审核通过' %}
+											<span class="text-success">{{ project_report.status }}</span>
+									{% else %}
+											<span class="text-danger">{{ project_report.status }}</span>
+									{% endif %}
+							</span>
+						</p>
 					</div>
 				</div>
 

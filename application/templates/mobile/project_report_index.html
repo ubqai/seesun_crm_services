@@ -19,7 +19,15 @@
 						</div>
 						<div class="wrapper-row">
 							<p class="set-2">项目名称 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ project_report.report_content.get('project_name') }}</span></p>
-							<p class="set-2">状态 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ project_report.status }}</span></p>
+							<p class="set-2">状态 :<br> 
+									{% if project_report.status == '新创建待审核' %}
+											<span class="text-primary"><span class="glyphicon glyphicon-leaf"></span> {{ project_report.status }}</span>
+									{% elif project_report.status == '申请通过，项目已被保护' or project_report.status == '项目报备审核通过' %}
+											<span class="text-success"><span class="glyphicon glyphicon-leaf"></span> {{ project_report.status }}</span>
+									{% else %}
+											<span class="text-danger"><span class="glyphicon glyphicon-leaf"></span> {{ project_report.status }}</span>
+									{% endif %}
+							</p>
 						</div>
 					</div>
 				</div>

@@ -17,7 +17,15 @@
 						</div>
 						<div class="wrapper-row">
 							<p class="set-2">经销商 :<span class="text-dark inline-display">{{ application.user.nickname }}</span></p>
-							<p class="set-2">申请状态 :<span class="text-dark inline-display"> {{ application.status }}</span></p>
+							
+							{% if application.status=="新申请" or application.status=="等待经销商再次确认" %}
+								<p class="set-2">申请状态 :<span class="text-primary inline-display"> {{ application.status }}</span></p>
+							{% elif application.status=="通过申请" or application.status=="经销商已确认" %}
+								<p class="set-2">申请状态 :<span class="text-success inline-display"> {{ application.status }}</span></p>
+							{% else %}
+								<p class="set-2">申请状态 :<span class="text-danger inline-display"> {{ application.status }}</span></p>
+							{% endif %}
+							
 						</div>
 					</div>
 				</div>
