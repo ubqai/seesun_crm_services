@@ -199,12 +199,16 @@ class WechatCall:
             use_appid = WECHAT_TEST_APPID
 
         url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s" % (WechatAccessToken.getTokenByType("access_token", is_test))
-        crm_services_url = HOOK_URL + "/mobile/user/login"
+        crm_services_url = "https://open.weixin.qq.com/connect/oauth2/authorize?" + \
+            "appid=" + use_appid + \
+            "&redirect_uri=" + urllib.parse.quote_plus(HOOK_URL + "/mobile/user/login") + \
+            "&response_type=code&scope=snsapi_base&state=wechat_user_binding#wechat_redirect"
+
         crm_user_binding_url = "https://open.weixin.qq.com/connect/oauth2/authorize?" + \
             "appid=" + use_appid + \
             "&redirect_uri=" + urllib.parse.quote_plus(HOOK_URL + "/wechat/mobile/user_binding") + \
             "&response_type=code&scope=snsapi_base&state=wechat_user_binding#wechat_redirect"
-        app.logger.info("crm_user_binding_url [%s]" % (crm_user_binding_url))
+        app.logger.info("crm_user_binding_url [%s] \n crm_services_url [%s]" % (crm_user_binding_url, crm_services_url))
 
         headers = {'content-type': 'application/json'}
         post_params = json.dumps({
@@ -229,23 +233,18 @@ class WechatCall:
                         }
                     ]
                 }
-                # {
-                #     "type":"view",
-                #     "name":"服务站".encode("utf-8").decode("latin1"),
-                #     "url": crm_services_url
-                # }
             ]
         }, ensure_ascii=False)
 
         response = requests.post(url, data=post_params, headers=headers)
         if response.status_code != 200:
             return "get failure"
- 
+
         res_json = response.json()
- 
+
         if res_json.get("errcode") != 0:
             raise BaseException("wechat: create menu failure [%s] - [%s]" % (post_params, res_json))
- 
+
         return res_json.get("errmsg")
 
     # 删除自定义菜单
@@ -262,3 +261,27 @@ class WechatCall:
 
         if res_json.get("errcode") != 0:
             return "get failure :" + res_json.get("errmsg")
+
+    # 获取openId
+    @classmethod
+    def getOpenIdByCode(cls, code, is_test=TEST_MODE):
+        print("getOpenIdByCode is_test: %s" % (is_test))
+        if is_test is False:
+            use_appid = WECHAT_APPID
+            use_appsecret = WECHAT_APPSECRET
+        else:
+            use_appid = WECHAT_TEST_APPID
+            use_appsecret = WECHAT_TEST_APPSECRET
+
+        url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"  \
+            % (use_appid, use_appsecret, code)
+        response = requests.get(url)
+        if response.status_code != 200:
+            return "get failure"
+
+        res_json = response.json()
+
+        if res_json.get("errcode") != 0:
+            raise ValueError("get failure :" + res_json.get("errmsg"))
+
+        return res_json.get("openid")

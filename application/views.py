@@ -10,6 +10,7 @@ from .helpers import save_upload_file
 from flask_login import *
 from .organization.forms import UserLoginForm
 from .forms import *
+from .wechat.models import WechatCall, WechatUserInfo
 
 
 @app.route('/mobile/index')
@@ -572,7 +573,7 @@ def mobile_user_login():
             if form.validate() is False:
                 raise ValueError("")
 
-            # 后台只能员工登入
+            # 微信只能经销商登入
             user = User.login_verification(form.email.data, form.password.data, 2)
             if user is None:
                 raise ValueError("用户名或密码错误")
@@ -587,10 +588,28 @@ def mobile_user_login():
         except Exception as e:
             app.logger.info("mobile login failure [%s]" % (e))
             flash(e)
+            return render_template('mobile/user_login.html', form=form)
     else:
-        form = UserLoginForm(meta={'csrf_context': session})
+        if request.args.get("code") is not None:
+            try:
+                openid = WechatCall.getOpenIdByCode(request.args.get("code"))
+                wui = WechatUserInfo.query.filter_by(open_id=openid).first()
+                if wui is not None:
+                    exists_binding_user = User.query.filter_by(id=wui.user_id).first()
+                    if exists_binding_user is not None:
+                        login_user(exists_binding_user)
+                        return redirect(url_for('mobile_index'))
+            except Exception as e:
+                pass
 
-    return render_template('mobile/user_login.html', form=form)
+        form = UserLoginForm(meta={'csrf_context': session})
+        return render_template('mobile/user_login.html', form=form)
+
+
+@app.route('/mobile/user/logout')
+def mobile_user_logout():
+    logout_user()
+    return redirect(url_for('mobile_user_login'))
 
 
 @app.route('/mobile/user/info/<int:user_id>')
