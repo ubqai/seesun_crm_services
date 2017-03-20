@@ -472,7 +472,7 @@ class SalesAreaHierarchy(db.Model):
 
         if regional_province == {}:
             regional_province[-1] = {"regional_province_name": "无", "team_info": (-1, "无")}
-            
+
         return regional_province
 
 
@@ -499,4 +499,3 @@ class ProjectReport(db.Model):
     @property
     def app_name(self):
         return User.query.get_or_404(self.app_id).nickname
-

@@ -281,7 +281,7 @@ class WechatCall:
 
         res_json = response.json()
 
-        if res_json.get("errcode") != 0:
-            raise ValueError("get failure :" + res_json.get("errmsg"))
+        if res_json.get("errcode", 0) != 0:
+            raise ValueError("get failure :" + res_json.get("errmsg", "unknown errmsg"))
 
-        return res_json.get("openid")
+        return res_json.get("openid", "")

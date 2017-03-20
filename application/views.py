@@ -24,6 +24,7 @@ def web_access_log():
             db.session.commit()
         except Exception as e:
             app.logger.warning('Exception: %s' % e)
+            db.session.rollback()
     pass
 
 
