@@ -1,4 +1,4 @@
-"""empty message
+"""remove_access_token_from_wechat_access_token
 
 Revision ID: 7939e3b94900
 Revises: ea68faadfa4e

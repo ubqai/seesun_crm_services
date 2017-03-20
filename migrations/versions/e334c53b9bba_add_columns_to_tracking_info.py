@@ -1,4 +1,4 @@
-"""empty message
+"""add_columns_to_tracking_info
 
 Revision ID: e334c53b9bba
 Revises: 901a4674cb12

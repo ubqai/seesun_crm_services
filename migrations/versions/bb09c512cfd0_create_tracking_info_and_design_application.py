@@ -1,4 +1,4 @@
-"""empty message
+"""create_tracking_info_and_design_application
 
 Revision ID: bb09c512cfd0
 Revises: a4ef5d3cfd2a

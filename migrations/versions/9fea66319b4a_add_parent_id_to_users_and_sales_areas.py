@@ -1,4 +1,4 @@
-"""empty message
+"""add_parent_id_to_users_and_sales_areas
 
 Revision ID: 9fea66319b4a
 Revises: 5705eb7a8dcf

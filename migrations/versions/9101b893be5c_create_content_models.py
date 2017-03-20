@@ -1,4 +1,4 @@
-"""empty message
+"""create_content_models
 
 Revision ID: 9101b893be5c
 Revises: 

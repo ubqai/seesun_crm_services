@@ -1,4 +1,4 @@
-"""empty message
+"""add_appid_to_wechat_access_token
 
 Revision ID: 59eeab2bbaaf
 Revises: d80a29ceb22a

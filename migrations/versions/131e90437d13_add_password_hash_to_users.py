@@ -1,4 +1,4 @@
-"""empty message
+"""add_password_hash_to_users
 
 Revision ID: 131e90437d13
 Revises: e334c53b9bba

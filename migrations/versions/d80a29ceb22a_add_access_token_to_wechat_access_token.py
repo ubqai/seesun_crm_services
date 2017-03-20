@@ -1,4 +1,4 @@
-"""empty message
+"""add_access_token_to_wechat_access_token
 
 Revision ID: d80a29ceb22a
 Revises: 7939e3b94900

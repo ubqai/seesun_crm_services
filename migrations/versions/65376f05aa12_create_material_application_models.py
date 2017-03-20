@@ -1,4 +1,4 @@
-"""empty message
+"""create_material_application_models
 
 Revision ID: 65376f05aa12
 Revises: ad50d4738049

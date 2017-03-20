@@ -1,4 +1,4 @@
-"""empty message
+"""create_districts_and_dealers_and_orders_and_contracts
 
 Revision ID: 9cc62ef23a49
 Revises: 9101b893be5c

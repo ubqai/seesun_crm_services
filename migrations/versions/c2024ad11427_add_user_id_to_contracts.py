@@ -1,4 +1,4 @@
-"""empty message
+"""add_user_id_to_contracts
 
 Revision ID: c2024ad11427
 Revises: 131e90437d13

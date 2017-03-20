@@ -108,6 +108,7 @@ def delete(id):
 # url -- /content/category/..
 @content.route('/category/index')
 def category_index():
+    return str(request.user_agent.system)
     categories = ContentCategory.query.order_by(ContentCategory.created_at.asc())
     return render_template('content/category/index.html', categories=categories)
 
@@ -283,45 +284,6 @@ def material_application_edit(id):
         return redirect(url_for('content.material_application_index'))
     form = MaterialApplicationForm(obj=application)
     return render_template('content/material_application/edit.html', application=application, form=form)
-
-
-@content.route('/material_application/<int:id>/approve')
-def material_application_approve(id):
-    application = MaterialApplication.query.get_or_404(id)
-    application.status = '通过申请'
-    application.save
-    return redirect(url_for('content.material_application_index'))
-
-
-@content.route('/material_application/<int:id>/reject')
-def material_application_reject(id):
-    application = MaterialApplication.query.get_or_404(id)
-    application.status = '拒绝申请'
-    application.save
-    return redirect(url_for('content.material_application_index'))
-
-
-@content.route('/material_application/<int:id>/reconfirm', methods=['POST'])
-def material_application_reconfirm(id):
-    application = MaterialApplication.query.get_or_404(id)
-    if request.method == 'POST':
-        if application.status == '等待经销商再次确认':
-            flash('非法操作', 'warning')
-            return redirect(url_for('content.material_application_index'))
-        if request.form:
-            application.status = '等待经销商再次确认'
-            application.memo = request.form.get('memo')
-            db.session.add(application)
-            for param in request.form:
-                if 'content' in param and request.form.get(param):
-                    content = MaterialApplicationContent.query.get(param.rsplit('_', 1)[1])
-                    content.available_number = request.form.get(param)
-                    db.session.add(content)
-            db.session.commit()
-            flash('操作成功,等待经销商再次确认', 'success')
-        else:
-            flash('params error', 'warning')
-        return redirect(url_for('content.material_application_index'))
 
 
 @content.route('/material/index')

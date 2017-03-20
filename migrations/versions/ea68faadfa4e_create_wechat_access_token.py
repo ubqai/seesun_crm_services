@@ -1,4 +1,4 @@
-"""empty message
+"""create_wechat_access_token
 
 Revision ID: ea68faadfa4e
 Revises: 3f632ce96098
