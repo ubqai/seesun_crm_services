@@ -11,8 +11,14 @@ def load_user(user_id):
 class Rails(object):
     @property
     def save(self):
-        db.session.add(self)
-        db.session.commit()
+        # 增加rollback防止一个异常导致后续SQL不可使用
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
+
         return self
 
     @property

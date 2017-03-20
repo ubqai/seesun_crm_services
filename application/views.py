@@ -613,6 +613,7 @@ def mobile_user_login():
                     exists_binding_user = User.query.filter_by(id=wui.user_id).first()
                     if exists_binding_user is not None:
                         login_user(exists_binding_user)
+                        app.logger.info("binding user login [%s] - [%s]" % (openid, exists_binding_user.nickname))
                         return redirect(url_for('mobile_index'))
             except Exception as e:
                 pass
