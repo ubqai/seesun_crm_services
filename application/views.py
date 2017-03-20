@@ -569,28 +569,28 @@ def new_share_inventory(id):
 @app.route('/mobile/user/login', methods=['GET', 'POST'])
 def mobile_user_login():
     if current_user.is_authenticated:
-        if current_user.user_or_origin==2:
+        if current_user.user_or_origin == 2:
             return redirect(url_for('mobile_index'))
         else:
-            #不运行前后端同时登入在一个WEB上
-            app.logger.info("后台用户[%s]自动登出,[%s][%s]" % (current_user.nickname,request.path,request.endpoint))
+            # 不运行前后端同时登入在一个WEB上
+            app.logger.info("后台用户[%s]自动登出,[%s][%s]" % (current_user.nickname, request.path, request.endpoint))
             logout_user()
 
     if request.method == 'POST':
         try:
-            form = UserLoginForm(request.form)
-            if form.validate()==False:
+            form = UserLoginForm(request.form, meta={'csrf_context': session})
+            if form.validate() is False:
                 raise ValueError("")
 
-            #后台只能员工登入
-            user=User.login_verification(form.email.data,form.password.data,2)
-            if user==None:
+            # 后台只能员工登入
+            user = User.login_verification(form.email.data, form.password.data, 2)
+            if user is None:
                 raise ValueError("用户名或密码错误")
-                
-            login_valid_errmsg=user.check_can_login()
-            if not login_valid_errmsg=="":
+
+            login_valid_errmsg = user.check_can_login()
+            if not login_valid_errmsg == "":
                 raise ValueError(login_valid_errmsg)
-                
+
             login_user(user)
             app.logger.info("mobile login success [%s]" % (user.nickname))
             return redirect(url_for('mobile_index'))
@@ -598,30 +598,31 @@ def mobile_user_login():
             app.logger.info("mobile login failure [%s]" % (e))
             flash(e)
     else:
-        form = UserLoginForm()
+        form = UserLoginForm(meta={'csrf_context': session})
 
-    return render_template('mobile/user_login.html',form=form)
+    return render_template('mobile/user_login.html', form=form)
+
 
 @app.route('/mobile/user/info/<int:user_id>')
 def mobile_user_info(user_id):
-    u=User.query.filter_by(id=user_id).first()
-    if u==None:
+    u = User.query.filter_by(id=user_id).first()
+    if u is None:
         return redirect(url_for('mobile_index'))
 
-    form = UserInfoForm(obj=u,user_type=u.user_or_origin)
+    form = UserInfoForm(obj=u, user_type=u.user_or_origin)
 
-    if len(u.user_infos)==0:
+    if len(u.user_infos) == 0:
         pass
     else:
-        ui=u.user_infos[0]
-        form.name.data=ui.name
-        form.address.data=ui.address
-        form.phone.data=ui.telephone
-        form.title.data=ui.title
+        ui = u.user_infos[0]
+        form.name.data = ui.name
+        form.address.data = ui.address
+        form.phone.data = ui.telephone
+        form.title.data = ui.title
 
-    if u.sales_areas.first()!=None:
-        form.sale_range.data=u.sales_areas.first().name
-    if u.departments.first()!=None:
-        form.dept_ranges.data=",".join([d.name for d in u.departmets.all()])
+    if u.sales_areas.first() is not None:
+        form.sale_range.data = u.sales_areas.first().name
+    if u.departments.first() is not None:
+        form.dept_ranges.data = ",".join([d.name for d in u.departmets.all()])
 
-    return render_template('mobile/user_info.html',form=form)
+    return render_template('mobile/user_info.html', form=form)
