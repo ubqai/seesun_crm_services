@@ -36,6 +36,8 @@ from .project_report.views import project_report
 app.register_blueprint(project_report, url_prefix='/project_report')
 from .organization.views import organization
 app.register_blueprint(organization, url_prefix='/organization')
+from .web_access_log.views import web_access_log
+app.register_blueprint(web_access_log, url_prefix='/web_access_log')
 
 from .inventory.api import load_products, load_skus, load_user_inventories, load_inventories_by_code
 app.add_template_global(load_products)

@@ -5,6 +5,7 @@ from flask_script import Manager, Shell
 from application import app, db
 from application.models import *
 from application.wechat.models import *
+from application.web_access_log.models import WebAccessLog
 import application.views
 
 migrate = Migrate(app, db)

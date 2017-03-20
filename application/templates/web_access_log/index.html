@@ -1,0 +1,87 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% from 'macros/pc_pagination.html' import paginate %}
+{% block main_content %}
+
+{{ sidebar(active = 'statistics') }}
+<div class="contents">
+	<div class="contents-header">
+		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+		<p class="contents-header-p">点击率统计</p>
+		<p class="contents-header-p text-sm">Details of access</p>
+	</div>
+	<div class="separator"><span></span></div>
+    <form action="{{ url_for('web_access_log.index') }}" method="get" role="form" class="form form-horizontal" >
+        <div class="form-style form-default">
+            <div class="form-item-2 col-3">
+                <span>操作系统</span>
+                <select class="form-control" name="platform">
+                    <option value=""></option>
+                    {% for name in 'aix amiga android bsd chromeos hpux iphone ipad irix linux macos sco solaris wii windows'.split() %}
+                    <option value="{{ name }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-item-2 col-3">
+                <span>访问时间从</span>
+                <input class="form-control datetimePicker" name="created_at_gt">
+            </div>
+            <div class="form-item-2 col-3">
+                <span>到</span>
+                <input class="form-control datetimePicker" name="created_at_lt">
+            </div>
+            <div class="form-item-2 col-3">
+                <span>浏览器</span>
+                <select class="form-control" name="browser">
+                    <option value=""></option>
+                    {% for name in 'aol ask camino chrome firefox galeon google kmeleon konqueror links lynx msie msn netscape opera safari seamonkey webkit yahoo'.split() %}
+                    <option value="{{ name }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="clearfix"></div>
+            <div class="text-right top-gap-2 right-gap-3">
+                <button class="btn btn-default my-btn">筛选条件</button>
+            </div>
+        </div>
+    </form>
+	<div class="widget">
+		<div class="widget_header">
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;点击率统计</h4>
+		</div>
+		<div class="widget_contents padding-0">
+			<table class="tables">
+				<thead>
+					<tr>
+						<th>Request path</th>
+						<th>Remote addr</th>
+						<th>User ID</th>
+						<th>Platform</th>
+                        <th>Browser</th>
+                        <th>Version</th>
+                        <th>Language</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for log in object_list.items %}
+					<tr>
+						<td>{{ log.request_path }}</td>
+						<td>{{ log.remote_addr }}</td>
+						<td>{{ log.user_id }}</td>
+						<td>{{ log.platform }}</td>
+						<td>{{ log.browser }}</td>
+						<td>{{ log.version }}</td>
+						<td>{{ log.language }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div style="text-align: center;">
+			{{ paginate(object_list) }}
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+

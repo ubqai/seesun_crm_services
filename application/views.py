@@ -4,6 +4,7 @@ from flask.helpers import make_response
 from flask import flash, redirect, render_template, request, url_for, session, current_app
 from . import app
 from .models import *
+from .web_access_log.models import WebAccessLog
 from .product.api import *
 from .inventory.api import create_inventory
 from .helpers import save_upload_file
@@ -16,9 +17,12 @@ from .forms import *
 def web_access_log():
     # only take record of frontend access
     if '/mobile/' in request.path and '/mobile/user/login' not in request.path:
-        record = WebAccessLog.take_record(request, current_user)
-        db.session.add(record)
-        db.session.commit()
+        try:
+            record = WebAccessLog.take_record(request, current_user)
+            db.session.add(record)
+            db.session.commit()
+        except Exception as e:
+            app.logger.warning('Exception: %s' % e)
     pass
 
 
