@@ -53,12 +53,13 @@ def mobile_user_binding():
             return render_template('wechat/mobile_user_binding.html', form=form)
     else:
         app.logger.info("mobile_user_binding [%s][%s]" % (request.args, request.args.get("code")))
-        openid = None
+        openid = ""
         if request.args.get("code") is None:
             flash("请关闭页面后,通过微信-绑定用户进入此页面")
         else:
             try:
                 openid = WechatCall.getOpenIdByCode(request.args.get("code"))
+                app.logger.info("get openid[%s] by code[%s]" % (openid, request.args.get("code")))
                 wui = WechatUserInfo.query.filter_by(open_id=openid).first()
                 if wui is not None:
                     exists_binding_user = User.query.filter_by(id=wui.user_id).first()
