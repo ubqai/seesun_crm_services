@@ -108,7 +108,6 @@ def delete(id):
 # url -- /content/category/..
 @content.route('/category/index')
 def category_index():
-    return str(request.user_agent.system)
     categories = ContentCategory.query.order_by(ContentCategory.created_at.asc())
     return render_template('content/category/index.html', categories=categories)
 

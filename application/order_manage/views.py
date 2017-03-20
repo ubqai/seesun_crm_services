@@ -291,7 +291,7 @@ def tracking_info_new(contract_id):
     return render_template('order_manage/tracking_info_new.html', contract = contract, form = form)
 
 
-@order_manage.route('/tracking_info/<int:id>/edit', methods = ['GET', 'POST'])
+@order_manage.route('/tracking_info/<int:id>/edit', methods=['GET', 'POST'])
 def tracking_info_edit(id):
     tracking_info = TrackingInfo.query.get_or_404(id)
     contract = Contract.query.filter(Contract.contract_no == tracking_info.contract_no).first()
@@ -303,8 +303,8 @@ def tracking_info_edit(id):
         flash('物流状态更新成功', 'success')   
         return redirect(url_for('order_manage.tracking_infos'))  
     else:
-        form = TrackingInfoForm2(obj = tracking_info)
-    return render_template('order_manage/tracking_info_edit.html', tracking_info = tracking_info, form = form, contract = contract)
+        form = TrackingInfoForm2(obj=tracking_info)
+    return render_template('order_manage/tracking_info_edit.html', tracking_info=tracking_info, form=form, contract=contract)
 
 
 @order_manage.route('/tracking_info/<int:id>/generate_qrcode')

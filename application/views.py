@@ -13,6 +13,16 @@ from .forms import *
 from .wechat.models import WechatCall, WechatUserInfo
 
 
+@app.before_request
+def web_access_log():
+    # only take record of frontend access
+    if '/mobile/' in request.path and '/mobile/user/login' not in request.path:
+        record = WebAccessLog.take_record(request, current_user)
+        db.session.add(record)
+        db.session.commit()
+    pass
+
+
 @app.route('/mobile/index')
 def mobile_index():
     return render_template('mobile/index.html')
