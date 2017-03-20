@@ -45,6 +45,11 @@ class UserLoginForm(BaseCsrfForm):
     ])
 
 
+# WECHAT USER_LOGIN
+class WechatUserLoginForm(UserLoginForm):
+    openid = StringField('微信openId', [validators.Required()])
+
+
 class BaseForm(Form):
     def reset_select_field(self):
         self.dept_ranges.query = get_dynamic_dept_ranges_query()

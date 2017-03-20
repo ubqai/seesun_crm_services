@@ -1,6 +1,8 @@
-from flask import Blueprint, flash, render_template, request, session
-from .models import WechatAccessToken, app, WECHAT_SERVER_AUTHENTICATION_TOKEN
-from ..organization.forms import UserLoginForm
+from flask import Blueprint, flash, render_template, request, session, redirect, url_for
+from .models import WechatAccessToken, app, WECHAT_SERVER_AUTHENTICATION_TOKEN, WechatCall, WechatUserInfo
+from ..organization.forms import WechatUserLoginForm
+from ..models import User
+from flask_login import login_user, current_user, logout_user
 import hashlib
 
 import xml.dom.minidom
@@ -21,12 +23,63 @@ def mobile_verification():
 
 @wechat.route('/mobile/user_binding', methods=['GET', 'POST'])
 def mobile_user_binding():
-    app.logger.info("mobile_user_binding [%s]" % (request.args))
     if request.method == 'POST':
-        pass
+        try:
+            if current_user.is_authenticated:
+                logout_user()
 
-    form = UserLoginForm(meta={'csrf_context': session})
-    return render_template('wechat/mobile_user_binding.html', form=form)
+            form = WechatUserLoginForm(request.form, meta={'csrf_context': session})
+            if form.validate() == False:
+                app.logger.info("form valid fail: [%s]" % (form.errors))
+                raise ValueError("")
+
+            # 微信只能经销商登入
+            user = User.login_verification(form.email.data, form.password.data, 2)
+            if user is None:
+                raise ValueError("用户名或密码错误")
+
+            login_valid_errmsg = user.check_can_login()
+            if not login_valid_errmsg == "":
+                raise ValueError(login_valid_errmsg)
+
+            WechatUserInfo(open_id=form.openid.data, user_id=user.id).save()
+            app.logger.info("insert into WechatUserInfo [%s]-[%s]" % (form.openid.data, user.id))
+
+            login_user(user)
+            app.logger.info("mobile login success [%s]" % (user.nickname))
+            return redirect(url_for('mobile_index'))
+        except Exception as e:
+            flash(e)
+            return render_template('wechat/mobile_user_binding.html', form=form)
+    else:
+        app.logger.info("mobile_user_binding [%s][%s]" % (request.args, request.args.get("code")))
+        openid = None
+        if request.args.get("code") is None:
+            flash("请关闭页面后,通过微信-绑定用户进入此页面")
+        else:
+            try:
+                openid = WechatCall.getOpenIdByCode(request.args.get("code"))
+                wui = WechatUserInfo.query.filter_by(open_id=openid).first()
+                if wui is not None:
+                    exists_binding_user = User.query.filter_by(id=wui.user_id).first()
+                    if exists_binding_user is not None:  # normal
+                        if current_user.is_authenticated:  # has login
+                            if current_user != exists_binding_user:  # not same user
+                                logout_user()
+                                login_user(exists_binding_user)
+                                app.logger.info("mobile login success [%s]" % (exists_binding_user.nickname))
+                            else:
+                                app.logger.info("mobile has login [%s]" % (exists_binding_user.nickname))
+                        else:
+                            login_user(exists_binding_user)
+                            app.logger.info("mobile login success [%s]" % (exists_binding_user.nickname))
+
+                        return redirect(url_for('mobile_index'))
+            except Exception as e:
+                flash("%s,请重新通过微信-绑定用户进入此页面" % (e))
+
+        form = WechatUserLoginForm(openid=openid, meta={'csrf_context': session})
+        return render_template('wechat/mobile_user_binding.html', form=form)
 
 
 @wechat.route("/server/authentication", methods=['GET', 'POST'])

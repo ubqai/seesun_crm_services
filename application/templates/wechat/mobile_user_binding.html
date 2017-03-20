@@ -6,6 +6,7 @@
 <div class="main-content">
 	<div class="wrappper top-gap-3">
 		<form action="{{ url_for('wechat.mobile_user_binding') }}" method="post">
+			{{ form.csrf_token }}
 			<div style="width:100%; position:relative">
 					{{ form.email(class="form-control",placeholder="请输入email") }}
 					{{ render_form_field_error(form.email) }}
@@ -14,7 +15,15 @@
 					{{ form.password(class="form-control top-gap-3",placeholder="请输入密码") }}
 					{{ render_form_field_error(form.password) }}
 			</div>
-			<button type="submit" class="btn btn-block btn-warning top-gap-3">绑定</button>
+			{{ form.openid(type="hidden") }}
+			{% if form.openid.data == None %}
+				<div class="top-gap-3">
+				<span> {{ get_flashed_messages()[0] }} </span>
+				</div>
+			{% else %}
+				<button type="submit" class="btn btn-block btn-warning top-gap-3">绑定</button>
+				{{ render_form_field_error(form.csrf_token) }}
+			{% endif %}
 		</form>
 	</div>
 </div>
