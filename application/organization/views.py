@@ -29,7 +29,7 @@ def user_login():
 
 	if request.method == 'POST':
 		try:
-			form = UserLoginForm(request.form)
+			form = UserLoginForm(request.form, meta={'csrf_context': session})
 			if form.validate() == False:
 				raise ValueError("")
 
@@ -49,7 +49,7 @@ def user_login():
 			app.logger.info("后端用户登入失败[%s]" % (e))
 			flash(e)
 	else:
-		form = UserLoginForm()
+		form = UserLoginForm(meta={'csrf_context': session})
 
 	return render_template('organization/user_login.html', form=form)
 

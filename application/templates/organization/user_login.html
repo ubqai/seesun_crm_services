@@ -9,6 +9,7 @@
 		<div class="login_title text-center">LOGIN IN</div>
 		<div class="login_border">
 			<div class="login_panel">
+				{{ form.csrf_token }}
 				<h2>USERNAME</h2>
 				<div style="width:100%; position:relative">
 					{{ form.email(class="form-input form-control",placeholder="请输入email") }}
@@ -25,6 +26,7 @@
 					<label for="checkbox">记住我</label>
 				</div>
 				<input type="submit" name="button" id="button" value="登入" style="opacity: 0.7;">
+				{{ render_form_field_error(form.csrf_token) }}
 			</div>
 		</div>
 	</form>

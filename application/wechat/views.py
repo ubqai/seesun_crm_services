@@ -1,5 +1,7 @@
-from flask import Blueprint, flash, render_template, request
-from .models import *
+from flask import Blueprint, flash, render_template, request, session
+from .models import WechatAccessToken, app, WECHAT_SERVER_AUTHENTICATION_TOKEN
+from ..organization.forms import UserLoginForm
+import hashlib
 
 import xml.dom.minidom
 
@@ -15,6 +17,16 @@ def mobile_verification():
         return render_template('wechat/mobile_verification.html', wechat_info=wechat_info)
     else:
         return render_template('wechat/mobile_verification.html', wechat_info=wechat_info)
+
+
+@wechat.route('/mobile/user_binding', methods=['GET', 'POST'])
+def mobile_user_binding():
+    app.logger.info("mobile_user_binding [%s]" % (request.args))
+    if request.method == 'POST':
+        pass
+
+    form = UserLoginForm(meta={'csrf_context': session})
+    return render_template('wechat/mobile_user_binding.html', form=form)
 
 
 @wechat.route("/server/authentication", methods=['GET', 'POST'])

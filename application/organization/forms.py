@@ -38,7 +38,7 @@ def get_dynamic_dept_ranges_query():
 
 
 # BASE USER_LOGIN
-class UserLoginForm(Form):
+class UserLoginForm(BaseCsrfForm):
     email = StringField('邮箱', [validators.Email(message="请填写正确格式的email")])
     password = PasswordField('密码', validators=[
         validators.Length(min=8, max=20, message="字段长度必须大等于8小等于20"),
