@@ -21,8 +21,9 @@ def make_shell_context():
                 TrackingInfo=TrackingInfo, TrackingInfoDetail=TrackingInfoDetail,
                 Order=Order, OrderContent=OrderContent, Contract=Contract,
                 User=User, UserInfo=UserInfo, Resource=Resource, SalesAreaHierarchy=SalesAreaHierarchy,
-                DepartmentHierarchy=DepartmentHierarchy,UserAndSaleArea=UserAndSaleArea,
-                WechatAccessToken=WechatAccessToken, WechatCall=WechatCall, ProjectReport=ProjectReport)
+                DepartmentHierarchy=DepartmentHierarchy, UserAndSaleArea=UserAndSaleArea,
+                WechatAccessToken=WechatAccessToken, WechatCall=WechatCall, ProjectReport=ProjectReport,
+                WebAccessLog=WebAccessLog)
         
 manager.add_command("shell", Shell(make_context=make_shell_context))
 

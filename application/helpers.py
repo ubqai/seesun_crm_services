@@ -16,12 +16,15 @@ def object_list(template_name, query, paginate_by = 20, **context):
     object_list = query.paginate(page, paginate_by)
     return render_template(template_name, object_list = object_list, **context)
 
+
 def gen_rnd_filename(prefix = '', postfix = ''):
     format_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     return '%s%s%s%s' % (prefix, format_time, str(random.randrange(1000, 10000)), postfix)
 
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
 
 # Save upload file and return relative path
 def save_upload_file(file):
@@ -36,6 +39,7 @@ def save_upload_file(file):
         file.save(filepath)
         return '/static/upload/%s' % new_filename
     return None
+
 
 def delete_file(file_path):
     try:
