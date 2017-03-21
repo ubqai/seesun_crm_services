@@ -530,6 +530,7 @@ def new_share_inventory(id):
 def mobile_user_login():
     if current_user.is_authenticated:
         if current_user.user_or_origin == 2:
+            app.logger.info("已登入用户[%s],重定向至mobile_index" % (current_user.nickname))
             return redirect(url_for('mobile_index'))
         else:
             # 不运行前后端同时登入在一个WEB上
@@ -567,6 +568,7 @@ def mobile_user_login():
                     exists_binding_user = User.query.filter_by(id=wui.user_id).first()
                     if exists_binding_user is not None:
                         login_user(exists_binding_user)
+                        app.logger.info("binding user login [%s] - [%s]" % (openid, exists_binding_user.nickname))
                         return redirect(url_for('mobile_index'))
             except Exception as e:
                 pass

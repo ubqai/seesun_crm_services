@@ -16,7 +16,7 @@
 					{{ render_form_field_error(form.password) }}
 			</div>
 			{{ form.openid(type="hidden") }}
-			{% if form.openid.data == None %}
+			{% if form.openid.data == "" %}
 				<div class="top-gap-3">
 				<span> {{ get_flashed_messages()[0] }} </span>
 				</div>

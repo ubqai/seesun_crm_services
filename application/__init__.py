@@ -60,7 +60,9 @@ def setup_logging():
 @app.before_request
 def login_check():
     # url_rule
-    if request.endpoint == "static" or request.path.startswith("/static/") or request.path.startswith("/favicon.ico"):
+    if request.endpoint == "static" or request.endpoint is None or request.path.startswith("/static/") or request.path.startswith("/favicon.ico"):
+        if request.endpoint is None:
+            app.logger.info("LOGIN_CHECK None?  request.path [%s] , [%s]" % (request.path, request.endpoint))
         # 静态文件
         # app.logger.info("static pass")
         pass

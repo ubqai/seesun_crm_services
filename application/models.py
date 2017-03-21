@@ -11,8 +11,14 @@ def load_user(user_id):
 class Rails(object):
     @property
     def save(self):
-        db.session.add(self)
-        db.session.commit()
+        # 增加rollback防止一个异常导致后续SQL不可使用
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
+
         return self
 
     @property
@@ -472,7 +478,7 @@ class SalesAreaHierarchy(db.Model):
 
         if regional_province == {}:
             regional_province[-1] = {"regional_province_name": "无", "team_info": (-1, "无")}
-            
+
         return regional_province
 
 
@@ -499,4 +505,3 @@ class ProjectReport(db.Model):
     @property
     def app_name(self):
         return User.query.get_or_404(self.app_id).nickname
-
