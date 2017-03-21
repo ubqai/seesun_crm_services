@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
-import os, datetime, random
+import os
+import datetime
+import random
+import traceback
 from flask.helpers import make_response
 from flask import flash, redirect, render_template, request, url_for, session, current_app
 from . import app
 from .models import *
-from .web_access_log.models import WebAccessLog
+from .web_access_log.models import WebAccessLog, can_take_record
 from .product.api import *
 from .inventory.api import create_inventory
 from .helpers import save_upload_file
@@ -17,14 +20,14 @@ from .wechat.models import WechatCall, WechatUserInfo
 @app.before_request
 def web_access_log():
     # only take record of frontend access
-    if (request.path.startswith('/mobile/') or request.path.startswith('/wechat/')) \
-            and not request.path.startswith('/mobile/user/'):
+    if can_take_record(request.path):
         try:
             record = WebAccessLog.take_record(request, current_user)
             db.session.add(record)
             db.session.commit()
         except Exception as e:
             app.logger.warning('Exception: %s' % e)
+            app.logger.warning(traceback.format_exc())
             db.session.rollback()
     pass
 
