@@ -933,3 +933,14 @@ p.contract-subtitle {
     background: #434a54;
     color: #fff;
 }
+
+.my-footer{
+	width: 100%;
+	background: #333;
+	color: #fff;
+	text-align: right;
+	font-size: 12px;
+	padding: 4px 10px;
+	position: fixed;
+	bottom: 0px;
+}
