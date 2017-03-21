@@ -26,7 +26,7 @@ class WebAccessLog(db.Model):
     def take_record(cls, request, current_user):
         return cls(request_path=request.path,
                    user_id=current_user.id,
-                   remote_addr=request.remote_addr,
+                   remote_addr=request.access_route[0],
                    user_agent=request.user_agent.string,
                    platform=request.user_agent.platform,
                    browser=request.user_agent.browser,

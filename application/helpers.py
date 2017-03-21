@@ -7,6 +7,7 @@ import qrcode
 
 from . import app
 
+
 def object_list(template_name, query, paginate_by = 20, **context):
     page = request.args.get('page')
     if page and page.isdigit():
@@ -14,7 +15,7 @@ def object_list(template_name, query, paginate_by = 20, **context):
     else:
         page = 1 
     object_list = query.paginate(page, paginate_by)
-    return render_template(template_name, object_list = object_list, **context)
+    return render_template(template_name, object_list=object_list, **context)
 
 
 def gen_rnd_filename(prefix = '', postfix = ''):
@@ -52,7 +53,7 @@ def delete_file(file_path):
 # First, check whether original image's size is bigger than specific.
 # If yes, resize original image by proportion until width or height is equal to specific size.
 # Final, crop the center region of image and save it.
-def clip_image(filepath, size = (100, 100)):
+def clip_image(filepath, size=(100, 100)):
     # file path should be absolute path
     image = Image.open(filepath)
     width = image.size[0]
@@ -81,20 +82,20 @@ def clip_image(filepath, size = (100, 100)):
 
 
 # This function is for generating qrcode image
-def gen_qrcode(data, output_filename = None):
+def gen_qrcode(data, output_filename=None):
     error = ''
     if output_filename:
         filename = gen_rnd_filename() + output_filename
     else:
-        filename = gen_rnd_filename(prefix = 'qr') + '.png'
+        filename = gen_rnd_filename(prefix='qr') + '.png'
     qr = qrcode.QRCode(
-        version = 2,
-        error_correction = qrcode.constants.ERROR_CORRECT_L,
-        box_size = 10,
-        border = 1
+        version=2,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=1
         )
     qr.add_data(data)
-    qr.make(fit = True)
+    qr.make(fit=True)
     image = qr.make_image()
     filepath = os.path.join(app.static_folder, 'upload/qrcode', filename)
     dirname = os.path.dirname(filepath)

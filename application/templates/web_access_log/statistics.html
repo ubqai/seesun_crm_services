@@ -1,0 +1,48 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% from 'macros/pc_pagination.html' import paginate %}
+{% block main_content %}
+
+{{ sidebar(active = 'statistics') }}
+<div class="contents">
+	<div class="contents-header">
+		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+		<p class="contents-header-p">点击率统计</p>
+		<p class="contents-header-p text-sm">Statistics</p>
+		<a class="new-one" href="{{ url_for('web_access_log.index') }}" title="访问列表"><span class="glyphicon glyphicon-list"></span></a>
+	</div>
+	<div class="separator"><span></span></div>
+	<div class="widget">
+		<div class="widget_header">
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;点击率统计</h4>
+		</div>
+		<div class="widget_contents padding-0">
+			<table class="tables">
+				<thead>
+					<tr>
+						<th>Module name</th>
+						<th>Count</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr><td>产品展示</td><td>{{ count_list[1] }}</td></tr>
+					<tr><td>库存查询</td><td>{{ count_list[2] }}</td></tr>
+					<tr><td>库存共享</td><td>{{ count_list[3] }}</td></tr>
+					<tr><td>案例展示</td><td>{{ count_list[4] }}</td></tr>
+					<tr><td>项目报备</td><td>{{ count_list[5] }}</td></tr>
+					<tr><td>产品设计</td><td>{{ count_list[6] }}</td></tr>
+					<tr><td>物料需要</td><td>{{ count_list[7] }}</td></tr>
+					<tr><td>一键下单</td><td>{{ count_list[8] }}</td></tr>
+					<tr><td>物流追踪</td><td>{{ count_list[9] }}</td></tr>
+					<tr><td>检验真伪</td><td>{{ count_list[10] }}</td></tr>
+					<tr><td>施工指导</td><td>{{ count_list[11] }}</td></tr>
+					<tr><td>售后服务</td><td>{{ count_list[12] }}</td></tr>
+					<tr><td>其他</td><td>{{ count_list[0] }}</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
