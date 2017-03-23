@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
-import os, datetime, random
+import os
+import datetime
+import random
+import traceback
 from flask.helpers import make_response
 from flask import flash, redirect, render_template, request, url_for, session, current_app
 from . import app
 from .models import *
-from .web_access_log.models import WebAccessLog
+from .web_access_log.models import WebAccessLog, can_take_record
 from .product.api import *
 from .inventory.api import create_inventory
 from .helpers import save_upload_file
@@ -17,13 +20,14 @@ from .wechat.models import WechatCall, WechatUserInfo
 @app.before_request
 def web_access_log():
     # only take record of frontend access
-    if '/mobile/' in request.path and '/mobile/user/login' not in request.path:
+    if can_take_record(request.path):
         try:
             record = WebAccessLog.take_record(request, current_user)
             db.session.add(record)
             db.session.commit()
         except Exception as e:
             app.logger.warning('Exception: %s' % e)
+            app.logger.warning(traceback.format_exc())
             db.session.rollback()
     pass
 
@@ -38,13 +42,13 @@ def mobile_index():
 def mobile_case_show():
     category = ContentCategory.query.filter(ContentCategory.name == '案例展示').first_or_404()
     classifications = category.classifications.order_by(ContentClassification.created_at.asc())
-    return render_template('mobile/case_show.html', classifications = classifications)
+    return render_template('mobile/case_show.html', classifications=classifications)
 
 
 @app.route('/mobile/case_classification/<int:id>')
 def mobile_case_classification_show(id):
     classification = ContentClassification.query.get_or_404(id)
-    return render_template('mobile/case_classification_show.html', classification = classification)
+    return render_template('mobile/case_classification_show.html', classification=classification)
 
 
 @app.route('/mobile/product_cases')
@@ -54,7 +58,7 @@ def mobile_product_cases():
     for category in categories:
         products = load_products(category.get('category_id'))
         products_hash[category.get('category_id')] = products
-    return render_template('mobile/product_cases.html', categories = categories, products_hash = products_hash)
+    return render_template('mobile/product_cases.html', categories=categories, products_hash=products_hash)
 
 
 @app.route('/mobile/product_case/<int:product_id>')
@@ -62,13 +66,13 @@ def mobile_product_case_show(product_id):
     product = load_product(product_id)
     case_ids = product.get('case_ids')
     contents = Content.query.filter(Content.id.in_(case_ids)).order_by(Content.created_at.desc())
-    return render_template('mobile/product_case_show.html', product = product, contents = contents)
+    return render_template('mobile/product_case_show.html', product=product, contents=contents)
 
 
 @app.route('/mobile/case_content/<int:id>')
 def mobile_case_content_show(id):
     content = Content.query.get_or_404(id)
-    return render_template('mobile/case_content_show.html', content = content)
+    return render_template('mobile/case_content_show.html', content=content)
 
 
 # --- Product model ---
@@ -79,17 +83,17 @@ def mobile_product():
     for category in categories:
         products = load_products(category.get('category_id'))
         products_hash[category.get('category_id')] = products
-    return render_template('mobile/product.html', categories =  categories, products_hash = products_hash)
+    return render_template('mobile/product.html', categories=categories, products_hash=products_hash)
 
 
 @app.route('/mobile/product/<int:id>')
 def mobile_product_show(id):
-    product  = load_product(id, option_sorted = True)
-    skus     = load_skus(id)
+    product = load_product(id, option_sorted=True)
+    skus = load_skus(id)
     contents = Content.query.filter(Content.id.in_(product.get('case_ids')))
     option_sorted = product.get('option_sorted')
-    return render_template('mobile/product_show.html', product = product, skus = skus, contents = contents, 
-        option_sorted = option_sorted)
+    return render_template('mobile/product_show.html', product=product, skus=skus, contents=contents,
+                           option_sorted=option_sorted)
 
 
 # --- Storage model ---
@@ -98,25 +102,10 @@ def mobile_share():
     return render_template('mobile/share.html')
 
 
-@app.route('/mobile/share_storage_detail')
-def mobile_share_storage_detail():
-    return render_template('mobile/share_storage_detail.html')
-
-
 @app.route('/mobile/share_storage_for_detail')
 def mobile_share_storage_for_detail():
     areas = SalesAreaHierarchy.query.filter_by(level_grade=3).all()
     return render_template('mobile/share_storage_for_detail.html', areas=areas)
-
-
-@app.route('/mobile/share_storage_for_upload')
-def mobile_share_storage_for_upload():
-    return render_template('mobile/share_storage_for_upload.html')
-
-
-@app.route('/mobile/share_storage_upload')
-def mobile_share_storage_upload():
-    return render_template('mobile/share_storage_upload.html')
 
 
 @app.route('/mobile/storage')
@@ -240,22 +229,6 @@ def mobile_contract_show(id):
     return render_template('mobile/contract_show_mobile.html', order=order, contract=contract)
 
 
-@app.route('/mobile/contract')
-def mobile_contract():
-    return render_template('mobile/contract.html')
-
-
-# --- Project ---
-@app.route('/mobile/project_lvl1')
-def mobile_project_lvl1():
-    return render_template('mobile/project_lvl1.html')
-
-
-@app.route('/mobile/project_lvl2')
-def mobile_project_lvl2():
-    return render_template('mobile/project_lvl2.html')
-
-
 # --- Design ---
 @app.route('/mobile/design', methods = ['GET', 'POST'])
 def mobile_design():
@@ -371,17 +344,6 @@ def mobile_material_application_cancel(id):
     return redirect(url_for('mobile_material_applications'))
 
 
-# --- Quick pay --- not be used anymore
-@app.route('/mobile/quick_pay')
-def mobile_quick_pay():
-    return render_template('mobile/quick_pay.html')
-
-
-@app.route('/mobile/quick_pay_lvl2')
-def mobile_quick_pay_lvl2():
-    return render_template('mobile/quick_pay_lvl2.html')
-
-
 # --- Tracking info ---
 @app.route('/mobile/tracking', methods = ['GET', 'POST'])
 def mobile_tracking():
@@ -406,12 +368,6 @@ def mobile_tracking():
 def mobile_tracking_info(id):
     tracking_info = TrackingInfo.query.get_or_404(id)
     return render_template('mobile/tracking_info.html', tracking_info = tracking_info)
-
-
-# --- Verification ---
-@app.route('/mobile/verification')
-def mobile_verification():
-    return render_template('mobile/verification.html')
 
 
 # --- Construction guide ---
@@ -482,6 +438,7 @@ def ckupload():
     return response
 
 
+# --- Project ---
 @app.route('/mobile/project_report/new', methods=['GET', 'POST'])
 def new_project_report():
     if request.method == 'POST':

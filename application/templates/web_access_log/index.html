@@ -9,6 +9,7 @@
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
 		<p class="contents-header-p">点击率统计</p>
 		<p class="contents-header-p text-sm">Details of access</p>
+		<a class="new-one" href="{{ url_for('web_access_log.statistics') }}" title="分类统计"><span class="glyphicon glyphicon-stats"></span></a>
 	</div>
 	<div class="separator"><span></span></div>
     <form action="{{ url_for('web_access_log.index') }}" method="get" role="form" class="form form-horizontal" >
