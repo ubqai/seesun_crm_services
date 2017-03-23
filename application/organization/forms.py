@@ -74,9 +74,11 @@ class UserForm(BaseForm, BaseCsrfForm):
     password_confirm = PasswordField('密码')
     address = TextAreaField('地址', [validators.Length(min=5, max=300, message="字段长度必须大等于5小等于300")])
     # 电话匹配规则 11位手机 or 3-4区号(可选)+7-8位固话+1-6分机号(可选)
-    phone = StringField('电话', [validators.Regexp(r'(^\d{11})$|(^(\d{3,4}-)?\d{7,8}(-\d{1,5})?$)', message="请输入正确格式的电话")])
+    phone = StringField('电话',
+                        [validators.Regexp(r'(^\d{11})$|(^(\d{3,4}-)?\d{7,8}(-\d{1,5})?$)', message="请输入正确格式的电话")])
     title = StringField('头衔')
-    user_type = SelectField('用户类型', choices=[('3', '员工'), ('2', '经销商')], validators=[validators.Required(message="字段不可为空")])
+    user_type = SelectField('用户类型', choices=[('3', '员工'), ('2', '经销商')],
+                            validators=[validators.Required(message="字段不可为空")])
     # dept_ranges = SelectMultipleField('dept_ranges',choices=[ ('-1','选择所属部门')] + [(str(dh.id),dh.name) for dh in DepartmentHierarchy.query.all() ])
     # sale_range = SelectField('sale_range',choices=[ ('-1','选择销售范围')] + [(str(sah.id),sah.name) for sah in SalesAreaHierarchy.query.filter_by(level_grade=4).all() ])
     dept_ranges = QuerySelectMultipleField(u'所属部门', get_label="name", validators=[valid_dept_ranges])

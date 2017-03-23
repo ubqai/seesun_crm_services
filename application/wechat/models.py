@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import datetime
-import time
-import requests
-import json
-import string
 import hashlib
+import json
 import random
+import string
+import time
 import urllib
+
+import requests
+
 from .. import db, app
 
 WECHAT_SERVER_AUTHENTICATION_TOKEN = "AUTH_TOKEN_135"
@@ -40,7 +42,7 @@ class DbBaseOperation(object):
 
 class WechatUserInfo(db.Model, DbBaseOperation):
     id = db.Column(db.Integer, primary_key=True)
-    open_id = db.Column(db.String(200), nullable=False)     # wechat - openid
+    open_id = db.Column(db.String(200), nullable=False)  # wechat - openid
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     is_active = db.Column(db.Boolean, default=True)
     active_time = db.Column(db.DateTime, default=datetime.datetime.now)
@@ -63,15 +65,17 @@ class WechatAccessToken(db.Model, DbBaseOperation):
     # 检查token是否超过有效时间,修改为不可使用
     @classmethod
     def checkTokenByType(cls, token_type, is_test=TEST_MODE):
-        print("checkAccessToken is_test: %s" % (is_test))
+        print("checkAccessToken is_test: %s" % is_test)
         if is_test is False:
             use_appid = WECHAT_APPID
         else:
             use_appid = WECHAT_TEST_APPID
 
         threshold_time = datetime.datetime.now() - datetime.timedelta(seconds=600)
-        print("checkAccessToken threshold_time : [%s]" % (threshold_time))
-        wats = WechatAccessToken.query.filter(WechatAccessToken.expires_at < threshold_time, WechatAccessToken.use_flag == True, WechatAccessToken.appid == use_appid, WechatAccessToken.token_type == token_type).all()
+        print("checkAccessToken threshold_time : [%s]" % threshold_time)
+        wats = WechatAccessToken.query.filter(WechatAccessToken.expires_at < threshold_time,
+                                              WechatAccessToken.use_flag == True, WechatAccessToken.appid == use_appid,
+                                              WechatAccessToken.token_type == token_type).all()
         for wat in wats:
             print("WechatAccessToken update Invalid : [%s],[%s]" % (wat.access_token, wat.expires_at))
             wat.use_flag = "N"
@@ -82,7 +86,7 @@ class WechatAccessToken(db.Model, DbBaseOperation):
     # 申请access_token - 基本推送接口使用
     @classmethod
     def applyAccessToken(cls, is_test=TEST_MODE):
-        print("applyAccessToken is_test: %s" % (is_test))
+        print("applyAccessToken is_test: %s" % is_test)
         if is_test is False:
             use_appid = WECHAT_APPID
             use_appsecret = WECHAT_APPSECRET
@@ -90,7 +94,8 @@ class WechatAccessToken(db.Model, DbBaseOperation):
             use_appid = WECHAT_TEST_APPID
             use_appsecret = WECHAT_TEST_APPSECRET
 
-        url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s' % (use_appid, use_appsecret)
+        url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s' % (
+            use_appid, use_appsecret)
         response = requests.get(url)
         if response.status_code != 200:
             return "get failure"
@@ -100,7 +105,8 @@ class WechatAccessToken(db.Model, DbBaseOperation):
         if res_json.get("errcode") is not None:
             return "get failure :" + res_json.get("errmsg")
 
-        wat = WechatAccessToken(access_token=res_json.get("access_token"), expires_in=res_json.get("expires_in"), use_flag=True)
+        wat = WechatAccessToken(access_token=res_json.get("access_token"), expires_in=res_json.get("expires_in"),
+                                use_flag=True)
         wat.created_at = datetime.datetime.now()
         wat.expires_at = wat.created_at + datetime.timedelta(seconds=wat.expires_in)
         wat.appid = use_appid
@@ -113,13 +119,14 @@ class WechatAccessToken(db.Model, DbBaseOperation):
     # 申请jsapi_ticket - js sdk 使用
     @classmethod
     def applyJsapTicket(cls, is_test=TEST_MODE):
-        print("applyJsapTicket is_test: %s" % (is_test))
+        print("applyJsapTicket is_test: %s" % is_test)
         if is_test is False:
             use_appid = WECHAT_APPID
         else:
             use_appid = WECHAT_TEST_APPID
 
-        url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi" % (WechatAccessToken.getTokenByType("access_token", is_test))
+        url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi" % (
+            WechatAccessToken.getTokenByType("access_token", is_test))
         response = requests.get(url)
         if response.status_code != 200:
             return "get failure"
@@ -129,7 +136,8 @@ class WechatAccessToken(db.Model, DbBaseOperation):
         if res_json.get("errcode") != 0:
             return "get failure :" + res_json.get("errmsg")
 
-        wat = WechatAccessToken(access_token=res_json.get("ticket"), expires_in=res_json.get("expires_in"), use_flag=True)
+        wat = WechatAccessToken(access_token=res_json.get("ticket"), expires_in=res_json.get("expires_in"),
+                                use_flag=True)
         wat.created_at = datetime.datetime.now()
         wat.expires_at = wat.created_at + datetime.timedelta(seconds=wat.expires_in)
         wat.appid = use_appid
@@ -142,7 +150,7 @@ class WechatAccessToken(db.Model, DbBaseOperation):
     # 获取可用token值
     @classmethod
     def getTokenByType(cls, token_type, is_test=TEST_MODE):
-        print("getTokenByType is_test: %s" % (is_test))
+        print("getTokenByType is_test: %s" % is_test)
         if is_test is False:
             use_appid = WECHAT_APPID
         else:
@@ -198,22 +206,23 @@ class WechatCall:
     # 创建自定义菜单
     @classmethod
     def createMenu(cls, is_test=TEST_MODE):
-        print("createMenu is_test: %s" % (is_test))
+        print("createMenu is_test: %s" % is_test)
         if is_test is False:
             use_appid = WECHAT_APPID
         else:
             use_appid = WECHAT_TEST_APPID
 
-        url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s" % (WechatAccessToken.getTokenByType("access_token", is_test))
+        url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s" % (
+            WechatAccessToken.getTokenByType("access_token", is_test))
         crm_services_url = "https://open.weixin.qq.com/connect/oauth2/authorize?" + \
-            "appid=" + use_appid + \
-            "&redirect_uri=" + urllib.parse.quote_plus(HOOK_URL + "/mobile/user/login") + \
-            "&response_type=code&scope=snsapi_base&state=wechat_user_binding#wechat_redirect"
+                           "appid=" + use_appid + \
+                           "&redirect_uri=" + urllib.parse.quote_plus(HOOK_URL + "/mobile/user/login") + \
+                           "&response_type=code&scope=snsapi_base&state=wechat_user_binding#wechat_redirect"
 
         crm_user_binding_url = "https://open.weixin.qq.com/connect/oauth2/authorize?" + \
-            "appid=" + use_appid + \
-            "&redirect_uri=" + urllib.parse.quote_plus(HOOK_URL + "/wechat/mobile/user_binding") + \
-            "&response_type=code&scope=snsapi_base&state=wechat_user_binding#wechat_redirect"
+                               "appid=" + use_appid + \
+                               "&redirect_uri=" + urllib.parse.quote_plus(HOOK_URL + "/wechat/mobile/user_binding") + \
+                               "&response_type=code&scope=snsapi_base&state=wechat_user_binding#wechat_redirect"
         app.logger.info("crm_user_binding_url [%s] \n crm_services_url [%s]" % (crm_user_binding_url, crm_services_url))
 
         headers = {'content-type': 'application/json'}
@@ -256,9 +265,10 @@ class WechatCall:
     # 删除自定义菜单
     @classmethod
     def deleteMenu(cls, is_test=TEST_MODE):
-        print("deleteMenu is_test: %s" % (is_test))
+        print("deleteMenu is_test: %s" % is_test)
 
-        url = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=%s" % (WechatAccessToken.getTokenByType("access_token", is_test))
+        url = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=%s" % (
+            WechatAccessToken.getTokenByType("access_token", is_test))
         response = requests.get(url)
         if response.status_code != 200:
             return "get failure"
@@ -271,7 +281,7 @@ class WechatCall:
     # 获取openId
     @classmethod
     def getOpenIdByCode(cls, code, is_test=TEST_MODE):
-        print("getOpenIdByCode is_test: %s" % (is_test))
+        print("getOpenIdByCode is_test: %s" % is_test)
         if is_test is False:
             use_appid = WECHAT_APPID
             use_appsecret = WECHAT_APPSECRET
@@ -279,8 +289,8 @@ class WechatCall:
             use_appid = WECHAT_TEST_APPID
             use_appsecret = WECHAT_TEST_APPSECRET
 
-        url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"  \
-            % (use_appid, use_appsecret, code)
+        url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code" \
+              % (use_appid, use_appsecret, code)
         response = requests.get(url)
         if response.status_code != 200:
             return "get failure"
