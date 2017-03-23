@@ -10,7 +10,7 @@
 	
 	<div class="wrapper">
         {% for area in areas %}
-            <div class="col-6-gap bot-gap-1 storage-link"><a href="{{ url_for('stocks_share', area_id=area.id) }}" class="text-md btn btn-default btn-block">{{ area.name }}库存</a></div>
+            <div class="col-6-gap bot-gap-1 storage-link"><a href="{{ url_for('stocks_share_for_order', area_id=area.id) }}" class="text-md btn btn-default btn-block">{{ area.name }}库存</a></div>
 	    {% endfor %}
     </div>
 		

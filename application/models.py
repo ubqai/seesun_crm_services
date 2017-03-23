@@ -312,6 +312,7 @@ class OrderContent(db.Model, Rails):
     price = db.Column(db.Float, default=0)
     amount = db.Column(db.Float, default=0)
     memo = db.Column(db.String(100))
+    batch_info = db.Column(db.JSON, default={})
     production_num = db.Column(db.Integer, default=0)
     inventory_choose = db.Column(db.JSON, default=[])
 
