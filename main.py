@@ -3,7 +3,7 @@
 # $ python main.py
 # $ gunicorn -w 4 -b 127.0.0.1:5000 main:app
 import os
-os.environ['FLASK_ENV'] = 'production'
+os.environ['FLASK_ENV'] = 'test'
 from application import app
 import application.views
 
