@@ -230,7 +230,7 @@ def mobile_contract_show(id):
 
 
 # --- Design ---
-@app.route('/mobile/design', methods = ['GET', 'POST'])
+@app.route('/mobile/design', methods=['GET', 'POST'])
 def mobile_design():
     project_reports = ProjectReport.query.filter_by(status='项目报备审核通过')
     if request.method == 'POST':
@@ -238,8 +238,8 @@ def mobile_design():
             project_report = ProjectReport.query.filter_by(report_no = request.form.get('filing_no')).first()
             if project_report in project_reports:
                 file_path = save_upload_file(request.files.get('ul_file'))
-                application = DesignApplication(filing_no = request.form.get('filing_no'), 
-                    ul_file = file_path, status = '新申请', applicant = current_user)
+                application = DesignApplication(filing_no=request.form.get('filing_no'),
+                    ul_file=file_path, status='新申请', applicant=current_user)
                 application.save
                 flash('产品设计申请提交成功', 'success')
                 return redirect(url_for('mobile_design_applications'))
@@ -248,13 +248,13 @@ def mobile_design():
         else:
             flash('项目报备编号和上传设计图纸不能为空', 'danger')
         return redirect(url_for('mobile_design'))
-    return render_template('mobile/design.html', project_reports = project_reports)
+    return render_template('mobile/design.html', project_reports=project_reports)
 
 
 @app.route('/mobile/design_applications')
 def mobile_design_applications():
     # list design applications of current user
-    applications = current_user.design_applications #DesignApplication.query.all()
+    applications = current_user.design_applications
     return render_template('mobile/design_applications.html', applications = applications)
 
 
@@ -263,7 +263,7 @@ def mobile_design_applications():
 def mobile_material_need():
     category = ContentCategory.query.filter(ContentCategory.name == '物料需要').first_or_404()
     classifications = category.classifications
-    return render_template('mobile/material_need.html', classifications = classifications)
+    return render_template('mobile/material_need.html', classifications=classifications)
 
 
 @app.route('/mobile/material_need_options/<int:classification_id>')
@@ -345,7 +345,7 @@ def mobile_material_application_cancel(id):
 
 
 # --- Tracking info ---
-@app.route('/mobile/tracking', methods = ['GET', 'POST'])
+@app.route('/mobile/tracking', methods=['GET', 'POST'])
 def mobile_tracking():
     if request.method == 'POST':
         contract_no = request.form.get('contract_no').strip()
@@ -355,19 +355,20 @@ def mobile_tracking():
             (TrackingInfo.receiver_tel == receiver_tel)
             ).first()
         if tracking_info:
-            return redirect(url_for('mobile_tracking_info', id = tracking_info.id))
+            return redirect(url_for('mobile_tracking_info', id=tracking_info.id))
         else:
             flash('未找到对应物流信息', 'warning')
             return redirect(url_for('mobile_tracking'))
-    contracts = Contract.query.filter_by(user_id = current_user.id).all()
-    tracking_infos = TrackingInfo.query.filter(TrackingInfo.contract_no.in_([contract.contract_no for contract in contracts])).all()
-    return render_template('mobile/tracking.html', tracking_infos = tracking_infos)
+    contracts = Contract.query.filter_by(user_id=current_user.id).all()
+    tracking_infos = TrackingInfo.query.filter(
+        TrackingInfo.contract_no.in_([contract.contract_no for contract in contracts])).all()
+    return render_template('mobile/tracking.html', tracking_infos=tracking_infos)
 
 
 @app.route('/mobile/tracking_info/<int:id>')
 def mobile_tracking_info(id):
     tracking_info = TrackingInfo.query.get_or_404(id)
-    return render_template('mobile/tracking_info.html', tracking_info = tracking_info)
+    return render_template('mobile/tracking_info.html', tracking_info=tracking_info)
 
 
 # --- Construction guide ---
@@ -375,21 +376,21 @@ def mobile_tracking_info(id):
 def mobile_construction_guide():
     category = ContentCategory.query.filter(ContentCategory.name == '施工指导').first_or_404()
     classifications = category.classifications.order_by(ContentClassification.created_at.desc())
-    return render_template('mobile/construction_guide.html', classifications = classifications)
+    return render_template('mobile/construction_guide.html', classifications=classifications)
 
 
 @app.route('/mobile/construction_guide_options/<int:classification_id>')
 def mobile_construction_guide_options(classification_id):
     classification = ContentClassification.query.get_or_404(classification_id)
     options = classification.options
-    return render_template('mobile/construction_guide_options.html', options = options)
+    return render_template('mobile/construction_guide_options.html', options=options)
 
 
 @app.route('/mobile/construction_guide_contents/<int:option_id>')
 def mobile_construction_guide_contents(option_id):
     option = ContentClassificationOption.query.get_or_404(option_id)
     contents = option.contents
-    return render_template('mobile/construction_guide_contents.html', contents = contents)
+    return render_template('mobile/construction_guide_contents.html', contents=contents)
 
 
 # --- After service ---
