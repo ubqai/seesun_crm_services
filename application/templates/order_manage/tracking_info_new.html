@@ -49,6 +49,14 @@
                                 <span>订单数量:</span>
                                 <span>{{ order_content.number }}㎡</span>
                             </div>
+                            {% if not (order_content.batch_info == {} or order_content.batch_info == None) %}
+                                <div class="sub-form-item">
+                                    <span>指定批次号:</span>
+                                    <span>{{ order_content.batch_info.get('batch_no') }}(经销商:{{ order_content.batch_info.get('dealer') }})</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-item">
                             <div class="sub-form-item">
                                 <span>需生产数量(㎡):</span>
                                 <span><input class="form-control" name="{{ order_content.sku_code }}_production_num"></span>

@@ -6,11 +6,6 @@
 <div class="main-content">
     {% for user in users %}
 	<div class="wrapper">
-		<div class="text">
-			<p class="text-title">{{ user.nickname }}</p>
-			<p class="text-content text-sm left-gap-1">联系人：{{ user.nickname }}</p>
-			<p class="text-content text-sm left-gap-1 bot-gap-1">Email：{{ user.email }}</p>
-		</div>		
 		{% for category in categories %}
 				{% with products_json = load_products(category.get('category_id')) %}
 						{% if len(products_json) > 0 %}

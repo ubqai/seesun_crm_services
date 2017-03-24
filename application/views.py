@@ -9,7 +9,7 @@ from . import app
 from .models import *
 from .web_access_log.models import WebAccessLog, can_take_record
 from .product.api import *
-from .inventory.api import create_inventory
+from .inventory.api import create_inventory, load_user_inventories
 from .helpers import save_upload_file
 from flask_login import *
 from .organization.forms import UserLoginForm
@@ -102,9 +102,15 @@ def mobile_share():
     return render_template('mobile/share.html')
 
 
-@app.route('/mobile/share_storage_for_detail')
-def mobile_share_storage_for_detail():
-    areas = SalesAreaHierarchy.query.filter_by(level_grade=3).all()
+@app.route('/mobile/share_storage_for_region')
+def mobile_share_storage_for_region():
+    regions = SalesAreaHierarchy.query.filter_by(level_grade=2).all()
+    return render_template('mobile/share_storage_for_region.html', regions=regions)
+
+
+@app.route('/mobile/share_storage_for_detail/<int:id>')
+def mobile_share_storage_for_detail(id):
+    areas = SalesAreaHierarchy.query.filter_by(level_grade=3, parent_id=id).all()
     return render_template('mobile/share_storage_for_detail.html', areas=areas)
 
 
@@ -134,20 +140,29 @@ def mobile_cart():
     if request.method == 'POST':
         if request.form:
             for param in request.form:
+                current_app.logger.info(param)
                 if 'number' in param and request.form.get(param):
                     index = param.rsplit('_', 1)[1]
+                    current_app.logger.info("%s-%s" % (index, request.form.get('number_%s' % index)))
                     if int(request.form.get('number_%s' % index)) > 0:
                         order_content = {'product_name': request.form.get('product_name_%s' % index),
                                          'sku_specification': request.form.get('sku_specification_%s' % index),
                                          'sku_code': request.form.get('sku_code_%s' % index),
-                                         'sku_id': index,
+                                         'sku_id': request.form.get('sku_id_%s' % index),
                                          'sku_thumbnail': request.form.get('sku_thumbnail_%s' % index),
+                                         'batch_no': request.form.get('batch_no_%s' % index),
+                                         'production_date': request.form.get('production_date_%s' % index),
+                                         'batch_id': request.form.get('batch_id_%s' % index),
+                                         'dealer': request.form.get('user_%s' % index),
                                          'number': int(request.form.get('number_%s' % index)),
                                          'square_num': "%.2f" % (0.3*int(request.form.get('number_%s' % index)))}
                         order.append(order_content)
         session['order'] = order
         flash('成功加入购物车', 'success')
-        return redirect(url_for('mobile_storage_show', product_id=request.form.get('product_id')))
+        if request.form.get('product_id') is not None:
+            return redirect(url_for('mobile_storage_show', product_id=request.form.get('product_id')))
+        elif request.form.get('area_id') is not None:
+            return redirect(url_for('stocks_share_for_order', area_id=request.form.get('area_id')))
     return render_template('mobile/cart.html', order=order)
 
 
@@ -163,8 +178,8 @@ def cart_delete(sku_id):
         session.pop('order', None)
     if 'order' in session and session['order']:
         return redirect(url_for('mobile_cart'))
-    orders = Order.query.filter_by(user_id=current_user.id).all()
-    return render_template('mobile/orders.html', orders=orders)
+    else:
+        return redirect(url_for('mobile_created_orders'))
 
 
 @app.route('/mobile/create_order')
@@ -186,10 +201,18 @@ def mobile_create_order():
                                   "dealer_name": dealer_name})
         db.session.add(order)
         for order_content in session['order']:
+            batch_info = {}
+            if order_content.get('batch_id') is not None and order_content.get('batch_id') != '':
+                batch_info = {'batch_no': order_content.get('batch_no'),
+                              'production_date': order_content.get('production_date'),
+                              'batch_id': order_content.get('batch_id'),
+                              'dealer': order_content.get('dealer')
+                              }
             oc = OrderContent(order=order, product_name=order_content.get('product_name'),
                               sku_specification=order_content.get('sku_specification'),
                               sku_code=order_content.get('sku_code'), number=order_content.get('number'),
-                              square_num=order_content.get('number'))
+                              square_num=order_content.get('number'), batch_info=batch_info
+                              )
             sku_id = order_content.get('sku_id')
             from .inventory.api import update_sku
             data = {"stocks_for_order": order_content.get('number')}
@@ -493,6 +516,79 @@ def stocks_share(area_id):
     return render_template('mobile/share_index.html', categories=categories, users=users)
 
 
+@app.route('/mobile/share_index_for_order/<int:area_id>', methods=['GET'])
+def stocks_share_for_order(area_id):
+    categories = load_categories()
+    if area_id == 0:
+        users = [current_user]
+    else:
+        area = SalesAreaHierarchy.query.get_or_404(area_id)
+        users = area.users.all()
+        for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
+            users.extend(sarea.users.all())
+            for ssarea in SalesAreaHierarchy.query.filter_by(parent_id=sarea.id).all():
+                users.extend(ssarea.users.all())
+    batch_infos = []
+    # 经销商库存
+    for user in users:
+        for category in categories:
+            products_json = load_products(category.get('category_id'))
+            if len(products_json) > 0:
+                for product_json in products_json:
+                    skus_json = load_skus(product_json.get('product_id'))
+                    if len(skus_json.get('skus')) > 0:
+                        for sku in skus_json.get('skus'):
+                            sku_option = ""
+                            for option in sku.get('options'):
+                                for key, value in option.items():
+                                    sku_option = "%s %s" % (sku_option, value)
+                            if request.args.get("sku_code", '') == '' or \
+                                    (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
+                                invs = load_user_inventories(user.id, sku.get('sku_id'))
+                                for inv in invs:
+                                    for batch in inv.get('batches'):
+                                        batch_infos.append({"product_name": product_json.get('name'),
+                                                            "sku_specification": sku_option,
+                                                            "thumbnail": sku.get('thumbnail'),
+                                                            "user": user.nickname,
+                                                            "city": "%s库存" % user.sales_areas.first().name,
+                                                            "sku_id": sku.get('sku_id'),
+                                                            "production_date": batch.get('production_date'),
+                                                            "batch_no": batch.get('batch_no'),
+                                                            "batch_id": batch.get('inv_id'),
+                                                            "sku_code": sku.get('code'),
+                                                            "stocks": batch.get('stocks')})
+    # 公司库存
+    for category in categories:
+        products_json = load_products(category.get('category_id'))
+        if len(products_json) > 0:
+            for product_json in products_json:
+                skus_json = load_skus(product_json.get('product_id'))
+                if len(skus_json.get('skus')) > 0:
+                    for sku in skus_json.get('skus'):
+                        sku_option = ""
+                        for option in sku.get('options'):
+                            for key, value in option.items():
+                                sku_option = "%s %s" % (sku_option, value)
+                        if request.args.get("sku_code", '') == '' or \
+                                (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
+                            invs = load_user_inventories("0", sku.get('sku_id'))
+                            for inv in invs:
+                                for batch in inv.get('batches'):
+                                    batch_infos.append({"product_name": product_json.get('name'),
+                                                        "sku_specification": sku_option,
+                                                        "thumbnail": sku.get('thumbnail'),
+                                                        "user": "公司",
+                                                        "city": "公司库存",
+                                                        "sku_id": sku.get('sku_id'),
+                                                        "production_date": batch.get('production_date'),
+                                                        "batch_no": batch.get('batch_no'),
+                                                        "batch_id": batch.get('inv_id'),
+                                                        "sku_code": sku.get('code'),
+                                                        "stocks": batch.get('stocks')})
+    return render_template('mobile/share_index_for_order.html', batch_infos=batch_infos, area_id=area_id)
+
+
 @app.route('/mobile/upload_share_index', methods=['GET'])
 def upload_share_index():
     categories = load_categories()
@@ -508,6 +604,9 @@ def new_share_inventory(id):
         stocks = request.form.get('stocks')
         inv_type = 2
         user_name = current_user.nickname
+        if production_date is None or production_date == '':
+            flash('生产日期不能为空', 'danger')
+            return render_template('mobile/new_share_inventory.html', id=id)
         if stocks is None:
             flash('库存数量不能为空', 'danger')
             return render_template('mobile/new_share_inventory.html', id=id)

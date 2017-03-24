@@ -28,6 +28,7 @@
 				<div class="p-input">
 					<input name="product_name_{{ sku.get('sku_id') }}" value="{{ skus.get('name') }}" type="hidden">
 					<input name="sku_code_{{ sku.get('sku_id') }}" value="{{ sku.get('code') }}" type="hidden">
+                    <input name="sku_id_{{ sku.get('sku_id') }}" value="{{ sku.get('sku_id') }}" type="hidden">
 					<input name="sku_specification_{{ sku.get('sku_id') }}" value="{{ sku.get('options') }}" type="hidden">
 					<input name="sku_thumbnail_{{ sku.get('sku_id') }}" value="{{ sku.get('thumbnail') }}" type="hidden" >
 					<div class="input-group material-group">
@@ -47,41 +48,6 @@
 			</div>
 		{% endfor %}
 		</div>
-<!--
-		<div class="expanded-table table-responsive">
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>code</th>
-						<th>stocks</th>
-						<th>price</th>
-						<th>weight</th>
-						<th>barcode</th>
-						<th>hscode</th>
-						<th>options</th>
-						<th>填写数量</th>
-					</tr>
-				</thead>
-				<tbody>
-				{% for sku in skus.get('skus') %}
-					<tr>
-						<td>{{ sku.get('code') }}</td>
-						<td>{{ sku.get('stocks') }}</td>
-						<td>{{ sku.get('price') }}</td>
-						<td>{{ sku.get('weight') }}</td>
-						<td>{{ sku.get('barcode') }}</td>
-						<td>{{ sku.get('hscode') }}</td>
-						<td>{{ sku.get('options') }}</td>
-						<td><input name="number_{{ sku.get('sku_id') }}" type="text"></input></td>
-<input name="product_name_{{ sku.get('sku_id') }}" value="{{ skus.get('name') }}" type="hidden">
-<input name="sku_code_{{ sku.get('sku_id') }}" value="{{ sku.get('code') }}" type="hidden">
-<input name="sku_specification_{{ sku.get('sku_id') }}" value="{{ sku.get('options') }}" type="hidden">
-					</tr>
-				{% endfor %}
-				</tbody>
-			</table>
-		</div>
-		-->
 		<div class="fixed-bot">
 			<button type="submit" class="col-6 orange">加入购物车</button>	
 			<a href="{{ url_for('mobile_cart') }}" class="col-6 gray">进入购物车</a>

@@ -73,6 +73,7 @@
 													<tr>
 															<th>产品名</th>
 															<th>规格</th>
+                                                            <th>指定批次号</th>
 															<th>数量(㎡)</th>
 															<th>单价</th>
 															<th>总价</th>
@@ -84,6 +85,12 @@
 													<tr>
 															<td><a class="table-link">{{ content.product_name }}</a></td>
 															<td>{{ content.sku_specification }}</td>
+                                                            <td>
+                                                                {% if not (content.batch_info == {} or content.batch_info == None) %}
+                                                                    {{ content.batch_info.get('batch_no') }}
+                                                                    (经销商：{{ content.batch_info.get('dealer') }})
+                                                                {% endif %}
+                                                            </td>
 															<td>{{ content.number }}</td>
 															<td><input class="form-control" name="{{ content.id }}price" value="{{ content.price }}"></td>
 															<td><input class="form-control" name="{{ content.id }}amount" value="{{ content.amount }}"></td>
