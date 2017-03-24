@@ -10,7 +10,7 @@
 
 	<div class="wrapper">
         {% for region in regions %}
-            <div class="col-6-gap bot-gap-1 storage-link"><a href="{{ url_for('mobile_share_storage_for_detail', id=region.id) }}" class="text-md btn btn-default btn-block">{{ region.name }}库存</a></div>
+            <div class="col-6-gap bot-gap-1 storage-link"><a href="{{ url_for('stocks_share_for_order', area_id=region.id) }}" class="text-md btn btn-default btn-block">{{ region.name }}库存</a></div>
 	    {% endfor %}
     </div>
 

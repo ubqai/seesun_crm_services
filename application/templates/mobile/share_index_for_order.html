@@ -3,6 +3,17 @@
 {% block content %}
 {{ header('共享库存查询') }}
 <div class="main-content">
+    <form style="margin-top:2.5rem;" action="{{ url_for('stocks_share_for_order', area_id=area_id) }}" method="get">
+        <div class="wrapper-style top-gap-3">
+            <div class="wrapper-header"><span class="wrapper-header-title">根据SKU代码搜索</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
+            <div class="wrapper-inner">
+                <p class="text-content text-sm"><input class="form-control" name="sku_code"></p>
+                <div class="light-divider"></div>
+                <p class="text-content text-sm"><button type="submit" class="col-12 orange">搜索</button></p>
+            </div>
+        </div>
+    </form>
+    <br/><br/><br/>
 	<form style="margin-top:2.5rem;" action="{{ url_for('mobile_cart') }}" method="post">
         <input type="hidden" name="area_id" value="{{ area_id }}">
 		<div class="storage-block clearfix">
@@ -15,6 +26,9 @@
 					</p>
 					<p class="light-font-sm">
 						规格 ：{{ batch.get('sku_specification') }}
+					</p>
+                    <p class="light-font-sm">
+						SKU代码 ：{{ batch.get('sku_code') }}
 					</p>
 					<p class="light-font-sm">
 						生产日期 ：{{ batch.get('production_date') }}

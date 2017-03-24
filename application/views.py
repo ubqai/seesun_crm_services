@@ -542,20 +542,22 @@ def stocks_share_for_order(area_id):
                             for option in sku.get('options'):
                                 for key, value in option.items():
                                     sku_option = "%s %s" % (sku_option, value)
-                            invs = load_user_inventories(user.id, sku.get('sku_id'))
-                            for inv in invs:
-                                for batch in inv.get('batches'):
-                                    batch_infos.append({"product_name": product_json.get('name'),
-                                                        "sku_specification": sku_option,
-                                                        "thumbnail": sku.get('thumbnail'),
-                                                        "user": user.nickname,
-                                                        "city": "%s库存" % user.sales_areas.first().name,
-                                                        "sku_id": sku.get('sku_id'),
-                                                        "production_date": batch.get('production_date'),
-                                                        "batch_no": batch.get('batch_no'),
-                                                        "batch_id": batch.get('inv_id'),
-                                                        "sku_code": sku.get('code'),
-                                                        "stocks": batch.get('stocks')})
+                            if request.args.get("sku_code", '') == '' or \
+                                    (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
+                                invs = load_user_inventories(user.id, sku.get('sku_id'))
+                                for inv in invs:
+                                    for batch in inv.get('batches'):
+                                        batch_infos.append({"product_name": product_json.get('name'),
+                                                            "sku_specification": sku_option,
+                                                            "thumbnail": sku.get('thumbnail'),
+                                                            "user": user.nickname,
+                                                            "city": "%s库存" % user.sales_areas.first().name,
+                                                            "sku_id": sku.get('sku_id'),
+                                                            "production_date": batch.get('production_date'),
+                                                            "batch_no": batch.get('batch_no'),
+                                                            "batch_id": batch.get('inv_id'),
+                                                            "sku_code": sku.get('code'),
+                                                            "stocks": batch.get('stocks')})
     # 公司库存
     for category in categories:
         products_json = load_products(category.get('category_id'))
@@ -568,20 +570,22 @@ def stocks_share_for_order(area_id):
                         for option in sku.get('options'):
                             for key, value in option.items():
                                 sku_option = "%s %s" % (sku_option, value)
-                        invs = load_user_inventories("0", sku.get('sku_id'))
-                        for inv in invs:
-                            for batch in inv.get('batches'):
-                                batch_infos.append({"product_name": product_json.get('name'),
-                                                    "sku_specification": sku_option,
-                                                    "thumbnail": sku.get('thumbnail'),
-                                                    "user": "公司",
-                                                    "city": "公司库存",
-                                                    "sku_id": sku.get('sku_id'),
-                                                    "production_date": batch.get('production_date'),
-                                                    "batch_no": batch.get('batch_no'),
-                                                    "batch_id": batch.get('inv_id'),
-                                                    "sku_code": sku.get('code'),
-                                                    "stocks": batch.get('stocks')})
+                        if request.args.get("sku_code", '') == '' or \
+                                (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
+                            invs = load_user_inventories("0", sku.get('sku_id'))
+                            for inv in invs:
+                                for batch in inv.get('batches'):
+                                    batch_infos.append({"product_name": product_json.get('name'),
+                                                        "sku_specification": sku_option,
+                                                        "thumbnail": sku.get('thumbnail'),
+                                                        "user": "公司",
+                                                        "city": "公司库存",
+                                                        "sku_id": sku.get('sku_id'),
+                                                        "production_date": batch.get('production_date'),
+                                                        "batch_no": batch.get('batch_no'),
+                                                        "batch_id": batch.get('inv_id'),
+                                                        "sku_code": sku.get('code'),
+                                                        "stocks": batch.get('stocks')})
     return render_template('mobile/share_index_for_order.html', batch_infos=batch_infos, area_id=area_id)
 
 
