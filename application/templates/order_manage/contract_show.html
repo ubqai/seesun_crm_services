@@ -104,6 +104,12 @@
                         <tr>
                             <td rowspan="{{ content.inventory_choose|length + 2 }}"><a class="table-link">{{ content.product_name }}</a></td>
                             <td rowspan="{{ content.inventory_choose|length + 2 }}">{{ content.sku_specification }}</td>
+                            <td rowspan="{{ content.inventory_choose|length + 2 }}">
+                                {% if not (content.batch_info == {} or content.batch_info == None) %}
+                                    {{ content.batch_info.get('batch_no') }}
+                                    (经销商：{{ content.batch_info.get('dealer') }})
+                                {% endif %}
+                            </td>
                             <td rowspan="{{ content.inventory_choose|length + 2 }}">{{ content.number }}</td>
                             <td>{{ content.price }}</td>
                             <td>{{ content.amount }}</td>
