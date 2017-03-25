@@ -6,6 +6,20 @@
 <div class="main-content">
 
 	<div class="wrapper">
+		
+		<div class="clearfix top-gap-2">
+			<div class="selection col-6">
+				<p class="text-sm">类目：</p>
+				<select id="category-select" class="form-control">
+					<option>all</option>
+				</select>
+			</div>
+			<div class="selection col-6">
+				<p class="text-sm">产品：</p>
+				<select id="product-select" class="form-control">
+				</select>
+			</div>
+		</div>
 	
 	{% for category in categories %}
 						{% with products_json = load_products(category.get('category_id')) %}
@@ -14,7 +28,7 @@
 												{% with skus_json = load_skus(product_json.get('product_id')) %}
 														{% if len(skus_json.get('skus')) > 0 %}
 																{% for sku in skus_json.get('skus') %}
-																<div class="wrapper-style rect top-gap-2">
+																<div class="wrapper-style rect top-gap-2 js-{{ category.get('category_name') }} js-{{ product_json.get('name') }} js-wrapper">
 																	<div class="wrapper-header"><span class="wrapper-header-title">{{ category.get('category_name') }}</span><span class="wrapper-header-icon glyphicon glyphicon-shopping-cart pull-right"></span></div>
 																	<div class="wrapper-inner clearfix">
 																		<div class="wrapper-inner-img"><img class="full-img" src="/static/images/doc.png"></div>
@@ -55,21 +69,51 @@
 	</div>
 </div>
 <script>
-var categories=[];
+	var categories=[];
 
-{% for category in categories %}
-	{% with products_json = load_products(category.get('category_id')) %}
-		{% for product_json in products_json %}
-		 if(categories["{{ category.get('category_name') }}"]===undefined){
-			categories["{{ category.get('category_name') }}"]=[];
-			categories["{{ category.get('category_name') }}"].push("{{ product_json.get('name') }}");
-		 }else{
-			categories["{{ category.get('category_name') }}"].push("{{ product_json.get('name') }}");
-		 }
-		{% endfor %}
-	{% endwith %}
-{% endfor %}
+	{% for category in categories %}
+		{% with products_json = load_products(category.get('category_id')) %}
+			{% for product_json in products_json %}
+			 if(categories["{{ category.get('category_name') }}"]===undefined){
+				categories["{{ category.get('category_name') }}"]=[];
+				categories["{{ category.get('category_name') }}"].push("all");
+				categories["{{ category.get('category_name') }}"].push("{{ product_json.get('name') }}");
+			 }else{
+				categories["{{ category.get('category_name') }}"].push("{{ product_json.get('name') }}");
+			 }
+			{% endfor %}
+		{% endwith %}
+	{% endfor %}
 
-
+	for(var i in categories){
+		var option=$("<option>"+i+"</option>")
+		$("#category-select").append(option);
+	}
+	
+	$("#category-select").change(function(e){
+		$("#product-select").html("");
+		var value=$(this).val();
+		for(var i in categories[value]){
+			var option=$("<option>"+categories[value][i]+"</option>");
+			$("#product-select").append(option);
+		}
+		if(value==="all"){
+			$(".js-wrapper").removeClass("hidden")
+		}else{
+			$(".js-wrapper").removeClass("hidden").not(".js-"+value).addClass("hidden");
+		}
+	});
+	
+	$("#product-select").change(function(e){
+		var category=$("#category-select").val();
+		var value=$(this).val();
+		if(value==="all"){
+			$(".js-"+category).removeClass("hidden")
+		}else{
+			$(".js-wrapper").removeClass("hidden").not(".js-"+value).addClass("hidden");
+		}
+	});
+	
+	
 </script>
 {% endblock %}
