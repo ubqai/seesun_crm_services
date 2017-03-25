@@ -561,7 +561,7 @@ def stocks_share_for_order(area_id):
                                                             "sku_specification": sku_option,
                                                             "thumbnail": sku.get('thumbnail'),
                                                             "user": user.nickname,
-                                                            "city": "%s库存" % user.sales_areas.first().name,
+                                                            "city": "%s工程剩余库存" % user.sales_areas.first().name,
                                                             "sku_id": sku.get('sku_id'),
                                                             "production_date": batch.get('production_date'),
                                                             "batch_no": batch.get('batch_no'),
