@@ -99,7 +99,8 @@
 				map.on('click', function (params) {
 					var name=params.name;
 					//todo--ajax or local data
-					console.log(params);
+					//这边根据name的值来判断那个区域，再根据区域来判断链接到那个url
+					
 				});
 		});
 		
@@ -113,7 +114,7 @@
 							left:"4%"
 					},
 					tooltip: {
-							trigger: 'axis',
+							trigger: 'item',
 							axisPointer: {
 									type: 'shadow'
 							}
@@ -126,7 +127,6 @@
 							},
 							data: ['2017年'],
 							selected: {
-									'2016年': false,
 									'2017年': true
 							}
 					},
@@ -156,6 +156,7 @@
 					},
 					yAxis: {
 							type: 'category',
+							//这是y轴的数据
 							data: ['北京','东北','江苏','上海','浙江','福建'],
 							axisLine:{
 								lineStyle:{
@@ -177,11 +178,24 @@
 							{
 									name: '2017年',
 									type: 'bar',
+									//这是对应Y轴的数据，柱状图
 									data: [19325, 23438, 31000, 121594, 134141, 51807],
 									barMaxWidth: 20,
 									label:{
 										normal:{
 											show:true
+										}
+									}
+							},
+							{
+									name: '2017年',
+									type: 'line',
+									//这是对应Y轴的数据，折线图
+									data: [19325, 23438, 31000, 121594, 134141, 51807],
+									symbolSize: 20,
+									label:{
+										normal:{
+											show:false
 										}
 									}
 							}
