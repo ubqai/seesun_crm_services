@@ -7,6 +7,8 @@
 					<a><i class="glyphicon glyphicon-comment"></i><span>经销商视图</span><span class="dcjq-icon"></span></a>
 					<ul class="sub">
 						<li><a>经销商列表管理</a></li>
+                        <li><a href="{{ url_for('order_manage.dealer_index') }}">各省经销商销售统计</a></li>
+						<li><a href="{{ url_for('order_manage.region_profit') }}">各省销售统计</a></li>
 					</ul>
 				</li>
 				<li class="sub-menu {% if active == 'sale' %}active{% endif %}">
@@ -60,8 +62,6 @@
 					<ul class="sub">
 						<li><a href="{{ url_for('web_access_log.statistics') }}">点击率统计</a></li>
                         <li><a href="{{ url_for('order_manage.team_profit') }}">销售团队销售统计</a></li>
-						<li><a href="{{ url_for('order_manage.dealer_index') }}">各省经销商销售统计</a></li>
-						<li><a href="{{ url_for('order_manage.region_profit') }}">各省销售统计</a></li>
 					</ul>
 				</li>
 				<li class="sub-menu {% if active == 'organization' %}active{% endif %}">

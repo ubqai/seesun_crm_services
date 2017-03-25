@@ -1,16 +1,13 @@
-﻿<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0;">
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/init.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/pc_style.css') }}">
-    <script src="{{ url_for('static', filename = 'javascripts/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename = 'javascripts/bootstrap.min.js') }}"></script>
+﻿{% extends 'pc_base.html' %}
+
+{% block extra_scripts %}
     <script src="{{ url_for('static', filename = 'javascripts/echarts.common.min.js') }}"></script>
     <script src="{{ url_for('static', filename = 'javascripts/dark.js') }}"></script>
-</head>
-<div class="my-main">
+{% endblock %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
 
+{{ sidebar(active = 'statistics') }}
 	<div class="contents">
 		<div id="chart" style="width:100%; height:600px"></div>
 	</div>
@@ -122,8 +119,4 @@
 		
 	
 	</script>
-
-
-
-
-</div>
+{% endblock %}

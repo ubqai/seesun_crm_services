@@ -1,22 +1,14 @@
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0;">
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/init.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/pc_style.css') }}">
-    <script src="{{ url_for('static', filename = 'javascripts/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename = 'javascripts/bootstrap.min.js') }}"></script>
+{% extends 'pc_base.html' %}
+
+{% block extra_scripts %}
     <script src="{{ url_for('static', filename = 'javascripts/echarts.common.min.js') }}"></script>
     <script src="{{ url_for('static', filename = 'javascripts/dark.js') }}"></script>
-	<style>
-		#cn-map{
-			float:left;
-		}
-	</style>
-</head>
-<div class="my-main">
+{% endblock %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
 
-	<div class="contents">
+{{ sidebar(active = 'dealer') }}
+    <div class="contents">
 		<div id="cn-map" style="width:60%; height: 500px"></div>
 		<div id="map-result" style="width:40%; height: 500px; float:left">
 			<table class="table table-hover" style=" margin-top:50px;box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);">
@@ -89,6 +81,4 @@
 	</script>
 
 
-
-
-</div>
+{% endblock %}
