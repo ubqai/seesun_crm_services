@@ -12,34 +12,81 @@
 		<a class="new-one" href="{{ url_for('web_access_log.index') }}" title="访问列表"><span class="glyphicon glyphicon-list"></span></a>
 	</div>
 	<div class="separator"><span></span></div>
+
+	<form action="{{ url_for('web_access_log.statistics') }}" method="get" role="form" class="form form-horizontal" >
+        <div class="form-style form-default">
+            <div class="form-item-2 col-3">
+                <span>统计时间从</span>
+                <input class="form-control datetimePicker" name="created_at_gt" value="{{ request.args.get('created_at_gt') or '' }}">
+            </div>
+            <div class="form-item-2 col-3">
+                <span>到</span>
+                <input class="form-control datetimePicker" name="created_at_lt" value="{{ request.args.get('created_at_lt') or '' }}">
+            </div>
+            <div class="clearfix"></div>
+            <div class="text-right top-gap-2 right-gap-3">
+                <button class="btn btn-default my-btn">筛选条件</button>
+            </div>
+        </div>
+    </form>
+
 	<div class="widget">
 		<div class="widget_header">
-			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;点击率统计</h4>
+			<h4 class="widget_header_title">
+				<span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;模块点击率统计
+			</h4>
 		</div>
 		<div class="widget_contents padding-0">
 			<table class="tables">
-				<thead>
-					<tr>
-						<th>Module name</th>
-						<th>Count</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr><td>产品展示</td><td>{{ count_list[1] }}</td></tr>
-					<tr><td>库存查询</td><td>{{ count_list[2] }}</td></tr>
-					<tr><td>库存共享</td><td>{{ count_list[3] }}</td></tr>
-					<tr><td>案例展示</td><td>{{ count_list[4] }}</td></tr>
-					<tr><td>项目报备</td><td>{{ count_list[5] }}</td></tr>
-					<tr><td>产品设计</td><td>{{ count_list[6] }}</td></tr>
-					<tr><td>物料需要</td><td>{{ count_list[7] }}</td></tr>
-					<tr><td>一键下单</td><td>{{ count_list[8] }}</td></tr>
-					<tr><td>物流追踪</td><td>{{ count_list[9] }}</td></tr>
-					<tr><td>检验真伪</td><td>{{ count_list[10] }}</td></tr>
-					<tr><td>施工指导</td><td>{{ count_list[11] }}</td></tr>
-					<tr><td>售后服务</td><td>{{ count_list[12] }}</td></tr>
-					<tr><td>总计</td><td>{{ count_list[0] }}</td></tr>
-				</tbody>
+				<thead><tr><th>产品展示</th><th>库存查询</th><th>库存共享</th></tr></thead>
+				<tbody><tr><td>{{ module_count_list[1] }}</td><td>{{ module_count_list[2] }}</td><td>{{ module_count_list[3] }}</td></tr></tbody>
+				<thead><tr><th>案例展示</th><th>项目报备</th><th>产品设计</th></tr></thead>
+				<tbody><tr><td>{{ module_count_list[4] }}</td><td>{{ module_count_list[5] }}</td><td>{{ module_count_list[6] }}</td></tr></tbody>
+				<thead><tr><th>物料需要</th><th>一键下单</th><th>物流追踪</th></tr></thead>
+				<tbody><tr><td>{{ module_count_list[7] }}</td><td>{{ module_count_list[8] }}</td><td>{{ module_count_list[9] }}</td></tr></tbody>
+				<thead><tr><th>检验真伪</th><th>施工指导</th><th>售后服务</th></tr></thead>
+				<tbody><tr><td>{{ module_count_list[10] }}</td><td>{{ module_count_list[11] }}</td><td>{{ module_count_list[12] }}</td></tr></tbody>
 			</table>
+		</div>
+	</div>
+
+	<div class="widget top-gap-2">
+		<div class="widget_header">
+			<h4 class="widget_header_title">
+				<span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;平台统计
+			</h4>
+		</div>
+
+		<div class="widget_contents padding-0 item-wrapper">
+			<div class="form-item item-template">
+				{% for platform in platform_count_list %}
+				<div class="form-item-2 col-3">
+					<span><label>{{ platform[0] }}</label></span>
+					<input name="{{ platform[0] }}" id="{{ platform[0] }}" value="{{ platform[1] }}"
+						   class="form-input form-control" type="text" disabled>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div class="widget top-gap-2">
+		<div class="widget_header">
+			<h4 class="widget_header_title">
+				<span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;浏览器统计
+			</h4>
+		</div>
+
+		<div class="widget_contents padding-0 item-wrapper">
+			<div class="form-item item-template">
+				{% for browser in browser_count_list %}
+				<div class="form-item-2 col-3">
+					<span><label>{{ browser[0] }}</label></span>
+					<input name="{{ browser[0] }}" id="{{ browser[0] }}" value="{{ browser[1] }}"
+						   class="form-input form-control" type="text" disabled>
+				</div>
+				{% endfor %}
+			</div>
 		</div>
 	</div>
 </div>

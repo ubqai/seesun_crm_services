@@ -7,7 +7,7 @@
 <div class="contents">
 	<div class="contents-header">
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
-		<p class="contents-header-p">点击率统计</p>
+		<p class="contents-header-p">访问详情</p>
 		<p class="contents-header-p text-sm">Details of access</p>
 		<a class="new-one" href="{{ url_for('web_access_log.statistics') }}" title="分类统计"><span class="glyphicon glyphicon-stats"></span></a>
 	</div>
@@ -18,24 +18,24 @@
                 <span>操作系统</span>
                 <select class="form-control" name="platform">
                     <option value=""></option>
-                    {% for name in 'aix amiga android bsd chromeos hpux iphone ipad irix linux macos sco solaris wii windows'.split() %}
+                    {% for name in platform_list %}
                     <option value="{{ name }}">{{ name }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="form-item-2 col-3">
                 <span>访问时间从</span>
-                <input class="form-control datetimePicker" name="created_at_gt">
+                <input class="form-control datetimePicker" name="created_at_gt" value="{{ request.args.get('created_at_gt') or '' }}">
             </div>
             <div class="form-item-2 col-3">
                 <span>到</span>
-                <input class="form-control datetimePicker" name="created_at_lt">
+                <input class="form-control datetimePicker" name="created_at_lt" value="{{ request.args.get('created_at_lt') or '' }}">
             </div>
             <div class="form-item-2 col-3">
                 <span>浏览器</span>
                 <select class="form-control" name="browser">
                     <option value=""></option>
-                    {% for name in 'aol ask camino chrome firefox galeon google kmeleon konqueror links lynx msie msn netscape opera safari seamonkey webkit yahoo'.split() %}
+                    {% for name in browser_list %}
                     <option value="{{ name }}">{{ name }}</option>
                     {% endfor %}
                 </select>

@@ -287,7 +287,7 @@ def material_application_edit(id):
 
 @content.route('/material/index')
 def material_index():
-    materials = Material.query.all()
+    materials = Material.query.order_by(Material.created_at.asc())
     return render_template('content/material_application/material_index.html', materials=materials)
 
 
@@ -323,3 +323,12 @@ def material_edit(id):
     else:
         form = MaterialForm(obj=material)
     return render_template('content/material_application/material_edit.html', material=material, form=form)
+
+
+@content.route('/material/<int:id>/delete')
+def material_delete(id):
+    material = Material.query.get_or_404(id)
+    db.session.delete(material)
+    db.session.commit()
+    flash('%s has been deleted successfully' % material.name, 'success')
+    return redirect(url_for('content.material_index'))
