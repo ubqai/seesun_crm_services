@@ -295,16 +295,37 @@ def tracking_info_new(contract_id):
 def tracking_info_edit(id):
     tracking_info = TrackingInfo.query.get_or_404(id)
     contract = Contract.query.filter(Contract.contract_no == tracking_info.contract_no).first()
+    delivery_infos_dict = {
+        'recipient': '收货人',
+        'tracking_no': '物流单号',
+        'delivery_tel': '货运公司电话',
+        'goods_weight': '货物重量(kg)',
+        'goods_count': '货物件数',
+        'duration': '运输时间',
+        'freight': '运费(元)',
+        'pickup_no': '提货号码'
+    }
     if request.method == 'POST':
         form = TrackingInfoForm2(request.form)
         tracking_info = form.save(tracking_info)
+        tracking_info.delivery_infos = {
+            'recipient': request.form.get('recipient'),
+            'tracking_no': request.form.get('tracking_no'),
+            'delivery_tel': request.form.get('delivery_tel'),
+            'goods_weight': request.form.get('goods_weight'),
+            'goods_count': request.form.get('goods_count'),
+            'duration': request.form.get('duration'),
+            'freight': request.form.get('freight'),
+            'pickup_no': request.form.get('pickup_no')
+        }
         db.session.add(tracking_info)
         db.session.commit()
         flash('物流状态更新成功', 'success')   
         return redirect(url_for('order_manage.tracking_infos'))  
     else:
         form = TrackingInfoForm2(obj=tracking_info)
-    return render_template('order_manage/tracking_info_edit.html', tracking_info=tracking_info, form=form, contract=contract)
+    return render_template('order_manage/tracking_info_edit.html', tracking_info=tracking_info, form=form,
+                           contract=contract, delivery_infos_dict=sorted(delivery_infos_dict.items()))
 
 
 @order_manage.route('/tracking_info/<int:id>/generate_qrcode')
