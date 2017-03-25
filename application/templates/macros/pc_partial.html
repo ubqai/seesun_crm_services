@@ -59,6 +59,9 @@
 					<a><i class="glyphicon glyphicon-signal"></i><span>数据统计</span><span class="dcjq-icon"></span></a>
 					<ul class="sub">
 						<li><a href="{{ url_for('web_access_log.statistics') }}">点击率统计</a></li>
+                        <li><a href="{{ url_for('order_manage.team_profit') }}">销售团队销售统计</a></li>
+						<li><a href="{{ url_for('order_manage.dealer_index') }}">各省经销商销售统计</a></li>
+						<li><a href="{{ url_for('order_manage.region_profit') }}">各省销售统计</a></li>
 					</ul>
 				</li>
 				<li class="sub-menu {% if active == 'organization' %}active{% endif %}">

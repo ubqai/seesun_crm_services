@@ -362,3 +362,29 @@ def tracking_info_qrcode(id):
     response = make_response(send_file(app.config['STATIC_DIR'] + '/upload/qrcode/' + tracking_info.qrcode_image))
     response.headers['Content-Disposition'] = 'attachment; filename = %s' % tracking_info.qrcode_image
     return response
+
+
+@order_manage.route('/region_profit')
+def region_profit():
+    return render_template('order_manage/region_profit.html')
+
+
+@order_manage.route('/team_profit')
+def team_profit():
+    return render_template('order_manage/team_profit.html')
+
+
+@order_manage.route('/dealer_index')
+def dealer_index():
+    area = SalesAreaHierarchy.query.filter_by(name=request.args.get('province')).first()
+    datas = []
+    if area is not None:
+        for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
+            for user in sarea.users.all():
+                amount = float('0')
+                for contract in Contract.query.filter_by(user_id=user.id, payment_status='已付款').all():
+                    amount = amount + float(contract.contract_content.get('amount', '0'))
+                datas.append([user.nickname, amount])
+        current_app.logger.info(datas)
+    return render_template('order_manage/dealer_index.html', datas=datas)
+

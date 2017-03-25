@@ -14,7 +14,7 @@ class Configuration(object):
 
 class DevelopmentConfiguration(Configuration):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://seesun:123456@localhost/seesun_crm'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://fuyuan:fuyuan@localhost/seesun_crm'
     PRODUCT_SERVER = 'http://localhost:5001'
     WECHAT_TEST_MODE = True
     WECHAT_HOOK_URL = "http://118.178.185.40"

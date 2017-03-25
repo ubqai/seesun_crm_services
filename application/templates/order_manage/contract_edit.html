@@ -16,20 +16,20 @@
         <div class="widget_contents padding-0 item-wrapper">
             <div class="form-item item-template">
                 <div class="form-item-2 col-3">
-                    <span>{{ form.amount.label }}</span>
+                    <span>*{{ form.amount.label }}</span>
                     {{ form.amount(class = 'form-input form-control') }}
                 </div>
                 <div class="form-item-2 col-3">
-                    <span>{{ form.delivery_time.label }}</span>
+                    <span>*{{ form.delivery_time.label }}</span>
                     {{ form.delivery_time(class = 'form-input form-control datetimePicker') }}
                 </div>
                 <div class="form-item-2 col-3">
-                    <span>{{ form.offer_no.label }}</span>
+                    <span>*{{ form.offer_no.label }}</span>
                     {{ form.offer_no(class = 'form-input form-control') }}
                 </div>
 
             <div class="form-item-2 col-3">
-                    <span>{{ form.logistics_costs.label }}</span>
+                    <span>*{{ form.logistics_costs.label }}</span>
                     {{ form.logistics_costs(class = 'form-input form-control') }}
                 </div>
             <div class="form-item-2 col-3">
@@ -53,7 +53,7 @@
                     {{ form.full_adhesive_costs(class = 'form-input form-control') }}
                 </div>
             <div class="form-item-2 col-3">
-                    <span>{{ form.material_loss_percent.label }}</span>
+                    <span>*{{ form.material_loss_percent.label }}</span>
                     {{ form.material_loss_percent(class = 'form-input form-control') }}
                 </div>
             <div class="form-item-2 col-3">
@@ -75,8 +75,8 @@
 															<th>规格</th>
                                                             <th>指定批次号</th>
 															<th>数量(㎡)</th>
-															<th>单价</th>
-															<th>总价</th>
+															<th>*单价</th>
+															<th>*总价</th>
 															<th>备注</th>
 													</tr>
 											</thead>

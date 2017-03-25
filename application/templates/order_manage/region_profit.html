@@ -1,0 +1,133 @@
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0;">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/init.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/pc_style.css') }}">
+    <script src="{{ url_for('static', filename = 'javascripts/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'javascripts/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'javascripts/echarts.common.min.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'javascripts/dark.js') }}"></script>
+</head>
+<div class="my-main">
+
+	<div class="contents">
+		<div id="chart2" style="width:100%; height:600px"></div>
+	</div>
+	
+	<script>
+		
+		(function(){
+				var chart = echarts.init(document.getElementById('chart2'), 'dark');
+				option = {
+					backgroundColor: "#344b58",
+					title: {
+							text: '区域销售额',
+							subtext: 'BY SEESUN',
+							left:"4%",
+							top:"10px"
+					},
+					tooltip: {
+							trigger: 'axis',
+							axisPointer: {
+									type: 'shadow'
+							}
+					},
+					legend: {
+							x: '4%',
+							top: '11%',
+							textStyle: {
+									color: '#90979c',
+							},
+							data: ['历史销售额','最新月销售额'],
+					},
+					grid: {
+							left: '4%',
+							borderWidth: 0,
+							top: 110,
+							containLabel: true
+					},
+					yAxis: {
+							type: 'value',
+							boundaryGap: [0, 0.01],
+							axisLine:{
+								lineStyle:{
+									color:"#90979c",
+									shadowColor: 'rgba(0, 0, 0, 0.5)',
+									shadowBlur: 0,
+									width:1
+								}
+							},
+							axisTick: {
+								show: false
+							},
+							splitLine: {
+								show: false
+							}
+					},
+					xAxis: {
+							type: 'category',
+							//这是y轴的数据
+							data: ['北京','福建','黑龙江','上海','浙江','江苏'],
+							axisLine:{
+								lineStyle:{
+									color:"#90979c",
+									shadowColor: 'rgba(0, 0, 0, 0.5)',
+									shadowBlur: 0,
+									width:1,					
+								}
+							},
+							minInterval: 20,
+							axisTick: {
+								show: false
+							},
+							splitLine: {
+								show: false
+							}
+					},
+					series: [
+							{
+									name: '历史销售额',
+									type: 'bar',
+									//这是对应Y轴的数据，柱状图
+									data: [19325, 23438, 31000, 51594, 74141, 51807],
+									barGap: "0%",
+									barMaxWidth: "35px",
+									label:{
+										normal:{
+											position:'top',
+											show:true,
+											formatter:function(params){
+												return params.data;
+											}
+										}
+									}
+							},
+							{
+									name: '最新月销售额',
+									type: 'bar',
+									//这是对应Y轴的数据，折线图
+									data: [1932, 2343, 3100, 12159, 13414, 5180],
+									barGap: "0%",
+									barMaxWidth: "35px",
+									label:{
+										normal:{
+											position:'top',
+											show:true,
+											formatter:function(params){
+												return params.data;
+											}
+										}
+									}
+							}
+					]
+				};
+
+				chart.setOption(option);
+		})()
+	</script>
+
+
+
+
+</div>

@@ -1,0 +1,94 @@
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0;">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/init.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/pc_style.css') }}">
+    <script src="{{ url_for('static', filename = 'javascripts/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'javascripts/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'javascripts/echarts.common.min.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'javascripts/dark.js') }}"></script>
+	<style>
+		#cn-map{
+			float:left;
+		}
+	</style>
+</head>
+<div class="my-main">
+
+	<div class="contents">
+		<div id="cn-map" style="width:60%; height: 500px"></div>
+		<div id="map-result" style="width:40%; height: 500px; float:left">
+			<table class="table table-hover" style=" margin-top:50px;box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);">
+				<thead>
+					<tr>
+						<th>经销商</th>
+						<th>销售额</th>
+					</tr>
+				</thead>
+				<tbody>
+                    {% for data in datas %}
+                        <tr>
+                            <td>{{ data[0] }}</td>
+                            <td>{{ data[1] }}</td>
+                        </tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+	
+	<script>
+		//map
+		$.get("{{ url_for('static', filename = 'pages/china.json') }}", function (chinaJson) {
+				echarts.registerMap('china', chinaJson);
+				var map = echarts.init(document.getElementById('cn-map'));
+				option = {
+					title: {
+						text: '经销商视图',
+						subtext: 'Data from seesun',
+						left: '5%'
+					},
+					tooltip: {
+						trigger: 'item',
+						showDelay: 0,
+						transitionDuration: 0.2,
+						formatter: function (params) {
+							var value = (params.value + '').split('.');
+							value = value[0].replace(/(\d{1,3})(?=(?:\d{3})+(?!\d))/g, '$1,');
+							return params.name;
+						}
+					},
+					series: [{
+						type: 'map',
+						map: 'china',
+						label:{
+							normal:{
+								show:false
+							},
+							emphasis:{
+								show:false
+							}
+						},
+						itemStyle:{
+							emphasis:{
+								areaColor:"#999",
+							}
+						}
+					}]
+				};
+				map.setOption(option);
+				map.on('click', function (params) {
+					var name=params.name;
+					window.location.href="/order_manage/dealer_index?province="+name+"省";
+					
+				});
+		});
+
+	</script>
+
+
+
+
+</div>
