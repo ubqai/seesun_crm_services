@@ -51,11 +51,22 @@
 							<p class="set-1">Sku Code :<span class="text-gray inline-display">{{ order_content.get('sku_code') }}</span></p>
 						</div>
 						<div class="wrapper-row">
-							<p class="set-1">Specification :<span class="text-gray inline-display">{{ order_content.get('sku_specification') }}</span></p>
-						</div>
+						    {% if not (order_content.get('production_date') == None or order_content.get('production_date') == '')%}
+                                <p class="set-2">Specification :<span class="text-gray inline-display">{{ order_content.get('sku_specification') }}</span></p>
+                                <p class="set-2">生产日期 :<span class="text-gray inline-display">{{ order_content.get('production_date') }}</span></p>
+                            {% else %}
+                                <p class="set-1">Specification :<span class="text-gray inline-display">{{ order_content.get('sku_specification') }}</span></p>
+                            {% endif %}
+                        </div>
 						<div class="wrapper-row">
-							<p class="set-2">&nbsp;<!--Number :<span class="text-dark inline-display"><span class="glyphicon glyphicon-tint text-gray"></span> {# { order_content.get('number') } #} </span>--></p>
-							<p class="set-2">Square Num :<span class="text-dark inline-display"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ order_content.get('number') }}㎡</span></p>
+							<p class="set-2">
+                                {% if not (order_content.get('batch_no') == None or order_content.get('batch_no') == '')%}
+                                批次号 :<span class="text-dark inline-display"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ order_content.get('batch_no') }}</span>
+                                {% else %}
+                                &nbsp;
+							    {% endif %}
+                            </p>
+                            <p class="set-2">Square Num :<span class="text-dark inline-display"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ order_content.get('number') }}㎡</span></p>
 						</div>
 					</div>
 				</div>

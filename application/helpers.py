@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, datetime, random
+import os, datetime, random, string
 from flask import render_template, request
 from werkzeug.utils import secure_filename
 from PIL import Image
@@ -8,7 +8,7 @@ import qrcode
 from . import app
 
 
-def object_list(template_name, query, paginate_by = 20, **context):
+def object_list(template_name, query, paginate_by=20, **context):
     page = request.args.get('page')
     if page and page.isdigit():
         page = int(page)
@@ -18,7 +18,7 @@ def object_list(template_name, query, paginate_by = 20, **context):
     return render_template(template_name, object_list=object_list, **context)
 
 
-def gen_rnd_filename(prefix = '', postfix = ''):
+def gen_rnd_filename(prefix='', postfix=''):
     format_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     return '%s%s%s%s' % (prefix, format_time, str(random.randrange(1000, 10000)), postfix)
 
@@ -45,7 +45,7 @@ def save_upload_file(file):
 def delete_file(file_path):
     try:
         os.remove(app.config['APPLICATION_DIR'] + file_path)
-    except:
+    except FileNotFoundError:
         pass
 
  
@@ -109,4 +109,9 @@ def gen_qrcode(data, output_filename=None):
         return filename
     else:
         return None
+
+
+def gen_random_string(length=16):
+    return ''.join(random.sample(string.ascii_letters + string.digits + string.punctuation, length))
+
 

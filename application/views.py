@@ -9,7 +9,7 @@ from . import app
 from .models import *
 from .web_access_log.models import WebAccessLog, can_take_record
 from .product.api import *
-from .inventory.api import create_inventory
+from .inventory.api import create_inventory, load_user_inventories
 from .helpers import save_upload_file
 from flask_login import *
 from .organization.forms import UserLoginForm
@@ -102,9 +102,15 @@ def mobile_share():
     return render_template('mobile/share.html')
 
 
-@app.route('/mobile/share_storage_for_detail')
-def mobile_share_storage_for_detail():
-    areas = SalesAreaHierarchy.query.filter_by(level_grade=3).all()
+@app.route('/mobile/share_storage_for_region')
+def mobile_share_storage_for_region():
+    regions = SalesAreaHierarchy.query.filter_by(level_grade=2).all()
+    return render_template('mobile/share_storage_for_region.html', regions=regions)
+
+
+@app.route('/mobile/share_storage_for_detail/<int:id>')
+def mobile_share_storage_for_detail(id):
+    areas = SalesAreaHierarchy.query.filter_by(level_grade=3, parent_id=id).all()
     return render_template('mobile/share_storage_for_detail.html', areas=areas)
 
 
@@ -134,20 +140,29 @@ def mobile_cart():
     if request.method == 'POST':
         if request.form:
             for param in request.form:
+                current_app.logger.info(param)
                 if 'number' in param and request.form.get(param):
                     index = param.rsplit('_', 1)[1]
+                    current_app.logger.info("%s-%s" % (index, request.form.get('number_%s' % index)))
                     if int(request.form.get('number_%s' % index)) > 0:
                         order_content = {'product_name': request.form.get('product_name_%s' % index),
                                          'sku_specification': request.form.get('sku_specification_%s' % index),
                                          'sku_code': request.form.get('sku_code_%s' % index),
-                                         'sku_id': index,
+                                         'sku_id': request.form.get('sku_id_%s' % index),
                                          'sku_thumbnail': request.form.get('sku_thumbnail_%s' % index),
+                                         'batch_no': request.form.get('batch_no_%s' % index),
+                                         'production_date': request.form.get('production_date_%s' % index),
+                                         'batch_id': request.form.get('batch_id_%s' % index),
+                                         'dealer': request.form.get('user_%s' % index),
                                          'number': int(request.form.get('number_%s' % index)),
                                          'square_num': "%.2f" % (0.3*int(request.form.get('number_%s' % index)))}
                         order.append(order_content)
         session['order'] = order
         flash('成功加入购物车', 'success')
-        return redirect(url_for('mobile_storage_show', product_id=request.form.get('product_id')))
+        if request.form.get('product_id') is not None:
+            return redirect(url_for('mobile_storage_show', product_id=request.form.get('product_id')))
+        elif request.form.get('area_id') is not None:
+            return redirect(url_for('stocks_share_for_order', area_id=request.form.get('area_id')))
     return render_template('mobile/cart.html', order=order)
 
 
@@ -163,8 +178,8 @@ def cart_delete(sku_id):
         session.pop('order', None)
     if 'order' in session and session['order']:
         return redirect(url_for('mobile_cart'))
-    orders = Order.query.filter_by(user_id=current_user.id).all()
-    return render_template('mobile/orders.html', orders=orders)
+    else:
+        return redirect(url_for('mobile_created_orders'))
 
 
 @app.route('/mobile/create_order')
@@ -186,10 +201,18 @@ def mobile_create_order():
                                   "dealer_name": dealer_name})
         db.session.add(order)
         for order_content in session['order']:
+            batch_info = {}
+            if order_content.get('batch_id') is not None and order_content.get('batch_id') != '':
+                batch_info = {'batch_no': order_content.get('batch_no'),
+                              'production_date': order_content.get('production_date'),
+                              'batch_id': order_content.get('batch_id'),
+                              'dealer': order_content.get('dealer')
+                              }
             oc = OrderContent(order=order, product_name=order_content.get('product_name'),
                               sku_specification=order_content.get('sku_specification'),
                               sku_code=order_content.get('sku_code'), number=order_content.get('number'),
-                              square_num=order_content.get('number'))
+                              square_num=order_content.get('number'), batch_info=batch_info
+                              )
             sku_id = order_content.get('sku_id')
             from .inventory.api import update_sku
             data = {"stocks_for_order": order_content.get('number')}
@@ -230,7 +253,7 @@ def mobile_contract_show(id):
 
 
 # --- Design ---
-@app.route('/mobile/design', methods = ['GET', 'POST'])
+@app.route('/mobile/design', methods=['GET', 'POST'])
 def mobile_design():
     project_reports = ProjectReport.query.filter_by(status='项目报备审核通过')
     if request.method == 'POST':
@@ -238,8 +261,8 @@ def mobile_design():
             project_report = ProjectReport.query.filter_by(report_no = request.form.get('filing_no')).first()
             if project_report in project_reports:
                 file_path = save_upload_file(request.files.get('ul_file'))
-                application = DesignApplication(filing_no = request.form.get('filing_no'), 
-                    ul_file = file_path, status = '新申请', applicant = current_user)
+                application = DesignApplication(filing_no=request.form.get('filing_no'),
+                    ul_file=file_path, status='新申请', applicant=current_user)
                 application.save
                 flash('产品设计申请提交成功', 'success')
                 return redirect(url_for('mobile_design_applications'))
@@ -248,13 +271,13 @@ def mobile_design():
         else:
             flash('项目报备编号和上传设计图纸不能为空', 'danger')
         return redirect(url_for('mobile_design'))
-    return render_template('mobile/design.html', project_reports = project_reports)
+    return render_template('mobile/design.html', project_reports=project_reports)
 
 
 @app.route('/mobile/design_applications')
 def mobile_design_applications():
     # list design applications of current user
-    applications = current_user.design_applications #DesignApplication.query.all()
+    applications = current_user.design_applications
     return render_template('mobile/design_applications.html', applications = applications)
 
 
@@ -263,7 +286,7 @@ def mobile_design_applications():
 def mobile_material_need():
     category = ContentCategory.query.filter(ContentCategory.name == '物料需要').first_or_404()
     classifications = category.classifications
-    return render_template('mobile/material_need.html', classifications = classifications)
+    return render_template('mobile/material_need.html', classifications=classifications)
 
 
 @app.route('/mobile/material_need_options/<int:classification_id>')
@@ -345,7 +368,7 @@ def mobile_material_application_cancel(id):
 
 
 # --- Tracking info ---
-@app.route('/mobile/tracking', methods = ['GET', 'POST'])
+@app.route('/mobile/tracking', methods=['GET', 'POST'])
 def mobile_tracking():
     if request.method == 'POST':
         contract_no = request.form.get('contract_no').strip()
@@ -355,19 +378,20 @@ def mobile_tracking():
             (TrackingInfo.receiver_tel == receiver_tel)
             ).first()
         if tracking_info:
-            return redirect(url_for('mobile_tracking_info', id = tracking_info.id))
+            return redirect(url_for('mobile_tracking_info', id=tracking_info.id))
         else:
             flash('未找到对应物流信息', 'warning')
             return redirect(url_for('mobile_tracking'))
-    contracts = Contract.query.filter_by(user_id = current_user.id).all()
-    tracking_infos = TrackingInfo.query.filter(TrackingInfo.contract_no.in_([contract.contract_no for contract in contracts])).all()
-    return render_template('mobile/tracking.html', tracking_infos = tracking_infos)
+    contracts = Contract.query.filter_by(user_id=current_user.id).all()
+    tracking_infos = TrackingInfo.query.filter(
+        TrackingInfo.contract_no.in_([contract.contract_no for contract in contracts])).all()
+    return render_template('mobile/tracking.html', tracking_infos=tracking_infos)
 
 
 @app.route('/mobile/tracking_info/<int:id>')
 def mobile_tracking_info(id):
     tracking_info = TrackingInfo.query.get_or_404(id)
-    return render_template('mobile/tracking_info.html', tracking_info = tracking_info)
+    return render_template('mobile/tracking_info.html', tracking_info=tracking_info)
 
 
 # --- Construction guide ---
@@ -375,21 +399,21 @@ def mobile_tracking_info(id):
 def mobile_construction_guide():
     category = ContentCategory.query.filter(ContentCategory.name == '施工指导').first_or_404()
     classifications = category.classifications.order_by(ContentClassification.created_at.desc())
-    return render_template('mobile/construction_guide.html', classifications = classifications)
+    return render_template('mobile/construction_guide.html', classifications=classifications)
 
 
 @app.route('/mobile/construction_guide_options/<int:classification_id>')
 def mobile_construction_guide_options(classification_id):
     classification = ContentClassification.query.get_or_404(classification_id)
     options = classification.options
-    return render_template('mobile/construction_guide_options.html', options = options)
+    return render_template('mobile/construction_guide_options.html', options=options)
 
 
 @app.route('/mobile/construction_guide_contents/<int:option_id>')
 def mobile_construction_guide_contents(option_id):
     option = ContentClassificationOption.query.get_or_404(option_id)
     contents = option.contents
-    return render_template('mobile/construction_guide_contents.html', contents = contents)
+    return render_template('mobile/construction_guide_contents.html', contents=contents)
 
 
 # --- After service ---
@@ -492,6 +516,79 @@ def stocks_share(area_id):
     return render_template('mobile/share_index.html', categories=categories, users=users)
 
 
+@app.route('/mobile/share_index_for_order/<int:area_id>', methods=['GET'])
+def stocks_share_for_order(area_id):
+    categories = load_categories()
+    if area_id == 0:
+        users = [current_user]
+    else:
+        area = SalesAreaHierarchy.query.get_or_404(area_id)
+        users = area.users.all()
+        for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
+            users.extend(sarea.users.all())
+            for ssarea in SalesAreaHierarchy.query.filter_by(parent_id=sarea.id).all():
+                users.extend(ssarea.users.all())
+    batch_infos = []
+    # 经销商库存
+    for user in users:
+        for category in categories:
+            products_json = load_products(category.get('category_id'))
+            if len(products_json) > 0:
+                for product_json in products_json:
+                    skus_json = load_skus(product_json.get('product_id'))
+                    if len(skus_json.get('skus')) > 0:
+                        for sku in skus_json.get('skus'):
+                            sku_option = ""
+                            for option in sku.get('options'):
+                                for key, value in option.items():
+                                    sku_option = "%s %s" % (sku_option, value)
+                            if request.args.get("sku_code", '') == '' or \
+                                    (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
+                                invs = load_user_inventories(user.id, sku.get('sku_id'))
+                                for inv in invs:
+                                    for batch in inv.get('batches'):
+                                        batch_infos.append({"product_name": product_json.get('name'),
+                                                            "sku_specification": sku_option,
+                                                            "thumbnail": sku.get('thumbnail'),
+                                                            "user": user.nickname,
+                                                            "city": "%s库存" % user.sales_areas.first().name,
+                                                            "sku_id": sku.get('sku_id'),
+                                                            "production_date": batch.get('production_date'),
+                                                            "batch_no": batch.get('batch_no'),
+                                                            "batch_id": batch.get('inv_id'),
+                                                            "sku_code": sku.get('code'),
+                                                            "stocks": batch.get('stocks')})
+    # 公司库存
+    for category in categories:
+        products_json = load_products(category.get('category_id'))
+        if len(products_json) > 0:
+            for product_json in products_json:
+                skus_json = load_skus(product_json.get('product_id'))
+                if len(skus_json.get('skus')) > 0:
+                    for sku in skus_json.get('skus'):
+                        sku_option = ""
+                        for option in sku.get('options'):
+                            for key, value in option.items():
+                                sku_option = "%s %s" % (sku_option, value)
+                        if request.args.get("sku_code", '') == '' or \
+                                (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
+                            invs = load_user_inventories("0", sku.get('sku_id'))
+                            for inv in invs:
+                                for batch in inv.get('batches'):
+                                    batch_infos.append({"product_name": product_json.get('name'),
+                                                        "sku_specification": sku_option,
+                                                        "thumbnail": sku.get('thumbnail'),
+                                                        "user": "公司",
+                                                        "city": "公司库存",
+                                                        "sku_id": sku.get('sku_id'),
+                                                        "production_date": batch.get('production_date'),
+                                                        "batch_no": batch.get('batch_no'),
+                                                        "batch_id": batch.get('inv_id'),
+                                                        "sku_code": sku.get('code'),
+                                                        "stocks": batch.get('stocks')})
+    return render_template('mobile/share_index_for_order.html', batch_infos=batch_infos, area_id=area_id)
+
+
 @app.route('/mobile/upload_share_index', methods=['GET'])
 def upload_share_index():
     categories = load_categories()
@@ -507,6 +604,9 @@ def new_share_inventory(id):
         stocks = request.form.get('stocks')
         inv_type = 2
         user_name = current_user.nickname
+        if production_date is None or production_date == '':
+            flash('生产日期不能为空', 'danger')
+            return render_template('mobile/new_share_inventory.html', id=id)
         if stocks is None:
             flash('库存数量不能为空', 'danger')
             return render_template('mobile/new_share_inventory.html', id=id)

@@ -22,10 +22,10 @@ class DevelopmentConfiguration(Configuration):
 
 class TestConfiguration(Configuration):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://seesun:123456@localhost/seesun_crm'
-    PRODUCT_SERVER = 'http://localhost:5001'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://seesun_db:UbqAI2017@121.43.175.216/seesun_crm_services_db'
+    PRODUCT_SERVER = 'http://120.27.233.160:5000'
     WECHAT_TEST_MODE = True
-    WECHAT_HOOK_URL = "http://118.178.185.40"
+    WECHAT_HOOK_URL = "http://120.27.233.160"
 
 
 class ProductionConfiguration(Configuration):

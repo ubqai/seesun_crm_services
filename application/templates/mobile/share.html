@@ -5,8 +5,9 @@
 
 <div class="main-content">
 	<div class="center-wrappper">
-		<a class="btn btn-default btn-block text-lg" href="{{ url_for('mobile_share_storage_for_detail') }}">查看共享库存</a>
-		<a class="btn btn-warning btn-block top-gap-3 text-lg" href="{{ url_for('upload_share_index') }}">上传共享库存</a>
+		<a class="btn btn-default btn-block text-lg" href="{{ url_for('mobile_share_storage_for_region') }}">查看共享库存</a>
+		<a class="btn btn-default btn-block text-lg" href="{{ url_for('stocks_share', area_id=0) }}">查看我的共享库存</a>
+        <a class="btn btn-warning btn-block top-gap-3 text-lg" href="{{ url_for('upload_share_index') }}">上传共享库存</a>
 	</div>
 </div>
 
