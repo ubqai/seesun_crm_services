@@ -66,7 +66,7 @@ def login_check():
         # 静态文件
         # app.logger.info("static pass")
         pass
-    elif request.path.startswith("/mobile/") or request.path.startswith("/wechat/mobile/"):
+    elif request.path.startswith("/mobile/") or request.path.startswith("/wechat/mobile/") or request.path == '/':
         if request.path == "/mobile/user/login" or request.path == '/wechat/mobile/user_binding':
             pass
         # 移动端登入界面

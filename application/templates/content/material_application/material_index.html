@@ -30,6 +30,7 @@
                         <td>{{ material.name }}</a></td>
                         <td>
 							<a class="table-edit text-info" href="{{ url_for('content.material_edit', id = material.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
+							<a class="table-edit text-danger" href="{{ url_for('content.material_delete', id = material.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;删除</a>
                         </td>
                     </tr>
                     {% endfor %}

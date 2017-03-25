@@ -150,7 +150,7 @@
                     {% for info in delivery_infos_dict %}
                     <div class="form-item-2 col-3">
                         <span style="font-size: 12px;"><label for="{{ info[0] }}">{{ info[1] }}</label></span>
-                        <input name="{{ info[0] }}" id="{{ info[0] }}" value="{{ tracking_info.delivery_infos.get(info[0]) }}"
+                        <input name="{{ info[0] }}" id="{{ info[0] }}" value="{{ tracking_info.delivery_infos.get(info[0]) or '' }}"
                                class="form-input form-control" type="text">
                     </div>
                     {% endfor %}
