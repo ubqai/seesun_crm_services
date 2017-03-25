@@ -858,6 +858,15 @@ td input{
     border: 1px solid #ccc;
     border-top: none;
 }
+.contract-float {
+    width: 100%;
+}
+.contract-float p {
+    float:left;
+		width:50%;
+		color:#7d7d7d;
+		line-height:1.9em;
+}
 .contract-value{
 	  display: block;
     margin-bottom: 0.5em;
@@ -871,6 +880,9 @@ td input{
     position: absolute;
     left: 0.3em;
     top: -0.1em;
+}
+.contract-value.without-line:after {
+    content: "";
 }
 /*file*/
 .file a{
@@ -976,4 +988,14 @@ td input{
     background: rgba(0,0,0,0.5);
     color: #fff;
 }
+
+/*2017/3/25*/
+.block{
+	display:block;
+	width:100% !important;
+}
+.inline-block{
+	display:inline-block !important;
+}
+
 

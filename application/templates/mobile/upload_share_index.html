@@ -54,5 +54,22 @@
 			
 	</div>
 </div>
+<script>
+var categories=[];
 
+{% for category in categories %}
+	{% with products_json = load_products(category.get('category_id')) %}
+		{% for product_json in products_json %}
+		 if(categories["{{ category.get('category_name') }}"]===undefined){
+			categories["{{ category.get('category_name') }}"]=[];
+			categories["{{ category.get('category_name') }}"].push("{{ product_json.get('name') }}");
+		 }else{
+			categories["{{ category.get('category_name') }}"].push("{{ product_json.get('name') }}");
+		 }
+		{% endfor %}
+	{% endwith %}
+{% endfor %}
+
+
+</script>
 {% endblock %}
