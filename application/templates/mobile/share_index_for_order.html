@@ -13,12 +13,20 @@
             </div>
         </div>
     </form>
-    <br/><br/><br/>
+    <br/>
+		<div class="clearfix top-gap-2">
+			<div class="selection">
+				<p class="text-sm">选择产品：</p>
+				<select id="product-select" class="form-control">
+					<option>ALL</option>
+				</select>
+			</div>
+		</div>
 	<form style="margin-top:2.5rem;" action="{{ url_for('mobile_cart') }}" method="post">
         <input type="hidden" name="area_id" value="{{ area_id }}">
 		<div class="storage-block clearfix">
 		{% for batch in batch_infos %}
-			<div class="col-6-gap storage-sku">
+			<div class="col-6-gap storage-sku js-wrapper js-{{ batch.get('product_name') }}">
 				<p class="text-center light-font-md p-title">{{ batch.get('city') }}</p>
 				<div class="p-content">
 					<p class="light-font-sm">
@@ -79,5 +87,30 @@
 	</form>
 
 </div>
+<script>
+	var products=[];
 
+	{% for batch in batch_infos %}
+		if(products.indexOf("{{ batch.get('product_name') }}")<0){
+			products.push("{{ batch.get('product_name') }}");
+		}		
+	{% endfor %}
+
+	for(var i in products){
+		var option=$("<option>"+products[i]+"</option>")
+		$("#product-select").append(option);
+	}
+	
+	$("#product-select").change(function(e){
+		var value=$(this).val();
+		if(value==="ALL"){
+			$(".js-wrapper").removeClass("hidden")
+		}else{
+			$(".js-wrapper").removeClass("hidden").not(".js-"+value).addClass("hidden");
+		}
+	});
+
+	
+	
+</script>
 {% endblock %}

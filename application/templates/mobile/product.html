@@ -6,7 +6,7 @@
 <div class="main-content">
 	<div class="nav-tab clearfix">
 	{% for category in categories %}
-		<a id="category_{{ category.get('category_id') }}">{{ category.get('category_name') }}</a>
+		<a id="category_{{ category.get('category_id') }}" href="#p_category_{{ category.get('category_id') }}">{{ category.get('category_name') }}</a>
 	{% endfor %}
 	</div>
 	<div class="module-1">
