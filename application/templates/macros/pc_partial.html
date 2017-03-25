@@ -55,8 +55,11 @@
 						<li><a href="{{ url_for('order_manage.tracking_infos') }}">物流状态列表</a></li>
 					</ul>
 				</li>
-				<li class="{% if active == 'statistics' %}active{% endif %}">
-					<a><i class="glyphicon glyphicon-signal"></i><span>数据统计</span></a>
+				<li class="sub-menu {% if active == 'statistics' %}active{% endif %}">
+					<a><i class="glyphicon glyphicon-signal"></i><span>数据统计</span><span class="dcjq-icon"></span></a>
+					<ul class="sub">
+						<li><a href="{{ url_for('web_access_log.statistics') }}">点击率统计</a></li>
+					</ul>
 				</li>
 				<li class="sub-menu {% if active == 'organization' %}active{% endif %}">
 					<a><i class="glyphicon glyphicon-user"></i><span>系统组织架构</span><span class="dcjq-icon"></span></a>
