@@ -997,5 +997,21 @@ td input{
 .inline-block{
 	display:inline-block !important;
 }
-
+.selection>p{
+    padding: 0.3em;
+    border: 1px solid #aaa;
+    border-radius: 5px 5px 0px 0px;
+    background: #F8B500;
+    color: #fff;
+}
+.selection>select{
+    border-radius: 0px 0px 5px 5px;
+}	
+.selection:first-child{
+	padding-right:0.5em;
+}
+.selection:last-child{
+	padding-left:0.5em;
+}	
+	
 
