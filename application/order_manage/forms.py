@@ -35,10 +35,10 @@ class TrackingInfoForm2(Form):
     production_starts_at = DateField('生产周期从', validators=[])
     production_ends_at = DateField('到', validators=[])
     delivery_date = DateField('配送日期', validators=[])
-    logistics_company = StringField('物流公司', validators=[])
-    delivery_man_name = StringField('司机姓名', validators=[])
-    delivery_man_tel = StringField('司机电话', validators=[])
-    delivery_plate_no = StringField('车牌号', validators=[])
+    #logistics_company = StringField('物流公司', validators=[])
+    #delivery_man_name = StringField('司机姓名', validators=[])
+    #delivery_man_tel = StringField('司机电话', validators=[])
+    #delivery_plate_no = StringField('车牌号', validators=[])
 
     def save(self, obj):
         self.populate_obj(obj)

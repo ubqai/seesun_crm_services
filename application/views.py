@@ -390,6 +390,16 @@ def mobile_tracking():
 
 @app.route('/mobile/tracking_info/<int:id>')
 def mobile_tracking_info(id):
+    delivery_infos_dict = {
+        'recipient': '收货人',
+        'tracking_no': '物流单号',
+        'delivery_tel': '货运公司电话',
+        'goods_weight': '货物重量(kg)',
+        'goods_count': '货物件数',
+        'duration': '运输时间',
+        'freight': '运费(元)',
+        'pickup_no': '提货号码'
+    }
     tracking_info = TrackingInfo.query.get_or_404(id)
     return render_template('mobile/tracking_info.html', tracking_info=tracking_info)
 
