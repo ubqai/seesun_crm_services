@@ -18,7 +18,9 @@ module2_paths = """
 module3_paths = """
 /mobile/share
 /mobile/share_index/\d+
+/mobile/share_index_for_order/\d+
 /mobile/share_storage_for_detail
+/mobile/share_storage_for_region
 /mobile/upload_share_index
 /mobile/new_share_inventory/\d+""".split()
 # Case
