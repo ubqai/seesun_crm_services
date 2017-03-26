@@ -40,7 +40,18 @@ def order_cancel(id):
 @order_manage.route("/orders/<int:id>/new_contract", methods=['GET', 'POST'])
 def contract_new(id):
     order = Order.query.get_or_404(id)
-    form = ContractForm()
+    form = ContractForm(amount=request.form.get("amount"),
+                        delivery_time=request.form.get("delivery_time"),
+                        offer_no=request.form.get("offer_no"),
+                        logistics_costs=request.form.get('logistics_costs'),
+                        live_floor_costs=request.form.get('live_floor_costs'),
+                        self_leveling_costs=request.form.get('self_leveling_costs'),
+                        crossed_line_costs=request.form.get('crossed_line_costs'),
+                        sticky_costs=request.form.get('sticky_costs'),
+                        full_adhesive_costs=request.form.get('full_adhesive_costs'),
+                        material_loss_percent=request.form.get('material_loss_percent'),
+                        other_costs=request.form.get('other_costs'),
+                        tax_costs=request.form.get('tax_costs'))
     if request.method == 'POST':
         if not is_number(request.form.get("amount")):
             flash('总金额必须为数字', 'warning')
@@ -383,7 +394,7 @@ def dealer_index():
             for user in sarea.users.all():
                 amount = float('0')
                 for contract in Contract.query.filter_by(user_id=user.id, payment_status='已付款').all():
-                    amount = amount + float(contract.contract_content.get('amount', '0'))
+                    amount += float(contract.contract_content.get('amount', '0'))
                 datas.append([user.nickname, amount])
         current_app.logger.info(datas)
     return render_template('order_manage/dealer_index.html', datas=datas)

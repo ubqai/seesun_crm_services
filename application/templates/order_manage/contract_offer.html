@@ -51,6 +51,48 @@
                                     <td>{{ content.memo }}</td>
                                 </tr>
 							{% endfor %}
+                            <tr>
+                                <td colspan="3">物流费用 :{{ contract.contract_content.get('logistics_costs') }}</td>
+                                <td colspan="2">原料损耗百分比 :{{ contract.contract_content.get('material_loss_percent') }}%</td>
+                                <td colspan="2">原料损耗费用 :{{ contract.contract_content.get('material_loss') }}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                {% if not (contract.contract_content.get('tax_costs') == None or contract.contract_content.get('tax_costs') == '') %}
+								税点 :{{ contract.contract_content.get('tax_costs') }}
+						        {% endif %}
+                                </td>
+                                <td>
+						        {% if not (contract.contract_content.get('live_floor_costs') == None or contract.contract_content.get('live_floor_costs') == '') %}
+								活铺费用 :{{ contract.contract_content.get('live_floor_costs') }}
+                                {% endif %}
+                                </td>
+                                <td>
+						        {% if not (contract.contract_content.get('self_leveling_costs') == None or contract.contract_content.get('self_leveling_costs') == '') %}
+								自流平费用 :{{ contract.contract_content.get('self_leveling_costs') }}
+						        {% endif %}
+                                </td>
+                                <td>
+						        {% if not (contract.contract_content.get('crossed_line_costs') == None or contract.contract_content.get('crossed_line_costs') == '') %}
+								划线费用 :{{ contract.contract_content.get('crossed_line_costs') }}
+						        {% endif %}
+                                </td>
+                                <td>
+						        {% if not (contract.contract_content.get('sticky_costs') == None or contract.contract_content.get('sticky_costs') == '') %}
+								点粘费用 :{{ contract.contract_content.get('sticky_costs') }}
+						        {% endif %}
+                                </td>
+                                <td>
+						        {% if not (contract.contract_content.get('full_adhesive_costs') == None or contract.contract_content.get('full_adhesive_costs') == '') %}
+								全胶粘费用 :{{ contract.contract_content.get('full_adhesive_costs') }}
+						        {% endif %}
+                                </td>
+                                <td>
+						        {% if not (contract.contract_content.get('other_costs') == None or contract.contract_content.get('other_costs') == '') %}
+								其他费用 :{{ contract.contract_content.get('other_costs') }}
+						        {% endif %}
+                                </td>
+                            </tr>
 							<tr>
 								<td class="text-left-i" colspan="5">合计(大写)：</td>
 								<td>{{ contract.contract_content.get('amount') }}</td>
