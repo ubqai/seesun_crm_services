@@ -7,6 +7,16 @@
         <div class="wrapper-style top-gap-3">
             <div class="wrapper-header"><span class="wrapper-header-title">根据SKU代码搜索</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
             <div class="wrapper-inner">
+                <p class="text-sm">产品类别：</p>
+                <p class="text-content text-sm">
+                    <select name="category_name" class="form-control">
+                        <option></option>
+                        {% for category in categories %}
+ +					        <option>{{ category.get('category_name') }}</option>
+                        {% endfor %}
+ +				    </select>
+                </p>
+                <p class="text-sm">SKU代码：</p>
                 <p class="text-content text-sm"><input class="form-control" name="sku_code"></p>
                 <div class="light-divider"></div>
                 <p class="text-content text-sm"><button type="submit" class="btn btn-warning btn-block">搜索</button></p>
