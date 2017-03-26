@@ -23,14 +23,14 @@ def mobile_verification():
             if ti is None:
                 raise ValueError("无此二维码记录")
 
-            contract = Contract.query.filter_by(contract_no=ti.contract_no)
+            contract = Contract.query.filter_by(contract_no=ti.contract_no).first()
             if contract is None or contract.order_id is None:
                 raise ValueError("二维码记录异常")
 
             flash('校验成功', 'success')
             return redirect(url_for('mobile_user_logout', id=contract.order_id))
         except Exception as e:
-            flash('校验失败', e)
+            flash('校验失败,%s' % e)
             return redirect(url_for('wechat.mobile_verification'))
     else:
         wechat_info = WechatAccessToken.getJsApiSign(request.url)
@@ -45,7 +45,7 @@ def mobile_user_binding():
                 logout_user()
 
             form = WechatUserLoginForm(request.form, meta={'csrf_context': session})
-            if form.validate() == False:
+            if not form.validate():
                 app.logger.info("form valid fail: [%s]" % (form.errors))
                 raise ValueError("")
 
@@ -65,7 +65,7 @@ def mobile_user_binding():
             app.logger.info("mobile login success [%s]" % (user.nickname))
             return redirect(url_for('mobile_index'))
         except Exception as e:
-            flash(e)
+            flash("绑定失败,%s" % e)
             return render_template('wechat/mobile_user_binding.html', form=form)
     else:
         app.logger.info("mobile_user_binding [%s][%s]" % (request.args, request.args.get("code")))
