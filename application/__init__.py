@@ -4,6 +4,7 @@ from flask import Flask, g, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
+from .utils import Num2MoneyFormat
 
 from .config import config
 
@@ -46,6 +47,7 @@ app.add_template_global(load_user_inventories)
 app.add_template_global(load_inventories_by_code)
 app.add_template_global(len)
 app.add_template_global(int)
+app.add_template_global(Num2MoneyFormat)
 
 
 @app.before_first_request

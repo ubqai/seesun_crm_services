@@ -63,7 +63,7 @@
 						
 			<div class="contract-item">
 				<div class="contract-table">
-					<p class="text-sm">合计（大写）：</p>
+					<p class="text-sm">合计（大写）：{{ Num2MoneyFormat(contract.contract_content.get('amount')) }}</p>
 					<p class="text-center text-sm">金额：{{ contract.contract_content.get('amount') }}</p>
 				</div>
 			</div>
