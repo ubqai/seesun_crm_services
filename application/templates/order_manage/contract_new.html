@@ -10,7 +10,7 @@
         <p class="contents-header-p text-sm">contracts</p>
     </div>
     <div class="separator"><span></span></div>
-		<div class="widget">
+		<div id="new-contract" class="widget">
     <form class="form form-horizontal" method="post" url="{{ url_for('order_manage.contract_new', id=order.id) }}"
           role="form" enctype="multipart/form-data">
         <div class="widget_contents padding-0 item-wrapper">
@@ -73,7 +73,7 @@
 													<tr>
 															<th>产品名</th>
 															<th>规格</th>
-                                                            <th>指定批次号</th>
+                              <th>指定批次号</th>
 															<th>数量(㎡)</th>
 															<th>*单价</th>
 															<th>*总价</th>
@@ -85,14 +85,14 @@
 													<tr>
 															<td><a class="table-link">{{ content.product_name }}</a></td>
 															<td>{{ content.sku_specification }}</td>
-                                                            <td>
-                                                                {% if not (content.batch_info == {} or content.batch_info == None) %}
-                                                                    {{ content.batch_info.get('batch_no') }}
-                                                                    (经销商：{{ content.batch_info.get('dealer') }})
-                                                                {% endif %}
-                                                            </td>
+															<td>
+																	{% if not (content.batch_info == {} or content.batch_info == None) %}
+																			{{ content.batch_info.get('batch_no') }}
+																			(经销商：{{ content.batch_info.get('dealer') }})
+																	{% endif %}
+															</td>
 															<td>{{ content.number }}</td>
-															<td><input class="form-control" name="{{ content.id }}price"></td>
+															<td><input class="form-control price" name="{{ content.id }}price"></td>
 															<td><input class="form-control" name="{{ content.id }}amount"></td>
 															<td><input class="form-control" name="{{ content.id }}memo"></td>
 													</tr>
@@ -109,6 +109,16 @@
     </form>
 		</div>
 </div>
+
+<script>
+	$(".price").keyup(function(){
+		var price=$(this).val();
+		var amount=parseInt($(this).parent().prev().html());
+		var amount=price*amount;
+	  $(this).parent().next().children().val(amount);
+	})
+
+</script>
 
 {% endblock %}
 

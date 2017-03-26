@@ -7,18 +7,23 @@
 
 	<div class="wrapper">
 		
-		<div class="clearfix top-gap-2">
-			<div class="selection col-6">
-				<p class="text-sm">类目：</p>
-				<select id="category-select" class="form-control">
-					<option>all</option>
-				</select>
-			</div>
-			<div class="selection col-6">
-				<p class="text-sm">产品：</p>
-				<select id="product-select" class="form-control">
-				</select>
-			</div>
+		<div class="wrapper-style top-gap-3">
+				<div class="wrapper-header"><span class="wrapper-header-title">根据产品搜索</span><span class="wrapper-header-icon glyphicon glyphicon-search pull-right"></span></div>
+				<div class="wrapper-inner">
+						<div class="clearfix">
+							<div class="selection col-6">
+									<p class="text-sm">类目：</p>
+									<select id="category-select" class="form-control">
+											<option>all</option>
+									</select>
+							</div>
+							<div class="selection col-6">
+									<p class="text-sm">产品：</p>
+									<select id="product-select" class="form-control">
+									</select>
+							</div>
+						</div>
+				</div>
 		</div>
 	
 	{% for category in categories %}

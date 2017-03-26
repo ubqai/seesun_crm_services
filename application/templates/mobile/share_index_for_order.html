@@ -3,19 +3,24 @@
 {% block content %}
 {{ header('共享库存查询') }}
 <div class="main-content">
-    <div class="clearfix top-gap-2">
-        <div class="selection col-6">
-            <p class="text-sm">类目：</p>
-            <select id="category-select" class="form-control">
-                <option>all</option>
-            </select>
-        </div>
-        <div class="selection col-6">
-            <p class="text-sm">产品：</p>
-            <select id="product-select" class="form-control">
-            </select>
-        </div>
-    </div>
+		<div class="wrapper-style top-gap-3">
+				<div class="wrapper-header"><span class="wrapper-header-title">根据产品搜索</span><span class="wrapper-header-icon glyphicon glyphicon-search pull-right"></span></div>
+				<div class="wrapper-inner">
+						<div class="clearfix">
+							<div class="selection col-6">
+									<p class="text-sm">类目：</p>
+									<select id="category-select" class="form-control">
+											<option>all</option>
+									</select>
+							</div>
+							<div class="selection col-6">
+									<p class="text-sm">产品：</p>
+									<select id="product-select" class="form-control">
+									</select>
+							</div>
+						</div>
+				</div>
+		</div>
     <form style="margin-top:2.5rem;" action="{{ url_for('stocks_share_for_order', area_id=area_id) }}" method="get">
         <div class="wrapper-style top-gap-3">
             <div class="wrapper-header"><span class="wrapper-header-title">根据SKU代码搜索</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
@@ -32,7 +37,7 @@
         <input type="hidden" name="area_id" value="{{ area_id }}">
 		<div class="storage-block clearfix">
 		{% for batch in batch_infos %}
-			<div class="col-6-gap storage-sku js-wrapper js-{{ batch.get('product_name') }}">
+			<div class="col-6-gap storage-sku js-wrapper js-{{ batch.get('product_name') }} js-{{ batch.get('category_name') }}">
 				<p class="text-center light-font-md p-title">{{ batch.get('city') }}</p>
 				<div class="p-content">
 					<p class="light-font-sm">
@@ -94,51 +99,51 @@
 
 </div>
 <script>
-	var categories=[];
+	$(function(){
+		var categories=[];
 
-	{% for category in categories %}
-		{% with products_json = load_products(category.get('category_id')) %}
-			{% for product_json in products_json %}
-			 if(categories["{{ category.get('category_name') }}"]===undefined){
-				categories["{{ category.get('category_name') }}"]=[];
-				categories["{{ category.get('category_name') }}"].push("all");
-				categories["{{ category.get('category_name') }}"].push("{{ product_json.get('name') }}");
-			 }else{
-				categories["{{ category.get('category_name') }}"].push("{{ product_json.get('name') }}");
-			 }
-			{% endfor %}
-		{% endwith %}
-	{% endfor %}
+		{% for category in categories %}
+			{% with products_json = load_products(category.get('category_id')) %}
+				{% for product_json in products_json %}
+				 if(categories["{{ category.get('category_name') }}"]===undefined){
+					categories["{{ category.get('category_name') }}"]=[];
+					categories["{{ category.get('category_name') }}"].push("all");
+					categories["{{ category.get('category_name') }}"].push("{{ product_json.get('name') }}");
+				 }else{
+					categories["{{ category.get('category_name') }}"].push("{{ product_json.get('name') }}");
+				 }
+				{% endfor %}
+			{% endwith %}
+		{% endfor %}
 
-	for(var i in categories){
-		var option=$("<option>"+i+"</option>")
-		$("#category-select").append(option);
-	}
-
-	$("#category-select").change(function(e){
-		$("#product-select").html("");
-		var value=$(this).val();
-		for(var i in categories[value]){
-			var option=$("<option>"+categories[value][i]+"</option>");
-			$("#product-select").append(option);
+		for(var i in categories){
+			var option=$("<option>"+i+"</option>")
+			$("#category-select").append(option);
 		}
-		if(value==="all"){
-			$(".js-wrapper").removeClass("hidden")
-		}else{
-			$(".js-wrapper").removeClass("hidden").not(".js-"+value).addClass("hidden");
-		}
-	});
 
-	$("#product-select").change(function(e){
-		var category=$("#category-select").val();
-		var value=$(this).val();
-		if(value==="all"){
-			$(".js-"+category).removeClass("hidden")
-		}else{
-			$(".js-wrapper").removeClass("hidden").not(".js-"+value).addClass("hidden");
-		}
-	});
-	
-	
+		$("#category-select").change(function(e){
+			$("#product-select").html("");
+			var value=$(this).val();
+			for(var i in categories[value]){
+				var option=$("<option>"+categories[value][i]+"</option>");
+				$("#product-select").append(option);
+			}
+			if(value==="all"){
+				$(".js-wrapper").removeClass("hidden")
+			}else{
+				$(".js-wrapper").removeClass("hidden").not(".js-"+value).addClass("hidden");
+			}
+		});
+
+		$("#product-select").change(function(e){
+			var category=$("#category-select").val();
+			var value=$(this).val();
+			if(value==="all"){
+				$(".js-"+category).removeClass("hidden")
+			}else{
+				$(".js-wrapper").removeClass("hidden").not(".js-"+value).addClass("hidden");
+			}
+		});
+	})
 </script>
 {% endblock %}
