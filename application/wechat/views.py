@@ -15,7 +15,7 @@ def mobile_verification():
     if request.method == 'POST':
         try:
             qrcode_token = request.form.get("text-verification", None)
-            if qrcode_token is None:
+            if qrcode_token is None or qrcode_token == "":
                 raise ValueError("请传入扫描结果")
 
             app.logger.info("wechat.mobile_verification: [%s]", qrcode_token)
@@ -28,7 +28,7 @@ def mobile_verification():
                 raise ValueError("二维码记录异常")
 
             flash('校验成功', 'success')
-            return redirect(url_for('mobile_user_logout', id=contract.order_id))
+            return render_template(url_for('mobile_user_logout', id=contract.order_id))
         except Exception as e:
             flash('校验失败,%s' % e)
             return redirect(url_for('wechat.mobile_verification'))
