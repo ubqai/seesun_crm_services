@@ -205,8 +205,8 @@ class WechatAccessToken(db.Model, DbBaseOperation):
 class WechatCall:
     # 创建自定义菜单
     @classmethod
-    def createMenu(cls, is_test=TEST_MODE):
-        print("createMenu is_test: %s" % is_test)
+    def create_menu(cls, is_test=TEST_MODE):
+        print("create_menu is_test: %s" % is_test)
         if is_test is False:
             use_appid = WECHAT_APPID
         else:
@@ -264,8 +264,8 @@ class WechatCall:
 
     # 删除自定义菜单
     @classmethod
-    def deleteMenu(cls, is_test=TEST_MODE):
-        print("deleteMenu is_test: %s" % is_test)
+    def delete_menu(cls, is_test=TEST_MODE):
+        print("delete_menu is_test: %s" % is_test)
 
         url = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=%s" % (
             WechatAccessToken.getTokenByType("access_token", is_test))
@@ -301,3 +301,81 @@ class WechatCall:
             raise ValueError("get failure :" + res_json.get("errmsg", "unknown errmsg"))
 
         return res_json.get("openid", "")
+
+    # 推送消息
+    @classmethod
+    def send_text_to_user(cls, user_id, msg, is_test=TEST_MODE):
+        if not user_id or not msg:
+            raise ValueError("user_id and msg can not null")
+
+        url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s" % (
+            WechatAccessToken.getTokenByType("access_token", is_test))
+
+        for wui in WechatUserInfo.query.filter_by(user_id=user_id).all():
+            try:
+                headers = {'content-type': 'application/json'}
+                post_params = json.dumps({
+                    "touser": wui.open_id,
+                    "msgtype": "text",
+                    "text": {
+                        "content": msg.encode("utf-8").decode("latin1"),
+                    }
+                }, ensure_ascii=False)
+
+                app.logger.info("send_text_to_user params : [" + post_params + "]")
+                response = requests.post(url, data=post_params, headers=headers)
+
+                if response.status_code != 200:
+                    raise ConnectionError("get url failure %d" % response.status_code)
+
+                res_json = response.json()
+
+                if res_json.get("errcode", 0) != 0:
+                    app.logger.info(res_json)
+                    raise ValueError(res_json.get("errcode"))
+
+            except Exception as e:
+                app.logger.info("send_text_to_user failure %s" % e)
+
+    # 推送消息模板
+    @classmethod
+    def send_template_to_user(cls, user_id, msg, is_test=TEST_MODE):
+        if not user_id or not msg:
+            raise ValueError("user_id and msg can not null")
+
+        url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s" % (
+            WechatAccessToken.getTokenByType("access_token", is_test))
+
+        for wui in WechatUserInfo.query.filter_by(user_id=user_id).all():
+            try:
+                headers = {'content-type': 'application/json'}
+                post_params = json.dumps({
+                    "touser": wui.open_id,
+                    "template_id": "LQPFR1MtOzjMUft-eEtVJ3ZEP8D8s5K0oF76X01n2Qg",
+                    # "url": "",   # 模板跳转地址
+                    "data": {
+                        "var_1": {
+                            "value": msg.encode("utf-8").decode("latin1"),
+                            "color": "#173177"
+                        },
+                        "var_2": {
+                            "value": "",
+                            "color": "#173177"
+                        }
+                    }
+                }, ensure_ascii=False)
+
+                app.logger.info("send_template_to_user params : [" + post_params + "]")
+                response = requests.post(url, data=post_params, headers=headers)
+
+                if response.status_code != 200:
+                    raise ConnectionError("get url failure %d" % response.status_code)
+
+                res_json = response.json()
+
+                if res_json.get("errcode", 0) != 0:
+                    app.logger.info(res_json)
+                    raise ValueError(res_json.get("errcode"))
+
+            except Exception as e:
+                app.logger.info("send_template_to_user failure %s" % e)
