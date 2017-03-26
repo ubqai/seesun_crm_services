@@ -560,6 +560,7 @@ def stocks_share_for_order(area_id):
                                     for inv in invs:
                                         for batch in inv.get('batches'):
                                             batch_infos.append({"product_name": product_json.get('name'),
+                                                                "category_name": category.get('category_name'),
                                                                 "sku_specification": sku_option,
                                                                 "thumbnail": sku.get('thumbnail'),
                                                                 "user": user.nickname,
@@ -591,6 +592,7 @@ def stocks_share_for_order(area_id):
                                 for inv in invs:
                                     for batch in inv.get('batches'):
                                         batch_infos.append({"product_name": product_json.get('name'),
+                                                            "category_name": category.get('category_name'),
                                                             "sku_specification": sku_option,
                                                             "thumbnail": sku.get('thumbnail'),
                                                             "user": "公司",
