@@ -5,12 +5,7 @@ from ..helpers import object_list
 web_access_log = Blueprint('web_access_log', __name__, template_folder='templates')
 
 
-@web_access_log.route('/')
-def root():
-    return 'web access log homepage!'
-
-
-@web_access_log.route('/index')
+@web_access_log.route('/index/')
 def index():
     query = WebAccessLog.query
     query = filter_by_request_args(query)
@@ -22,7 +17,7 @@ def index():
 @web_access_log.route('/statistics')
 def statistics():
     module_count_list = []
-    for i in range(13):
+    for i in range(1, 13):
         query = access_query(i)
         query = filter_by_request_args(query)
         module_count_list.append(query.count())
@@ -54,7 +49,9 @@ def access_query(module_no=None):
             return WebAccessLog.query.filter(
                 WebAccessLog.request_path.ilike('/mobile/share') |
                 WebAccessLog.request_path.ilike('/mobile/share_index/%') |
+                WebAccessLog.request_path.ilike('/mobile/share_index_for_order/%') |
                 WebAccessLog.request_path.ilike('/mobile/share_storage_for_detail') |
+                WebAccessLog.request_path.ilike('/mobile/share_storage_for_region') |
                 WebAccessLog.request_path.ilike('/mobile/upload_share_index') |
                 WebAccessLog.request_path.ilike('/mobile/new_share_inventory/%'))
         elif module_no == 4:
