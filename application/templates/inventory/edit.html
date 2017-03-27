@@ -19,12 +19,16 @@
 			<div class="widget_contents padding-0 item-wrapper">
                 <div class="form-item item-template">
                     <div class="form-item-2 col-3">
-                        <span>生产日期</span>
+                        <span>*生产日期</span>
                         <input class="form-control datetimePicker" name="production_date" value="{{ inventory.get('production_date') }}">
                     </div>
                     <div class="form-item-2 col-3">
-                        <span>库存数量(㎡)</span>
+                        <span>*库存数量(㎡)</span>
                         <input class="form-control" name="stocks" value="{{ inventory.get('stocks') }}">
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span>价格</span>
+                        <input class="form-control" name="price" value="{{ '' if inventory.get('price') == None else inventory.get('price') }}">
                     </div>
                 </div>
 			</div>

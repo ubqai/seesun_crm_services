@@ -24,6 +24,7 @@
                         <th>库存类型</th>
 						<th>创建日期</th>
 						<th>生产日期</th>
+                        <th>价格</th>
 						<th>库存量(㎡)</th>
 						<th>操作</th>
 					</tr>
@@ -40,6 +41,7 @@
                             <td>{{ {1: "正常库存", 2: "尾货库存"}.get(inv.get("batches")[i-1].get('type')) }}</td>
 							<td>{{ inv.get("batches")[i-1].get('created_at') }}</td>
 							<td>{{ inv.get("batches")[i-1].get('production_date') }}</td>
+                            <td>{{ '' if inv.get("batches")[i-1].get('price') == None else inv.get("batches")[i-1].get('price') }}</td>
 							<td>{{ inv.get("batches")[i-1].get('stocks') }}</td>
 							<td>
 									<a class="table-edit text-info" href="{{ url_for('inventory.edit', id = inv.get('batches')[i-1].get('inv_id'), from = 'company' ) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;修改</a>

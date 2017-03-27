@@ -25,11 +25,13 @@ def new(id):
     if request.method == 'POST':
         user_id = request.form.get('user_id')
         inv_type = request.form.get('inv_type')
-        production_date = request.form.get('production_date','')
+        production_date = request.form.get('production_date', '')
         batch_no = 'BT%s%s' % (datetime.datetime.now().strftime('%y%m%d%H%M%S'), inv_type)
         stocks = request.form.get('stocks', '')
+        price = request.form.get('price', '')
         user_name = '公司'
-        params = {'user_id': user_id, 'inv_type': inv_type, 'production_date': production_date, 'stocks': stocks}
+        params = {'user_id': user_id, 'inv_type': inv_type, 'production_date': production_date,
+                  'stocks': stocks, "price": price}
         current_app.logger.info(params)
         if production_date == '':
             flash('生产日期不能为空', 'danger')
@@ -43,10 +45,21 @@ def new(id):
         if Decimal(stocks) <= Decimal("0"):
             flash('库存数量必须大于0', 'danger')
             return render_template('inventory/new.html', id=id, params=params)
+        if inv_type == '2' and price == '':
+            flash('尾货库存价格必须填写', 'danger')
+            return render_template('inventory/new.html', id=id, params=params)
+        if not price == '':
+            if not is_number(price):
+                flash('价格必须为数字', 'danger')
+                return render_template('inventory/new.html', id=id, params=params)
+            if Decimal(price) <= Decimal("0"):
+                flash('价格必须大于0', 'danger')
+                return render_template('inventory/new.html', id=id, params=params)
         data = {'inventory_infos': [{"sku_id": id, "inventory": [{"type": inv_type, "user_id": user_id,
                                                                   "user_name": user_name,
                                                                   "production_date": production_date,
                                                                   "batch_no": batch_no,
+                                                                  "price": price,
                                                                   "stocks": stocks}]}]}
         response = create_inventory(data)
         if response.status_code == 201:
@@ -64,6 +77,7 @@ def edit(id):
     if request.method == 'POST':
         production_date = request.form.get('production_date', '')
         stocks = request.form.get('stocks', '')
+        price = request.form.get('price', '')
         if production_date == '':
             flash('生产日期不能为空', 'danger')
             return render_template('inventory/edit.html', id=id, inventory=inv)
@@ -76,7 +90,17 @@ def edit(id):
         if Decimal(stocks) <= Decimal("0"):
             flash('库存数量必须大于0', 'danger')
             return render_template('inventory/edit.html', id=id, inventory=inv)
-        data = {"production_date": production_date, "stocks": str(Decimal(stocks))}
+        if inv.get('type') == 2 and price == '':
+            flash('尾货库存价格必须填写', 'danger')
+            return render_template('inventory/edit.html', id=id, inventory=inv)
+        if not price == '':
+            if not is_number(price):
+                flash('价格必须为数字', 'danger')
+                return render_template('inventory/edit.html', id=id, inventory=inv)
+            if Decimal(price) <= Decimal("0"):
+                flash('价格必须大于0', 'danger')
+                return render_template('inventory/edit.html', id=id, inventory=inv)
+        data = {"production_date": production_date, "stocks": str(Decimal(stocks)), "price": price}
         response = update_inventory(id, data)
         if response.status_code == 200:
             flash('库存修改成功', 'success')
