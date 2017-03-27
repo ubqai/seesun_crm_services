@@ -7,7 +7,7 @@ from ..models import *
 from ..helpers import gen_qrcode, gen_random_string
 from .forms import ContractForm, TrackingInfoForm1, TrackingInfoForm2
 from ..inventory.api import load_inventories_by_code, update_sku_by_code
-from .utils import is_number
+from application.utils import is_number
 from decimal import Decimal
 
 order_manage = Blueprint('order_manage', __name__, template_folder='templates')

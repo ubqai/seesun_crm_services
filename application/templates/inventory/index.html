@@ -21,8 +21,9 @@
 						<th>产品目录</th>
 						<th>产品</th>
 						<th>Sku</th>
-						<th>库存</th>
-            <th>已下单数量</th>
+						<th>正常库存(㎡)</th>
+                        <th>尾货库存(㎡)</th>
+                        <th>已下单数量(㎡)</th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -59,7 +60,8 @@
 																{% endfor %}
 														{% endfor %}
 												</td>
-												<td>{{ sku.get('stocks') }}</td>
+												<td>{{ sku.get('normal_stocks') }}</td>
+                                                <td>{{ sku.get('tailory_stock') }}</td>
 												<td>{{ sku.get('stocks_for_order') }}</td>
 												<td>
 														<a class="table-edit text-info" href="{{ url_for('inventory.list_invs', id = sku.get('sku_id')) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;查看详情</a>

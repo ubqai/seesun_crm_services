@@ -19,11 +19,12 @@
 				<thead>
 					<tr>
 						<th>经销商</th>
-						<th>库存量</th>
+						<th>库存量(㎡)</th>
 						<th>批次号</th>
+                        <th>库存类型</th>
 						<th>创建日期</th>
 						<th>生产日期</th>
-						<th>库存量</th>
+						<th>库存量(㎡)</th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -36,6 +37,7 @@
 								<td rowspan={{inv.get("batches")|length}}>{{ inv.get('total') }}</td>
 							{% endif %}
 							<td>{{ inv.get("batches")[i-1].get('batch_no') }}</td>
+                            <td>{{ {1: "正常库存", 2: "尾货库存"}.get(inv.get("batches")[i-1].get('type')) }}</td>
 							<td>{{ inv.get("batches")[i-1].get('created_at') }}</td>
 							<td>{{ inv.get("batches")[i-1].get('production_date') }}</td>
 							<td>{{ inv.get("batches")[i-1].get('stocks') }}</td>
