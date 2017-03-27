@@ -57,8 +57,8 @@ def load_inventories_by_code(code):
         return []
 
 
-def load_user_inventories(user_id, sku_id):
-    url = '%s/%s/sku/%s/%s/inventories' % (site, version, user_id, sku_id)
+def load_user_inventories(user_id, sku_id, inv_type):
+    url = '%s/%s/sku/%s/%s/%s/inventories' % (site, version, user_id, sku_id, inv_type)
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()

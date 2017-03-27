@@ -124,6 +124,11 @@ def mobile_storage():
     return render_template('mobile/storage.html', categories=categories, products_hash=products_hash)
 
 
+@app.route("/mobile/storage_index")
+def storage_index():
+    return render_template('mobile/storage_index.html')
+
+
 @app.route('/mobile/storage_show/<int:product_id>')
 def mobile_storage_show(product_id):
     skus = load_skus(product_id)
@@ -556,7 +561,7 @@ def stocks_share_for_order(area_id):
                                         sku_option = "%s %s" % (sku_option, value)
                                 if request.args.get("sku_code", '') == '' or \
                                         (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
-                                    invs = load_user_inventories(user.id, sku.get('sku_id'))
+                                    invs = load_user_inventories(user.id, sku.get('sku_id'), "2")
                                     for inv in invs:
                                         for batch in inv.get('batches'):
                                             batch_infos.append({"product_name": product_json.get('name'),
@@ -570,6 +575,7 @@ def stocks_share_for_order(area_id):
                                                                 "batch_no": batch.get('batch_no'),
                                                                 "batch_id": batch.get('inv_id'),
                                                                 "sku_code": sku.get('code'),
+                                                                "price": batch.get('price'),
                                                                 "stocks": batch.get('stocks')})
     # 公司库存
     for category in categories:
@@ -588,7 +594,7 @@ def stocks_share_for_order(area_id):
                                     sku_option = "%s %s" % (sku_option, value)
                             if request.args.get("sku_code", '') == '' or \
                                     (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
-                                invs = load_user_inventories("0", sku.get('sku_id'))
+                                invs = load_user_inventories("0", sku.get('sku_id'), "2")
                                 for inv in invs:
                                     for batch in inv.get('batches'):
                                         batch_infos.append({"product_name": product_json.get('name'),
@@ -596,12 +602,13 @@ def stocks_share_for_order(area_id):
                                                             "sku_specification": sku_option,
                                                             "thumbnail": sku.get('thumbnail'),
                                                             "user": "公司",
-                                                            "city": "公司库存",
+                                                            "city": "公司工程剩余库存",
                                                             "sku_id": sku.get('sku_id'),
                                                             "production_date": batch.get('production_date'),
                                                             "batch_no": batch.get('batch_no'),
                                                             "batch_id": batch.get('inv_id'),
                                                             "sku_code": sku.get('code'),
+                                                            "price": batch.get('price'),
                                                             "stocks": batch.get('stocks')})
     return render_template('mobile/share_index_for_order.html', batch_infos=batch_infos, area_id=area_id,
                            categories=categories)

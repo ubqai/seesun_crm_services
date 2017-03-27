@@ -53,13 +53,10 @@
 						生产日期 ：{{ batch.get('production_date') }}
 					</p>
                     <p class="light-font-sm">
-						批次号 ：{{ batch.get('batch_no') }}
+						价格 ：{{ '' if batch.get('price')==None else "%s元" % batch.get('price') }}
 					</p>
                     <p class="light-font-sm">
-						库存代码 ：{{ batch.get('sku_code') }}
-					</p>
-                    <p class="light-font-sm">
-						库存量 ：{{ batch.get('stocks') }}
+						库存量 ：{{ batch.get('stocks') }}㎡
 					</p>
 				</div>
 				<div class="p-input">

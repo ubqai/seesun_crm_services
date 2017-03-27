@@ -13,7 +13,7 @@
 										{% with skus_json = load_skus(product_json.get('product_id')) %}
 												{% if len(skus_json.get('skus')) > 0 %}
 														{% for sku in skus_json.get('skus') %}
-																{% with invs = load_user_inventories(user.id,sku.get('sku_id')) %}
+																{% with invs = load_user_inventories(user.id,sku.get('sku_id'), "2") %}
 																		{% for inv in invs %}
 																				{% for batch in inv.get('batches') %}
 																					<div class="wrapper-style rect top-gap-2">
