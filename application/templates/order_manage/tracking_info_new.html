@@ -33,74 +33,78 @@
         </div>
 
 
-        <div class="widget">
+        <div class="widget top-gap-3">
             <div class="widget_header">
                 <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;选择库存及填写生产数量</h4>
             </div>
             <div class="widget_contents padding-0 bot-gap-3">
-                <div class="form-item inline-2">
-                    {% for order_content in contract.order.order_contents %}
-                        <div class="form-item">
-                            <div class="sub-form-item">
-                                <span>产品名--SKU:</span>
-                                <span>{{ order_content.product_name }}:{{ order_content.sku_specification }}</span>
-                            </div>
-                            <div class="sub-form-item">
-                                <span>订单数量:</span>
-                                <span>{{ order_content.number }}㎡</span>
-                            </div>
-                            {% if not (order_content.batch_info == {} or order_content.batch_info == None) %}
-                                <div class="sub-form-item">
-                                    <span>指定批次号:</span>
-                                    <span>{{ order_content.batch_info.get('batch_no') }}(经销商:{{ order_content.batch_info.get('dealer') }})</span>
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div class="form-item">
-                            <div class="sub-form-item">
-                                <span>需生产数量(㎡):</span>
-                                <span><input class="form-control" name="{{ order_content.sku_code }}_production_num"></span>
-                            </div>
-                        </div>
-                        <div class="widget_contents padding-0">
-                            <table class="tables">
-                                <thead>
-                                    <tr>
-                                        <th>经销商</th>
-                                        <th>库存量(㎡)</th>
-                                        <th>批次号</th>
-                                        <th>库存类型</th>
-                                        <th>创建日期</th>
-                                        <th>生产日期</th>
-                                        <th>库存量(㎡)</th>
-                                        <th>填写库存(㎡)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {% for inv in load_inventories_by_code(order_content.sku_code) %}
-                                    {% for i in range(1,(inv.get("batches")|length+1)) %}
-                                        <tr>
-                                            {% if i==1 %}
-                                                <td rowspan={{inv.get("batches")|length}}>{{ inv.get('user_name') }}</td>
-                                                <td rowspan={{inv.get("batches")|length}}>{{ inv.get('total') }}</td>
-                                            {% endif %}
-                                            <td>{{ inv.get("batches")[i-1].get('batch_no') }}</td>
-                                            <td>{{ {1: "正常库存", 2: "尾货库存"}.get(inv.get("batches")[i-1].get('type')) }}</td>
-                                            <td>{{ inv.get("batches")[i-1].get('created_at') }}</td>
-                                            <td>{{ inv.get("batches")[i-1].get('production_date') }}</td>
-                                            <td>{{ inv.get("batches")[i-1].get('stocks') }}</td>
-                                            <td><input class="form-control" name="{{ order_content.sku_code }}_{{ inv.get("batches")[i-1].get('inv_id') }}_num"></td>
-                                            <input type="hidden" name="{{ order_content.sku_code }}_{{ inv.get("batches")[i-1].get('inv_id') }}_username" value="{{ inv.get('user_name') }}">
-                                            <input type="hidden" name="{{ order_content.sku_code }}_{{ inv.get("batches")[i-1].get('inv_id') }}_batch_no" value="{{ inv.get("batches")[i-1].get('batch_no') }}">
-                                            <input type="hidden" name="{{ order_content.sku_code }}_{{ inv.get("batches")[i-1].get('inv_id') }}_production_date" value="{{ inv.get("batches")[i-1].get('production_date') }}">
-                                        </tr>
-                                    {% endfor %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% endfor %}
-                </div>
+								{% for order_content in contract.order.order_contents %}
+										<div class="separator-3"></div>
+										<div class="title-style">
+											<span><b>产品名</b>: &nbsp; {{ order_content.product_name }} &nbsp;&nbsp;&nbsp;&nbsp; <b>SKU</b>: &nbsp; {{ order_content.sku_specification }}</span>
+											<i class="pull-right	glyphicon glyphicon-list-alt"></i>
+										</div>
+										<div class="form-item">
+												<div class="sub-form-item">
+														<span>订单数量:</span>
+														<span>{{ order_content.number }}㎡</span>
+												</div>
+												{% if not (order_content.batch_info == {} or order_content.batch_info == None) %}
+														<div class="sub-form-item">
+																<span>指定批次号:</span>
+																<span>{{ order_content.batch_info.get('batch_no') }}(经销商:{{ order_content.batch_info.get('dealer') }})</span>
+														</div>
+												{% endif %}
+												<div class="sub-form-item">
+														<span>需生产数量(㎡):</span>
+														<span><input class="form-control" name="{{ order_content.sku_code }}_production_num"></span>
+												</div>
+										</div>
+			
+										{% if load_inventories_by_code(order_content.sku_code)|length>0 %}
+											<div class="widget_contents padding-0">
+													<table class="tables">
+															<thead>
+																	<tr>
+																			<th>经销商</th>
+																			<th>库存量(㎡)</th>
+																			<th>批次号</th>
+																			<th>库存类型</th>
+																			<th>创建日期</th>
+																			<th>生产日期</th>
+																			<th>库存量(㎡)</th>
+																			<th>填写库存(㎡)</th>
+																	</tr>
+															</thead>
+															<tbody>
+															{% for inv in load_inventories_by_code(order_content.sku_code) %}
+																	{% for i in range(1,(inv.get("batches")|length+1)) %}
+																			<tr>
+																					{% if i==1 %}
+																							<td rowspan={{inv.get("batches")|length}}>{{ inv.get('user_name') }}</td>
+																							<td rowspan={{inv.get("batches")|length}}>{{ inv.get('total') }}</td>
+																					{% endif %}
+																					<td>{{ inv.get("batches")[i-1].get('batch_no') }}</td>
+																					<td>{{ {1: "正常库存", 2: "尾货库存"}.get(inv.get("batches")[i-1].get('type')) }}</td>
+																					<td>{{ inv.get("batches")[i-1].get('created_at') }}</td>
+																					<td>{{ inv.get("batches")[i-1].get('production_date') }}</td>
+																					<td>{{ inv.get("batches")[i-1].get('stocks') }}</td>
+																					<td><input class="form-control" name="{{ order_content.sku_code }}_{{ inv.get("batches")[i-1].get('inv_id') }}_num"></td>
+																					<input type="hidden" name="{{ order_content.sku_code }}_{{ inv.get('batches')[i-1].get('inv_id') }}_username" value="{{ inv.get('user_name') }}">
+																					<input type="hidden" name="{{ order_content.sku_code }}_{{ inv.get('batches')[i-1].get('inv_id') }}_batch_no" value="{{ inv.get('batches')[i-1].get('batch_no') }}">
+																					<input type="hidden" name="{{ order_content.sku_code }}_{{ inv.get('batches')[i-1].get('inv_id') }}_production_date" value="{{ inv.get('batches')[i-1].get('production_date') }}">
+																			</tr>
+																	{% endfor %}
+															{% endfor %}
+															</tbody>
+													</table>
+											</div>
+										{% else %}
+											<div style="padding:10px 20px">
+												<div class="alert alert-info bot-gap-0 text-center">暂无库存信息</div>
+											</div>
+										{% endif %}
+								{% endfor %}
 
             </div>
         </div>

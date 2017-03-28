@@ -74,12 +74,25 @@
 	width:20% !important;
 	float:left !important;
 }
+.col-5-re{
+	width:80% !important;
+	float:left !important;	
+}
 /*custom*/
 .left-gap-28{
 	margin-left:28px !important;
 }
 .padding-0{
 	padding:0px !important;
+}
+.border-0{
+	border:none !important;
+}
+.border-left-1{
+	border-left:1px solid #ddd !important;
+}
+.radius-0{
+	border-radius:0px !important;
 }
 .text-left-i{
 	text-align:left !important;
@@ -111,6 +124,20 @@
 	  z-index: 1000000;
     position: absolute;
     width: 100%;
+}
+.bg-grass{
+	background-color:#A0D468;
+	color:#fff !important;
+}
+.separator-2 {
+    height: 1px;
+    background: #eee;
+    margin: 35px;
+}
+.separator-3 {
+    height: 20px;
+    background: #eee;
+    box-shadow: inset 0px 0px 3px 1px rgba(0,0,0,0.2);
 }
 /*layout*/
 body{
@@ -473,6 +500,7 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
     border-radius: 0 0 3px 3px;
     box-shadow: inset 0 1px 0 #ffffff;
     padding: 15px;
+		overflow:auto;
 }
 .tables {
     width: 100%;
@@ -489,7 +517,7 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
 }
 .tables th {
     color: #9D9D9D;
-    font-size: 13px;
+    font-size: 12px;
     text-shadow: 0 1px 0 #FFFFFF;
     font-weight: bold;
     line-height: 25px;
@@ -503,11 +531,12 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
 }
 .tables td {
     color: #696969;
-    font-size: 14px;
+    font-size: 12px;
     text-shadow: 0 1px 0 #FFFFFF;
     font-weight: normal;
     line-height: 32px;
 		text-align:center;
+		white-space:nowrap;
 }
 .too-long-td{
 		max-width: 400px;
@@ -548,7 +577,7 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
 .form-label {
     display: table-cell;
     color: #8f8f8f;
-    font-size: 13px;
+    font-size: 12px;
     text-shadow: 0 1px 0 #FFFFFF;
     width: 130px;
     padding-left: 26px;
@@ -565,17 +594,19 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
     float:left;
     width: 33.3%;
     color: #8f8f8f;
-    font-size: 13px;
+    font-size: 12px;
     text-shadow: 0 1px 0 #FFFFFF;
     padding-left: 26px;
 }
 .sub-form-item>span:first-child {
     float:left;
     width: 34.3%;
+		line-height:30px;
 }.sub-form-item>span:last-child {
     float:left;
     width: 65.6%;
 		word-break:break-all;
+		line-height:30px;
 }
 textarea.form-input{
 	height:120px
@@ -741,7 +772,7 @@ textarea.form-input{
     background: linear-gradient(to bottom, #fafafa 0%,#eaeaea 100%);
     padding-left: 6.5px;
     padding-top: 5px;
-    font-size: 13px;
+    font-size: 12px;
     color: #aaa;
     right: 16px;
     top: 6px;
@@ -761,9 +792,9 @@ textarea.form-input{
     background: linear-gradient(to bottom, #fafafa 0%,#eaeaea 100%);
     padding-left: 5.5px;
     padding-top: 5px;
-    font-size: 13px;
+    font-size: 12px;
     color: #aaa;
-    right: 13px;
+    right: 12px;
     top: 4px;
     cursor: pointer;
     transition: all 0.2s;
@@ -797,7 +828,7 @@ textarea.form-input{
 }
 .form-item-2 span {
     display: table-cell;
-    font-size: 13px;
+    font-size: 12px;
     width: 90px;
     border: 1px solid #ddd;
     background: linear-gradient(to bottom, #ffffff 0%,#f5f5f5 100%);
@@ -856,7 +887,7 @@ p.contract-subtitle {
 }
 .contract-footer-p {
     line-height: 32px;
-    font-size: 13px;
+    font-size: 12px;
     color: #5d5d5d;
     letter-spacing: 1px;
 }
@@ -930,7 +961,7 @@ p.contract-subtitle {
 /*2017/3/9*/
 .title-style{
     padding: 10px 20px;
-    background: #434a54;
+    background: #656D78;
     color: #fff;
 }
 
@@ -944,3 +975,4 @@ p.contract-subtitle {
     position: fixed;
     bottom: 0px;
 }
+

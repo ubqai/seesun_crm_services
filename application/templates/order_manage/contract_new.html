@@ -16,10 +16,6 @@
         <div class="widget_contents padding-0 item-wrapper">
             <div class="form-item item-template">
                 <div class="form-item-2 col-3">
-                    <span>*总金额</span>
-                    <input class="form-input form-control" name="amount" value="{{ params.get('amount', '') }}">
-                </div>
-                <div class="form-item-2 col-3">
                     <span>*交货期</span>
                     <input class="form-input form-control datetimePicker" name="delivery_time" value="{{ params.get('delivery_time', '') }}">
                 </div>
@@ -29,44 +25,45 @@
                 </div>
 
                 <div class="form-item-2 col-3">
-                    <span>物流费用</span>
-                    <input class="form-input form-control" name="logistics_costs" value="{{ params.get('logistics_costs', '') }}">
+                    <span>*物流费用</span>
+                    <input class="form-input form-control countAll-trigger tax-trigger" name="logistics_costs" value="{{ params.get('logistics_costs', '') }}">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>活铺费用</span>
-                    <input class="form-input form-control" name="live_floor_costs" value="{{ params.get('live_floor_costs', '') }}">
+                    <input class="form-input form-control countAll-trigger tax-trigger" name="live_floor_costs" value="{{ params.get('live_floor_costs', '') }}">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>自流平费用</span>
-                    <input class="form-input form-control" name="self_leveling_costs" value="{{ params.get('self_leveling_costs', '') }}">
+                    <input class="form-input form-control countAll-trigger tax-trigger" name="self_leveling_costs" value="{{ params.get('self_leveling_costs', '') }}">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>划线费用</span>
-                    <input class="form-input form-control" name="crossed_line_costs" value="{{ params.get('crossed_line_costs', '') }}">
+                    <input class="form-input form-control countAll-trigger tax-trigger" name="crossed_line_costs" value="{{ params.get('crossed_line_costs', '') }}">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>点粘费用</span>
-                    <input class="form-input form-control" name="sticky_costs" value="{{ params.get('sticky_costs', '') }}">
+                    <input class="form-input form-control countAll-trigger tax-trigger" name="sticky_costs" value="{{ params.get('sticky_costs', '') }}">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>全胶粘费用</span>
-                    <input class="form-input form-control" name="full_adhesive_costs" value="{{ params.get('full_adhesive_costs', '') }}">
-                </div>
-                <div class="form-item-2 col-3">
-                    <span>*耗损百分比</span>
-                    <input class="form-input form-control" name="material_loss_percent" value="{{ params.get('material_loss_percent', '') }}">
+                    <input class="form-input form-control countAll-trigger tax-trigger" name="full_adhesive_costs" value="{{ params.get('full_adhesive_costs', '') }}">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>其他费用</span>
-                    <input class="form-input form-control" name="other_costs" value="{{ params.get('other_costs', '') }}">
+                    <input class="form-input form-control countAll-trigger tax-trigger" name="other_costs" value="{{ params.get('other_costs', '') }}">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>税点</span>
-                    <input class="form-input form-control" name="tax_costs" value="{{ params.get('tax_costs', '') }}">
+                    <input class="form-input form-control countAll-trigger tax-trigger" name="tax_costs" value="{{ params.get('tax_costs', '') }}">
+                </div>
+								<div class="form-item-2 col-3">
+                    <span>税费</span>
+                    <input class="form-input form-control tax-price" readonly />
                 </div>
 
 								<br/>
-				<div class="clearfix"></div>
+								<div class="clearfix"></div>
+								<div class="separator-2"></div>
                 <div class="widget_contents padding-0 top-gap-2">
                     <table class="tables">
                         <thead>
@@ -77,7 +74,6 @@
                                 <th>数量(㎡)</th>
                                 <th>*单价</th>
                                 <th>*总价</th>
-                                <th>备注</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -92,15 +88,34 @@
                                         {% endif %}
                                 </td>
                                 <td>{{ content.number }}</td>
-                                <td><input class="form-control price" name="{{ content.id }}price"></td>
-                                <td><input class="form-control" name="{{ content.id }}amount"></td>
-                                <td><input class="form-control" name="{{ content.id }}memo"></td>
+                                <td><input class="form-control price countAll-trigger material-loss-trigger" name="{{ content.id }}price"></td>
+                                <td><input class="form-control product-amount" name="{{ content.id }}amount" readonly></td>                               
                             </tr>
+														<tr>
+															<td colspan='6' class="bg-grass padding-0">
+																<div class="col-5">备注</div>
+																<div class="col-5-re"><input class="form-control border-0 radius-0 border-left-1" name="{{ content.id }}memo" placeholder="请在这儿填写备注"></div>
+															</td>
+														</tr>
+														<tr><td colspan="6" style="background: url(/static/images/home-bg.gif)"><div class="separator"></div></td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-
+								<div class="separator-2"></div>
+								<div class="form-item-2 col-3">
+                    <span>*耗损百分比</span>
+                    <input class="form-input form-control countAll-trigger material-loss-trigger" name="material_loss_percent" value="{{ params.get('material_loss_percent', '') }}">
+                </div>
+								<div class="form-item-2 col-3">
+                    <span>耗损费用</span>
+                    <input class="form-input form-control material_loss_price" readonly>
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>*总金额</span>
+                    <input class="form-input form-control total-amount" name="amount" value="{{ params.get('amount', '') }}" readonly>
+                </div>
+								<div class="clearfix"></div>
                 <div class="text-right top-gap-1">
                     <button type="submit" class="btn btn-default my-btn">提交</button>
                 </div>
@@ -111,13 +126,71 @@
 </div>
 
 <script>
-	$(".price").keyup(function(){
-		var price=$(this).val();
-		var amount=parseInt($(this).parent().prev().html());
-		var amount=price*amount;
-	  $(this).parent().next().children().val(amount);
-	})
+	$(function(){
 
+		function sum_first(){
+		
+			var logistics=parseFloat($("input[name=logistics_costs]").val()==="" ? 0 : $("input[name=logistics_costs]").val());
+			var live_floor=parseFloat($("input[name=live_floor_costs]").val()==="" ? 0 : $("input[name=live_floor_costs]").val());
+			var self_leveling=parseFloat($("input[name=self_leveling_costs]").val()==="" ? 0 : $("input[name=self_leveling_costs]").val());
+			var crossed_line=parseFloat($("input[name=crossed_line_costs]").val()==="" ? 0 : $("input[name=crossed_line_costs]").val());
+			var sticky=parseFloat($("input[name=sticky_costs]").val()==="" ? 0 : $("input[name=sticky_costs]").val());
+			var full_adhesive=parseFloat($("input[name=full_adhesive_costs]").val()==="" ? 0 : $("input[name=full_adhesive_costs]").val());
+			var other=parseFloat($("input[name=other_costs]").val()==="" ? 0 : $("input[name=other_costs]").val());
+			
+			var sum_others=logistics+live_floor+self_leveling+crossed_line+sticky+full_adhesive+other;
+			
+			return sum_others;
+		}
+		
+		function sum_second(){
+		
+			var products=0;
+			$(".product-amount").each(function(index,ele){
+				var cost=parseFloat($(ele).val()==="" ? 0 : $(ele).val());
+				products+=cost;
+			});
+			
+			return products;
+		}
+
+		function countAll(){
+				
+			var sum_others=sum_first();
+			var tax=parseFloat($("input[name=tax_costs]").val()==="" ? 0 : $("input[name=tax_costs]").val());		
+			var tax_cost=sum_others*tax/100.00;
+			var after_tax=sum_others+tax_cost;
+			
+			var products=sum_second();
+			var material_loss_percent=parseFloat($("input[name=material_loss_percent]").val()==="" ? 0 : $("input[name=material_loss_percent]").val());			
+			var material_loss_cost=products*material_loss_percent/100.00;
+			var after_material_loss=products+material_loss_cost;
+			
+			var total_price=after_tax+after_material_loss;
+			
+			$(".total-amount").val(total_price.toFixed(2));
+		}
+		
+		$(".price").on("keyup",function(){
+			var price=$(this).val();
+			var amount=parseFloat($(this).parent().prev().html());
+			var amount=price*amount;
+			$(this).parent().next().children().val(amount);
+		});
+		
+		$(".countAll-trigger").on("keyup", countAll);
+		
+		$(".tax-trigger").on("keyup", function(){
+			var tax=$("input[name=tax_costs]").val();
+			$(".tax-price").val((tax*sum_first()/100).toFixed(2));
+		})
+		
+		$(".material-loss-trigger").on("keyup", function(){
+			var material_loss=$("input[name=material_loss_percent]").val();
+			$(".material_loss_price").val((material_loss*sum_second()/100).toFixed(2));
+		})
+
+	})
 </script>
 
 {% endblock %}
