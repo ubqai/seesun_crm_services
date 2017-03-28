@@ -164,8 +164,11 @@ def contract_edit(id):
         if request.form.get("offer_no") is None or request.form.get("offer_no") == '':
             flash('要约NO.必须填写', 'warning')
             return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
-        if not is_number(request.form.get("logistics_costs")):
-            flash('物流费用必须为数字', 'warning')
+        if not is_number(request.form.get("tax_costs")):
+            flash('税点必须为0-100之间的数字', 'warning')
+            return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
+        if Decimal(request.form.get("tax_costs")) > Decimal("100") or Decimal(request.form.get("tax_costs")) < Decimal("0"):
+            flash('税点必须为0-100之间的数字', 'warning')
             return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
         if not is_number(request.form.get("material_loss_percent")):
             flash('耗损百分比必须为0-100之间的数字', 'warning')
@@ -314,7 +317,7 @@ def tracking_info_new(contract_id):
             flash('物流状态创建成功', 'success')
             return redirect(url_for('order_manage.tracking_infos'))
         else:
-            flash('物流状态创建失败', 'danger')
+            flash('对接人姓名和电话必须填写', 'danger')
             return redirect(url_for('order_manage.tracking_info_new', contract_id = contract.id))
     else:
         form = TrackingInfoForm1()
