@@ -22,11 +22,11 @@
                     {{ form.contract_date(class = 'form-input form-control', value = contract.contract_date, disabled='') }}
                 </div>
                 <div class="form-item-2 col-3">
-                    <span>{{ form.receiver_name.label }}</span>
+                    <span>*{{ form.receiver_name.label }}</span>
                     {{ form.receiver_name(class = 'form-input form-control') }}
                 </div>
                 <div class="form-item-2 col-3">
-                    <span>{{ form.receiver_tel.label }}</span>
+                    <span>*{{ form.receiver_tel.label }}</span>
                     {{ form.receiver_tel(class = 'form-input form-control') }}
                 </div>
             </div>
@@ -69,6 +69,7 @@
                                         <th>经销商</th>
                                         <th>库存量(㎡)</th>
                                         <th>批次号</th>
+                                        <th>库存类型</th>
                                         <th>创建日期</th>
                                         <th>生产日期</th>
                                         <th>库存量(㎡)</th>
@@ -84,6 +85,7 @@
                                                 <td rowspan={{inv.get("batches")|length}}>{{ inv.get('total') }}</td>
                                             {% endif %}
                                             <td>{{ inv.get("batches")[i-1].get('batch_no') }}</td>
+                                            <td>{{ {1: "正常库存", 2: "尾货库存"}.get(inv.get("batches")[i-1].get('type')) }}</td>
                                             <td>{{ inv.get("batches")[i-1].get('created_at') }}</td>
                                             <td>{{ inv.get("batches")[i-1].get('production_date') }}</td>
                                             <td>{{ inv.get("batches")[i-1].get('stocks') }}</td>

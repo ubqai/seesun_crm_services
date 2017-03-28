@@ -317,7 +317,7 @@ def tracking_info_new(contract_id):
             flash('物流状态创建成功', 'success')
             return redirect(url_for('order_manage.tracking_infos'))
         else:
-            flash('物流状态创建失败', 'danger')
+            flash('对接人姓名和电话必须填写', 'danger')
             return redirect(url_for('order_manage.tracking_info_new', contract_id = contract.id))
     else:
         form = TrackingInfoForm1()
