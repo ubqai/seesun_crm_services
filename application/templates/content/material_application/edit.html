@@ -49,13 +49,13 @@
                         <tr>
                             <td>{{ content.material_name }}</td>
                             <td>{{ content.number }}</td>
-                            <td><input name="content_{{ content.id }}" value="{{ content.available_number or content.number }}" type="number" step="1" min="0" max="{{ content.number }}" {{ 'disabled' if content.available_number else '' }}></td>
+                            <td><input class="form-control" name="content_{{ content.id }}" value="{{ content.available_number or content.number }}" type="number" step="1" min="0" max="{{ content.number }}" {{ 'disabled' if content.available_number else '' }}></td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-            <div class="widget_contents padding-0">
+            <div class="widget_contents padding-0 top-gap-3">
                 {% if application.status == '新申请' %}
                 <div class="form-item inline-2">
                     <span class="form-label">审核意见</span>

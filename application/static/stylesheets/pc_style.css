@@ -134,6 +134,11 @@
     background: #eee;
     margin: 35px;
 }
+.separator-3 {
+    height: 20px;
+    background: #eee;
+    box-shadow: inset 0px 0px 3px 1px rgba(0,0,0,0.2);
+}
 /*layout*/
 body{
 	background:#efefef;
@@ -596,10 +601,12 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
 .sub-form-item>span:first-child {
     float:left;
     width: 34.3%;
+		line-height:30px;
 }.sub-form-item>span:last-child {
     float:left;
     width: 65.6%;
 		word-break:break-all;
+		line-height:30px;
 }
 textarea.form-input{
 	height:120px
@@ -954,7 +961,7 @@ p.contract-subtitle {
 /*2017/3/9*/
 .title-style{
     padding: 10px 20px;
-    background: #434a54;
+    background: #656D78;
     color: #fff;
 }
 
