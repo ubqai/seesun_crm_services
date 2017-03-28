@@ -93,7 +93,7 @@
 															</td>
 															<td>{{ content.number }}</td>
 															<td><input class="form-control price" name="{{ content.id }}price"></td>
-															<td><input class="form-control" name="{{ content.id }}amount"></td>
+															<td><input v-model="amount[0].b" class="form-control" name="{{ content.id }}amount"></td>
 															<td><input class="form-control" name="{{ content.id }}memo"></td>
 													</tr>
 													{% endfor %}
@@ -117,7 +117,15 @@
 		var amount=price*amount;
 	  $(this).parent().next().children().val(amount);
 	})
-
+	var a={
+		b:20
+	}
+	var app=new Vue({
+		el:"#new-contract",
+		data:{
+			amount:[a]
+		}
+	});
 </script>
 
 {% endblock %}
