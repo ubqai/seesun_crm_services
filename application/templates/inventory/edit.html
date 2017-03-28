@@ -13,27 +13,22 @@
 	<div class="widget">
 		<div class="widget_header">
 			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;编辑库存</h4>
-			<a class="new-item new-inventory"><span class="glyphicon glyphicon-plus"></span></a>
 		</div>
 
 		<form action="{{ url_for('inventory.edit', id=id, from=from_path) }}" method="post">
 			<div class="widget_contents padding-0 item-wrapper">
                 <div class="form-item item-template">
                     <div class="form-item-2 col-3">
-                        <span>生产日期</span>
-                        <input class="form-control" name="production_date" value="{{ inventory.get('production_date') }}">
+                        <span>*生产日期</span>
+                        <input class="form-control datetimePicker" name="production_date" value="{{ inventory.get('production_date') }}">
                     </div>
                     <div class="form-item-2 col-3">
-                        <span>有效日期</span>
-                        <input class="form-control" name="valid_until" value="{{ inventory.get('valid_until') }}">
-                    </div>
-                    <div class="form-item-2 col-3">
-                        <span>批次号</span>
-                        <input class="form-control" name="batch_no" value="{{ inventory.get('batch_no') }}">
-                    </div>
-                    <div class="form-item-2 col-3">
-                        <span>库存数量</span>
+                        <span>*库存数量(㎡)</span>
                         <input class="form-control" name="stocks" value="{{ inventory.get('stocks') }}">
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span>价格</span>
+                        <input class="form-control" name="price" value="{{ '' if inventory.get('price') == None else inventory.get('price') }}">
                     </div>
                 </div>
 			</div>

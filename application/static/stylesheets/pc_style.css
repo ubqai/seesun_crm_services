@@ -74,12 +74,25 @@
 	width:20% !important;
 	float:left !important;
 }
+.col-5-re{
+	width:80% !important;
+	float:left !important;	
+}
 /*custom*/
 .left-gap-28{
 	margin-left:28px !important;
 }
 .padding-0{
 	padding:0px !important;
+}
+.border-0{
+	border:none !important;
+}
+.border-left-1{
+	border-left:1px solid #ddd !important;
+}
+.radius-0{
+	border-radius:0px !important;
 }
 .text-left-i{
 	text-align:left !important;
@@ -111,6 +124,15 @@
 	  z-index: 1000000;
     position: absolute;
     width: 100%;
+}
+.bg-grass{
+	background-color:#A0D468;
+	color:#fff !important;
+}
+.separator-2 {
+    height: 1px;
+    background: #eee;
+    margin: 35px;
 }
 /*layout*/
 body{

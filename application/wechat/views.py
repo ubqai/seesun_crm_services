@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, render_template, request, session, redirect, url_for
 from .models import WechatAccessToken, app, WECHAT_SERVER_AUTHENTICATION_TOKEN, WechatCall, WechatUserInfo
 from ..organization.forms import WechatUserLoginForm
-from ..models import User
+from ..models import User, TrackingInfo, Contract
 from flask_login import login_user, current_user, logout_user
 import hashlib
 
@@ -12,12 +12,28 @@ wechat = Blueprint('wechat', __name__, template_folder='templates')
 
 @wechat.route('/mobile/verification', methods=['GET', 'POST'])
 def mobile_verification():
-    wechat_info = WechatAccessToken.getJsApiSign(request.url)
     if request.method == 'POST':
-        app.logger.info("wechat.mobile_verification: [%s]", request.form.get("text-verification"))
-        flash('校验成功', 'success')
-        return render_template('wechat/mobile_verification.html', wechat_info=wechat_info)
+        try:
+            qrcode_token = request.form.get("text-verification", None)
+            if qrcode_token is None or qrcode_token == "":
+                raise ValueError("请传入扫描结果")
+
+            app.logger.info("wechat.mobile_verification: [%s]", qrcode_token)
+            ti = TrackingInfo.query.filter_by(qrcode_token=qrcode_token).first()
+            if ti is None:
+                raise ValueError("无此二维码记录")
+
+            contract = Contract.query.filter_by(contract_no=ti.contract_no).first()
+            if contract is None or contract.order_id is None:
+                raise ValueError("二维码记录异常")
+
+            flash('校验成功', 'success')
+            return redirect(url_for('mobile_contract_show', id=contract.order_id))
+        except Exception as e:
+            flash('校验失败,%s' % e)
+            return redirect(url_for('wechat.mobile_verification'))
     else:
+        wechat_info = WechatAccessToken.getJsApiSign(request.url)
         return render_template('wechat/mobile_verification.html', wechat_info=wechat_info)
 
 
@@ -29,7 +45,7 @@ def mobile_user_binding():
                 logout_user()
 
             form = WechatUserLoginForm(request.form, meta={'csrf_context': session})
-            if form.validate() == False:
+            if not form.validate():
                 app.logger.info("form valid fail: [%s]" % (form.errors))
                 raise ValueError("")
 
@@ -49,7 +65,7 @@ def mobile_user_binding():
             app.logger.info("mobile login success [%s]" % (user.nickname))
             return redirect(url_for('mobile_index'))
         except Exception as e:
-            flash(e)
+            flash("绑定失败,%s" % e)
             return render_template('wechat/mobile_user_binding.html', form=form)
     else:
         app.logger.info("mobile_user_binding [%s][%s]" % (request.args, request.args.get("code")))
@@ -182,7 +198,7 @@ def server_authentication():
         xmlstr = ret_doc.toxml()
 
         app.logger.info("return xml : [" + xmlstr + "]")
-        return xmlstr[22:len(xmlstr)]
+        return xmlstr[22:]
     else:
         # authentication
         return request.args.get("echostr")
