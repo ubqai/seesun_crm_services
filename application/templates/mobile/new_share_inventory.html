@@ -3,18 +3,25 @@
 {% block content %}
 {{ header('共享库存') }}
 <div class="main-content">
-    <form action="{{ url_for('new_share_inventory', id=id) }}" method="post">
+    <form action="{{ url_for('new_share_inventory', sku_id=sku_id, product_name=product_name) }}"  enctype="multipart/form-data" method="post">
 	<div class="text bot-gap-2">
-		<p class="text-title bot-gap-1">填写共享库存信息</p>
+		<p class="text-title bot-gap-1">填写工程剩余库存信息</p>
 
 		<div class="wrapper-style">
 			<div class="wrapper-header"><span class="wrapper-header-title"></span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
 			<div class="wrapper-inner">
-                <p class="text-content text-sm"><input class="form-control datetimePicker" name="production_date" placeholder="生产日期"></p>
-                <div class="light-divider top-gap-1 bot-gap-1"></div>
-				<p class="text-content text-sm"><input class="form-control" name="batch_no" placeholder="批次号"></p>
+                <p class="text-content text-sm"><input class="form-control datetimePicker" name="production_date" placeholder="生产日期" value="{{ params.get('production_date', '') }}"></p>
 				<div class="light-divider top-gap-1 bot-gap-1"></div>
-				<p class="text-content text-sm"><input class="form-control" name="stocks" placeholder="库存数量"></p>
+				<p class="text-content text-sm"><input class="form-control" name="stocks" placeholder="库存数量" value="{{ params.get('stocks', '') }}"></p>
+			    <div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control" name="price" placeholder="价格" value="{{ params.get('price', '') }}"></p>
+            </div>
+            <div class="file form-item bot-gap-2">
+				<a href="javascript:;">
+					<img src="/static/images/upload.png" style="display: block; margin: 0px auto; width: 96px;">
+					<label>上传图片</label>
+					<input type="file" name="pic_files[]" id="ul_file" multiple=true, class="form-control">
+				</a>
 			</div>
 		</div>
 

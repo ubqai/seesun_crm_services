@@ -83,6 +83,15 @@ def create_sku(data={}):
     return response
 
 
+def get_sku(sku_id):
+    url = '%s/%s/product_skus/%s' % (site, version, sku_id)
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {}
+
+
 def update_sku(sku_id, data={}):
     url = '%s/%s/product_skus/%s/edit' % (site, version, sku_id)
     response = requests.put(url, json=data, headers=headers)

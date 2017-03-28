@@ -60,7 +60,7 @@
 																		</div>
 																	</div>
 																	<div class="wrapper-footer text-right">
-																			<a href="{{ url_for('new_share_inventory', id = sku.get('sku_id')) }}" class="text-success"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;共享库存</a>
+																			<a href="{{ url_for('new_share_inventory', product_name=product_json.get('name'), sku_id=sku.get('sku_id') ) }}" class="text-success"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;申请上传工程剩余库存</a>
 																	</div>
 																</div>
 													{% endfor %}

@@ -15,6 +15,8 @@ from flask_login import *
 from .organization.forms import UserLoginForm
 from .forms import *
 from .wechat.models import WechatCall, WechatUserInfo
+from .utils import is_number
+from decimal import Decimal
 
 
 @app.before_request
@@ -620,37 +622,86 @@ def upload_share_index():
     return render_template('mobile/upload_share_index.html', categories=categories)
 
 
-@app.route('/mobile/new_share_inventory/<int:id>', methods=['GET', 'POST'])
-def new_share_inventory(id):
+@app.route('/mobile/new_share_inventory/<product_name>/<sku_id>', methods=['GET', 'POST'])
+def new_share_inventory(product_name, sku_id):
     if request.method == 'POST':
-        user_id = current_user.id
-        production_date = request.form.get('production_date')
-        batch_no = request.form.get('batch_no')
-        stocks = request.form.get('stocks')
-        inv_type = 2
-        user_name = current_user.nickname
-        if production_date is None or production_date == '':
+        params = {
+            'production_date': request.form.get('production_date', ''),
+            'stocks': request.form.get('stocks', ''),
+            'price': request.form.get('price')
+        }
+        production_date = request.form.get('production_date', '')
+        price = request.form.get('price')
+        stocks = request.form.get('stocks', '')
+        if production_date == '':
             flash('生产日期不能为空', 'danger')
-            return render_template('mobile/new_share_inventory.html', id=id)
-        if stocks is None:
+            return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name,
+                                   params=params)
+        if stocks == '':
             flash('库存数量不能为空', 'danger')
-            return render_template('mobile/new_share_inventory.html', id=id)
-        elif int(stocks) < 1:
+            return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name,
+                                   params=params)
+        if not is_number(stocks):
+            flash('库存数量必须为数字', 'danger')
+            return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name,
+                                   params=params)
+        if Decimal(stocks) < Decimal("1"):
             flash('库存数量不能小于1', 'danger')
-            return render_template('mobile/new_share_inventory.html', id=id)
-        data = {'inventory_infos': [{"sku_id": id, "inventory": [{"type": inv_type, "user_id": user_id,
-                                                                  "user_name": user_name,
-                                                                  "production_date": production_date,
-                                                                  "valid_until": production_date,
-                                                                  "batch_no": batch_no,
-                                                                  "stocks": stocks}]}]}
-        response = create_inventory(data)
-        if response.status_code == 201:
-            flash('库存共享成功', 'success')
-        else:
-            flash('库存共享失败', 'danger')
+            return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name,
+                                   params=params)
+        if price == '':
+            flash('价格不能为空', 'danger')
+            return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name,
+                                   params=params)
+        if not is_number(price):
+            flash('价格必须为数字', 'danger')
+            return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name,
+                                   params=params)
+        if Decimal(price) <= Decimal("0"):
+            flash('价格必须大于0', 'danger')
+            return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name,
+                                   params=params)
+        if request.form.getlist('pic_files[]') == []:
+            flash('材料图片必须上传', 'danger')
+            return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name,
+                                   params=params)
+        upload_files = request.files.getlist('pic_files[]')
+        filenames = []
+        for file in upload_files:
+            file_path = save_upload_file(file)
+            filenames.append(file_path)
+        sku = get_sku(sku_id)
+        options = []
+        for option in sku.get('options'):
+            for key, value in option.items():
+                options.append(value)
+        si = ShareInventory(
+            applicant_id=current_user.id,
+            status="新申请待审核",
+            batch_no='BT%s%s' % (datetime.datetime.now().strftime('%y%m%d%H%M%S'), 2),
+            product_name=product_name,
+            sku_id=sku_id,
+            sku_code=sku.get('code'),
+            sku_option=" ".join(options),
+            production_date=production_date,
+            stocks=stocks,
+            price=price,
+            pic_files=filenames
+        )
+        db.session.add(si)
+        db.session.commit()
+        flash('已申请，等待审核', 'success')
         return redirect(url_for('stocks_share', area_id=0))
-    return render_template('mobile/new_share_inventory.html', id=id)
+    return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name, params={})
+
+
+@app.route('/mobile/share_inventory_list', methods=['GET'])
+def share_inventory_list():
+    page_size = int(request.args.get('page_size', 5))
+    page_index = int(request.args.get('page', 1))
+    sis = ShareInventory.query.filter_by(applicant_id=current_user.id).order_by(ShareInventory.created_at.desc())\
+        .paginate(page_index, per_page=page_size, error_out=True)
+    return render_template('mobile/share_inventory_list.html', sis=sis)
 
 
 # --- mobile user---
