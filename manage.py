@@ -27,7 +27,14 @@ def make_shell_context():
                 WechatPushMsg=WechatPushMsg,
                 ProjectReport=ProjectReport, WebAccessLog=WebAccessLog, ShareInventory=ShareInventory)
 
+
 manager.add_command("shell", Shell(make_context=make_shell_context))
+
+
+# 微信token定时检测任务
+@manager.command
+def cron_wechat_token():
+    WechatAccessToken.cron_create_token()
 
 
 @manager.command
@@ -35,6 +42,7 @@ def test():
     import unittest
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
+
 
 if __name__ == '__main__':
     manager.run()
