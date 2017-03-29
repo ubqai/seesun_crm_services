@@ -326,59 +326,69 @@ class WechatCall:
 
         return res_json.get("openid", "")
 
-    # 推送消息
+    # 推送消息 - openid
     @classmethod
-    def send_text_to_user(cls, user_id, msg, is_test=TEST_MODE):
-        if not user_id or not msg:
+    def send_text_by_openid(cls, open_id, msg, is_test=TEST_MODE):
+        if not open_id or not msg:
             raise ValueError("user_id and msg can not null")
 
         url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s" % (
             WechatAccessToken.getTokenByType("access_token", is_test))
 
-        for wui in WechatUserInfo.query.filter_by(user_id=user_id).all():
-            try:
-                headers = {'content-type': 'application/json'}
-                post_params = json.dumps({
-                    "touser": wui.open_id,
-                    "msgtype": "text",
-                    "text": {
-                        "content": msg.encode("utf-8").decode("latin1"),
-                    }
-                }, ensure_ascii=False)
+        try:
+            headers = {'content-type': 'application/json'}
+            post_params = json.dumps({
+                "touser": open_id,
+                "msgtype": "text",
+                "text": {
+                    "content": msg.encode("utf-8").decode("latin1"),
+                }
+            }, ensure_ascii=False)
 
-                app.logger.info("send_text_to_user params : [" + post_params + "]")
-                response = requests.post(url, data=post_params, headers=headers)
+            app.logger.info("send_text_to_user params : [" + post_params + "]")
+            response = requests.post(url, data=post_params, headers=headers)
 
-                if response.status_code != 200:
-                    raise ConnectionError("get url failure %d" % response.status_code)
+            if response.status_code != 200:
+                raise ConnectionError("get url failure %d" % response.status_code)
 
-                res_json = response.json()
+            res_json = response.json()
 
+            if res_json.get("errcode", 0) != 0:
+                app.logger.info(res_json)
+                raise ValueError(res_json.get("errcode"))
+
+        except Exception as e:
+            app.logger.info("send_text_to_user failure %s" % e)
+        finally:
+            wpm = WechatPushMsg(
+                push_type="text",
+                push_info=post_params
+            )
+
+            if res_json:
                 if res_json.get("errcode", 0) != 0:
-                    app.logger.info(res_json)
-                    raise ValueError(res_json.get("errcode"))
-
-            except Exception as e:
-                app.logger.info("send_text_to_user failure %s" % e)
-            finally:
-                wpm = WechatPushMsg(
-                    wechat_user_info_id=wui.id,
-                    push_type="text",
-                    push_info=post_params
-                )
-
-                if res_json:
-                    if res_json.get("errcode", 0) != 0:
-                        wpm.push_flag = "fail"
-                        wpm.remark = res_json.get("errcode") + " [" + res_json.get("errmsg", "") + "]"
-                    else:
-                        wpm.push_flag = "succ"
-                        wpm.wechat_msg_id = res_json.get("msgid", "")
+                    wpm.push_flag = "fail"
+                    wpm.remark = res_json.get("errcode") + " [" + res_json.get("errmsg", "") + "]"
                 else:
-                    wpm.push_flag = "push_fail"
-                    wpm.remark = "请求返回异常"
+                    wpm.push_flag = "succ"
+                    wpm.wechat_msg_id = res_json.get("msgid", "")
+            else:
+                wpm.push_flag = "push_fail"
+                wpm.remark = "请求返回异常"
 
-                wpm.save()
+        # 返回待记录数据由调用方处理是否插入
+        return wpm
+
+    # 推送消息 - 已绑定用户
+    @classmethod
+    def send_text_to_user(cls, user_id, msg, is_test=TEST_MODE):
+        if not user_id or not msg:
+            raise ValueError("user_id and msg can not null")
+
+        for wui in WechatUserInfo.query.filter_by(user_id=user_id).all():
+            wpm = WechatCall.send_text_by_openid(wui.open_id, msg, is_test)
+            wpm.wechat_user_info_id = wui.id
+            wpm.save()
 
     # 推送消息模板
     @classmethod
