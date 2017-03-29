@@ -1,5 +1,5 @@
 from flask import Blueprint, flash, render_template, request, session, redirect, url_for
-from .models import WechatAccessToken, app, WECHAT_SERVER_AUTHENTICATION_TOKEN, WechatCall, WechatUserInfo
+from .models import WechatAccessToken, app, WECHAT_SERVER_AUTHENTICATION_TOKEN, WechatCall, WechatUserInfo, WechatPushMsg
 from ..organization.forms import WechatUserLoginForm
 from ..models import User, TrackingInfo, Contract
 from flask_login import login_user, current_user, logout_user
@@ -51,7 +51,7 @@ def mobile_user_binding():
 
             form = WechatUserLoginForm(request.form, meta={'csrf_context': session})
             if not form.validate():
-                app.logger.info("form valid fail: [%s]" % (form.errors))
+                app.logger.info("form valid fail: [%s]" % form.errors)
                 raise ValueError("")
 
             # 微信只能经销商登入
@@ -67,7 +67,7 @@ def mobile_user_binding():
             app.logger.info("insert into WechatUserInfo [%s]-[%s]" % (form.openid.data, user.id))
 
             login_user(user)
-            app.logger.info("mobile login success [%s]" % (user.nickname))
+            app.logger.info("mobile login success [%s]" % user.nickname)
             return redirect(url_for('mobile_index'))
         except Exception as e:
             flash("绑定失败,%s" % e)
@@ -89,16 +89,16 @@ def mobile_user_binding():
                             if current_user != exists_binding_user:  # not same user
                                 logout_user()
                                 login_user(exists_binding_user)
-                                app.logger.info("mobile login success [%s]" % (exists_binding_user.nickname))
+                                app.logger.info("mobile login success [%s]" % exists_binding_user.nickname)
                             else:
-                                app.logger.info("mobile has login [%s]" % (exists_binding_user.nickname))
+                                app.logger.info("mobile has login [%s]" % exists_binding_user.nickname)
                         else:
                             login_user(exists_binding_user)
-                            app.logger.info("mobile login success [%s]" % (exists_binding_user.nickname))
+                            app.logger.info("mobile login success [%s]" % exists_binding_user.nickname)
 
                         return redirect(url_for('mobile_index'))
             except Exception as e:
-                flash("%s,请重新通过微信-绑定用户进入此页面" % (e))
+                flash("%s,请重新通过微信-绑定用户进入此页面" % e)
 
         form = WechatUserLoginForm(openid=openid, meta={'csrf_context': session})
         return render_template('wechat/mobile_user_binding.html', form=form)
@@ -122,12 +122,9 @@ def server_authentication():
     if request.method == 'POST':
         get_xml_str = request.get_data().decode('utf-8')
         app.logger.info("get xml : [" + get_xml_str + "]")
-        # DOMTree = xml.dom.minidom.parseString(str(request.get_data())
-        # root.getElementsByTagName('ToUserName')[0].firstChild.data
-        # root.getElementsByTagName('CreateTime')[0].firstChild.data
 
-        DOMTree = xml.dom.minidom.parseString(get_xml_str)
-        root = DOMTree.documentElement
+        dom_tree = xml.dom.minidom.parseString(get_xml_str)
+        root = dom_tree.documentElement
         text_tun = root.getElementsByTagName('ToUserName')[0].firstChild.data
         text_fun = root.getElementsByTagName('FromUserName')[0].firstChild.data
         text_ct = root.getElementsByTagName('CreateTime')[0].firstChild.data
@@ -161,11 +158,13 @@ def server_authentication():
 
         if text_mt == "event":
             text_event = root.getElementsByTagName('Event')[0].firstChild.data
-            text_ek = root.getElementsByTagName('EventKey')[0].firstChild.data
+            # 点击微信公众号中的 按钮事件
             if text_event == "CLICK":
-                if text_ek == "click_bind_user":
+                text_ek = root.getElementsByTagName('EventKey')[0].firstChild.data
+                # 人工客服 按钮
+                if text_ek == "click_custom_service":
                     element_content = ret_doc.createElement('Content')
-                    text_content = ret_doc.createTextNode("功能尚在开发")
+                    text_content = ret_doc.createTextNode("请发送文字: 人工客服")
                     element_content.appendChild(text_content)
 
                     element_root.appendChild(element_content)
@@ -175,12 +174,14 @@ def server_authentication():
                     element_content.appendChild(text_content)
 
                     element_root.appendChild(element_content)
+            # 关注微信公众号事件
             elif text_event == "subscribe":
                 element_content = ret_doc.createElement('Content')
                 text_content = ret_doc.createTextNode("感谢关注公众号,请点击按钮进行操作")
                 element_content.appendChild(text_content)
 
                 element_root.appendChild(element_content)
+            # 公众微信号中的扫描按钮事件
             elif text_event == "scancode_push" or text_event == "scancode_waitmsg":
                 input_element_scan_info = root.getElementsByTagName('ScanCodeInfo')[0]
                 text_st = input_element_scan_info.getElementsByTagName('ScanType')[0].firstChild.data
@@ -190,14 +191,38 @@ def server_authentication():
                 element_content.appendChild(text_content)
 
                 element_root.appendChild(element_content)
+            # 推送模板 用户接受状态返回
+            elif text_event == "TEMPLATESENDJOBFINISH":
+                text_msg_id = root.getElementsByTagName('MsgID')[0].firstChild.data
+                text_status = root.getElementsByTagName('Status')[0].firstChild.data
+                wpm = WechatPushMsg.query.filter_by(wechat_msg_id = text_msg_id).first()
+                if wpm:
+                    if text_status == "success":
+                        wpm.push_flag = "succ"
+                    else:
+                        wpm.push_flag = "fail"
+                        wpm.remark = text_status
+                    wpm.save()
             else:
                 return ""
         else:
-            element_content = ret_doc.createElement('Content')
-            text_content = ret_doc.createTextNode("请点击按钮进行操作")
-            element_content.appendChild(text_content)
+            text_content = root.getElementsByTagName('Content')[0].firstChild.data
+            if "人工客服" in text_content:
+                # 删除默认的文本节点
+                element_root.removeChild(element_msg_type)
+                element_msg_type.removeChild(text_msg_type)
+                element_msg_type.appendChild(ret_doc.createCDATASection("transfer_customer_service"))
 
-            element_root.appendChild(element_content)
+                element_root.appendChild(element_msg_type)
+
+                # 默认无返回数据， 返回一条信息给客户
+                WechatCall.send_text_by_openid(text_fun, "正在转人工客服,请稍后...")
+            else:
+                element_content = ret_doc.createElement('Content')
+                text_content = ret_doc.createTextNode("请点击按钮进行操作")
+                element_content.appendChild(text_content)
+
+                element_root.appendChild(element_content)
 
         ret_doc.appendChild(element_root)
         xmlstr = ret_doc.toxml()

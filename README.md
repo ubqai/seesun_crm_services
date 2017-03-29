@@ -31,6 +31,8 @@
 		$ python manage.py db upgrade
 		And you can rollback your last migration if necessary
 		$ python manage.py db downgrade
+		IF database conflict example:  Multiple heads are present for given argument 'head'; f96e60b9c39c, 636191448952
+		$ python manage.py db merge -m "merge migration conflict" f96e60b9c39c  636191448952
 
 	4. Execute seed file to create a bunch of sample data
 		$ python seed.py
