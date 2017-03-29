@@ -89,6 +89,7 @@ class WechatAccessToken(db.Model, DbBaseOperation):
     # 服务器定时任务,创建10条可用token
     @classmethod
     def cron_create_token(cls, max_count=10, is_test=TEST_MODE):
+        print("cron_create_token start is_test:", is_test)
         if is_test is False:
             use_appid = WECHAT_APPID
         else:
@@ -106,6 +107,8 @@ class WechatAccessToken(db.Model, DbBaseOperation):
                     cls.apply_jsap_ticket()
             print("[%s] can_use_count = %d and apply_count = %d"
                   % (token_type, can_use_count, max_count - can_use_count))
+
+        print("cron_create_token end")
 
     # 检查token是否超过有效时间,修改为不可使用
     @classmethod
