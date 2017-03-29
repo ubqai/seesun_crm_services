@@ -168,7 +168,7 @@ def server_authentication():
 
                     text_msg_type = ret_doc.createTextNode("transfer_customer_service")
                     element_msg_type.appendChild(text_msg_type)
-                    
+
                     element_root.appendChild(element_msg_type)
                 else:
                     element_content = ret_doc.createElement('Content')
