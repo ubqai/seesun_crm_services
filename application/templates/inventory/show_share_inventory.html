@@ -18,13 +18,19 @@
             <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;工程剩余库存申请详情</h4>
         </div>
         <div class="widget_contents padding-0 bot-gap-3">
-            <div class="form-item inline-2">
-                <span class="form-label">申请编号(批次号)</span>
-                <input class="form-input form-control" value="{{ si.batch_no }}" disabled/>
-                <span class="form-label">申请日期</span>
-                <input class="form-input form-control" value="{{ si.created_at.strftime('%Y-%m-%d') }}" disabled/>
-                <span class="form-label">状态</span>
-                <input class="form-input form-control" value="{{ si.status }}" disabled/>
+            <div class="form-item">
+								<div class="sub-form-item">
+									<span>申请编号(批次号)：</span>
+									<span>{{ si.batch_no }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>申请日期：</span>
+									<span>{{ si.created_at.strftime('%Y-%m-%d') }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>状态：</span>
+									<span>{{ si.status }}</span>
+								</div>
             </div>
         </div>
 				<div class="widget_header">
@@ -33,40 +39,36 @@
 
 
         <div class="widget_contents padding-0 bot-gap-3">
-						<div class="title-style">
-							<span>DETAILS</span>
-							<i class="pull-right	glyphicon glyphicon-list-alt"></i>
-						</div>
             <div class="form-item">
 								<div class="sub-form-item">
-									<span>产品名称:</span>
+									<span>产品名称：</span>
 									<span>{{ si.product_name }}</span>
 								</div>
 								<div class="sub-form-item">
-									<span>规格:</span>
+									<span>规格：</span>
 									<span>{{ si.sku_option }}</span>
 								</div>
 								<div class="sub-form-item">
-									<span>生产日期:</span>
+									<span>生产日期：</span>
 									<span>{{ si.production_date }}</span>
 								</div>
             </div>
 						<div class="form-item">
 								<div class="sub-form-item">
-									<span>库存量:</span>
+									<span>库存量：</span>
 									<span>{{ si.stocks }}</span>
 								</div>
 								<div class="sub-form-item">
-									<span>价格:</span>
+									<span>价格：</span>
 									<span>{{ si.price }}</span>
 								</div>
             </div>
 						<div class="form-item">
-                            {% for file in si.pic_files %}
-                            <div class="sub-form-item">
-                                <img src="{{ file }}">
-                            </div>
-                            {% endfor %}
+								{% for file in si.pic_files %}
+								<div class="col-3 thumbnail">
+										<img src="{{ file }}" class="full-img">
+								</div>
+								{% endfor %}
 
             </div>
         </div>
