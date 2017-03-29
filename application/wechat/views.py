@@ -163,11 +163,16 @@ def server_authentication():
                 text_ek = root.getElementsByTagName('EventKey')[0].firstChild.data
                 # 人工客服 按钮
                 if text_ek == "click_custom_service":
-                    element_content = ret_doc.createElement('Content')
-                    text_content = ret_doc.createTextNode("请发送文字: 转人工客服")
-                    element_content.appendChild(text_content)
+                    element_root.removeChild(element_msg_type)
+                    element_msg_type.removeChild(text_msg_type)
+                    element_msg_type.appendChild(ret_doc.createCDATASection("transfer_customer_service"))
 
-                    element_root.appendChild(element_content)
+                    element_root.appendChild(element_msg_type)
+                    # element_content = ret_doc.createElement('Content')
+                    # text_content = ret_doc.createTextNode("请发送文字: 转人工客服")
+                    # element_content.appendChild(text_content)
+                    #
+                    # element_root.appendChild(element_content)
                 else:
                     element_content = ret_doc.createElement('Content')
                     text_content = ret_doc.createTextNode("未知click事件:" + text_ek)
@@ -210,9 +215,8 @@ def server_authentication():
             if "人工客服" in text_content:
                 # 删除默认的文本节点
                 element_root.removeChild(element_msg_type)
-
-                text_msg_type = ret_doc.createCDATASection("transfer_customer_service")
-                element_msg_type.appendChild(text_msg_type)
+                element_msg_type.removeChild(text_msg_type)
+                element_msg_type.appendChild(ret_doc.createCDATASection("transfer_customer_service"))
 
                 element_root.appendChild(element_msg_type)
             else:
