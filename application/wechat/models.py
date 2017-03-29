@@ -338,10 +338,13 @@ class WechatCall:
                 app.logger.info("send_text_to_user failure %s" % e)
 
     # 推送消息模板
+    # WechatCall.send_template_to_user("op2_o1GdwA5SGFaVxqXnKpYHs73k",
+    #   "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0",
+    #   )
     @classmethod
-    def send_template_to_user(cls, user_id, msg, is_test=TEST_MODE):
-        if not user_id or not msg:
-            raise ValueError("user_id and msg can not null")
+    def send_template_to_user(cls, user_id, template_id, params_hash, is_test=TEST_MODE):
+        if not user_id or not template_id:
+            raise ValueError("user_id and template_id can not null")
 
         url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s" % (
             WechatAccessToken.getTokenByType("access_token", is_test))
@@ -349,24 +352,26 @@ class WechatCall:
         for wui in WechatUserInfo.query.filter_by(user_id=user_id).all():
             try:
                 headers = {'content-type': 'application/json'}
-                post_params = json.dumps({
-                    "touser": wui.open_id,
-                    "template_id": "LQPFR1MtOzjMUft-eEtVJ3ZEP8D8s5K0oF76X01n2Qg",
-                    # "url": "",   # 模板跳转地址
-                    "data": {
-                        "var_1": {
-                            "value": msg.encode("utf-8").decode("latin1"),
-                            "color": "#173177"
-                        },
-                        "var_2": {
-                            "value": "",
-                            "color": "#173177"
-                        }
-                    }
-                }, ensure_ascii=False)
 
-                app.logger.info("send_template_to_user params : [" + post_params + "]")
-                response = requests.post(url, data=post_params, headers=headers)
+                post_params = {
+                    "touser": wui.open_id,
+                    "template_id": template_id,
+                    "topcolor": "#FF0000",
+                    # "url": "",   # 模板跳转地址
+                    "data": {params_hash.encode("utf-8").decode("latin1")}
+                }
+                # for key_var in params_hash.keys():
+                #     value = params_hash[key_var].get("value", "").encode("utf-8").decode("latin1")
+                #     color = params_hash[key_var].get("color", "#173177")
+                #     post_params["data"][key_var] = {
+                #         "value": value,
+                #         "color": color
+                #     }
+
+                json_params = json.dumps(post_params, ensure_ascii=False)
+
+                app.logger.info("send_template_to_user params : [" + json_params + "]")
+                response = requests.post(url, data=json_params, headers=headers)
 
                 if response.status_code != 200:
                     raise ConnectionError("get url failure %d" % response.status_code)

@@ -33,7 +33,12 @@ def mobile_verification():
             flash('校验失败,%s' % e)
             return redirect(url_for('wechat.mobile_verification'))
     else:
-        wechat_info = WechatAccessToken.getJsApiSign(request.url)
+        wechat_info = None
+        try:
+            wechat_info = WechatAccessToken.getJsApiSign(request.url)
+        except Exception as e:
+            flash('摄像头授权获取失败,请刷新重试 %s' % e)
+
         return render_template('wechat/mobile_verification.html', wechat_info=wechat_info)
 
 
