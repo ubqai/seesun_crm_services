@@ -192,6 +192,24 @@ class DesignApplication(db.Model, Rails):
         return 'DesignApplication(id: %s, filing_no: %s, status: %s,...)' % (self.id, self.filing_no, self.status)
 
 
+class ShareInventory(db.Model, Rails):
+    id = db.Column(db.Integer, primary_key=True)
+    applicant_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    audit_id = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    status = db.Column(db.String(50))
+    batch_no = db.Column(db.String(50))
+    product_name = db.Column(db.String(200))
+    sku_option = db.Column(db.String(200))
+    sku_code = db.Column(db.String(30))
+    sku_id = db.Column(db.Integer)
+    production_date = db.Column(db.String(30))
+    stocks = db.Column(db.Float)
+    price = db.Column(db.Float)
+    pic_files = db.Column(db.JSON)
+
+
 class TrackingInfo(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(50))

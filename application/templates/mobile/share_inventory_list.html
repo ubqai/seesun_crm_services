@@ -1,0 +1,70 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('共享库存') }}
+<div class="main-content">
+	<div class="text bot-gap-2">
+		<p class="text-title bot-gap-1">工程剩余库存申请列表</p>
+
+
+		{% for si in sis.items %}
+			<div class="wrapper-style rect top-gap-2">
+				<div class="wrapper-header"><span class="wrapper-header-title">{{ si.batch_no }}</span><span class="wrapper-header-icon glyphicon glyphicon-book pull-right"></span></div>
+				<div class="wrapper-inner clearfix">
+					<div class="wrapper-inner-img"><img class="full-img" src="{{ si.pic_files[0] }}"></div>
+					<div class="wrapper-inner-content clearfix">
+						<div class="wrapper-row">
+							<p class="set-2">产品名:<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ si.product_name }}</span></p>
+							<p class="set-2">规格 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ si.sku_option }}</span></p>
+						</div>
+						<div class="wrapper-row">
+							<p class="set-2">生产日期 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ si.production_date }}</span></p>
+							<p class="set-2">库存量 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ si.stocks }}</span></p>
+						</div>
+                        <div class="wrapper-row">
+							<p class="set-2">价格 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ si.price }}</span></p>
+							<p class="set-2">状态 :<br>
+									{% if si.status == '新申请待审核' %}
+											<span class="text-primary"><span class="glyphicon glyphicon-leaf"></span> {{ si.status }}</span>
+									{% elif si.status == '审核通过' %}
+											<span class="text-success"><span class="glyphicon glyphicon-leaf"></span> {{ si.status }}</span>
+									{% else %}
+											<span class="text-danger"><span class="glyphicon glyphicon-leaf"></span> {{ si.status }}</span>
+									{% endif %}
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+
+	</div>
+    <ul class="pagination">
+	    <li>
+	        {% if sis.has_prev %}
+	            <a href="{{ url_for('share_inventory_list', page = sis.prev_num) }}">上一页</a>
+	        {% endif %}
+        </li>
+
+        {%- for page in sis.iter_pages() %}
+          <li>
+              {% if page %}
+                {% if page != sis.page %}
+                  <a href="{{ url_for('share_inventory_list', page=page) }}">{{ page }}</a>
+                {% else %}
+                  <span class="page-number current">{{ page }}</span>
+                {% endif %}
+              {% else %}
+                <span class=ellipsis>…</span>
+              {% endif %}
+          </li>
+        {%- endfor %}
+         <li>
+            {% if sis.has_next %}
+                <a href="{{ url_for('share_inventory_list', page = sis.next_num) }}">下一页 </a>
+            {% endif %}
+        </li>
+	</ul>
+</div>
+
+{% endblock %}

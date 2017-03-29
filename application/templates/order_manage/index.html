@@ -73,7 +73,7 @@
                         </td>
                         <td>{{ order.user.sales_areas.all()[0].name }}</td>
                         <td>{{ order.user.nickname }}</td>
-                        <td>{{ order.sale_contract }}</td>
+                        <td>{{ '未指定' if order.sale_contract==None else order.sale_contract }}</td>
                         <td><span class="text-warning">{{ order.order_status }}</span></td>
                     </tr>
                     {% endfor %}
