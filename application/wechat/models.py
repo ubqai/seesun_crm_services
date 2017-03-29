@@ -338,10 +338,13 @@ class WechatCall:
                 app.logger.info("send_text_to_user failure %s" % e)
 
     # 推送消息模板
+    # WechatCall.send_template_to_user("op2_o1GdwA5SGFaVxqXnKpYHs73k",
+    #   "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0",
+    #   )
     @classmethod
     def send_template_to_user(cls, user_id, template_id, params_hash, is_test=TEST_MODE):
-        if not user_id or not msg:
-            raise ValueError("user_id and msg can not null")
+        if not user_id or not template_id:
+            raise ValueError("user_id and template_id can not null")
 
         url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s" % (
             WechatAccessToken.getTokenByType("access_token", is_test))
