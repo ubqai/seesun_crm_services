@@ -129,3 +129,54 @@ def share_index():
     categories = load_categories()
     user_id = User.query.filter_by(user_or_origin=2, nickname='普陀区经销商').first().id
     return render_template('inventory/share_index.html', categories=categories, user_id=user_id)
+
+
+@inventory.route('/share_inventory_list', methods=['GET'])
+def share_inventory_list():
+    page_size = int(request.args.get('page_size', 10))
+    page_index = int(request.args.get('page', 1))
+    sis = ShareInventory.query.order_by(ShareInventory.created_at.desc()) \
+        .paginate(page_index, per_page=page_size, error_out=True)
+    return render_template('inventory/share_inventory_list.html', sis=sis)
+
+
+@inventory.route('/audit_share_inventory/<int:id>', methods=['GET', 'POST'])
+def audit_share_inventory(id):
+    si = ShareInventory.query.get_or_404(id)
+    if request.method == 'POST':
+        status = request.form.get("status", '')
+        price = request.form.get("price", '')
+        params = {'status': status, 'price': price}
+        if status == '':
+            flash('状态必须选择', 'danger')
+            return render_template('inventory/audit_share_inventory.html', si=si, params=params)
+        if status == '审核通过':
+            if price == '':
+                flash('审核通过时，价格必须填写', 'danger')
+                return render_template('inventory/audit_share_inventory.html', si=si, params=params)
+            if not price == '':
+                if not is_number(price):
+                    flash('价格必须为数字', 'danger')
+                    return render_template('inventory/audit_share_inventory.html', si=si, params=params)
+                if Decimal(price) <= Decimal("0"):
+                    flash('价格必须大于0', 'danger')
+                    return render_template('inventory/audit_share_inventory.html', si=si, params=params)
+        si.status = status
+        if si.status == "审核通过":
+            si.audit_price = price
+            data = {"production_date": si.production_date, "stocks": si.stocks, "price": si.audit_price}
+            response = update_inventory(si.sku_id, data)
+            if not response.status_code == 200:
+                flash('库存修改失败', 'danger')
+                return render_template('inventory/audit_share_inventory.html', si=si, params={})
+        db.session.add(si)
+        db.session.commit()
+        flash('工程剩余库存申请审核成功', 'success')
+        return redirect(url_for('inventory.share_inventory_list'))
+    return render_template('inventory/audit_share_inventory.html', si=si, params={})
+
+
+@inventory.route('/show_share_inventory/<int:id>', methods=['GET'])
+def show_share_inventory(id):
+    si = ShareInventory.query.get_or_404(id)
+    return render_template('inventory/show_share_inventory.html', si=si)
