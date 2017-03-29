@@ -21,6 +21,10 @@ WECHAT_TEST_APPSECRET = "3c48165926a74837bfc6c61442925943"
 TEST_MODE = app.config['WECHAT_TEST_MODE']
 HOOK_URL = app.config['WECHAT_HOOK_URL']
 
+TEMPLATE_DESC = {
+    "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0": "订单状态提醒"
+}
+
 
 class DbBaseOperation(object):
     def save(self):
@@ -40,12 +44,27 @@ class DbBaseOperation(object):
         return None
 
 
+# 微信帐号与经销商用户绑定表
 class WechatUserInfo(db.Model, DbBaseOperation):
     id = db.Column(db.Integer, primary_key=True)
     open_id = db.Column(db.String(200), nullable=False)  # wechat - openid
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     is_active = db.Column(db.Boolean, default=True)
     active_time = db.Column(db.DateTime, default=datetime.datetime.now)
+    push_msgs = db.relationship('WechatPushMsg', backref='wechat_user_info', lazy='dynamic')
+
+
+# 推送微信的各种消息记录
+class WechatPushMsg(db.Model, DbBaseOperation):
+    id = db.Column(db.Integer, primary_key=True)
+    wechat_msg_id = db.Column(db.String(100))  # 微信返回的msgId等
+    wechat_user_info_id = db.Column(db.Integer, db.ForeignKey('wechat_user_info.id'))
+    push_type = db.Column(db.String(20), nullable=False)  # 推送类型 - text,template等
+    push_info = db.Column(db.JSON, default={})  # 推送内容
+    push_time = db.Column(db.DateTime, default=datetime.datetime.now)  # 推送时间
+    push_flag = db.Column(db.String(10))  # 推送是否成功
+    push_remark = db.Column(db.String(200))  # 推送失败原因等
+    push_times = db.Column(db.Integer, default=1)  # 推送次数
 
 
 # from application.wechat.models import *
@@ -242,6 +261,11 @@ class WechatCall:
                             "key": "click_scan_wait"
                         },
                         {
+                            "type": "click",
+                            "name": "人工客服".encode("utf-8").decode("latin1"),
+                            "key": "click_custom_service"
+                        },
+                        {
                             "type": "view",
                             "name": "服务站".encode("utf-8").decode("latin1"),
                             "url": crm_services_url
@@ -336,11 +360,27 @@ class WechatCall:
 
             except Exception as e:
                 app.logger.info("send_text_to_user failure %s" % e)
+            finally:
+                wpm = WechatPushMsg(
+                    wechat_user_info_id=wui.id,
+                    push_type="text",
+                    push_info=post_params
+                )
+
+                if res_json:
+                    if res_json.get("errcode", 0) != 0:
+                        wpm.push_flag = "fail"
+                        wpm.remark = res_json.get("errcode") + " [" + res_json.get("errmsg", "") + "]"
+                    else:
+                        wpm.push_flag = "succ"
+                        wpm.wechat_msg_id = res_json.get("msgid", "")
+                else:
+                    wpm.push_flag = "push_fail"
+                    wpm.remark = "请求返回异常"
+
+                wpm.save()
 
     # 推送消息模板
-    # WechatCall.send_template_to_user("op2_o1GdwA5SGFaVxqXnKpYHs73k",
-    #   "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0",
-    #   )
     @classmethod
     def send_template_to_user(cls, user_id, template_id, params_hash, is_test=TEST_MODE):
         if not user_id or not template_id:
@@ -358,15 +398,15 @@ class WechatCall:
                     "template_id": template_id,
                     "topcolor": "#FF0000",
                     # "url": "",   # 模板跳转地址
-                    "data": {params_hash.encode("utf-8").decode("latin1")}
+                    "data": {}
                 }
-                # for key_var in params_hash.keys():
-                #     value = params_hash[key_var].get("value", "").encode("utf-8").decode("latin1")
-                #     color = params_hash[key_var].get("color", "#173177")
-                #     post_params["data"][key_var] = {
-                #         "value": value,
-                #         "color": color
-                #     }
+                for key_var in params_hash.keys():
+                    value = params_hash[key_var].get("value", "").encode("utf-8").decode("latin1")
+                    color = params_hash[key_var].get("color", "#173177")
+                    post_params["data"][key_var] = {
+                        "value": value,
+                        "color": color
+                    }
 
                 json_params = json.dumps(post_params, ensure_ascii=False)
 
@@ -381,6 +421,64 @@ class WechatCall:
                 if res_json.get("errcode", 0) != 0:
                     app.logger.info(res_json)
                     raise ValueError(res_json.get("errcode"))
-
             except Exception as e:
                 app.logger.info("send_template_to_user failure %s" % e)
+            finally:
+                wpm = WechatPushMsg(
+                    wechat_user_info_id=wui.id,
+                    push_type="template",
+                    push_info=json_params
+                )
+
+                if res_json:
+                    if res_json.get("errcode", 0) != 0:
+                        wpm.push_flag = "push_fail"
+                        wpm.remark = res_json.get("errcode") + " [" + res_json.get("errmsg", "") + "]"
+                    else:
+                        wpm.push_flag = "init"
+                        wpm.wechat_msg_id = res_json.get("msgid", "")
+                else:
+                    wpm.push_flag = "push_fail"
+                    wpm.remark = "请求返回异常"
+
+                wpm.save()
+
+    # 获取所有客服基本信息
+    @classmethod
+    def get_kf_list(cls, is_test=TEST_MODE):
+        url = "https://api.weixin.qq.com/cgi-bin/customservice/getkflist?access_token=%s" % (
+            WechatAccessToken.getTokenByType("access_token", is_test))
+
+        response = requests.get(url)
+        if response.status_code != 200:
+            return "get failure"
+
+        res_json = response.json()
+
+        if res_json.get("errcode", 0) != 0:
+            raise ValueError("get failure :" + res_json.get("errmsg", "unknown errmsg"))
+        # print("kf list: ", res_json)
+        for kf_hash in res_json['kf_list']:
+            print("客服帐号[%s]:微信号[%s],昵称[%s]" % (kf_hash['kf_account'], kf_hash['kf_wx'], kf_hash['kf_nick']))
+
+    # 获取客服信息--是否在线,接待人数
+    @classmethod
+    def get_kf_list_online(cls, is_test=TEST_MODE):
+        url = "https://api.weixin.qq.com/cgi-bin/customservice/getonlinekflist?access_token=%s" % (
+            WechatAccessToken.getTokenByType("access_token", is_test))
+
+        response = requests.get(url)
+        if response.status_code != 200:
+            return "get failure"
+
+        res_json = response.json()
+
+        if res_json.get("errcode", 0) != 0:
+            raise ValueError("get failure :" + res_json.get("errmsg", "unknown errmsg"))
+        # print("kf list: ", res_json)
+        for kf_hash in res_json['kf_online_list']:
+            if kf_hash['status'] == 1:
+                status = "在线"
+            else:
+                status = "离线"
+            print("客服帐号[%s]:是否在线[%s],正接待会话数[%d]" % (kf_hash['kf_account'], status, kf_hash['accepted_case']))
