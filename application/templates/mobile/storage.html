@@ -15,11 +15,13 @@
 			<p class="module-title">{{ category.get('category_name') }}</p>
 			<div class="divider2"></div>
 			{% for product in products_hash.get(category.get('category_id')) %}
+                {% if not product.get('isvalid')=="NO" %}
 				<a href="{{ url_for('mobile_storage_show', product_id = product.get('product_id')) }}" class="col-6-gap product top-gap-1">
 					<img class="full-img" src="{{ product.get('images')[0] }}">
 					<p class="text-center">{{ product.get('name') }}</p>
 					<div class="product-divider"></div>
-				</a>	
+				</a>
+                {% endif %}
 			{% endfor %}
 			<div class="text-center pull-left top-gap-3 col-12">
 				<a class="much-more text-sm btn-style-2">更 多</a>

@@ -27,49 +27,53 @@
 		</div>
 	
 	{% for category in categories %}
-						{% with products_json = load_products(category.get('category_id')) %}
-								{% if len(products_json) > 0 %}
-										{% for product_json in products_json %}
-												{% with skus_json = load_skus(product_json.get('product_id')) %}
-														{% if len(skus_json.get('skus')) > 0 %}
-																{% for sku in skus_json.get('skus') %}
-																<div class="wrapper-style rect top-gap-2 js-{{ category.get('category_name') }} js-{{ product_json.get('name') }} js-wrapper">
-																	<div class="wrapper-header"><span class="wrapper-header-title">{{ category.get('category_name') }}</span><span class="wrapper-header-icon glyphicon glyphicon-shopping-cart pull-right"></span></div>
-																	<div class="wrapper-inner clearfix">
-																		<div class="wrapper-inner-img"><img class="full-img" src="/static/images/doc.png"></div>
-																		<div class="wrapper-inner-content clearfix">
-																			<div class="wrapper-row">
-																				<p class="set-1">产品 :<span class="text-gray inline-display">{{ product_json.get('name') }}</span></p>
-																			</div>
-																			<div class="wrapper-row">
-																				<p class="set-1">Sku :
-																					<span class="text-gray inline-display">
-																						{% for option in sku.get('options') %}
-																								{% for key, value in option.items() %}
-																										{{ value }}
-																								{% endfor %}
-																						{% endfor %}
-																					</span>
-																				</p>
-																			</div>
-																			<div class="wrapper-row">
-																				<p class="set-2">库存 :<span class="text-dark inline-display"><span class="glyphicon glyphicon-tint text-gray"></span> {{ sku.get('stocks') }}</span></p>
-																				<p class="set-2">已下单数量 :<span class="text-dark inline-display"><span class="glyphicon glyphicon-tint text-gray"></span> {{ sku.get('stocks_for_order') }}</span></p>
-																				
-																			</div>
-																		</div>
-																	</div>
-																	<div class="wrapper-footer text-right">
-																			<a href="{{ url_for('new_share_inventory', product_name=product_json.get('name'), sku_id=sku.get('sku_id') ) }}" class="text-success"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;申请上传工程剩余库存</a>
-																	</div>
-																</div>
-													{% endfor %}
-												{% endif %}
-										{% endwith %}
-								{% endfor %}
-						{% endif %}
-				{% endwith %}
-		{% endfor %}
+        {% with products_json = load_products(category.get('category_id')) %}
+            {% if len(products_json) > 0 %}
+                {% for product_json in products_json %}
+                    {% if not product_json.get('isvalid') == "NO" %}
+                        {% with skus_json = load_skus(product_json.get('product_id')) %}
+                            {% if len(skus_json.get('skus')) > 0 %}
+                                {% for sku in skus_json.get('skus') %}
+                                    {% if not sku.get('isvalid') == "NO" %}
+                                    <div class="wrapper-style rect top-gap-2 js-{{ category.get('category_name') }} js-{{ product_json.get('name') }} js-wrapper">
+                                        <div class="wrapper-header"><span class="wrapper-header-title">{{ category.get('category_name') }}</span><span class="wrapper-header-icon glyphicon glyphicon-shopping-cart pull-right"></span></div>
+                                        <div class="wrapper-inner clearfix">
+                                            <div class="wrapper-inner-img"><img class="full-img" src="/static/images/doc.png"></div>
+                                            <div class="wrapper-inner-content clearfix">
+                                                <div class="wrapper-row">
+                                                    <p class="set-1">产品 :<span class="text-gray inline-display">{{ product_json.get('name') }}</span></p>
+                                                </div>
+                                                <div class="wrapper-row">
+                                                    <p class="set-1">Sku :
+                                                        <span class="text-gray inline-display">
+                                                            {% for option in sku.get('options') %}
+                                                                    {% for key, value in option.items() %}
+                                                                            {{ value }}
+                                                                    {% endfor %}
+                                                            {% endfor %}
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                                <div class="wrapper-row">
+                                                    <p class="set-2">库存 :<span class="text-dark inline-display"><span class="glyphicon glyphicon-tint text-gray"></span> {{ sku.get('stocks') }}</span></p>
+                                                    <p class="set-2">已下单数量 :<span class="text-dark inline-display"><span class="glyphicon glyphicon-tint text-gray"></span> {{ sku.get('stocks_for_order') }}</span></p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="wrapper-footer text-right">
+                                                <a href="{{ url_for('new_share_inventory', product_name=product_json.get('name'), sku_id=sku.get('sku_id') ) }}" class="text-success"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;申请上传工程剩余库存</a>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    {% endfor %}
 			
 	</div>
 </div>

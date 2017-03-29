@@ -10,9 +10,11 @@
 				{% with products_json = load_products(category.get('category_id')) %}
 						{% if len(products_json) > 0 %}
 								{% for product_json in products_json %}
+                                    {% if not product_json.get('isvalid') == "NO" %}
 										{% with skus_json = load_skus(product_json.get('product_id')) %}
 												{% if len(skus_json.get('skus')) > 0 %}
 														{% for sku in skus_json.get('skus') %}
+                                                            {% if not sku.get('isvalid') == "NO" %}
 																{% with invs = load_user_inventories(user.id,sku.get('sku_id'), "2") %}
 																		{% for inv in invs %}
 																				{% for batch in inv.get('batches') %}
@@ -50,9 +52,11 @@
 																			{% endfor %}
 																		{% endfor %}
 																{% endwith %}
+                                                            {% endif %}
 														{% endfor %}
 												{% endif %}
 										{% endwith %}
+                                    {% endif %}
 								{% endfor %}
 						{% endif %}
 				{% endwith %}

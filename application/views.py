@@ -554,31 +554,33 @@ def stocks_share_for_order(area_id):
                 products_json = load_products(category.get('category_id'))
                 if len(products_json) > 0:
                     for product_json in products_json:
-                        skus_json = load_skus(product_json.get('product_id'))
-                        if len(skus_json.get('skus')) > 0:
-                            for sku in skus_json.get('skus'):
-                                sku_option = ""
-                                for option in sku.get('options'):
-                                    for key, value in option.items():
-                                        sku_option = "%s %s" % (sku_option, value)
-                                if request.args.get("sku_code", '') == '' or \
-                                        (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
-                                    invs = load_user_inventories(user.id, sku.get('sku_id'), "2")
-                                    for inv in invs:
-                                        for batch in inv.get('batches'):
-                                            batch_infos.append({"product_name": product_json.get('name'),
-                                                                "category_name": category.get('category_name'),
-                                                                "sku_specification": sku_option,
-                                                                "thumbnail": sku.get('thumbnail'),
-                                                                "user": user.nickname,
-                                                                "city": "%s工程剩余库存" % user.sales_areas.first().name,
-                                                                "sku_id": sku.get('sku_id'),
-                                                                "production_date": batch.get('production_date'),
-                                                                "batch_no": batch.get('batch_no'),
-                                                                "batch_id": batch.get('inv_id'),
-                                                                "sku_code": sku.get('code'),
-                                                                "price": batch.get('price'),
-                                                                "stocks": batch.get('stocks')})
+                        if not product_json.get('isvalid') == "NO":
+                            skus_json = load_skus(product_json.get('product_id'))
+                            if len(skus_json.get('skus')) > 0:
+                                for sku in skus_json.get('skus'):
+                                    if not sku.get('isvalid') == "NO":
+                                        sku_option = ""
+                                        for option in sku.get('options'):
+                                            for key, value in option.items():
+                                                sku_option = "%s %s" % (sku_option, value)
+                                        if request.args.get("sku_code", '') == '' or \
+                                                (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
+                                            invs = load_user_inventories(user.id, sku.get('sku_id'), "2")
+                                            for inv in invs:
+                                                for batch in inv.get('batches'):
+                                                    batch_infos.append({"product_name": product_json.get('name'),
+                                                                        "category_name": category.get('category_name'),
+                                                                        "sku_specification": sku_option,
+                                                                        "thumbnail": sku.get('thumbnail'),
+                                                                        "user": user.nickname,
+                                                                        "city": "%s工程剩余库存" % user.sales_areas.first().name,
+                                                                        "sku_id": sku.get('sku_id'),
+                                                                        "production_date": batch.get('production_date'),
+                                                                        "batch_no": batch.get('batch_no'),
+                                                                        "batch_id": batch.get('inv_id'),
+                                                                        "sku_code": sku.get('code'),
+                                                                        "price": batch.get('price'),
+                                                                        "stocks": batch.get('stocks')})
     # 公司库存
     for category in categories:
         if request.args.get("category_name", '') == '' or \
@@ -587,31 +589,33 @@ def stocks_share_for_order(area_id):
             products_json = load_products(category.get('category_id'))
             if len(products_json) > 0:
                 for product_json in products_json:
-                    skus_json = load_skus(product_json.get('product_id'))
-                    if len(skus_json.get('skus')) > 0:
-                        for sku in skus_json.get('skus'):
-                            sku_option = ""
-                            for option in sku.get('options'):
-                                for key, value in option.items():
-                                    sku_option = "%s %s" % (sku_option, value)
-                            if request.args.get("sku_code", '') == '' or \
-                                    (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
-                                invs = load_user_inventories("0", sku.get('sku_id'), "2")
-                                for inv in invs:
-                                    for batch in inv.get('batches'):
-                                        batch_infos.append({"product_name": product_json.get('name'),
-                                                            "category_name": category.get('category_name'),
-                                                            "sku_specification": sku_option,
-                                                            "thumbnail": sku.get('thumbnail'),
-                                                            "user": "公司",
-                                                            "city": "公司工程剩余库存",
-                                                            "sku_id": sku.get('sku_id'),
-                                                            "production_date": batch.get('production_date'),
-                                                            "batch_no": batch.get('batch_no'),
-                                                            "batch_id": batch.get('inv_id'),
-                                                            "sku_code": sku.get('code'),
-                                                            "price": batch.get('price'),
-                                                            "stocks": batch.get('stocks')})
+                    if not product_json.get('isvalid') == "NO":
+                        skus_json = load_skus(product_json.get('product_id'))
+                        if len(skus_json.get('skus')) > 0:
+                            for sku in skus_json.get('skus'):
+                                if not sku.get('isvalid') == "NO":
+                                    sku_option = ""
+                                    for option in sku.get('options'):
+                                        for key, value in option.items():
+                                            sku_option = "%s %s" % (sku_option, value)
+                                    if request.args.get("sku_code", '') == '' or \
+                                            (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
+                                        invs = load_user_inventories("0", sku.get('sku_id'), "2")
+                                        for inv in invs:
+                                            for batch in inv.get('batches'):
+                                                batch_infos.append({"product_name": product_json.get('name'),
+                                                                    "category_name": category.get('category_name'),
+                                                                    "sku_specification": sku_option,
+                                                                    "thumbnail": sku.get('thumbnail'),
+                                                                    "user": "公司",
+                                                                    "city": "公司工程剩余库存",
+                                                                    "sku_id": sku.get('sku_id'),
+                                                                    "production_date": batch.get('production_date'),
+                                                                    "batch_no": batch.get('batch_no'),
+                                                                    "batch_id": batch.get('inv_id'),
+                                                                    "sku_code": sku.get('code'),
+                                                                    "price": batch.get('price'),
+                                                                    "stocks": batch.get('stocks')})
     return render_template('mobile/share_index_for_order.html', batch_infos=batch_infos, area_id=area_id,
                            categories=categories)
 
