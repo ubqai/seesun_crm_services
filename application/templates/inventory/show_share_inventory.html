@@ -2,7 +2,7 @@
 {% from 'macros/pc_partial.html' import sidebar %}
 {% block main_content %}
 
-{{ sidebar(active = 'product') }}
+{{ sidebar(active = 'sale') }}
 <div class="contents">
     <div class="contents-header">
         <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
@@ -49,6 +49,20 @@
 								<div class="sub-form-item">
 									<span>生产日期:</span>
 									<span>{{ si.production_date }}</span>
+								</div>
+            </div>
+            <div class="form-item">
+								<div class="sub-form-item">
+									<span>申请经销商:</span>
+									<span>{{ si.app_user.nickname }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>联系人:</span>
+									<span>{{ si.app_user.user_infos[0].name }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>联系电话:</span>
+									<span>{{ si.app_user.user_infos[0].telephone }}</span>
 								</div>
             </div>
 						<div class="form-item">
