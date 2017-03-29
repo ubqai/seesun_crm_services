@@ -35,7 +35,7 @@ def mobile_verification():
     else:
         wechat_info = None
         try:
-            wechat_info = WechatAccessToken.getJsApiSign(request.url)
+            wechat_info = WechatAccessToken.get_js_api_sign(request.url)
         except Exception as e:
             flash('摄像头授权获取失败,请刷新重试 %s' % e)
 
@@ -79,7 +79,7 @@ def mobile_user_binding():
             flash("请关闭页面后,通过微信-绑定用户进入此页面")
         else:
             try:
-                openid = WechatCall.getOpenIdByCode(request.args.get("code"))
+                openid = WechatCall.get_open_id_by_code(request.args.get("code"))
                 app.logger.info("get openid[%s] by code[%s]" % (openid, request.args.get("code")))
                 wui = WechatUserInfo.query.filter_by(open_id=openid).first()
                 if wui is not None:
