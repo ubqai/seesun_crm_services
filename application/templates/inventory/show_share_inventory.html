@@ -1,0 +1,85 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active = 'product') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">工程剩余库存申请详情</p>
+        <p class="contents-header-p text-sm">details of inventories</p>
+        <a class="new-one" href="{{ url_for('inventory.show_share_inventory', id=si.id) }}"><span class="glyphicon glyphicon-envelope"></span></a>
+    </div>
+    <div class="separator"><span></span></div>
+
+
+    <div class="widget">
+        <div class="widget_header">
+            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;工程剩余库存申请详情</h4>
+        </div>
+        <div class="widget_contents padding-0 bot-gap-3">
+            <div class="form-item">
+								<div class="sub-form-item">
+									<span>申请编号(批次号)：</span>
+									<span>{{ si.batch_no }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>申请日期：</span>
+									<span>{{ si.created_at.strftime('%Y-%m-%d') }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>状态：</span>
+									<span>{{ si.status }}</span>
+								</div>
+            </div>
+        </div>
+				<div class="widget_header">
+            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;详情列表</h4>
+        </div>
+
+
+        <div class="widget_contents padding-0 bot-gap-3">
+            <div class="form-item">
+								<div class="sub-form-item">
+									<span>产品名称：</span>
+									<span>{{ si.product_name }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>规格：</span>
+									<span>{{ si.sku_option }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>生产日期：</span>
+									<span>{{ si.production_date }}</span>
+								</div>
+            </div>
+						<div class="form-item">
+								<div class="sub-form-item">
+									<span>库存量：</span>
+									<span>{{ si.stocks }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>价格：</span>
+									<span>{{ si.price }}</span>
+								</div>
+            </div>
+						<div class="form-item">
+								{% for file in si.pic_files %}
+								<div class="col-3 thumbnail">
+										<img src="{{ file }}" class="full-img">
+								</div>
+								{% endfor %}
+
+            </div>
+        </div>
+
+
+        {% if si.status=="新申请待审核" %}
+            <div class="text-right top-gap-3">
+                <a class="btn btn-default my-btn right-gap-2" href="{{ url_for('inventory.audit_share_inventory', id=si.id) }}">审核</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

@@ -36,6 +36,7 @@
 					<ul class="sub">
 						<li><a href="{{ url_for('product.category_index') }}">产品</a></li>
 						<li><a href="{{ url_for('inventory.index') }}">库存</a></li>
+                        <li><a href="{{ url_for('inventory.share_inventory_list') }}">工程剩余库存申请审核</a></li>
 					</ul>
 				</li>
 				<li class="sub-menu {% if active == 'design' %}active{% endif %}">

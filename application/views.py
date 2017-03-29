@@ -661,15 +661,15 @@ def new_share_inventory(product_name, sku_id):
             flash('价格必须大于0', 'danger')
             return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name,
                                    params=params)
-        if request.form.getlist('pic_files[]') == []:
-            flash('材料图片必须上传', 'danger')
-            return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name,
-                                   params=params)
         upload_files = request.files.getlist('pic_files[]')
         filenames = []
         for file in upload_files:
             file_path = save_upload_file(file)
             filenames.append(file_path)
+        if filenames == [None]:
+            flash('材料图片必须上传', 'danger')
+            return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name,
+                                   params=params)
         sku = get_sku(sku_id)
         options = []
         for option in sku.get('options'):
@@ -691,7 +691,7 @@ def new_share_inventory(product_name, sku_id):
         db.session.add(si)
         db.session.commit()
         flash('已申请，等待审核', 'success')
-        return redirect(url_for('stocks_share', area_id=0))
+        return redirect(url_for('share_inventory_list'))
     return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name, params={})
 
 

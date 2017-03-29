@@ -1,0 +1,40 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active = 'product') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">审核工程剩余库存申请</p>
+        <p class="contents-header-p text-sm">contracts</p>
+    </div>
+    <div class="separator"><span></span></div>
+    <form class="form form-horizontal" method="post" url="{{ url_for('inventory.audit_share_inventory', id=si.id) }}"
+          role="form" enctype="multipart/form-data">
+        <div class="widget_contents padding-0 item-wrapper">
+            <div class="form-item item-template">
+                <div class="form-item-2 col-3">
+                    <span>*请选择状态</span>
+                    <select class="form-input form-control" name="status">
+                        <option value=""></option>
+                        <option value="审核通过" {{ 'selected' if params.get('status','') == '审核通过' else '' }}>审核通过</option>
+                        <option value="审核未通过" {{ 'selected' if params.get('status','') == '审核未通过' else '' }}>审核未通过</option>
+                    </select>
+                </div>
+                <div class="form-item-2 col-3">
+                    <span>审核价格</span>
+                    <input class="form-input form-control" name="price" value="{{ params.get('price', '') }}">
+                </div>
+
+
+                <div class="text-right top-gap-1">
+                    <button type="submit" class="btn btn-default my-btn">提交</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+

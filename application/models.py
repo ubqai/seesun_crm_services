@@ -207,7 +207,12 @@ class ShareInventory(db.Model, Rails):
     production_date = db.Column(db.String(30))
     stocks = db.Column(db.Float)
     price = db.Column(db.Float)
+    audit_price = db.Column(db.Float)
     pic_files = db.Column(db.JSON)
+
+    @property
+    def app_name(self):
+        return User.query.get_or_404(self.applicant_id).nickname
 
 
 class TrackingInfo(db.Model, Rails):

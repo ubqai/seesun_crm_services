@@ -1,0 +1,88 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% block main_content %}
+
+{{ sidebar(active = 'product') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">工程剩余库存申请列表</p>
+        <p class="contents-header-p text-sm">list of shares</p>
+    </div>
+    <div class="separator"><span></span></div>
+
+    <div class="widget">
+        <div class="widget_header">
+            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;工程剩余库存申请列表</h4>
+        </div>
+        <div class="widget_contents padding-0">
+            <table class="tables">
+                <thead>
+					<tr>
+						<th>申请编号（批次号）</th>
+                        <th>申请人</th>
+						<th>申请日期</th>
+                        <th>产品名称</th>
+						<th>规格</th>
+						<th>生产日期</th>
+						<th>库存量</th>
+                        <th>价格</th>
+                        <th>状态</th>
+						<th>审核</th>
+					</tr>
+				</thead>
+				<tbody>
+                    {% for si in sis.items %}
+                        <tr>
+                            <td><a href="{{ url_for('inventory.show_share_inventory', id=si.id) }}" class="text-danger">{{ si.batch_no }}</a></td>
+                            <td>{{ si.app_name }}</td>
+                            <td>{{ si.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ si.product_name }}</td>
+                            <td>{{ si.sku_option }}</td>
+                            <td>{{ si.production_date }}</td>
+                            <td>{{ si.stocks }}</td>
+                            <td>{{ si.price }}</td>
+                            <td>
+                                {{ si.status }}
+                            </td>
+                            <td>
+                                {% if si.status == '新申请待审核' %}
+                                    <a href="{{ url_for('inventory.audit_share_inventory', id=si.id) }}" class="text-danger">审核</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+				</tbody>
+            </table>
+        </div>
+    <ul class="pagination">
+	    <li>
+	        {% if sis.has_prev %}
+	            <a href="{{ url_for('inventory.share_inventory_list', page = sis.prev_num) }}">上一页</a>
+	        {% endif %}
+        </li>
+
+        {%- for page in sis.iter_pages() %}
+          <li>
+              {% if page %}
+                {% if page != sis.page %}
+                  <a href="{{ url_for('inventory.share_inventory_list', page=page) }}">{{ page }}</a>
+                {% else %}
+                  <span class="page-number current">{{ page }}</span>
+                {% endif %}
+              {% else %}
+                <span class=ellipsis>…</span>
+              {% endif %}
+          </li>
+        {%- endfor %}
+         <li>
+            {% if sis.has_next %}
+                <a href="{{ url_for('inventory.share_inventory_list', page = sis.next_num) }}">下一页 </a>
+            {% endif %}
+        </li>
+	</ul>
+    </div>
+</div>
+
+{% endblock %}
+
