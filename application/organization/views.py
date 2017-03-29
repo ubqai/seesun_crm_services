@@ -219,9 +219,9 @@ def user_update(user_id):
             form.phone.data = ui.telephone
             form.title.data = ui.title
 
-        if u.sales_areas.first() != None:
+        if u.sales_areas.first() is not None:
             form.sale_range.default = u.sales_areas.first().id
-        if u.departments.first() != None:
+        if u.departments.first() is not None:
             form.dept_ranges.default = u.departments.all()
 
         return render_template('organization/user_update.html', form=form, user_id=u.id)
@@ -251,15 +251,14 @@ def regional_and_team_index():
     form.reset_select_field()
 
     sah_infos = {}
-    app.logger.info("regional.data [%s]" % (form.regional.data))
+    app.logger.info("regional.data [%s]" % form.regional.data)
     if form.regional.data == []:
         sah_search = form.regional.query
     else:
         sah_search = form.regional.data
 
-    for sah in (sah_search):
+    for sah in sah_search:
         # 每个区域只有一个总监
-        leader = ()
         leader_info = UserAndSaleArea.query.filter(UserAndSaleArea.parent_id == None,
                                                    UserAndSaleArea.sales_area_id == sah.id).first()
         if leader_info is None:
@@ -284,8 +283,8 @@ def regional_manage_leader(sah_id):
     if request.method == 'POST':
         try:
             form = BaseCsrfForm(request.form, meta={'csrf_context': session})
-            if form.validate() == False:
-                flash("非法提交 [%s]" % (form.errors))
+            if form.validate() is False:
+                flash("非法提交 [%s]" % form.errors)
                 return redirect(url_for('organization.regional_and_team_index'))
 
             user_id = int(request.form.get("user_id"))
@@ -305,13 +304,13 @@ def regional_manage_leader(sah_id):
                 db.session.delete(leader_info)
 
             # add data proc
-            app.logger.info("add new user[%s] proc" % (user_id))
+            app.logger.info("add new user[%s] proc" % user_id)
             u_add = User.query.filter_by(id=user_id).first()
             u_add.sales_areas.append(sah)
             db.session.add(u_add)
 
             db.session.commit()
-            flash("区域[%s] 负责人修改成功" % (sah.name))
+            flash("区域[%s] 负责人修改成功" % sah.name)
             return redirect(url_for('organization.regional_and_team_index'))
         except Exception as e:
             flash("区域[%s] 负责人修改失败:[%s]" % (sah.name, e))
@@ -338,7 +337,7 @@ def regional_manage_leader(sah_id):
             user_infos[u.id] = {"choose": choose, "name": u.nickname}
 
         sorted_user_infos = sorted(user_infos.items(), key=lambda p: p[1]["choose"], reverse=True)
-        app.logger.info("sorted_user_infos [%s]" % (sorted_user_infos))
+        app.logger.info("sorted_user_infos [%s]" % sorted_user_infos)
 
         return render_template('organization/regional_manage_leader.html', sorted_user_infos=sorted_user_infos,
                                sah_id=sah.id,
@@ -351,19 +350,19 @@ def regional_manage_team(sah_id, leader_id, region_province_id):
     app.logger.info("regional_manage_team [%d],[%d],[%d]" % (sah_id, leader_id, region_province_id))
     sah = SalesAreaHierarchy.query.filter_by(id=sah_id).first()
     if sah is None:
-        flash("非法区域id[%d]" % (sah_id))
+        flash("非法区域id[%d]" % sah_id)
         return redirect(url_for('organization.regional_and_team_index'))
 
     leader = User.query.filter_by(id=leader_id).first()
     if leader is None:
-        flash("非法负责人id[%d]" % (leader_id))
+        flash("非法负责人id[%d]" % leader_id)
         return redirect(url_for('organization.regional_and_team_index'))
 
     if request.method == 'POST':
         try:
             form = BaseCsrfForm(request.form, meta={'csrf_context': session})
-            if form.validate() == False:
-                flash("非法提交 [%s]" % (form.errors))
+            if form.validate() is False:
+                flash("非法提交 [%s]" % form.errors)
                 return redirect(url_for('organization.regional_and_team_index'))
 
             user_id = int(request.form.get("user_id"))
@@ -419,7 +418,7 @@ def regional_manage_team(sah_id, leader_id, region_province_id):
             user_infos[u.id] = {"choose": choose, "name": u.nickname}
 
         sorted_user_infos = sorted(user_infos.items(), key=lambda p: p[1]["choose"], reverse=True)
-        app.logger.info("sorted_user_infos [%s]" % (sorted_user_infos))
+        app.logger.info("sorted_user_infos [%s]" % sorted_user_infos)
 
         return render_template('organization/regional_manage_team.html', sorted_user_infos=sorted_user_infos,
                                sah_id=sah.id, leader_id=leader.id, region_province_id=region_province_id, form=form)
@@ -435,12 +434,12 @@ def regional_manage_province(sah_id):
     if request.method == 'POST':
         try:
             form = BaseCsrfForm(request.form, meta={'csrf_context': session})
-            if form.validate() == False:
-                flash("非法提交 [%s]" % (form.errors))
+            if form.validate() is False:
+                flash("非法提交 [%s]" % form.errors)
                 return redirect(url_for('organization.regional_and_team_index'))
 
             province_id_array = request.form.getlist("province_id")
-            app.logger.info("choose province_arrays: [%s]" % (province_id_array))
+            app.logger.info("choose province_arrays: [%s]" % province_id_array)
             delete_exists_count = 0
             # 先对已有记录进行删除
             for exists_province in SalesAreaHierarchy.query.filter_by(parent_id=sah.id).all():
@@ -477,7 +476,7 @@ def regional_manage_province(sah_id):
                 db.session.add(add_province)
 
             db.session.commit()
-            flash("区域[%s] 区域(省)修改成功" % (sah.name))
+            flash("区域[%s] 区域(省)修改成功" % sah.name)
             return redirect(url_for('organization.regional_and_team_index'))
         except Exception as e:
             flash(e)
@@ -501,6 +500,56 @@ def regional_manage_province(sah_id):
             province_info[sah_province.id] = {"name": sah_province.name, "up_name": sah_up_name, "choose": choose}
 
         sorted_province_info = sorted(province_info.items(), key=lambda p: p[1]["choose"], reverse=True)
-        app.logger.info("sorted_province_info [%s]" % (sorted_province_info))
+        app.logger.info("sorted_province_info [%s]" % sorted_province_info)
         return render_template('organization/regional_manage_province.html', sah_id=sah.id,
                                sorted_province_info=sorted_province_info, form=form)
+
+
+# 帐号信息管理
+@organization.route('/account/index')
+def account_index():
+    app.logger.info("into account_index")
+    form = UserForm(obj=current_user, user_type=current_user.user_or_origin, meta={'csrf_context': session})
+    form.reset_select_field()
+    if len(current_user.user_infos) == 0:
+        pass
+    else:
+        ui = current_user.user_infos[0]
+        form.name.data = ui.name
+        form.address.data = ui.address
+        form.phone.data = ui.telephone
+        form.title.data = ui.title
+
+    return render_template('organization/account_index.html', form=form)
+
+
+# 帐号信息管理
+@organization.route('/account/password_update', methods=['POST'])
+def account_password_update():
+    app.logger.info("into account_password_update")
+    try:
+        form = BaseCsrfForm(request.form, meta={'csrf_context': session})
+        if form.validate() is False:
+            raise ValueError("非法提交,验证错误")
+
+        app.logger.info("%s - %s" % (request.form.get("email"), request.form.get("password_now")))
+        user = User.login_verification(request.form.get("email"), request.form.get("password_now"),
+                                       current_user.user_or_origin)
+        if user is None:
+            raise ValueError("密码错误")
+        app.logger.info(user.nickname)
+        password = request.form.get("password_new")
+        password_confirm = request.form.get("password_new_confirm")
+        if password != password_confirm:
+            raise ValueError("新密码两次输入不匹配")
+        if len(password) < 8 or len(password) > 20:
+            raise ValueError("密码长度必须大等于8小等于20")
+
+        user.password = password
+        user.save
+
+        flash("密码修改成功")
+    except Exception as e:
+        flash("%s" % e)
+
+    return redirect(url_for('organization.account_index'))

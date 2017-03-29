@@ -1,0 +1,88 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar %}
+{% from 'macros/pc_form_field_error.html' import render_form_field_error %}
+{% block main_content %}
+
+{{ sidebar(active = 'organization') }}
+
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png"/></div>
+        <p class="contents-header-p">帐号信息</p>
+        <p class="contents-header-p text-sm">user management</p>
+    </div>
+    <div class="separator"><span></span></div>
+    <div class="widget_contents padding-0 item-wrapper">
+        <div class="form-item item-template">
+            <div class="well well-sm">
+                <button type="button" class="btn my-btn" id="btn_click_display">密码</button>
+                <div id="div_click_display" style="display:none">
+                    <form class="form form-horizontal" method="post" action="{{url_for('organization.account_password_update')}}" role="form">
+                        {{ form.csrf_token }}
+                        {{ form.email(class = 'form-input form-control',placeholder="请输入email",type='hidden') }}
+                        <div class="form-item-2">
+                            <span>* 现密码</span>
+                            <input class="form-input form-control" id="password_now" name="password_now" placeholder="请输入现密码" type="password" value="">
+                        </div>
+                        <div class="form-item-2">
+                            <span>* 新密码</span>
+                            <input class="form-input form-control" id="password_new" name="password_new" placeholder="请输入新密码" type="password" value="">
+                        </div>
+                        <div class="form-item-2">
+                            <span style="vertical-align:middle">* 新密码</span>
+                            <input class="form-input form-control" id="password_new_confirm" name="password_new_confirm" placeholder="请输入新密码" type="password" value="">
+                        </div>
+                        <button type="submit" class="btn btn-default my-btn">修改密码</button>
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="form-item-2">
+                <span>{{ form.user_type.label }}</span>
+                {{ form.user_type(class = 'form-input form-control',id="select_user_type",disabled="disabled") }}
+                {{ render_form_field_error(form.user_type) }}
+            </div>
+            <div class="form-item-2">
+                <span>* {{ form.email.label }}</span>
+                {{ form.email(class = 'form-input form-control',placeholder="请输入email",readonly="readonly") }}
+                {{ render_form_field_error(form.email) }}
+            </div>
+            <div class="form-item-2">
+                <span>* {{ form.name.label }}</span>
+                {{ form.name(class = 'form-input form-control',placeholder="请输入姓名",readonly="readonly") }}
+                {{ render_form_field_error(form.name) }}
+            </div>
+
+            <div class="form-item-2">
+                <span>{{ form.title.label }}</span>
+                {{ form.title(class = 'form-input form-control',placeholder="请输入头衔",readonly="readonly") }}
+                {{ render_form_field_error(form.title) }}
+            </div>
+
+            <div class="form-item-2">
+                <span>{{ form.nickname.label(id='label_nickname') }}</span>
+                {{ form.nickname(class = 'form-input form-control',placeholder="请输入昵称",readonly="readonly") }}
+                {{ render_form_field_error(form.nickname) }}
+            </div>
+            <div class="form-item-2">
+                <span>* {{ form.phone.label(id='label_phone') }}</span>
+                {{ form.phone(class = 'form-input form-control',placeholder="请输入电话",readonly="readonly") }}
+                {{ render_form_field_error(form.phone) }}
+            </div>
+
+            <div class="form-item-2">
+                <span>* {{ form.address.label }}</span>
+                {{ form.address(class = 'form-input form-control',placeholder="请输入地址",readonly="readonly")|safe }}
+                {{ render_form_field_error(form.address) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btn_click_display").click(function(){
+      $("#div_click_display").toggle();
+    });
+</script>
+{% endblock %}
