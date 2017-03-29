@@ -21,6 +21,7 @@
 							<ul class="t-sub">
 								<li><a href="{{ url_for('content.material_application_index') }}">物料申请</a></li>
                                 <li><a href="{{ url_for('project_report.index') }}">项目报备申请</a></li>
+                                <li><a href="{{ url_for('inventory.share_inventory_list') }}">工程剩余库存申请审核</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -36,7 +37,6 @@
 					<ul class="sub">
 						<li><a href="{{ url_for('product.category_index') }}">产品</a></li>
 						<li><a href="{{ url_for('inventory.index') }}">库存</a></li>
-                        <li><a href="{{ url_for('inventory.share_inventory_list') }}">工程剩余库存申请审核</a></li>
 					</ul>
 				</li>
 				<li class="sub-menu {% if active == 'design' %}active{% endif %}">

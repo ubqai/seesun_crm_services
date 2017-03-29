@@ -211,8 +211,8 @@ class ShareInventory(db.Model, Rails):
     pic_files = db.Column(db.JSON)
 
     @property
-    def app_name(self):
-        return User.query.get_or_404(self.applicant_id).nickname
+    def app_user(self):
+        return User.query.get_or_404(self.applicant_id)
 
 
 class TrackingInfo(db.Model, Rails):
