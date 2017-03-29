@@ -741,7 +741,7 @@ def mobile_user_login():
     else:
         if request.args.get("code") is not None:
             try:
-                openid = WechatCall.getOpenIdByCode(request.args.get("code"))
+                openid = WechatCall.get_open_id_by_code(request.args.get("code"))
                 wui = WechatUserInfo.query.filter_by(open_id=openid).first()
                 if wui is not None:
                     exists_binding_user = User.query.filter_by(id=wui.user_id).first()
