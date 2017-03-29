@@ -11,6 +11,7 @@
         <input type="hidden" name="product_id" value="{{ product_id }}">
 		<div class="storage-block clearfix">
 		{% for sku in skus.get('skus') %}
+            {% if not sku.get('isvalid') == "NO"%}
 			<div class="col-6-gap storage-sku">
 				<a style="display:block"><img src="{{ sku.get('thumbnail') }}" class="full-img"></a>
 				<p class="text-center light-font-md p-title">sku号 ：{{ sku.get('code') }}</p>
@@ -43,6 +44,7 @@
 					</div>
 				</div>
 			</div>
+            {% endif %}
 		{% endfor %}
 		</div>
 		<div class="fixed-bot">
