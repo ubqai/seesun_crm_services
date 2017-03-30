@@ -37,45 +37,46 @@
                 </div>
             </div>
 
+						<div class="form-style form-default">
+							<div class="form-item-2 col-3">
+									<span>{{ form.user_type.label }}</span>
+									{{ form.user_type(class = 'form-input form-control',id="select_user_type",disabled="disabled") }}
+									{{ render_form_field_error(form.user_type) }}
+							</div>
+							<div class="form-item-2 col-3">
+									<span>* {{ form.email.label }}</span>
+									{{ form.email(class = 'form-input form-control',placeholder="请输入email",readonly="readonly") }}
+									{{ render_form_field_error(form.email) }}
+							</div>
+							<div class="form-item-2 col-3">
+									<span>* {{ form.name.label }}</span>
+									{{ form.name(class = 'form-input form-control',placeholder="请输入姓名",readonly="readonly") }}
+									{{ render_form_field_error(form.name) }}
+							</div>
 
-            <div class="form-item-2">
-                <span>{{ form.user_type.label }}</span>
-                {{ form.user_type(class = 'form-input form-control',id="select_user_type",disabled="disabled") }}
-                {{ render_form_field_error(form.user_type) }}
-            </div>
-            <div class="form-item-2">
-                <span>* {{ form.email.label }}</span>
-                {{ form.email(class = 'form-input form-control',placeholder="请输入email",readonly="readonly") }}
-                {{ render_form_field_error(form.email) }}
-            </div>
-            <div class="form-item-2">
-                <span>* {{ form.name.label }}</span>
-                {{ form.name(class = 'form-input form-control',placeholder="请输入姓名",readonly="readonly") }}
-                {{ render_form_field_error(form.name) }}
-            </div>
+							<div class="form-item-2 col-3">
+									<span>{{ form.title.label }}</span>
+									{{ form.title(class = 'form-input form-control',placeholder="请输入头衔",readonly="readonly") }}
+									{{ render_form_field_error(form.title) }}
+							</div>
 
-            <div class="form-item-2">
-                <span>{{ form.title.label }}</span>
-                {{ form.title(class = 'form-input form-control',placeholder="请输入头衔",readonly="readonly") }}
-                {{ render_form_field_error(form.title) }}
-            </div>
+							<div class="form-item-2 col-3">
+									<span>{{ form.nickname.label(id='label_nickname') }}</span>
+									{{ form.nickname(class = 'form-input form-control',placeholder="请输入昵称",readonly="readonly") }}
+									{{ render_form_field_error(form.nickname) }}
+							</div>
+							<div class="form-item-2 col-3">
+									<span>* {{ form.phone.label(id='label_phone') }}</span>
+									{{ form.phone(class = 'form-input form-control',placeholder="请输入电话",readonly="readonly") }}
+									{{ render_form_field_error(form.phone) }}
+							</div>
 
-            <div class="form-item-2">
-                <span>{{ form.nickname.label(id='label_nickname') }}</span>
-                {{ form.nickname(class = 'form-input form-control',placeholder="请输入昵称",readonly="readonly") }}
-                {{ render_form_field_error(form.nickname) }}
-            </div>
-            <div class="form-item-2">
-                <span>* {{ form.phone.label(id='label_phone') }}</span>
-                {{ form.phone(class = 'form-input form-control',placeholder="请输入电话",readonly="readonly") }}
-                {{ render_form_field_error(form.phone) }}
-            </div>
-
-            <div class="form-item-2">
-                <span>* {{ form.address.label }}</span>
-                {{ form.address(class = 'form-input form-control',placeholder="请输入地址",readonly="readonly")|safe }}
-                {{ render_form_field_error(form.address) }}
-            </div>
+							<div class="form-item-2 col-3 vertical">
+									<span>* {{ form.address.label }}</span>
+									{{ form.address(class = 'form-input form-control',placeholder="请输入地址",readonly="readonly")|safe }}
+									{{ render_form_field_error(form.address) }}
+							</div>
+						</div>
         </div>
     </div>
 </div>
