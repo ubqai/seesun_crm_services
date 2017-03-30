@@ -3,16 +3,44 @@
 {% block content %}
 {{ header('用户信息') }}
 <div class="main-content">
-	<div class="wrappper top-gap-3">
-		<form action="{{ url_for('mobile_user_logout') }}" method="get">
-			{{ form.email(class="form-control",readonly="readonly") }}
-			{{ form.name(class="form-control top-gap-3",readonly="readonly") }}
-			{{ form.address(class="form-control top-gap-3",readonly="readonly") }}
-			{{ form.phone(class="form-control top-gap-3",readonly="readonly") }}
-			{{ form.sale_range(class="form-control top-gap-3",readonly="readonly") }}
-		            <button type="submit" class="btn btn-block btn-warning top-gap-3">退出登入</button>
-		</form>
-	</div>
+    <div class="wrappper top-gap-3">
+       <div class="well well-sm">
+            <button type="button" class="btn my-btn" id="btn_click_display">密码</button>
+            <div id="div_click_display" style="display:none">
+                <form class="form form-horizontal" method="post" action="{{url_for('mobile_user_password_update')}}" role="form">
+                    {{ form.csrf_token }}
+                    {{ form.email(class = 'form-input form-control',placeholder="请输入email",type='hidden') }}
+                    <div class="form-item-2">
+                        <span>* 现密码</span>
+                        <input class="form-input form-control" id="password_now" name="password_now" placeholder="请输入现密码" type="password" value="">
+                    </div>
+                    <div class="form-item-2">
+                        <span>* 新密码</span>
+                        <input class="form-input form-control" id="password_new" name="password_new" placeholder="请输入新密码" type="password" value="">
+                    </div>
+                    <div class="form-item-2">
+                        <span style="vertical-align:middle">* 新密码</span>
+                        <input class="form-input form-control" id="password_new_confirm" name="password_new_confirm" placeholder="请输入新密码" type="password" value="">
+                    </div>
+                    <button type="submit" class="btn btn-default my-btn">修改密码</button>
+                </form>
+            </div>
+        </div>
+        <form action="{{ url_for('mobile_user_logout') }}" method="get">
+            {{ form.email(class="form-control",readonly="readonly") }}
+            {{ form.name(class="form-control top-gap-3",readonly="readonly") }}
+            {{ form.address(class="form-control top-gap-3",readonly="readonly") }}
+            {{ form.phone(class="form-control top-gap-3",readonly="readonly") }}
+            {{ form.sale_range(class="form-control top-gap-3",readonly="readonly") }}
+            <button type="submit" class="btn btn-block btn-warning top-gap-3">退出登入</button>
+        </form>
+    </div>
 </div>
+
+<script>
+    $("#btn_click_display").click(function(){
+      $("#div_click_display").toggle();
+    });
+</script>
 
 {% endblock %}

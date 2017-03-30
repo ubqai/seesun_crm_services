@@ -27,6 +27,7 @@ class Rails(object):
         db.session.commit()
         return self
 
+
 # Contents_and_options: id, content_id, content_classification_option_id
 contents_and_options = db.Table('contents_and_options',
                                 db.Column('content_id', db.Integer, db.ForeignKey('content.id')),
@@ -100,7 +101,8 @@ class ContentCategory(db.Model, Rails):
     @property
     def options(self):
         classification_ids = [classification.id for classification in self.classifications]
-        options = ContentClassificationOption.query.filter(ContentClassificationOption.classification_id.in_(classification_ids))
+        options = ContentClassificationOption.query.filter(
+            ContentClassificationOption.classification_id.in_(classification_ids))
         return options
 
 
@@ -174,7 +176,8 @@ class MaterialApplicationContent(db.Model, Rails):
     application_id = db.Column(db.Integer, db.ForeignKey('material_application.id'))
 
     def __repr__(self):
-        return 'MaterialApplicationContent(id: %s, material_id: %s, number: %s,...)' % (self.id, self.material_id, self.number)
+        return 'MaterialApplicationContent(id: %s, material_id: %s, number: %s,...)' % (
+            self.id, self.material_id, self.number)
 
 
 class DesignApplication(db.Model, Rails):
@@ -228,10 +231,10 @@ class TrackingInfo(db.Model, Rails):
     production_ends_at = db.Column(db.DateTime)
     delivery_date = db.Column(db.DateTime)
     delivery_infos = db.Column(db.JSON, default={})
-    #logistics_company = db.Column(db.String(200))
-    #delivery_plate_no = db.Column(db.String(100))
-    #delivery_man_name = db.Column(db.String(200))
-    #delivery_man_tel = db.Column(db.String(30))
+    # logistics_company = db.Column(db.String(200))
+    # delivery_plate_no = db.Column(db.String(100))
+    # delivery_man_name = db.Column(db.String(200))
+    # delivery_man_tel = db.Column(db.String(30))
     qrcode_token = db.Column(db.String(128))
     qrcode_image = db.Column(db.String(200))
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
@@ -307,7 +310,8 @@ class Contract(db.Model):
 
     def __repr__(self):
         return 'Contract(id: %s, contract_no: %s, contract_date: %s, order_id: %s, contract_status: %s, product_status: %s, shipment_status: %s, ...)' % (
-            self.id, self.contract_no, self.contract_date, self.order_id, self.contract_status, self.product_status, self.shipment_status)
+            self.id, self.contract_no, self.contract_date, self.order_id, self.contract_status, self.product_status,
+            self.shipment_status)
 
     @property
     def production_status(self):
@@ -342,7 +346,8 @@ class OrderContent(db.Model, Rails):
 
     def __repr__(self):
         return 'OrderContent(id: %s, order_id: %s, product_name: %s, sku_specification: %s, sku_code: %s, number: %s, square_num: %s)' % (
-            self.id, self.order_id, self.product_name, self.sku_specification, self.sku_code, self.number, self.square_num)
+            self.id, self.order_id, self.product_name, self.sku_specification, self.sku_code, self.number,
+            self.square_num)
 
 
 users_and_resources = db.Table(
@@ -351,7 +356,6 @@ users_and_resources = db.Table(
     db.Column('resource_id', db.Integer, db.ForeignKey('resources.id'))
 )
 
-
 users_and_sales_areas = db.Table(
     'users_and_sales_areas',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
@@ -359,7 +363,6 @@ users_and_sales_areas = db.Table(
     db.Column('parent_id', db.Integer),
     db.Column('parent_time', db.DateTime)
 )
-
 
 users_and_departments = db.Table(
     'users_and_departments',
@@ -451,6 +454,21 @@ class User(db.Model, Rails):
 
         return user
 
+    @classmethod
+    def update_password(cls, email, password_now, password_new, password_new_confirm, user_or_origin):
+        user = User.login_verification(email, password_now, user_or_origin)
+
+        if user is None:
+            raise ValueError("密码错误")
+
+        if password_new != password_new_confirm:
+            raise ValueError("新密码两次输入不匹配")
+        if len(password_new) < 8 or len(password_new) > 20:
+            raise ValueError("密码长度必须大等于8小等于20")
+
+        user.password = password_new
+        user.save
+
     def get_max_level_grade(self):
         max_level_grade = 99
         for d in self.departments:
@@ -485,7 +503,7 @@ class SalesAreaHierarchy(db.Model):
     level_grade = db.Column(db.Integer)
 
     def __repr__(self):
-            return 'SalesAreaHierarchy %r' % self.name
+        return 'SalesAreaHierarchy %r' % self.name
 
     @classmethod
     def get_team_info_by_regional(cls, regional_id):
@@ -493,7 +511,8 @@ class SalesAreaHierarchy(db.Model):
         for regional_info in SalesAreaHierarchy.query.filter_by(parent_id=regional_id).all():
             # 每个省份只有一个销售员
             team = ()
-            team_info = UserAndSaleArea.query.filter(UserAndSaleArea.parent_id != None, UserAndSaleArea.sales_area_id == regional_info.id).first()
+            team_info = UserAndSaleArea.query.filter(UserAndSaleArea.parent_id != None,
+                                                     UserAndSaleArea.sales_area_id == regional_info.id).first()
             if team_info is None:
                 team = (-1, "无")
             else:

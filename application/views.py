@@ -162,7 +162,7 @@ def mobile_cart():
                                          'batch_id': request.form.get('batch_id_%s' % index),
                                          'dealer': request.form.get('user_%s' % index),
                                          'number': int(request.form.get('number_%s' % index)),
-                                         'square_num': "%.2f" % (0.3*int(request.form.get('number_%s' % index)))}
+                                         'square_num': "%.2f" % (0.3 * int(request.form.get('number_%s' % index)))}
                         order.append(order_content)
         session['order'] = order
         flash('成功加入购物车', 'success')
@@ -247,7 +247,7 @@ def mobile_orders():
 def mobile_created_orders():
     page_size = int(request.args.get('page_size', 5))
     page_index = int(request.args.get('page', 1))
-    orders_page = Order.query.filter_by(user_id=current_user.id).order_by(Order.created_at.desc())\
+    orders_page = Order.query.filter_by(user_id=current_user.id).order_by(Order.created_at.desc()) \
         .paginate(page_index, per_page=page_size, error_out=True)
     return render_template('mobile/orders.html', orders_page=orders_page)
 
@@ -265,11 +265,11 @@ def mobile_design():
     project_reports = ProjectReport.query.filter_by(status='项目报备审核通过')
     if request.method == 'POST':
         if request.form.get('filing_no') and request.files.get('ul_file'):
-            project_report = ProjectReport.query.filter_by(report_no = request.form.get('filing_no')).first()
+            project_report = ProjectReport.query.filter_by(report_no=request.form.get('filing_no')).first()
             if project_report in project_reports:
                 file_path = save_upload_file(request.files.get('ul_file'))
                 application = DesignApplication(filing_no=request.form.get('filing_no'),
-                    ul_file=file_path, status='新申请', applicant=current_user)
+                                                ul_file=file_path, status='新申请', applicant=current_user)
                 application.save
                 flash('产品设计申请提交成功', 'success')
                 return redirect(url_for('mobile_design_applications'))
@@ -285,7 +285,7 @@ def mobile_design():
 def mobile_design_applications():
     # list design applications of current user
     applications = current_user.design_applications
-    return render_template('mobile/design_applications.html', applications = applications)
+    return render_template('mobile/design_applications.html', applications=applications)
 
 
 # --- Material need ---
@@ -321,11 +321,12 @@ def mobile_material_application_new():
                         app_contents.append([param.split('_', 1)[1], request.form.get(param)])
         if app_contents:
             application = MaterialApplication(app_no='MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
-                user=current_user, status='新申请')
+                                              user=current_user, status='新申请')
             db.session.add(application)
             for app_content in app_contents:
                 material = Material.query.get_or_404(app_content[0])
-                content = MaterialApplicationContent(material_name=material.name, number=app_content[1], application=application)
+                content = MaterialApplicationContent(material_name=material.name, number=app_content[1],
+                                                     application=application)
                 db.session.add(content)
             db.session.commit()
             flash('物料申请提交成功', 'success')
@@ -383,7 +384,7 @@ def mobile_tracking():
         tracking_info = TrackingInfo.query.filter(
             (TrackingInfo.contract_no == contract_no) &
             (TrackingInfo.receiver_tel == receiver_tel)
-            ).first()
+        ).first()
         if tracking_info:
             return redirect(url_for('mobile_tracking_info', id=tracking_info.id))
         else:
@@ -445,7 +446,7 @@ def gen_rnd_filename():
     return '%s%s' % (filename_prefix, str(random.randrange(1000, 10000)))
 
 
-@app.route('/ckupload/', methods = ['POST'])
+@app.route('/ckupload/', methods=['POST'])
 def ckupload():
     error = ''
     url = ''
@@ -466,7 +467,7 @@ def ckupload():
             error = 'ERROR_DIR_NOT_WRITEABLE'
         if not error:
             fileobj.save(filepath)
-            url = url_for('static', filename = '%s/%s' % ('upload/ckupload', rnd_name))
+            url = url_for('static', filename='%s/%s' % ('upload/ckupload', rnd_name))
     else:
         error = 'post error'
     res = """
@@ -507,7 +508,7 @@ def new_project_report():
 def project_report_index():
     page_size = int(request.args.get('page_size', 5))
     page_index = int(request.args.get('page', 1))
-    project_reports = ProjectReport.query.filter_by(app_id=current_user.id).order_by(ProjectReport.created_at.desc())\
+    project_reports = ProjectReport.query.filter_by(app_id=current_user.id).order_by(ProjectReport.created_at.desc()) \
         .paginate(page_index, per_page=page_size, error_out=True)
     return render_template('mobile/project_report_index.html', project_reports=project_reports)
 
@@ -550,7 +551,8 @@ def stocks_share_for_order(area_id):
     for user in users:
         for category in categories:
             if request.args.get("category_name", '') == '' or \
-                    (request.args.get("category_name", '') != '' and category.get('category_name') == request.args.get("category_name")):
+                    (request.args.get("category_name", '') != '' and category.get('category_name') == request.args.get(
+                        "category_name")):
                 products_json = load_products(category.get('category_id'))
                 if len(products_json) > 0:
                     for product_json in products_json:
@@ -564,7 +566,8 @@ def stocks_share_for_order(area_id):
                                             for key, value in option.items():
                                                 sku_option = "%s %s" % (sku_option, value)
                                         if request.args.get("sku_code", '') == '' or \
-                                                (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
+                                                (request.args.get("sku_code", '') != '' and sku.get(
+                                                    'code') == request.args.get("sku_code")):
                                             invs = load_user_inventories(user.id, sku.get('sku_id'), "2")
                                             for inv in invs:
                                                 for batch in inv.get('batches'):
@@ -599,7 +602,8 @@ def stocks_share_for_order(area_id):
                                         for key, value in option.items():
                                             sku_option = "%s %s" % (sku_option, value)
                                     if request.args.get("sku_code", '') == '' or \
-                                            (request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
+                                            (request.args.get("sku_code", '') != '' and sku.get(
+                                                'code') == request.args.get("sku_code")):
                                         invs = load_user_inventories("0", sku.get('sku_id'), "2")
                                         for inv in invs:
                                             for batch in inv.get('batches'):
@@ -703,7 +707,7 @@ def new_share_inventory(product_name, sku_id):
 def share_inventory_list():
     page_size = int(request.args.get('page_size', 5))
     page_index = int(request.args.get('page', 1))
-    sis = ShareInventory.query.filter_by(applicant_id=current_user.id).order_by(ShareInventory.created_at.desc())\
+    sis = ShareInventory.query.filter_by(applicant_id=current_user.id).order_by(ShareInventory.created_at.desc()) \
         .paginate(page_index, per_page=page_size, error_out=True)
     return render_template('mobile/share_inventory_list.html', sis=sis)
 
@@ -746,14 +750,14 @@ def mobile_user_login():
         if request.args.get("code") is not None:
             try:
                 openid = WechatCall.get_open_id_by_code(request.args.get("code"))
-                wui = WechatUserInfo.query.filter_by(open_id=openid).first()
+                wui = WechatUserInfo.query.filter_by(open_id=openid, is_active=True).first()
                 if wui is not None:
                     exists_binding_user = User.query.filter_by(id=wui.user_id).first()
                     if exists_binding_user is not None:
                         login_user(exists_binding_user)
                         app.logger.info("binding user login [%s] - [%s]" % (openid, exists_binding_user.nickname))
                         return redirect(url_for('mobile_index'))
-            except Exception as e:
+            except Exception:
                 pass
 
         form = UserLoginForm(meta={'csrf_context': session})
@@ -768,11 +772,15 @@ def mobile_user_logout():
 
 @app.route('/mobile/user/info/<int:user_id>')
 def mobile_user_info(user_id):
+    if user_id != current_user.id:
+        flash("非法提交,请通过正常页面进入")
+        return redirect(url_for('mobile_index'))
+
     u = User.query.filter_by(id=user_id).first()
     if u is None:
         return redirect(url_for('mobile_index'))
 
-    form = UserInfoForm(obj=u, user_type=u.user_or_origin)
+    form = UserInfoForm(obj=u, user_type=u.user_or_origin, meta={'csrf_context': session})
 
     if len(u.user_infos) == 0:
         pass
@@ -785,7 +793,33 @@ def mobile_user_info(user_id):
 
     if u.sales_areas.first() is not None:
         form.sale_range.data = u.sales_areas.first().name
-    if u.departments.first() is not None:
-        form.dept_ranges.data = ",".join([d.name for d in u.departmets.all()])
 
     return render_template('mobile/user_info.html', form=form)
+
+
+@app.route('/mobile/user/password_update', methods=['POST'])
+def mobile_user_password_update():
+    app.logger.info("into mobile_user_password_update")
+    try:
+        form = BaseCsrfForm(request.form, meta={'csrf_context': session})
+        if form.validate() is False:
+            raise ValueError("非法提交,请通过正常页面进行修改")
+
+        if request.form.get("email") != current_user.email:
+            raise ValueError("非法提交,请通过正常页面进行修改")
+
+        User.update_password(request.form.get("email"),
+                             request.form.get("password_now"),
+                             request.form.get("password_new"),
+                             request.form.get("password_new_confirm"),
+                             current_user.user_or_origin)
+
+        for wui in WechatUserInfo.query.filter_by(user_id=current_user.id, is_active=True).all():
+            wui.is_active = False
+            wui.save()
+
+        flash("密码修改成功,如有绑定微信帐号,需要重新绑定")
+    except Exception as e:
+        flash("密码修改失败: %s" % e)
+
+    return redirect(url_for('mobile_user_info', user_id=current_user.id))
