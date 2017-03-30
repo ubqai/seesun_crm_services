@@ -536,7 +536,6 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
     font-weight: normal;
     line-height: 32px;
 		text-align:center;
-		white-space:nowrap;
 }
 .too-long-td{
 		max-width: 400px;

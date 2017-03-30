@@ -1,11 +1,13 @@
 from flask import Blueprint, flash, render_template, request, session, redirect, url_for
-from .models import WechatAccessToken, app, WECHAT_SERVER_AUTHENTICATION_TOKEN, WechatCall, WechatUserInfo, WechatPushMsg
+from .models import WechatAccessToken, app, WECHAT_SERVER_AUTHENTICATION_TOKEN, WechatCall, WechatUserInfo, \
+    WechatPushMsg
 from ..organization.forms import WechatUserLoginForm
 from ..models import User, TrackingInfo, Contract
 from flask_login import login_user, current_user, logout_user
 import hashlib
 
 import xml.dom.minidom
+import datetime
 
 wechat = Blueprint('wechat', __name__, template_folder='templates')
 
@@ -63,7 +65,14 @@ def mobile_user_binding():
             if not login_valid_errmsg == "":
                 raise ValueError(login_valid_errmsg)
 
-            WechatUserInfo(open_id=form.openid.data, user_id=user.id).save()
+            wui = WechatUserInfo.query.filter_by(open_id=form.openid.data, user_id=user.id).first()
+            if wui is None:
+                wui = WechatUserInfo(open_id=form.openid.data, user_id=user.id, is_active=True)
+            else:
+                wui.is_active = True
+                wui.active_time = datetime.datetime.now()
+
+            wui.save()
             app.logger.info("insert into WechatUserInfo [%s]-[%s]" % (form.openid.data, user.id))
 
             login_user(user)
@@ -81,7 +90,7 @@ def mobile_user_binding():
             try:
                 openid = WechatCall.get_open_id_by_code(request.args.get("code"))
                 app.logger.info("get openid[%s] by code[%s]" % (openid, request.args.get("code")))
-                wui = WechatUserInfo.query.filter_by(open_id=openid).first()
+                wui = WechatUserInfo.query.filter_by(open_id=openid, is_active=True).first()
                 if wui is not None:
                     exists_binding_user = User.query.filter_by(id=wui.user_id).first()
                     if exists_binding_user is not None:  # normal
@@ -195,7 +204,7 @@ def server_authentication():
             elif text_event == "TEMPLATESENDJOBFINISH":
                 text_msg_id = root.getElementsByTagName('MsgID')[0].firstChild.data
                 text_status = root.getElementsByTagName('Status')[0].firstChild.data
-                wpm = WechatPushMsg.query.filter_by(wechat_msg_id = text_msg_id).first()
+                wpm = WechatPushMsg.query.filter_by(wechat_msg_id=text_msg_id).first()
                 if wpm:
                     if text_status == "success":
                         wpm.push_flag = "succ"
