@@ -536,7 +536,6 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
     font-weight: normal;
     line-height: 32px;
 		text-align:center;
-		white-space:nowrap;
 }
 .too-long-td{
 		max-width: 400px;
@@ -975,4 +974,26 @@ p.contract-subtitle {
     position: fixed;
     bottom: 0px;
 }
-
+/* 2017-03-30, added by cc */
+.state {
+    /*
+	text-transform:uppercase;
+	font-size:80%;
+	font-weight:600;
+	*/
+}
+.state:before {
+	content:'';
+	position:relative;
+	display:inline-block;
+	margin-right:3px;
+	border-radius:6.5px;
+	width:9px;
+	height:9px
+}
+.state.valid:before {
+	background-color:#00a100;
+}
+.state.invalid:before {
+	background-color:#cd3700;
+}

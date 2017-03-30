@@ -530,26 +530,19 @@ def account_password_update():
     try:
         form = BaseCsrfForm(request.form, meta={'csrf_context': session})
         if form.validate() is False:
-            raise ValueError("非法提交,验证错误")
+            raise ValueError("非法提交,请通过正常页面进行修改")
 
-        app.logger.info("%s - %s" % (request.form.get("email"), request.form.get("password_now")))
-        user = User.login_verification(request.form.get("email"), request.form.get("password_now"),
-                                       current_user.user_or_origin)
-        if user is None:
-            raise ValueError("密码错误")
-        app.logger.info(user.nickname)
-        password = request.form.get("password_new")
-        password_confirm = request.form.get("password_new_confirm")
-        if password != password_confirm:
-            raise ValueError("新密码两次输入不匹配")
-        if len(password) < 8 or len(password) > 20:
-            raise ValueError("密码长度必须大等于8小等于20")
+        if request.form.get("email") != current_user.email:
+            raise ValueError("非法提交,请通过正常页面进行修改")
 
-        user.password = password
-        user.save
+        User.update_password(request.form.get("email"),
+                             request.form.get("password_now"),
+                             request.form.get("password_new"),
+                             request.form.get("password_new_confirm"),
+                             current_user.user_or_origin)
 
         flash("密码修改成功")
     except Exception as e:
-        flash("%s" % e)
+        flash("密码修改失败: %s" % e)
 
     return redirect(url_for('organization.account_index'))

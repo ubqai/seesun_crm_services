@@ -13,7 +13,7 @@ class BaseCsrfForm(Form):
         csrf_time_limit = timedelta(minutes=20)
 
 
-class UserInfoForm(Form):
+class UserInfoForm(BaseCsrfForm):
     email = StringField('email', [validators.Email(message="请填写正确格式的email")])
     name = StringField('name', [validators.Length(min=2, max=30, message="字段长度必须大等于2小等于30")])
     nickname = StringField('nickname', [validators.Length(min=2, max=30, message="字段长度必须大等于2小等于30")])

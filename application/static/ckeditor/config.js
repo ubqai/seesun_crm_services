@@ -8,4 +8,5 @@ CKEDITOR.editorConfig = function( config ) {
 	config.language = 'zh-CN';
 	// config.uiColor = '#AADC6E';
 	config.filebrowserUploadUrl = '/ckupload/';
+	config.height = 320;
 };
