@@ -54,7 +54,7 @@
 				<li class="sub-menu {% if active == 'service' %}active{% endif %}">
 					<a><i class="glyphicon glyphicon-phone-alt"></i><span>售后服务</span><span class="dcjq-icon"></span></a>
 					<ul class="sub">
-						<li><a>生产合同列表</a></li>
+						<li><a href="{{ url_for('order_manage.contracts_for_tracking') }}">生产合同列表</a></li>
 						<li><a href="{{ url_for('order_manage.tracking_infos') }}">物流状态列表</a></li>
 					</ul>
 				</li>

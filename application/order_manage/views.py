@@ -250,6 +250,15 @@ def finance_contract_index():
     return render_template('order_manage/finance_contracts_index.html', contracts=contracts)
 
 
+@order_manage.route("/contracts_for_tracking", methods=['GET'])
+def contracts_for_tracking():
+    page_size = int(request.args.get('page_size', 10))
+    page_index = int(request.args.get('page', 1))
+    contracts = Contract.query.filter_by(payment_status="已付款").order_by(Contract.created_at.desc())\
+        .paginate(page_index, per_page=page_size, error_out=True)
+    return render_template('order_manage/contracts_for_tracking.html', contracts=contracts)
+
+
 @order_manage.route("/contracts/<int:id>", methods=['GET'])
 def contract_show(id):
     contract = Contract.query.get_or_404(id)
