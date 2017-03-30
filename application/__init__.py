@@ -56,6 +56,7 @@ def setup_logging():
         # In production mode, add log handler to sys.stderr.
         app.logger.addHandler(logging.StreamHandler())
         app.logger.setLevel(logging.INFO)
+        app.logger.info("RUN ENV : [%s]" % os.getenv('FLASK_ENV'))
 
 
 # 单个使用@login_required
