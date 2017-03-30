@@ -30,7 +30,7 @@
 				{% for feature in category.get('features') %}
 					<tr>
 						<td><a href="{{ url_for('product.feature_show', id = feature.get('feature_id'), category_id = category.get('category_id')) }}" class="table-link">{{ feature.get('feature_name') }}</a></td>
-						<td class="text-left-i too-long-td">{% for option in feature.get('options') %}&nbsp;&nbsp;{{ option.get('option_name') }}&nbsp;&nbsp;{% endfor %}</td>
+						<td class="text-left-i too-long-td">{% for option in feature.get('options') %}<span style="display:inline-block">&nbsp;&nbsp;{{ option.get('option_name') }}&nbsp;&nbsp;</span>{% endfor %}</td>
 						<td>
 							<a class="table-edit text-info" href="{{ url_for('product.feature_edit', id = feature.get('feature_id'), category_id = category.get('category_id')) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
 							<a class="table-del text-danger"><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</a>
