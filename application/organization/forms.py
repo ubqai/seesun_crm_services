@@ -67,7 +67,7 @@ class UserForm(BaseForm, BaseCsrfForm):
     name = StringField('姓名', [validators.Length(min=2, max=30, message="字段长度必须大等于2小等于30")])
     nickname = StringField('昵称', [validators.Length(min=2, max=30, message="字段长度必须大等于2小等于30")])
     password = PasswordField('密码', validators=[
-        validators.Required(message="字段不可为空"),
+        validators.DataRequired(message="字段不可为空"),
         validators.Length(min=8, max=20, message="字段长度必须大等于8小等于20"),
         validators.EqualTo('password_confirm', message="两次输入密码不匹配")
     ])
