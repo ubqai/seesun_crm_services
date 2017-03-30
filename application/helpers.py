@@ -81,6 +81,19 @@ def clip_image(filepath, size=(100, 100)):
     image.save(filepath)
 
 
+# resize large images to specified width, reduce file size.
+def resize_image_by_width(filepath, new_width=640):
+    image = Image.open(filepath)
+    width = image.size[0]
+    height = image.size[1]
+    if width > new_width:
+        new_height = int(new_width / width * height)
+        image = image.resize((new_width, new_height), Image.ANTIALIAS)
+        image.save(filepath)
+    else:
+        pass
+
+
 # This function is for generating qrcode image
 def gen_qrcode(data, output_filename=None):
     error = ''

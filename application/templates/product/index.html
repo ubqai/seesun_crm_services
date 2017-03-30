@@ -23,8 +23,9 @@
 					<tr>
 						<th>产品名称</th>
 						<th>产品编码</th>
-						<th>长度</th>
-						<th>宽度</th>
+						<th>卷长</th>
+						<th>卷宽</th>
+						<th>状态</th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -35,6 +36,11 @@
 						<td>{{ product.get('code') }}</td>
 						<td>{{ product.get('length') }} m</td>
 						<td>{{ product.get('width') }} m</td>
+						{% if product.get('isvalid') == 'NO' %}
+							<td class="state invalid">{{ '下架' }}</td>
+						{% else %}
+							<td class="state valid">{{ '上架' }}</td>
+						{% endif %}
 						<td>
 							<a class="table-del text-warning" href="{{ url_for('product.sku_index', product_id = product.get('product_id')) }}"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;管理SKU</a>
 							<a class="table-del text-success" href="{{ url_for('product.relate_cases', product_id = product.get('product_id')) }}"><span class="glyphicon glyphicon-link"></span>&nbsp;&nbsp;关联案例</a>

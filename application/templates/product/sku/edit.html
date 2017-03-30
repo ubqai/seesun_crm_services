@@ -28,19 +28,24 @@
 
 				<div class="form-item inline-2">
 					<span class="form-label">sku代码</span>
-					<input class="form-input form-control" name="code" value="{{ sku.get('code') }}"/>
+					<input class="form-input form-control" name="code" value="{{ sku.get('code') or '' }}"/>
+					<span class="form-label">状态</span>
+					<select name="isvalid" id="isvalid" class="form-input form-control">
+						<option value="YES">上架</option>
+						<option value="NO" {% if sku.get('isvalid') == 'NO' %}selected{% endif %}>下架</option>
+					</select>
 				</div>
 				<div class="form-item inline-2">
 					<span class="form-label">Barcode</span>
-					<input class="form-input form-control" name="barcode" value="{{ sku.get('barcode')}}"/>
+					<input class="form-input form-control" name="barcode" value="{{ sku.get('barcode') or '' }}"/>
 					<span class="form-label">hscode</span>
-					<input class="form-input form-control" name="hscode" value="{{ sku.get('hscode') }}"/>
+					<input class="form-input form-control" name="hscode" value="{{ sku.get('hscode') or '' }}"/>
 				</div>
 				<div class="form-item inline-2">
 					<span class="form-label">重量</span>
-					<input class="form-input form-control" name="weight" value="{{ sku.get('weight') }}"/>
+					<input class="form-input form-control" name="weight" value="{{ sku.get('weight') or '' }}"/>
 					<span class="form-label">价格</span>
-					<input class="form-input form-control" name="price" value="{{ sku.get('price') }}"/>
+					<input class="form-input form-control" name="price" value="{{ sku.get('price') or '' }}"/>
 				</div>
 				<div class="form-item small-pic">
 					<span class="form-label">产品图片</span>

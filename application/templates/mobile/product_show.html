@@ -31,6 +31,7 @@
 		<!-- sku thumbnails display area -->
 		<div class="clearfix texture">
 		{% for sku in skus.get('skus') %}
+			{% if not sku.get('isvalid') == 'NO' %}
 			<div class="col-3-gap texture-block">
 				<img src="{{ sku.get('thumbnail') }}" class="full-img">
 				<p class="text-center light-font-sm">{{ sku.get('code') }}</p>
@@ -42,6 +43,7 @@
 					</div><!-- /.modal-content -->
 				</div><!-- /.modal -->
 			</div>
+			{% endif %}
 		{% endfor %}
 		</div>
 	</div>
@@ -54,7 +56,7 @@
 			{% for options in option_sorted %}
 				<p class="text-content text-indent-1 text-sm">
 					{{ options[0].get('feature_name') }}：
-					{% for option in options %}{{ option.get('option_name') }}/{% endfor %}
+					{% for option in options %}{{ '' if loop.first else '/' }}{{ option.get('option_name') }}{% endfor %}
 				</p>
 			{% endfor %}
 		</div>

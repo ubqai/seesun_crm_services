@@ -34,10 +34,17 @@
 					<input class="form-input form-control" name="code" value="{{ product.get('code') }}" disabled=""/>
 				</div>
 				<div class="form-item">
-					<span class="form-label">长度(m)</span>
+					<span class="form-label">卷长(m)</span>
 					<input class="form-input form-control" name="length" value="{{ product.get('length') }}"/>
-					<span class="form-label">宽度(m)</span>
+					<span class="form-label">卷宽(m)</span>
 					<input class="form-input form-control" name="width" value="{{ product.get('width') }}"/>
+				</div>
+				<div class="form-item">
+					<span class="form-label">状态</span>
+					<select name="isvalid" id="isvalid" class="form-control">
+						<option value="YES">上架</option>
+						<option value="NO" {% if product.get('isvalid') == 'NO' %}selected{% endif %}>下架</option>
+					</select>
 				</div>
 				<div class="form-item small-pic">
 					<span class="form-label">产品图片</span>

@@ -20,25 +20,29 @@
 			<table class="tables">
 				<thead>
 					<tr>
-						<th>sku_id</th>
-						<th>price</th>
-						<th>weight</th>
-						<th>barcode</th>
-						<th>code</th>
-						<th>hscode</th>
-						<th>options</th>
+						<th>SKU code</th>
+						<th>Barcode</th>
+						<th>HScode</th>
+						<th>Weight</th>
+						<th>Price</th>
+						<th>State</th>
+						<th>Options</th>
 						<th>操作</th>
 					</tr>
 				</thead>
 				<tbody>
 				{% for sku in skus.get('skus') %}
 					<tr>
-						<td>{{ sku.get('sku_id') }}</td>
-						<td>{{ sku.get('price') }}</td>
-						<td>{{ sku.get('weight') }} kg</td>
-						<td>{{ sku.get('barcode') }}</td>
 						<td>{{ sku.get('code') }}</td>
-						<td>{{ sku.get('hscode') }}</td>
+						<td>{{ sku.get('barcode') or '-' }}</td>
+						<td>{{ sku.get('hscode') or '-' }}</td>
+						<td>{{ sku.get('weight') or '-' }} g/m2</td>
+						<td>¥ {{ sku.get('price') or '' }}</td>
+						{% if sku.get('isvalid') == 'NO' %}
+							<td class="state invalid">{{ '下架' }}</td>
+						{% else %}
+							<td class="state valid">{{ '上架' }}</td>
+						{% endif %}
 						<td>
 						{% for option in sku.get('options') %}
 							{% for key in option %}{{ key }}:{{ option[key] }}{% endfor %}&nbsp;&nbsp;

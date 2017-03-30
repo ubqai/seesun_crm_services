@@ -126,7 +126,8 @@ def edit(id):
             'width': request.form.get('width'),
             'description': request.form.get('description'),
             'product_image_links': product_image_links,
-            'options_id': [str(option_id) for option_id in option_ids]
+            'options_id': [str(option_id) for option_id in option_ids],
+            'isvalid': request.form.get('isvalid')
         }
         response = update_product(id, data=data)
         if response.status_code == 200:
@@ -172,10 +173,10 @@ def sku_new(product_id):
         sku_infos = []
         sku_info = {
             'code': str(request.form.get('code')),
-            'price': str(request.form.get('price')),
-            'barcode': str(request.form.get('barcode')),
-            'hscode': str(request.form.get('hscode')),
-            'weight': str(request.form.get('weight')),
+            'price': str(request.form.get('price')) or None,
+            'barcode': str(request.form.get('barcode')) or None,
+            'hscode': str(request.form.get('hscode')) or None,
+            'weight': str(request.form.get('weight')) or None,
             'thumbnail': image_path,
             'options_id': [str(option_id) for option_id in option_ids]
         }
@@ -213,9 +214,10 @@ def sku_edit(id):
         else: 
             image_path = sku.get('thumbnail')
         data = {
-            'barcode': request.form.get('barcode'),
-            'hscode': request.form.get('hscode'),
-            'weight': request.form.get('weight'),
+            'barcode': request.form.get('barcode') or None,
+            'hscode': request.form.get('hscode') or None,
+            'weight': request.form.get('weight') or None,
+            'isvalid': request.form.get('isvalid'),
             'thumbnail': image_path
         }
         if not request.form.get('code') == sku.get('code'):
