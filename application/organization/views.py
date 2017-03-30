@@ -30,8 +30,8 @@ def user_login():
     if request.method == 'POST':
         try:
             form = UserLoginForm(request.form, meta={'csrf_context': session})
-            if form.validate() == False:
-                raise ValueError("")
+            if form.validate() is False:
+                raise ValueError(form.errors)
 
             # 后台只能员工登入
             user = User.login_verification(form.email.data, form.password.data, 3)
@@ -46,7 +46,7 @@ def user_login():
             app.logger.info("后端用户[%s][%s]登入成功" % (user.email, user.nickname))
             return redirect(url_for('organization.user_index'))
         except Exception as e:
-            app.logger.info("后端用户登入失败[%s]" % (e))
+            app.logger.info("后端用户登入失败[%s]" % e)
             flash(e)
     else:
         form = UserLoginForm(meta={'csrf_context': session})
@@ -102,12 +102,12 @@ def user_new():
             if form.nickname.data == "":
                 form.nickname.data = form.name.data
 
-            if form.validate() == False:
-                app.logger.info("form valid fail: [%s]" % (form.errors))
-                raise ValueError("")
+            if form.validate() is False:
+                app.logger.info("form valid fail: [%s]" % form.errors)
+                raise ValueError(form.errors)
 
             if User.query.filter_by(email=form.email.data).count() > 0:
-                raise ValueError("邮箱[%s]已被注册,请更换!" % (form.email.data))
+                raise ValueError("邮箱[%s]已被注册,请更换!" % form.email.data)
 
             ui = UserInfo(name=form.name.data, telephone=form.phone.data, address=form.address.data,
                           title=form.title.data)
@@ -117,17 +117,17 @@ def user_new():
             u.user_infos.append(ui)
 
             if form.user_type.data == "3":
-                app.logger.info("into 3 : [%s]" % (form.dept_ranges.data))
+                app.logger.info("into 3 : [%s]" % form.dept_ranges.data)
                 for dh_data in form.dept_ranges.data:
                     dh = DepartmentHierarchy.query.filter_by(id=dh_data.id).first()
                     if dh is None:
-                        raise ValueError("所属部门错误[%s]" % (dh_data.id))
+                        raise ValueError("所属部门错误[%s]" % dh_data.id)
                     u.departments.append(dh)
             else:
-                app.logger.info("into 2 : [%s]" % (form.sale_range.data.id))
+                app.logger.info("into 2 : [%s]" % form.sale_range.data.id)
                 sah = SalesAreaHierarchy.query.filter_by(id=form.sale_range.data.id).first()
                 if sah is None:
-                    raise ValueError("销售区域错误[%s]" % (form.sale_range.data.name))
+                    raise ValueError("销售区域错误[%s]" % form.sale_range.data.name)
                 u.sales_areas.append(sah)
 
             u.save
@@ -165,9 +165,9 @@ def user_update(user_id):
             if form.nickname.data == "":
                 form.nickname.data = form.name.data
 
-            if form.validate() == False:
-                app.logger.info("form valid fail: [%s]" % (form.errors))
-                raise ValueError("")
+            if form.validate() is False:
+                app.logger.info("form valid fail: [%s]" % form.errors)
+                raise ValueError(form.errors)
 
             u.email = form.email.data
             u.nickname = form.nickname.data
@@ -252,7 +252,7 @@ def regional_and_team_index():
 
     sah_infos = {}
     app.logger.info("regional.data [%s]" % form.regional.data)
-    if form.regional.data == []:
+    if not form.regional.data:
         sah_search = form.regional.query
     else:
         sah_search = form.regional.data
@@ -284,7 +284,7 @@ def regional_manage_leader(sah_id):
         try:
             form = BaseCsrfForm(request.form, meta={'csrf_context': session})
             if form.validate() is False:
-                flash("非法提交 [%s]" % form.errors)
+                flash(form.errors)
                 return redirect(url_for('organization.regional_and_team_index'))
 
             user_id = int(request.form.get("user_id"))
@@ -362,7 +362,7 @@ def regional_manage_team(sah_id, leader_id, region_province_id):
         try:
             form = BaseCsrfForm(request.form, meta={'csrf_context': session})
             if form.validate() is False:
-                flash("非法提交 [%s]" % form.errors)
+                flash(form.errors)
                 return redirect(url_for('organization.regional_and_team_index'))
 
             user_id = int(request.form.get("user_id"))
@@ -428,14 +428,14 @@ def regional_manage_team(sah_id, leader_id, region_province_id):
 def regional_manage_province(sah_id):
     sah = SalesAreaHierarchy.query.filter_by(id=sah_id).first()
     if sah is None:
-        flash("非法区域id[%d]" % (sah_id))
+        flash("非法区域id[%d]" % sah_id)
         return redirect(url_for('organization.regional_and_team_index'))
 
     if request.method == 'POST':
         try:
             form = BaseCsrfForm(request.form, meta={'csrf_context': session})
             if form.validate() is False:
-                flash("非法提交 [%s]" % form.errors)
+                flash(form.errors)
                 return redirect(url_for('organization.regional_and_team_index'))
 
             province_id_array = request.form.getlist("province_id")
@@ -444,10 +444,10 @@ def regional_manage_province(sah_id):
             # 先对已有记录进行删除
             for exists_province in SalesAreaHierarchy.query.filter_by(parent_id=sah.id).all():
                 if exists_province.id in province_id_array:
-                    app.logger.info("has existed province[%s] not proc" % (exists_province.name))
+                    app.logger.info("has existed province[%s] not proc" % exists_province.name)
                     province_id_array.remove(exists_province.id)
                 else:
-                    app.logger.info("delete existed province[%s]" % (exists_province.name))
+                    app.logger.info("delete existed province[%s]" % exists_province.name)
                     # 删除对应销售团队
                     uasa = UserAndSaleArea.query.filter_by(sales_area_id=exists_province.id).first()
                     if uasa is not None:

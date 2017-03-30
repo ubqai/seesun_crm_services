@@ -1,5 +1,4 @@
 {% extends 'pc_base.html' %}
-{% from 'macros/pc_form_field_error.html' import render_form_field_error %}
 {% block custome_styles %}
 	<link rel="stylesheet" href="{{ url_for('static', filename = 'stylesheets/login.css') }}">
 {% endblock %}
@@ -13,12 +12,10 @@
 				<h2>USERNAME</h2>
 				<div style="width:100%; position:relative">
 					{{ form.email(class="form-input form-control",placeholder="请输入email") }}
-					{{ render_form_field_error(form.email) }}
 				</div>
 				<h2>PASSWORD</h2>
 				<div style="width:100%; position:relative">
 					{{ form.password(class="form-input form-control",placeholder="请输入密码") }}
-					{{ render_form_field_error(form.password) }}
 				</div>
 				<p class="forgot"><a id="iforget" href="javascript:void(0);">忘记密码?</a></p>
 				<div class="rem_me">
@@ -26,7 +23,6 @@
 					<label for="checkbox">记住我</label>
 				</div>
 				<input type="submit" name="button" id="button" value="登入" style="opacity: 0.7;">
-				{{ render_form_field_error(form.csrf_token) }}
 			</div>
 		</div>
 	</form>
