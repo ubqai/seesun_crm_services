@@ -496,7 +496,7 @@ td input{
     text-decoration: none;
     color: #fff;
     position: relative;
-    padding: 0.5em 3em;
+    padding: 0.4em 1.5em;
     border-left: solid 1px #FFCC33;
     margin-left: 35px;
     background-image: linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
@@ -513,7 +513,7 @@ td input{
     height: 100%;
     position: absolute;
     display: block;
-    padding-top: 5px;
+    padding-top: 3px;
     top: 0px;
     left: -36px;
     font-size: 0.65em;
