@@ -25,7 +25,7 @@
                 </div>
                  <div class="form-item-2 col-3">
                     <span>* {{ form.name.label }}</span>
-                    {{ form.name(class = 'form-input form-control',placeholder="请输入姓名") }}
+                    {{ form.name(class = 'form-input form-control',placeholder="请输入姓名",required="required") }}
                 </div>
 
                 <div class="form-item-2 col-3">
@@ -44,12 +44,12 @@
                 </div>
                  <div class="form-item-2 col-3">
                     <span>* {{ form.phone.label(id='label_phone') }}</span>
-                    {{ form.phone(class = 'form-input form-control',placeholder="请输入电话") }}
+                    {{ form.phone(class = 'form-input form-control',placeholder="请输入电话",required="required") }}
                 </div>
 
                 <div class="form-item-2 col-3">
                     <span>* {{ form.address.label }}</span>
-                    {{ form.address(class = 'form-input form-control',placeholder="请输入地址") }}
+                    {{ form.address(class = 'form-input form-control',placeholder="请输入地址",required="required") }}
                 </div>
                 
                  <div class="form-item-2 col-3" id="search_user_dept_ranges">

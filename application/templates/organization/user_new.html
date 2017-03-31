@@ -21,11 +21,11 @@
                 </div>
                 <div class="form-item-2 col-3">
                     <span>* {{ form.email.label }}</span>
-                    {{ form.email(class = 'form-input form-control',placeholder="请输入email") }}
+                    {{ form.email(class = 'form-input form-control',placeholder="请输入email",required="required") }}
                 </div>
                 <div class="form-item-2 col-3">
                     <span>* {{ form.name.label }}</span>
-                    {{ form.name(class = 'form-input form-control',placeholder="请输入姓名") }}
+                    {{ form.name(class = 'form-input form-control',placeholder="请输入姓名",required="required") }}
                 </div>
                 <div class="form-item-2 col-3">
                     <span>{{ form.title.label }}</span>
@@ -33,11 +33,11 @@
                 </div>
                 <div class="form-item-2 col-3">
                     <span>* {{ form.password.label }}</span>
-                    {{ form.password(class = 'form-input form-control',placeholder="请输入密码") }}
+                    {{ form.password(class = 'form-input form-control',placeholder="请输入密码",required="required") }}
                 </div>
                 <div class="form-item-2 col-3">
                     <span style="vertical-align:middle">* {{ form.password_confirm.label }}</span>
-                    {{ form.password_confirm(class = 'form-input form-control',placeholder="请再次输入密码") }}
+                    {{ form.password_confirm(class = 'form-input form-control',placeholder="请再次输入密码",required="required") }}
                 </div>
                 <div class="form-item-2 col-3">
                     <span>{{ form.nickname.label(id='label_nickname') }}</span>
@@ -45,13 +45,13 @@
                 </div>
                 <div class="form-item-2 col-3">
                     <span>* {{ form.phone.label(id='label_phone') }}</span>
-                    {{ form.phone(class = 'form-input form-control',placeholder="请输入电话") }}
+                    {{ form.phone(class = 'form-input form-control',placeholder="请输入电话",required="required") }}
                 </div>
                 <div class="clearfix"></div>
                 <div class="separator-4"></div>
                 <div class="form-item-2 col-3 vertical">
                     <span>* {{ form.address.label }}</span>
-                    {{ form.address(class = 'form-input form-control',placeholder="请输入地址") }}
+                    {{ form.address(class = 'form-input form-control',placeholder="请输入地址",required="required") }}
                 </div>
                 <div class="form-item-2 col-3" id="search_user_dept_ranges">
                     <span style="vertical-align:middle">* {{ form.dept_ranges.label }}</span>
