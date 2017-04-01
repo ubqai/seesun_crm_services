@@ -9,7 +9,7 @@
 
 {{ sidebar(active = 'dealer') }}
     <div class="contents">
-		<div id="cn-map" style="width:60%; height: 500px; float:left"></div>
+		<div id="cn-map" style="width:60%; height:600px; float:left"></div>
 		<div id="map-result" style="width:40%; height: 500px; float:left">
 			<table class="table table-hover" style=" margin-top:50px;box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);">
 				<thead>
@@ -73,7 +73,7 @@
 				map.setOption(option);
 				map.on('click', function (params) {
 					var name=params.name;
-					window.location.href="/order_manage/dealer_index?province="+name+"省";
+					window.location.href="/order_manage/dealer_index?province="+name;
 					
 				});
 		});
