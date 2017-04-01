@@ -73,7 +73,31 @@ if not User.query.filter_by(email="admin@hotmail.com").first():
     u.departments.append(dh)
     u.save
 
-for u in User.query.filter_by(user_or_origin=3):
-    for sa in u.sales_areas:
-        u.sales_areas.remove(sa)
-    u.save
+webpage_describe_list = [
+    ("order_manage.dealer_index", "get", "各省经销商销售统计"),
+    ("order_manage.region_profit", "get", "各省销售统计"),
+    ("order_manage.order_index", "get", "订单列表"),
+    ("order_manage.contract_index", "get", "合同列表"),
+    ("content.material_application_index", "get", "物料申请"),
+    ("project_report.index", "get", "项目报备申请"),
+    ("inventory.share_inventory_list", "get", "工程剩余库存申请审核"),
+    ("order_manage.finance_contract_index", "get", "合同列表"),
+    ("product.category_index", "get", "产品"),
+    ("inventory.index", "get", "库存"),
+    ("design_application.index", "get", "待设计列表"),
+    ("content.category_index", "get", "内容"),
+    ("order_manage.contracts_for_tracking", "get", "生产合同列表"),
+    ("order_manage.tracking_infos", "get", "物流状态列表"),
+    ("web_access_log.statistics", "get", "点击率统计"),
+    ("order_manage.team_profit", "get", "销售团队销售统计"),
+    ("organization.user_index", "get", "用户管理"),
+    ("organization.authority_index", "get", "组织架构及权限组"),
+    ("organization.regional_and_team_index", "get", "区域管理和销售团队"),
+]
+
+dh = DepartmentHierarchy.query.filter_by(name="董事长").first()
+for (endpoint, method, describe) in webpage_describe_list:
+    wd = WebpageDescribe(endpoint=endpoint, method=method, describe=describe)
+    wd.check_data()
+    wd.save
+    AuthorityOperation(webpage_id=wd.id, role_id=dh.id, flag="Y").save

@@ -25,7 +25,8 @@ def make_shell_context():
                 DepartmentHierarchy=DepartmentHierarchy, UserAndSaleArea=UserAndSaleArea,
                 WechatAccessToken=WechatAccessToken, WechatCall=WechatCall, WechatUserInfo=WechatUserInfo,
                 WechatPushMsg=WechatPushMsg,
-                ProjectReport=ProjectReport, WebAccessLog=WebAccessLog, ShareInventory=ShareInventory)
+                ProjectReport=ProjectReport, WebAccessLog=WebAccessLog, ShareInventory=ShareInventory,
+                WebpageDescribe=WebpageDescribe, AuthorityOperation=AuthorityOperation)
 
 
 manager.add_command("shell", Shell(make_context=make_shell_context))

@@ -548,3 +548,9 @@ def account_password_update():
         flash("密码修改失败: %s" % e)
 
     return redirect(url_for('organization.account_index'))
+
+
+# 权限管理
+@organization.route('/authority/index', methods=['GET', 'POST'])
+def authority_index():
+    return "tmp_view: authority_index"

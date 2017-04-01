@@ -1,79 +1,86 @@
 {% macro sidebar(active = 'category') %}
-	<aside class="my-nav">
-		<div id="sidebar">
-			<ul class="sidebar-menu">
-				<li class="{% if active == 'home' %}active{% endif %}"><a><i class="glyphicon glyphicon-dashboard"></i><span>首页</span></a></li>
-				<li class="sub-menu {% if active == 'dealer' %}active{% endif %}">
-					<a><i class="glyphicon glyphicon-comment"></i><span>经销商视图</span><span class="dcjq-icon"></span></a>
-					<ul class="sub">
-						<li><a>经销商列表管理</a></li>
-                        <li><a href="{{ url_for('order_manage.dealer_index') }}">各省经销商销售统计</a></li>
-						<li><a href="{{ url_for('order_manage.region_profit') }}">各省销售统计</a></li>
-					</ul>
-				</li>
-				<li class="sub-menu {% if active == 'sale' %}active{% endif %}">
-					<a><i class="glyphicon glyphicon-shopping-cart"></i><span>销售管理</span><span class="dcjq-icon"></span></a>
-					<ul class="sub">
-						<li><a href="{{ url_for('order_manage.order_index') }}">订单列表</a></li>
-						<li><a href="{{ url_for('order_manage.contract_index') }}">合同列表</a></li>
-						<li>
-							<a>工作流与审批<span class="dcjq-icon"></span></a>
-							<ul class="t-sub">
-								<li><a href="{{ url_for('content.material_application_index') }}">物料申请</a></li>
-                                <li><a href="{{ url_for('project_report.index') }}">项目报备申请</a></li>
-                                <li><a href="{{ url_for('inventory.share_inventory_list') }}">工程剩余库存申请审核</a></li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-                <li class="sub-menu {% if active == 'finance' %}active{% endif %}">
-					<a><i class="glyphicon glyphicon-shopping-cart"></i><span>财务管理</span><span class="dcjq-icon"></span></a>
-					<ul class="sub">
-						<li><a href="{{ url_for('order_manage.finance_contract_index') }}">合同列表</a></li>
-					</ul>
-				</li>
-				<li class="sub-menu {% if active == 'product' %}active{% endif %}">
-					<a><i class="glyphicon glyphicon-tasks"></i><span>产品管理</span><span class="dcjq-icon"></span></a>
-					<ul class="sub">
-						<li><a href="{{ url_for('product.category_index') }}">产品</a></li>
-						<li><a href="{{ url_for('inventory.index') }}">库存</a></li>
-					</ul>
-				</li>
-				<li class="sub-menu {% if active == 'design' %}active{% endif %}">
-					<a><i class="glyphicon glyphicon-paperclip"></i><span>产品设计</span><span class="dcjq-icon"></span></a>
-					<ul class="sub">
-						<li><a href="{{ url_for('design_application.index') }}">待设计列表 &nbsp;&nbsp;<div class="badge badge-info"></div></a></li>
-					</ul>
-				</li>
-				<li class="sub-menu {% if active == 'file' %}active{% endif %}">
-					<a><i class="glyphicon glyphicon-folder-open"></i><span>归档中心</span><span class="dcjq-icon"></span></a>
-					<ul class="sub">
-						<li><a href="{{ url_for('content.category_index') }}">内容</a></li>
-					</ul>
-				</li>
-				<li class="sub-menu {% if active == 'service' %}active{% endif %}">
-					<a><i class="glyphicon glyphicon-phone-alt"></i><span>售后服务</span><span class="dcjq-icon"></span></a>
-					<ul class="sub">
-						<li><a href="{{ url_for('order_manage.contracts_for_tracking') }}">生产合同列表</a></li>
-						<li><a href="{{ url_for('order_manage.tracking_infos') }}">物流状态列表</a></li>
-					</ul>
-				</li>
-				<li class="sub-menu {% if active == 'statistics' %}active{% endif %}">
-					<a><i class="glyphicon glyphicon-signal"></i><span>数据统计</span><span class="dcjq-icon"></span></a>
-					<ul class="sub">
-						<li><a href="{{ url_for('web_access_log.statistics') }}">点击率统计</a></li>
-                        <li><a href="{{ url_for('order_manage.team_profit') }}">销售团队销售统计</a></li>
-					</ul>
-				</li>
-				<li class="sub-menu {% if active == 'organization' %}active{% endif %}">
-					<a><i class="glyphicon glyphicon-user"></i><span>系统组织架构</span><span class="dcjq-icon"></span></a>
-					<ul class="sub">
-						<li><a href="{{ url_for('organization.user_index') }}">用户管理</a></li>
-						<li><a>组织架构及权限组</a></li>
-						<li><a href="{{ url_for('organization.regional_and_team_index') }}">区域管理和销售团队</a></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
-	</aside>
+<aside class="my-nav">
+    <div id="sidebar">
+        <ul class="sidebar-menu">
+            <li class="{% if active == 'home' %}active{% endif %}"><a><i
+                    class="glyphicon glyphicon-dashboard"></i><span>首页</span></a></li>
+            <li class="sub-menu {% if active == 'dealer' %}active{% endif %}">
+                <a><i class="glyphicon glyphicon-comment"></i><span>经销商视图</span><span class="dcjq-icon"></span></a>
+                <ul class="sub">
+                    <li><a>经销商列表管理</a></li>
+                    <li><a href="{{ url_for('order_manage.dealer_index') }}">各省经销商销售统计</a></li>
+                    <li><a href="{{ url_for('order_manage.region_profit') }}">各省销售统计</a></li>
+                </ul>
+            </li>
+            <li class="sub-menu {% if active == 'sale' %}active{% endif %}">
+                <a><i class="glyphicon glyphicon-shopping-cart"></i><span>销售管理</span><span class="dcjq-icon"></span></a>
+                <ul class="sub">
+                    <li><a href="{{ url_for('order_manage.order_index') }}">订单列表</a></li>
+                    <li><a href="{{ url_for('order_manage.contract_index') }}">合同列表</a></li>
+                    <li>
+                        <a>工作流与审批<span class="dcjq-icon"></span></a>
+                        <ul class="t-sub">
+                            <li><a href="{{ url_for('content.material_application_index') }}">物料申请</a></li>
+                            <li><a href="{{ url_for('project_report.index') }}">项目报备申请</a></li>
+                            <li><a href="{{ url_for('inventory.share_inventory_list') }}">工程剩余库存申请审核</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="sub-menu {% if active == 'finance' %}active{% endif %}">
+                <a><i class="glyphicon glyphicon-shopping-cart"></i><span>财务管理</span><span class="dcjq-icon"></span></a>
+                <ul class="sub">
+                    <li><a href="{{ url_for('order_manage.finance_contract_index') }}">合同列表</a></li>
+                </ul>
+            </li>
+            <li class="sub-menu {% if active == 'product' %}active{% endif %}">
+                <a><i class="glyphicon glyphicon-tasks"></i><span>产品管理</span><span class="dcjq-icon"></span></a>
+                <ul class="sub">
+                    <li><a href="{{ url_for('product.category_index') }}">产品</a></li>
+                    <li><a href="{{ url_for('inventory.index') }}">库存</a></li>
+                </ul>
+            </li>
+            <li class="sub-menu {% if active == 'design' %}active{% endif %}">
+                <a><i class="glyphicon glyphicon-paperclip"></i><span>产品设计</span><span class="dcjq-icon"></span></a>
+                <ul class="sub">
+                    <li><a href="{{ url_for('design_application.index') }}">待设计列表 &nbsp;&nbsp;<div
+                            class="badge badge-info"></div>
+                    </a></li>
+                </ul>
+            </li>
+            <li class="sub-menu {% if active == 'file' %}active{% endif %}">
+                <a><i class="glyphicon glyphicon-folder-open"></i><span>归档中心</span><span class="dcjq-icon"></span></a>
+                <ul class="sub">
+                    <li><a href="{{ url_for('content.category_index') }}">内容</a></li>
+                </ul>
+            </li>
+            <li class="sub-menu {% if active == 'service' %}active{% endif %}">
+                <a><i class="glyphicon glyphicon-phone-alt"></i><span>售后服务</span><span class="dcjq-icon"></span></a>
+                <ul class="sub">
+                    <li><a href="{{ url_for('order_manage.contracts_for_tracking') }}">生产合同列表</a></li>
+                    <li><a href="{{ url_for('order_manage.tracking_infos') }}">物流状态列表</a></li>
+                </ul>
+            </li>
+            <li class="sub-menu {% if active == 'statistics' %}active{% endif %}">
+                <a><i class="glyphicon glyphicon-signal"></i><span>数据统计</span><span class="dcjq-icon"></span></a>
+                <ul class="sub">
+                    <li><a href="{{ url_for('web_access_log.statistics') }}">点击率统计</a></li>
+                    <li><a href="{{ url_for('order_manage.team_profit') }}">销售团队销售统计</a></li>
+                </ul>
+            </li>
+            <li class="sub-menu {% if active == 'organization' %}active{% endif %}">
+                <a><i class="glyphicon glyphicon-user"></i><span>系统组织架构</span><span class="dcjq-icon"></span></a>
+                <ul class="sub">
+                    <li><a href="{{ url_for('organization.user_index') }}">用户管理</a></li>
+                    {% if current_user.is_authorized('organization.authority_index') %}
+                    <li><a href="{{ url_for('organization.authority_index') }}">组织架构及权限组</a></li>
+                    {% else %}
+                    <li><a href='javascript:void(0)' class="a_disabled">组织架构及权限组</a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('organization.regional_and_team_index') }}">区域管理和销售团队</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</aside>
 {% endmacro %}

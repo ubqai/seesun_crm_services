@@ -1,5 +1,5 @@
 {% extends 'pc_base.html' %}
-{% from 'macros/pc_partial.html' import sidebar %}
+{% from 'macros/pc_partial.html' import sidebar with context %}
 {% block main_content %}
 
 {{ sidebar(active = 'file') }}
