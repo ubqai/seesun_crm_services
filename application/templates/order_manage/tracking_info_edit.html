@@ -124,7 +124,7 @@
                     <div id="qrcode_field_wrapper" class="form-item-2">
                     {% if tracking_info.qrcode_image %}
                         <a href="{{ url_for('order_manage.tracking_info_qrcode', id = tracking_info.id) }}">
-                            <img src="{{ tracking_info.qrcode_image_path }}">
+                            <img src="{{ tracking_info.qrcode_image_path }}" style="width: 100%;">
                         </a>
                     {% else %}
                         <a id="create_qrcode_btn" name="{{tracking_info.id}}" class="btn btn-info">生成二维码</a>

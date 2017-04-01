@@ -6,51 +6,58 @@
 {{ sidebar(active = 'organization') }}
 
 <div class="contents">
-	<div class="contents-header">
-		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
-		<p class="contents-header-p">区域管理和销售团队</p>
-		<p class="contents-header-p text-sm">regional_and_team management</p>
-	</div>
-	<div class="separator"><span></span></div>
-	<form class="form form-horizontal" url="{{url_for('organization.regional_manage_province',sah_id=sah_id)}}" role="form" method="post">
-	    <div class="form-style form-default">
-	        <div class="widget_contents padding-0">
-	        	{{ form.csrf_token }}
-	        	<table class="tables">
-	        		<tr>
-	        			<th>选择</th>
-	        			<th>区域(省)</th>
-	        			<th>现对应区域</th>
-	        		</tr>
-					{% for province_info in sorted_province_info %}
-						<tr>
-							<td>
-								{% if province_info[1]['choose'] == 1 %}
-				        			<input type="checkbox" name="province_id" value="{{province_info[0]}}" checked="{{province_info[1]['choose']}}" />
-				        		{% else %}	        			
-				        			<input type="checkbox" name="province_id" value="{{province_info[0]}}" />
-				        		{% endif %}
-				        	</td>
-				        	<td>{{province_info[1]["name"]}}
-				        		{% if province_info[1]['choose'] == 1 %}
-				        			(现系统值)
-				        		{% endif %}
-				        	</td>
-				        	<td>{{province_info[1]["up_name"]}}</td>
-						</tr>
-					{% endfor %}	
-				</table>
-	        </div>
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png"/></div>
+        <p class="contents-header-p">区域管理和销售团队</p>
+        <p class="contents-header-p text-sm">regional_and_team management</p>
+    </div>
+    <div class="separator"><span></span></div>
+    <form class="form form-horizontal" url="{{url_for('organization.regional_manage_province',sah_id=sah_id)}}"
+          role="form" method="post">
+        <div class="form-style form-default">
+            <div class="widget_contents padding-0">
+                {{ form.csrf_token }}
+                <table class="tables">
+                    <tr>
+                        <th>选择</th>
+                        <th>区域(省)</th>
+                        <th>现对应区域</th>
+                    </tr>
+                    {% for province_info in sorted_province_info %}
+                    {% if province_info[1]['choose'] == 1 %}
+                    <tr bgcolor="#FFFF99">
+                    {% else %}
+                    <tr>
+                    {% endif %}
+                        <td>
+                            {% if province_info[1]['choose'] == 1 %}
+                            <input type="checkbox" name="province_id" value="{{province_info[0]}}"
+                                   checked="{{province_info[1]['choose']}}"/>
+                            {% else %}
+                            <input type="checkbox" name="province_id" value="{{province_info[0]}}"/>
+                            {% endif %}
+                        </td>
+                        <td>{{province_info[1]["name"]}}
+                            {% if province_info[1]['choose'] == 1 %}
+                            (现系统值)
+                            {% endif %}
+                        </td>
+                        <td>{{province_info[1]["up_name"]}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
 
-	        <div class="text-right top-gap-2 right-gap-3">
-	            <button class="btn btn-default my-btn" onclick="{
+            <div class="text-right top-gap-2 right-gap-3">
+                <button class="btn btn-default my-btn" onclick="{
 	            if(confirm('修改区域(省)将会重置此次变更省份所对应的销售团队,请知晓')){
 				  this.document.formname.submit();
 				  return true;}return false;
-				 }">提交</button>
-	        </div>
-	    </div>
-	</form>
+				 }">提交
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 
 {% endblock %}

@@ -225,6 +225,7 @@ def server_authentication():
                 element_root.appendChild(element_msg_type)
 
                 # 默认无返回数据， 返回一条信息给客户
+                # 超时问题,使用异步队列？
                 WechatCall.send_text_by_openid(text_fun, "正在转人工客服,请稍后...")
             else:
                 element_content = ret_doc.createElement('Content')
