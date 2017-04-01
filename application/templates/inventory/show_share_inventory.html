@@ -8,7 +8,6 @@
         <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
         <p class="contents-header-p">工程剩余库存申请详情</p>
         <p class="contents-header-p text-sm">details of inventories</p>
-        <a class="new-one" href="{{ url_for('inventory.show_share_inventory', id=si.id) }}"><span class="glyphicon glyphicon-envelope"></span></a>
     </div>
     <div class="separator"><span></span></div>
 
@@ -31,6 +30,12 @@
 									<span>状态：</span>
 									<span>{{ si.status }}</span>
 								</div>
+                                {% if si.status == "审核通过" %}
+                                <div class="sub-form-item">
+									<span>审核价格：</span>
+									<span>{{ '' if si.audit_price == None else si.audit_price }}</span>
+								</div>
+                                {% endif %}
             </div>
         </div>
 				<div class="widget_header">
