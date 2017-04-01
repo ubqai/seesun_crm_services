@@ -67,7 +67,7 @@ for dh_name in dh_array:
         db.session.add(dh)
         db.session.commit()
 
-if User.query.filter_by(email="admin@hotmail.com"):
+if not User.query.filter_by(email="admin@hotmail.com").first():
     u = User(email="admin@hotmail.com", nickname="admin", user_or_origin=3, password='1qaz@WSX')
     dh = DepartmentHierarchy().query.filter_by(level_grade=1).first()
     u.departments.append(dh)

@@ -8,7 +8,7 @@
 	<div class="contents-header">
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
 		<p class="contents-header-p">产品属性</p>
-		<p class="contents-header-p text-sm">features</p>
+		<p class="contents-header-p text-sm">product features</p>
 		<a class="new-one" href="{{ url_for('product.feature_new') }}"><span class="glyphicon glyphicon-plus"></span></a>
 	</div>
 	<div class="separator"><span></span></div>
@@ -31,19 +31,24 @@
 				<tbody>
 				{% for feature in features %}
 					<tr>
-						<td><a href="{{ url_for('product.feature_show', id = feature.get('feature_id')) }}" class="table-link">{{ feature.get('feature_name') }}</a></td>
+						<td>
+							<span style="display:inline-block; word-break: break-word;" class="hover-attr">
+								&nbsp;&nbsp;{{ feature.get('feature_name') }}
+								<a class="text-primary glyphicon glyphicon-edit" href="{{ url_for('product.feature_edit', id = feature.get('feature_id')) }}"></a>
+								<a class="text-danger glyphicon glyphicon-remove-circle"></a>
+							</span>
+						</td>
 						<td class="text-left-i too-long-td">
 							{% for option in feature.get('options') %}
 								<span style="display:inline-block; word-break: break-word;" class="hover-attr">
 									&nbsp;&nbsp;{{ option.get('option_name') }}
-									<a class="text-primary glyphicon glyphicon-edit"></a>
+									<a class="text-primary glyphicon glyphicon-edit" href="{{ url_for('product.option_edit', id = option.get('option_id'), feature_id = feature.get('feature_id')) }}"></a>
 									<a class="text-danger glyphicon glyphicon-remove-circle"></a>
 								</span>				
 							{% endfor %}
 						</td>
 						<td>
-							<a class="table-edit text-info" href="{{ url_for('product.feature_edit', id = feature.get('feature_id')) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
-							<a class="table-del text-danger"><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</a>
+							<a href="{{ url_for('product.option_new', feature_id = feature.get('feature_id')) }}" class="table-edit text-success"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;添加属性值</a>
 						</td>
 					</tr>
 				{% endfor %}

@@ -200,8 +200,20 @@ def mobile_create_order():
         contact_name = request.args.get('contact_name')
         project_name = request.args.get('project_name')
         dealer_name = request.args.get('dealer_name')
+        province_id = current_user.sales_areas.first().parent_id
+        us = db.session.query(User).join(User.departments).join(User.sales_areas).filter(
+            User.user_or_origin == 3).filter(DepartmentHierarchy.name == "销售部").filter(
+            SalesAreaHierarchy.id == province_id).first()
+        if us is not None:
+            sale_contract_id = us.id
+            sale_contract = us.nickname
+        else:
+            sale_contract_id = None
+            sale_contract = None
         order = Order(order_no=order_no, user=current_user, order_status='新订单',
                       order_memo=request.args.get('order_memo'),
+                      sale_contract_id=sale_contract_id,
+                      sale_contract=sale_contract,
                       buyer_info={"buyer": buyer, "buyer_company": buyer_company,
                                   "buyer_address": buyer_address, "contact_phone": contact_phone,
                                   "contact_name": contact_name, "project_name": project_name,

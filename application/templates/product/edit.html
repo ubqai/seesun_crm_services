@@ -20,8 +20,9 @@
 	<div class="widget">
 		<div class="widget_header">
 			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;
-			<a href="{{ url_for('product.category_index') }}">产品目录列表</a> >  
-			<a href="{{ url_for('product.index', category_id = category.get('category_id')) }}">{{ category.get('category_name') }}</a> > {{ product.get('name') }}</h4>
+			<a href="{{ url_for('product.category_index') }}" class="text-muted">产品目录列表</a> >
+			<a href="{{ url_for('product.index', category_id = category.get('category_id')) }}" class="text-muted">{{ category.get('category_name') }}</a> >
+			<a>{{ product.get('name') }}</a></h4>
 		</div>
 
 		<form action="{{ url_for('product.edit', id = product.get('product_id'), category_id = request.args.get('category_id')) }}" enctype="multipart/form-data" method="post">

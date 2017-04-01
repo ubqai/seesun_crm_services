@@ -422,7 +422,7 @@ def team_profit():
 
 @order_manage.route('/dealer_index')
 def dealer_index():
-    area = SalesAreaHierarchy.query.filter_by(name=request.args.get('province')).first()
+    area = SalesAreaHierarchy.query.filter_by(name=request.args.get('province'), level_grade=3).first()
     datas = []
     if area is not None:
         for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
