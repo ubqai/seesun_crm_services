@@ -51,7 +51,7 @@ def new(category_id):
             return redirect(url_for('product.sku_index', product_id=int(response.json().get('product_id'))))
         return redirect(url_for('product.index', category_id=category_id))
     category = load_category(category_id)
-    features = load_features(category_id)
+    features = load_features()
     return render_template('product/new.html', category=category, features=features)
 
 
@@ -102,7 +102,7 @@ def edit(id):
         return redirect(url_for('product.category_index'))
     _product = load_product(id)
     category = load_category(category_id)
-    features = load_features(category_id)
+    features = load_features()
     option_ids = [x.get('option_id') for x in _product.get('options')]
     if request.method == 'POST':
         option_ids = request.form.getlist('option_ids[]')
@@ -339,12 +339,6 @@ def category_new():
     return render_template('product/category/new.html')
 
 
-@product.route('/category/<int:id>')
-def category_show(id):
-    category = load_category(id)
-    return render_template('product/category/show.html', category=category)
-
-
 @product.route('/category/<int:id>/edit', methods=['GET', 'POST'])
 def category_edit(id):
     category = load_category(id)
@@ -360,19 +354,24 @@ def category_edit(id):
     return render_template('product/category/edit.html', category=category)
 
 
-@product.route('/feature/new/<int:category_id>', methods=['GET', 'POST'])
-def feature_new(category_id):
+@product.route('/feature/index')
+def feature_index():
+    features = load_features()
+    return render_template('product/feature/index.html', features=features)
+
+
+@product.route('/feature/new', methods=['GET', 'POST'])
+def feature_new():
     if request.method == 'POST':
         feature_names = request.form.getlist('names[]')
         for name in feature_names:
             if len(name) == 0:
                 flash('Please input correct names', 'danger')
-                return render_template('product/feature/new.html', category_id=category_id)
+                return render_template('product/feature/new.html')
         feature_infos = []
         for name in feature_names:
             feature_infos.append({'name': name, 'description': name})
         data = {
-            'product_category_id': str(category_id),
             'feature_infos': feature_infos
         }
         response = create_feature(data)
@@ -380,24 +379,19 @@ def feature_new(category_id):
             flash('产品属性创建成功', 'success')
         else:
             flash('产品属性创建失败', 'danger')
-        return redirect(url_for('product.category_show', id=category_id))
-    return render_template('product/feature/new.html', category_id=category_id)
+        return redirect(url_for('product.feature_index'))
+    return render_template('product/feature/new.html')
 
 
 @product.route('/feature/<int:id>')
 def feature_show(id):
-    category_id = request.args.get('category_id')
-    if not category_id:
-        return redirect('product.category_index')
-    category = load_category(category_id)
     feature = load_feature(id)
-    return render_template('product/feature/show.html', feature=feature, category=category)
+    return render_template('product/feature/show.html', feature=feature)
 
 
 @product.route('/feature/<int:id>/edit', methods=['GET', 'POST'])
 def feature_edit(id):
     feature = load_feature(id)
-    category_id = request.args.get('category_id')
     if request.method == 'POST':
         data = {
             'name': request.form.get('name'),
@@ -408,15 +402,12 @@ def feature_edit(id):
             flash('产品属性修改成功', 'success')
         else:
             flash('产品属性修改失败', 'danger')
-        if category_id:
-            return redirect(url_for('product.category_show', id=category_id))
-        return redirect(url_for('product.category_index'))      
+        return redirect(url_for('product.feature_index'))
     return render_template('product/feature/edit.html', feature=feature)
 
 
 @product.route('/option/new/<int:feature_id>', methods=['GET', 'POST'])
 def option_new(feature_id):
-    category_id = request.args.get('category_id')
     if request.method == 'POST':
         option_names = request.form.getlist('names[]')
         for name in option_names:
@@ -432,15 +423,12 @@ def option_new(feature_id):
             flash('产品属性值创建成功', 'success')
         else:
             flash('产品属性值创建失败', 'danger')
-        if category_id:
-            return redirect(url_for('product.category_show', id=category_id))
         return redirect(url_for('product.feature_show', id=feature_id))
     return render_template('product/option/new.html', feature_id=feature_id)
 
 
 @product.route('/option/<int:id>/edit', methods=['GET', 'POST'])
 def option_edit(id):
-    category_id = request.args.get('category_id')
     if request.method == 'POST':
         data = {'name': request.form.get('name')}
         response = update_option(id, data=data)
@@ -448,7 +436,5 @@ def option_edit(id):
             flash('产品属性值修改成功', 'success')
         else:
             flash('产品属性值修改失败', 'danger')
-        if category_id:
-            return redirect(url_for('product.category_show', id=category_id))
         return redirect(url_for('product.category_index'))
     return render_template('product/option/edit.html', option_id=id)

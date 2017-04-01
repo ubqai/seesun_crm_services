@@ -136,8 +136,13 @@ def update_category(category_id, data={}):
 
 
 # resource :features, [:index, :show, :create, :update]
-def load_features(category_id):
-    return load_category(category_id).get('features') or []
+def load_features():
+    url = '%s/%s/sku_features' % (site, version)
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return []
 
 
 def load_feature(feature_id):

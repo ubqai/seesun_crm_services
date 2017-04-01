@@ -7,15 +7,17 @@
 <div class="contents">
 	<div class="contents-header">
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
-		<p class="contents-header-p">产品属性 - {{ category.get('category_name') }}</p>
-		<p class="contents-header-p text-sm">product features</p>
-		<a class="new-one" href="{{ url_for('product.feature_new', category_id = category.get('category_id')) }}"><span class="glyphicon glyphicon-plus"></span></a>
+		<p class="contents-header-p">产品属性</p>
+		<p class="contents-header-p text-sm">features</p>
+		<a class="new-one" href="{{ url_for('product.feature_new') }}"><span class="glyphicon glyphicon-plus"></span></a>
 	</div>
 	<div class="separator"><span></span></div>
 	<div class="widget">
 		<div class="widget_header">
-			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;
-			<a href="{{ url_for('product.category_index') }}">产品目录列表</a> > {{ category.get('category_name') }} </h4>
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>
+				&nbsp;&nbsp;&nbsp;<a href="{{ url_for('product.category_index') }}" class="text-muted">产品目录列表</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+				<a class="text-success">产品属性管理</a>
+			</h4>
 		</div>
 		<div class="widget_contents padding-0">
 			<table class="tables">
@@ -27,12 +29,12 @@
 					</tr>
 				</thead>
 				<tbody>
-				{% for feature in category.get('features') %}
+				{% for feature in features %}
 					<tr>
-						<td><a href="{{ url_for('product.feature_show', id = feature.get('feature_id'), category_id = category.get('category_id')) }}" class="table-link">{{ feature.get('feature_name') }}</a></td>
+						<td><a href="{{ url_for('product.feature_show', id = feature.get('feature_id')) }}" class="table-link">{{ feature.get('feature_name') }}</a></td>
 						<td class="text-left-i too-long-td">{% for option in feature.get('options') %}<span style="display:inline-block">&nbsp;&nbsp;{{ option.get('option_name') }}&nbsp;&nbsp;</span>{% endfor %}</td>
 						<td>
-							<a class="table-edit text-info" href="{{ url_for('product.feature_edit', id = feature.get('feature_id'), category_id = category.get('category_id')) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
+							<a class="table-edit text-info" href="{{ url_for('product.feature_edit', id = feature.get('feature_id')) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
 							<a class="table-del text-danger"><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</a>
 						</td>
 					</tr>
