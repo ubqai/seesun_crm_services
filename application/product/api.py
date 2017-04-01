@@ -95,7 +95,7 @@ def get_sku(sku_id):
 def update_sku(sku_id, data={}):
     url = '%s/%s/product_skus/%s/edit' % (site, version, sku_id)
     response = requests.put(url, json=data, headers=headers)
-    return response # 200
+    return response  # 200
 
 
 def delete_sku(sku_id):

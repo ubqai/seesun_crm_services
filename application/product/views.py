@@ -424,11 +424,14 @@ def option_new(feature_id):
         else:
             flash('产品属性值创建失败', 'danger')
         return redirect(url_for('product.feature_show', id=feature_id))
-    return render_template('product/option/new.html', feature_id=feature_id)
+    feature = load_feature(feature_id)
+    return render_template('product/option/new.html', feature=feature)
 
 
 @product.route('/option/<int:id>/edit', methods=['GET', 'POST'])
 def option_edit(id):
+    feature_id = request.args.get('feature_id')
+    feature = load_feature(feature_id)
     if request.method == 'POST':
         data = {'name': request.form.get('name')}
         response = update_option(id, data=data)
@@ -436,5 +439,7 @@ def option_edit(id):
             flash('产品属性值修改成功', 'success')
         else:
             flash('产品属性值修改失败', 'danger')
-        return redirect(url_for('product.category_index'))
-    return render_template('product/option/edit.html', option_id=id)
+        if feature_id:
+            return redirect(url_for('product.feature_show', id=feature_id))
+        return redirect(url_for('product.feature_index'))
+    return render_template('product/option/edit.html', option_id=id, feature=feature)

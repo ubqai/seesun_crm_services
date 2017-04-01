@@ -13,7 +13,9 @@
 	<div class="separator"><span></span></div>
 	<div class="widget">
 		<div class="widget_header">
-			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;新增产品属性</h4>
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>
+				&nbsp;&nbsp;&nbsp;<a href="{{ url_for('product.feature_index') }}" class="text-muted">产品属性管理</a> >
+				<a>新增产品属性</a></h4>
 			<a class="new-item new-product-feature"><span class="glyphicon glyphicon-plus"></span></a>
 		</div>
 
@@ -21,7 +23,7 @@
 			<div class="widget_contents padding-0 item-wrapper">
 				<div class="form-item item-template">
 					<span class="form-label">属性名称</span>
-					<input class="form-input form-control" name="names[]"/>
+					<input class="form-input form-control" name="names[]" required=""/>
 					<span  class="form-ele del-wrapper">
 						<a class="del-item hidden"><span class="glyphicon glyphicon-minus"></span></a>
 					</span>
