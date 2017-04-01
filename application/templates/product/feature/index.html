@@ -31,8 +31,16 @@
 				<tbody>
 				{% for feature in features %}
 					<tr>
-						<td>{{ feature.get('feature_name') }}</td>
-						<td class="text-left-i too-long-td">{% for option in feature.get('options') %}<span style="display:inline-block">&nbsp;&nbsp;{{ option.get('option_name') }}&nbsp;&nbsp;</span>{% endfor %}</td>
+						<td><a href="{{ url_for('product.feature_show', id = feature.get('feature_id')) }}" class="table-link">{{ feature.get('feature_name') }}</a></td>
+						<td class="text-left-i too-long-td">
+							{% for option in feature.get('options') %}
+								<span style="display:inline-block; word-break: break-word;" class="hover-attr">
+									&nbsp;&nbsp;{{ option.get('option_name') }}
+									<a class="text-primary glyphicon glyphicon-edit"></a>
+									<a class="text-danger glyphicon glyphicon-remove-circle"></a>
+								</span>				
+							{% endfor %}
+						</td>
 						<td>
 							<a href="{{ url_for('product.feature_show', id = feature.get('feature_id')) }}" class="table-edit text-success"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;属性值管理</a>
 							<a class="table-edit text-info" href="{{ url_for('product.feature_edit', id = feature.get('feature_id')) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>

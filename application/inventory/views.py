@@ -164,10 +164,15 @@ def audit_share_inventory(id):
         si.status = status
         if si.status == "审核通过":
             si.audit_price = price
-            data = {"production_date": si.production_date, "stocks": si.stocks, "price": si.audit_price}
-            response = update_inventory(si.sku_id, data)
-            if not response.status_code == 200:
-                flash('库存修改失败', 'danger')
+            data = {'inventory_infos': [{"sku_id": si.sku_id, "inventory": [{"type": '2', "user_id": si.applicant_id,
+                                                                             "user_name": si.app_user.nickname,
+                                                                             "production_date": si.production_date,
+                                                                             "batch_no": si.batch_no,
+                                                                             "price": si.audit_price,
+                                                                             "stocks": si.stocks}]}]}
+            response = create_inventory(data)
+            if not response.status_code == 201:
+                flash('库存创建失败', 'danger')
                 return render_template('inventory/audit_share_inventory.html', si=si, params={})
         db.session.add(si)
         db.session.commit()
