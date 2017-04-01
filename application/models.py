@@ -461,6 +461,9 @@ class User(db.Model, Rails):
         if user is None:
             raise ValueError("密码错误")
 
+        if password_now == password_new:
+            raise ValueError("新旧密码不可相同")
+
         if password_new != password_new_confirm:
             raise ValueError("新密码两次输入不匹配")
         if len(password_new) < 8 or len(password_new) > 20:

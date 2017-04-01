@@ -139,6 +139,11 @@
     background: #eee;
     box-shadow: inset 0px 0px 3px 1px rgba(0,0,0,0.2);
 }
+.separator-4 {
+    height: 1px;
+    background: #eee;
+    margin: 10px 35px;
+}
 /*layout*/
 body{
 	background:#efefef;
@@ -836,9 +841,20 @@ textarea.form-input{
     border-radius: 5px 0px 0px 5px;
     border-right: 0px;
 }
+.form-item-2.vertical span {
+		display: block;
+    width: 100%;
+    border-radius: 4px 4px 0px 0px;
+    border-bottom: 0px;
+    border-right: 1px solid #ddd;
+    padding-top: 7px;
+}
 .form-item-2 input, .form-item-2 select {
     display: table-cell;
     border-radius: 0px 5px 5px 0px;
+}
+.form-item-2.vertical textarea, .form-item-2.vertical select, .form-item-2.vertical input {
+		border-radius: 0px 0px 4px 4px;
 }
 
 /*2017-2-22 新增加的*/
@@ -996,4 +1012,9 @@ p.contract-subtitle {
 }
 .state.invalid:before {
 	background-color:#cd3700;
+}
+.tr-separator{
+    background: #eee;
+    box-shadow: inset 0px 0px 3px 0px rgba(0,0,0,0.15);
+    border-color: #eee !important;
 }

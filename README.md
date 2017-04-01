@@ -48,5 +48,5 @@
 #### Crontab
     #Begin for seesun_crm_services
     #wechat token
-    * */1 * * * /bin/bash -l -c 'source ~/.bashrc && export FLASK_ENV='test' && cd /opt/seesun-app/seesun_crm_services && source venv/bin/activate && python manage.py cron_wechat_token >> logs/cron_wechat_token.log 2>&1'
+    0 */1 * * * /bin/bash -l -c 'source ~/.bashrc && export FLASK_ENV='production' && cd /opt/seesun-app/seesun_crm_services && source venv/bin/activate && python manage.py cron_wechat_token >> logs/cron_wechat_token.log 2>&1'
     #End for seesun_crm_services
