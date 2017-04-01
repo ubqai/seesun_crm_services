@@ -32,7 +32,7 @@
 					<span class="form-label">状态</span>
 					<select name="isvalid" id="isvalid" class="form-input form-control">
 						<option value="YES">上架</option>
-						<option value="NO" {% if sku.get('isvalid') == 'NO' %}selected{% endif %}>下架</option>
+						<option value="NO" {{ 'selected' if sku.get('isvalid') == 'NO' else '' }}>下架</option>
 					</select>
 				</div>
 				<div class="form-item inline-2">
@@ -42,9 +42,9 @@
 					<input class="form-input form-control" name="hscode" value="{{ sku.get('hscode') or '' }}"/>
 				</div>
 				<div class="form-item inline-2">
-					<span class="form-label">重量</span>
+					<span class="form-label">重量(g/m2)</span>
 					<input class="form-input form-control" name="weight" value="{{ sku.get('weight') or '' }}"/>
-					<span class="form-label">价格</span>
+					<span class="form-label">价格(元)</span>
 					<input class="form-input form-control" name="price" value="{{ sku.get('price') or '' }}"/>
 				</div>
 				<div class="form-item small-pic">
