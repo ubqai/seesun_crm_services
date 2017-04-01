@@ -35,10 +35,10 @@
 			<div class="form-item">
 				<p class="form-label">产品属性</p>
 				{% for options in option_sorted %}
-					<p class="label label-bg label-default right-gap-2" style="font-size:15px">
+					<span class="label label-bg label-default right-gap-2 bot-gap-1 text-left" style="display:inline-block;font-size:15px;max-width: 800px; white-space:initial">
 						{{ options[0].get('feature_name') }}：
 						{% for option in options %}{{ '' if loop.first else '/' }}{{ option.get('option_name') }}{% endfor %}
-					</p>
+					</span>
 				{% endfor %}
 			</div>
 			<div class="form-item">
