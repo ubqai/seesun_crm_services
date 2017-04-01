@@ -14,9 +14,12 @@
 	<div class="separator"><span></span></div>
 	<div class="widget">
 		<div class="widget_header">
-			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;<a href="{{ url_for('content.category_index') }}">目录列表</a> > 
-			<a href="{{ url_for('content.index', category_id = content.category_id) }}">{{ content.category.name }}</a> > 
-			{{ content.name }} <span style="float: right;">{{ content.created_at.strftime('%F %T') }}</span></h4>
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>
+				&nbsp;&nbsp;&nbsp;<a href="{{ url_for('content.category_index') }}" class="text-muted">目录列表</a> >
+				<a href="{{ url_for('content.index', category_id = content.category_id) }}" class="text-muted">{{ content.category.name }}</a> >
+				<a>{{ content.name }}</a>
+			</h4>
+			<span class="text-muted" style="position: absolute; right: 12px; top: 9px;">{{ content.created_at.strftime('%F %T') }}</span>
 		</div>
 		<!-- 这部分版面需要优化下 -->
 		<div class="widget_contents padding-0">

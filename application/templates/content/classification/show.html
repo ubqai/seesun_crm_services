@@ -14,8 +14,10 @@
 	<div class="widget">
 		<div class="widget_header">
 			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;
-			<a href="{{ url_for('content.category_index') }}">目录列表</a> > 
-			<a href="{{ url_for('content.category_show', id = classification.category_id) }}">{{ classification.category.name }}</a> > {{ classification.name }}</h4>
+				<a href="{{ url_for('content.category_index') }}" class="text-muted">目录列表</a> >
+				<a href="{{ url_for('content.category_show', id = classification.category_id) }}" class="text-muted">{{ classification.category.name }}</a> >
+				<a>{{ classification.name }}</a>
+			</h4>
 		</div>
 		<div class="widget_contents padding-0">
 			<div class="form-item">
