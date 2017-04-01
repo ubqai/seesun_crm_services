@@ -79,12 +79,13 @@ def contract_new(id):
         if request.form.get("offer_no") is None or request.form.get("offer_no") == '':
             flash('要约NO.必须填写', 'warning')
             return render_template('order_manage/contract_new.html', order=order, params=params)
-        if not is_number(request.form.get("tax_costs")):
-            flash('税点必须为0-100之间的数字', 'warning')
-            return render_template('order_manage/contract_new.html', order=order, params=params)
-        if Decimal(request.form.get("tax_costs")) > Decimal("100") or Decimal(request.form.get("tax_costs")) < Decimal("0"):
-            flash('税点必须为0-100之间的数字', 'warning')
-            return render_template('order_manage/contract_new.html', order=order, params=params)
+        if not request.form.get("tax_costs", '') == '':
+            if not is_number(request.form.get("tax_costs")):
+                flash('税点必须为0-100之间的数字', 'warning')
+                return render_template('order_manage/contract_new.html', order=order, params=params)
+            if Decimal(request.form.get("tax_costs")) > Decimal("100") or Decimal(request.form.get("tax_costs")) < Decimal("0"):
+                flash('税点必须为0-100之间的数字', 'warning')
+                return render_template('order_manage/contract_new.html', order=order, params=params)
         if not is_number(request.form.get("material_loss_percent")):
             flash('耗损百分比必须为0-100之间的数字', 'warning')
             return render_template('order_manage/contract_new.html', order=order, params=params)
@@ -164,12 +165,13 @@ def contract_edit(id):
         if request.form.get("offer_no") is None or request.form.get("offer_no") == '':
             flash('要约NO.必须填写', 'warning')
             return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
-        if not is_number(request.form.get("tax_costs")):
-            flash('税点必须为0-100之间的数字', 'warning')
-            return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
-        if Decimal(request.form.get("tax_costs")) > Decimal("100") or Decimal(request.form.get("tax_costs")) < Decimal("0"):
-            flash('税点必须为0-100之间的数字', 'warning')
-            return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
+        if not request.form.get("tax_costs", '') == '':
+            if not is_number(request.form.get("tax_costs")):
+                flash('税点必须为0-100之间的数字', 'warning')
+                return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
+            if Decimal(request.form.get("tax_costs")) > Decimal("100") or Decimal(request.form.get("tax_costs")) < Decimal("0"):
+                flash('税点必须为0-100之间的数字', 'warning')
+                return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
         if not is_number(request.form.get("material_loss_percent")):
             flash('耗损百分比必须为0-100之间的数字', 'warning')
             return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
