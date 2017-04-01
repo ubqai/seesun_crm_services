@@ -27,6 +27,7 @@
 						<th>生产日期</th>
 						<th>库存量</th>
                         <th>价格</th>
+                        <th>审核价格</th>
                         <th>状态</th>
 						<th>审核</th>
 					</tr>
@@ -42,6 +43,7 @@
                             <td>{{ si.production_date }}</td>
                             <td>{{ si.stocks }}</td>
                             <td>{{ si.price }}</td>
+                            <td>{{ '' if si.audit_price == None else si.audit_price }}</td>
                             <td>
                                 {{ si.status }}
                             </td>
