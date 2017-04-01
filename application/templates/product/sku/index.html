@@ -17,7 +17,25 @@
 			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>
 				&nbsp;&nbsp;&nbsp;<a>{{ skus.get('name') }}</a>
 			</h4>
+			<a class="new-item" onclick="$('#feature_wrapper').slideToggle();"><span class="glyphicon glyphicon-th"></span></a>
 		</div>
+		<div id="feature_wrapper" class="widget_contents padding-0" style="display: none; border-bottom: 0; border-radius: 0;">
+			{% for feature in features %}
+				<div class="form-item">
+					<span class="form-label">{{ feature.get('feature_name') }}</span>
+					<div class="label-block">
+					{% for option in feature.get('options') %}
+						<div class="label-item">
+							<input name="option_ids[]" value="{{ option.get('option_id') }}" type="checkbox" id="option_{{ option.get('option_id') }}" class="chk_1"
+							{% if option.get('option_id') in option_ids %}checked=""{% endif %} disabled/>
+							<label for="option_{{ option.get('option_id') }}">{{ option.get('option_name') }}</label>
+						</div>
+					{% endfor %}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+
 		<div class="widget_contents padding-0">
 			<table class="tables">
 				<thead>

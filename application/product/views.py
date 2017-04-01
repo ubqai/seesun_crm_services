@@ -157,7 +157,11 @@ def delete(id):
 @product.route('/sku/index/<int:product_id>')
 def sku_index(product_id):
     skus = load_skus(product_id)
-    return render_template('product/sku/index.html', skus=skus, product_id=product_id)
+    _product = load_product(product_id)
+    features = load_features()
+    option_ids = [x.get('option_id') for x in _product.get('options')]
+    return render_template('product/sku/index.html', skus=skus, product_id=product_id,
+                           features=features, option_ids=option_ids)
 
 
 @product.route('/sku/new/<int:product_id>', methods=['GET', 'POST'])
