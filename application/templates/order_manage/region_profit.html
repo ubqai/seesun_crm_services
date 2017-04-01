@@ -4,7 +4,7 @@
     <script src="{{ url_for('static', filename = 'javascripts/echarts.common.min.js') }}"></script>
     <script src="{{ url_for('static', filename = 'javascripts/dark.js') }}"></script>
 {% endblock %}
-{% from 'macros/pc_partial.html' import sidebar %}
+{% from 'macros/pc_partial.html' import sidebar with context %}
 {% block main_content %}
 
 {{ sidebar(active = 'dealer') }}

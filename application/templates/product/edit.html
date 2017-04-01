@@ -1,5 +1,5 @@
 {% extends 'pc_base.html' %}
-{% from 'macros/pc_partial.html' import sidebar %}
+{% from 'macros/pc_partial.html' import sidebar with context %}
 {% block extra_scripts %}
 	<script src="{{ url_for('static', filename = 'ckeditor/ckeditor.js') }}"></script>
 	<script src="{{ url_for('static', filename = 'javascripts/metisMenu.js') }}"></script>

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 from . import db, login_manager, bcrypt
+from flask import url_for
 
 
 @login_manager.user_loader
@@ -399,6 +400,9 @@ class User(db.Model, Rails):
     departments = db.relationship('DepartmentHierarchy', secondary=users_and_departments,
                                   backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
 
+    def __repr__(self):
+        return '<User %r -- %r>' % (self.id, self.nickname)
+
     # 用户的对象是否可认证 , 因为某些原因不允许被认证
     def is_authenticated(self):
         return True
@@ -445,6 +449,7 @@ class User(db.Model, Rails):
     def password(self, value):
         self.password_hash = bcrypt.generate_password_hash(value).decode('utf-8')
 
+    # 根据emal+密码获取用户实例
     @classmethod
     def login_verification(cls, email, password, user_or_origin):
         user = User.query.filter(User.email == email, User.user_or_origin == user_or_origin).first()
@@ -454,6 +459,7 @@ class User(db.Model, Rails):
 
         return user
 
+    # 验证并修改用户密码
     @classmethod
     def update_password(cls, email, password_now, password_new, password_new_confirm, user_or_origin):
         user = User.login_verification(email, password_now, user_or_origin)
@@ -472,6 +478,7 @@ class User(db.Model, Rails):
         user.password = password_new
         user.save
 
+    # 获取用户的最大部门等级
     def get_max_level_grade(self):
         max_level_grade = 99
         for d in self.departments:
@@ -479,6 +486,19 @@ class User(db.Model, Rails):
                 max_level_grade = d.level_grade
 
         return max_level_grade
+
+    # 是否有授权
+    def is_authorized(self, endpoint, method="get"):
+        return AuthorityOperation.is_authorized(self, endpoint, method)
+
+    # 获取用户所属role -- 暂使用所属部门代替
+    def get_roles(self):
+        return [(d.id, d.name) for d in self.departments.order_by("id asc").all()]
+
+    # 获取所有role -- 暂使用所属部门代替
+    @classmethod
+    def get_all_roles(cls):
+        return [(d.id, d.name) for d in DepartmentHierarchy.query.order_by("id asc").all()]
 
 
 class UserInfo(db.Model):
@@ -489,6 +509,9 @@ class UserInfo(db.Model):
     address = db.Column(db.String(500))
     title = db.Column(db.String(200))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def __repr__(self):
+        return '<UserInfo %r -- %r>' % (self.id, self.name)
 
 
 class Resource(db.Model):
@@ -506,7 +529,8 @@ class SalesAreaHierarchy(db.Model):
     level_grade = db.Column(db.Integer)
 
     def __repr__(self):
-        return 'SalesAreaHierarchy %r' % self.name
+        # return 'SalesAreaHierarchy %r' % self.name
+        return '<SalesAreaHierarchy %r -- %r>' % (self.id, self.name)
 
     @classmethod
     def get_team_info_by_regional(cls, regional_id):
@@ -536,6 +560,9 @@ class DepartmentHierarchy(db.Model):
     parent_id = db.Column(db.Integer)
     level_grade = db.Column(db.Integer)
 
+    def __repr__(self):
+        return '<DepartmentHierarchy %r -- %r>' % (self.id, self.name)
+
 
 class ProjectReport(db.Model):
     __tablename__ = 'project_reports'
@@ -552,3 +579,57 @@ class ProjectReport(db.Model):
     @property
     def app_name(self):
         return User.query.get_or_404(self.app_id).nickname
+
+
+# 页面说明表
+class WebpageDescribe(db.Model, Rails):
+    __tablename__ = 'webpage_describes'
+    id = db.Column(db.Integer, primary_key=True)
+    endpoint = db.Column(db.String(200), nullable=False)
+    method = db.Column(db.String(4), default="get")  # get or post
+    describe = db.Column(db.String(200), nullable=False)
+    validate_flag = db.Column(db.Boolean, default=True)  # 是否需要校验权限
+    type = db.Column(db.String(30), default="pc_sidebar")  # 页面类型
+
+    # 校验endpoint是否合法等
+    def check_data(self):
+        if self.method is not None and self.method not in ["get", "post"]:
+            raise "method wrong"
+
+        # 无对应数据,会抛出异常
+        url_for(self.endpoint)
+
+        # endpoint + method  唯一数据
+        if WebpageDescribe.query.filter_by(endpoint=self.endpoint, method=(self.method or "get")).first() is not None:
+            raise "has exists record"
+
+
+# 页面操作权限表
+class AuthorityOperation(db.Model, Rails):
+    __tablename__ = 'authority_operations'
+    id = db.Column(db.Integer, primary_key=True)
+    webpage_id = db.Column(db.Integer, db.ForeignKey('webpage_describes.id'))
+    role_id = db.Column(db.Integer, nullable=False)  # 暂时对应DepartmentHierarchy.id
+    flag = db.Column(db.String(10))  # 权限配置是否有效等
+    remark = db.Column(db.String(200))  # 权限备注
+    time = db.Column(db.DateTime, default=datetime.datetime.now)  # 权限设置时间
+
+    @classmethod
+    def is_authorized(cls, user, endpoint, method="get"):
+        if user is None or endpoint is None:
+            raise "is_authorized params wrong:[user,endpoint,method]"
+
+        wd = WebpageDescribe.query.filter_by(endpoint=endpoint, method=method).first()
+        # 无配置数据 默认有访问权限
+        if wd is None or wd.validate_flag is False:
+            return True
+
+        auth_flag = False
+        for (role_id, role_name) in user.get_roles():
+            ao = cls.query.filter_by(role_id=role_id, webpage_id=wd.id).first()
+            if ao is None or ao.flag != "Y":
+                continue
+            auth_flag = True
+            break
+
+        return auth_flag

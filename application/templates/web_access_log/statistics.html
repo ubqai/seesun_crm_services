@@ -3,7 +3,7 @@
     <script src="{{ url_for('static', filename = 'javascripts/echarts.common.min.js') }}"></script>
     <script src="{{ url_for('static', filename = 'javascripts/dark.js') }}"></script>
 {% endblock %}
-{% from 'macros/pc_partial.html' import sidebar %}
+{% from 'macros/pc_partial.html' import sidebar with context %}
 {% from 'macros/pc_pagination.html' import paginate %}
 {% block main_content %}
 
