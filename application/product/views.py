@@ -87,11 +87,12 @@ def relate_cases(product_id):
 
 @product.route('/<int:id>')
 def show(id):
+    category = load_category(request.args.get('category_id'))
     _product = load_product(id, option_sorted=True)
     skus = load_skus(id)
     contents = Content.query.filter(Content.id.in_(_product.get('case_ids')))
     option_sorted = _product.get('option_sorted')
-    return render_template('product/show.html', product=_product, skus=skus, contents=contents,
+    return render_template('product/show.html', category=category, product=_product, skus=skus, contents=contents,
                            option_sorted=option_sorted)
 
 
@@ -423,8 +424,9 @@ def option_new(feature_id):
             flash('产品属性值创建成功', 'success')
         else:
             flash('产品属性值创建失败', 'danger')
-        return redirect(url_for('product.feature_show', id=feature_id))
-    return render_template('product/option/new.html', feature_id=feature_id)
+        return redirect(url_for('product.feature_index'))
+    feature = load_feature(feature_id)
+    return render_template('product/option/new.html', feature=feature)
 
 
 @product.route('/option/<int:id>/edit', methods=['GET', 'POST'])
@@ -436,5 +438,6 @@ def option_edit(id):
             flash('产品属性值修改成功', 'success')
         else:
             flash('产品属性值修改失败', 'danger')
-        return redirect(url_for('product.category_index'))
-    return render_template('product/option/edit.html', option_id=id)
+        return redirect(url_for('product.feature_index'))
+    feature = load_feature(request.args.get('feature_id'))
+    return render_template('product/option/edit.html', option_id=id, feature=feature)

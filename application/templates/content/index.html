@@ -14,7 +14,10 @@
 	<div class="separator"><span></span></div>
 	<div class="widget">
 		<div class="widget_header">
-			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;<a href="{{ url_for('content.category_index') }}">目录列表</a> > {{ category.name }}</h4>
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>
+				&nbsp;&nbsp;&nbsp;<a href="{{ url_for('content.category_index') }}" class="text-muted">目录列表</a> >
+				<a>{{ category.name }}</a>
+			</h4>
 		</div>
 		<div class="widget_contents padding-0">
 			<table class="tables">
@@ -30,7 +33,7 @@
 				{% for content in object_list.items %}
 					<tr>
 						<td><a href="{{ url_for('content.show', id = content.id) }}" class="table-link">{{ content.name }}</a></td>
-						<td>{% for option in content.options %}{{ option.name }}, {% endfor %}</td>
+						<td style="text-align: left;">{% for option in content.options %}{{ option.name }}&nbsp;&nbsp;&nbsp;{% endfor %}</td>
 						<td>{{ content.created_at.strftime('%F %T') }}</td>
 						<td>
 							<a class="table-edit text-info" href="{{ url_for('content.edit', id = content.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>

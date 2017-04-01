@@ -294,6 +294,19 @@ class Order(db.Model, Rails):
         return 'Order(id: %s, order_no: %s, user_id: %s, order_status: %s, order_memo: %s)' % (
             self.id, self.order_no, self.user_id, self.order_status, self.order_memo)
 
+    @property
+    def sale_director(self):
+        province_id = User.query.get_or_404(self.user_id).sales_areas.first().parent_id
+        region_id = SalesAreaHierarchy.query.get_or_404(province_id).parent_id
+        us = db.session.query(User).join(User.departments).join(User.sales_areas).filter(
+            User.user_or_origin == 3).filter(
+            DepartmentHierarchy.name == "销售部").filter(
+            SalesAreaHierarchy.id == region_id).first()
+        if us is not None:
+            return us.nickname
+        else:
+            return ''
+
 
 class Contract(db.Model):
     __tablename__ = 'contracts'

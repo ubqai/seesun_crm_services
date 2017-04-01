@@ -18,8 +18,11 @@
 	<div class="separator"><span></span></div>
 	<div class="widget">
 		<div class="widget_header">
-			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;<a href="{{ url_for('content.category_index') }}">目录列表</a> > 
-			<a href="{{ url_for('content.index', category_id = content.category_id) }}">{{ content.category.name }}</a> >编辑内容</h4>
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>
+				&nbsp;&nbsp;&nbsp;<a href="{{ url_for('content.category_index') }}" class="text-muted">目录列表</a> >
+				<a href="{{ url_for('content.index', category_id = content.category_id) }}" class="text-muted">{{ content.category.name }}</a> >
+				<a>编辑内容</a>
+			</h4>
 		</div>
 
 		<form action="{{ url_for('content.edit', id = content.id) }}" enctype="multipart/form-data" method="post">

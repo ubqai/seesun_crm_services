@@ -7,15 +7,17 @@
 <div class="contents">
 	<div class="contents-header">
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
-		<p class="contents-header-p">产品列表</p>
+		<p class="contents-header-p">{{ category.get('category_name') }}</p>
 		<p class="contents-header-p text-sm">products list</p>
 		<a class="new-one" href="{{ url_for('product.new', category_id = category.get('category_id')) }}"><span class="glyphicon glyphicon-plus"></span></a>
 	</div>
 	<div class="separator"><span></span></div>
 	<div class="widget">
 		<div class="widget_header">
-			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;
-			<a href="{{ url_for('product.category_index') }}">产品目录列表</a> > {{ category.get('category_name') }}</h4>
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>
+				&nbsp;&nbsp;&nbsp;<a href="{{ url_for('product.category_index') }}" class="text-muted">产品目录列表</a> >
+				<a>{{ category.get('category_name') }}</a>
+			</h4>
 		</div>
 		<div class="widget_contents padding-0">
 			<table class="tables">

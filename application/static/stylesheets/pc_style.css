@@ -1018,3 +1018,22 @@ p.contract-subtitle {
     box-shadow: inset 0px 0px 3px 0px rgba(0,0,0,0.15);
     border-color: #eee !important;
 }
+
+.hover-attr{
+	padding-right:41px;
+}
+.hover-attr a {
+    font-size: 12px;
+    padding: 0px 2px;
+    display: none;
+		transition:all 0.3s;
+		cursor:pointer;	
+}
+.hover-attr:hover{
+    background:#eee;
+		border-radius:5px;
+		padding-right:3px;
+}
+.hover-attr:hover a {
+    display: inline-block;
+}
