@@ -6,44 +6,51 @@
 {{ sidebar(active = 'organization') }}
 
 <div class="contents">
-	<div class="contents-header">
-		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
-		<p class="contents-header-p">区域管理和销售团队</p>
-		<p class="contents-header-p text-sm">regional_and_team management</p>
-	</div>
-	<div class="separator"><span></span></div>
-	<form class="form form-horizontal" url="{{url_for('organization.regional_manage_team',sah_id=sah_id,leader_id=leader_id,region_province_id=region_province_id)}}" role="form" method="post">
-	    <div class="form-style form-default">
-	        <div class="widget_contents padding-0">
-	        	{{ form.csrf_token }}
-	        	<table class="tables">
-	        		<tr>
-	        			<th colspan=2>销售团队选择</th>
-	        		</tr>
-					{% for user_info in sorted_user_infos %}
-						<tr>
-							<td>
-								{% if user_info[1]['choose'] ==1 %}
-				        			<input type="radio" name="user_id" value="{{user_info[0]}}" checked="{{user_info[1]['choose']}}" />
-				        		{% else %}	        			
-				        			<input type="radio" name="user_id" value="{{user_info[0]}}" />
-				        		{% endif %}
-				        	</td>
-				        	<td>{{user_info[1]['name']}}
-				        		{% if user_info[1]['choose'] ==1 %}
-				        			(现系统值)
-				        		{% endif %}
-				        	</td>
-						</tr>
-					{% endfor %}	
-				</table>
-	        </div>
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png"/></div>
+        <p class="contents-header-p">区域管理和销售团队</p>
+        <p class="contents-header-p text-sm">regional_and_team management</p>
+    </div>
+    <div class="separator"><span></span></div>
+    <form class="form form-horizontal"
+          url="{{url_for('organization.regional_manage_team',sah_id=sah_id,leader_id=leader_id,region_province_id=region_province_id)}}"
+          role="form" method="post">
+        <div class="form-style form-default">
+            <div class="widget_contents padding-0">
+                {{ form.csrf_token }}
+                <table class="tables">
+                    <tr>
+                        <th colspan=2>销售团队选择</th>
+                    </tr>
+                    {% for user_info in sorted_user_infos %}
+                    {% if user_info[1]['choose'] ==1 %}
+                    <tr bgcolor="#FFFF99">
+                    {% else %}
+                    <tr>
+                    {% endif %}
+                        <td>
+                            {% if user_info[1]['choose'] ==1 %}
+                            <input type="radio" name="user_id" value="{{user_info[0]}}"
+                                   checked="{{user_info[1]['choose']}}"/>
+                            {% else %}
+                            <input type="radio" name="user_id" value="{{user_info[0]}}"/>
+                            {% endif %}
+                        </td>
+                        <td>{{user_info[1]['name']}}
+                            {% if user_info[1]['choose'] ==1 %}
+                            (现系统值)
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
 
-	        <div class="text-right top-gap-2 right-gap-3">
-	            <button class="btn btn-default my-btn">提交</button>
-	        </div>
-	    </div>
-	</form>
+            <div class="text-right top-gap-2 right-gap-3">
+                <button class="btn btn-default my-btn">提交</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 {% endblock %}

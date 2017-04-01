@@ -6,61 +6,68 @@
 {{ sidebar(active = 'organization') }}
 
 <div class="contents">
-	<div class="contents-header">
-		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
-		<p class="contents-header-p">区域管理和销售团队</p>
-		<p class="contents-header-p text-sm">regional_and_team management</p>
-	</div>
-	<div class="separator"><span></span></div>
-	<form class="form form-horizontal" url="{{url_for('organization.regional_manage_leader',sah_id=sah_id)}}" role="form" method="post">
-	    <div class="form-style form-default">
-	        <div class="widget_contents padding-0">
-	        	{{ form.csrf_token }}
-	        	<table class="tables">
-	        		<tr>
-	        			<th colspan=2>负责人选择</th>
-	        		</tr>
-					{% for use_info in sorted_user_infos %}
-						<tr>
-							<td>
-								{% if use_info[1]['choose'] ==1 %}
-				        			<input type="radio" name="user_id" value="{{use_info[0]}}" checked="{{use_info[1]['choose']}}" />
-				        		{% else %}	        			
-				        			<input type="radio" name="user_id" value="{{use_info[0]}}" />
-				        		{% endif %}
-				        	</td>
-				        	<td>{{use_info[1]['name']}}
-				        		{% if use_info[1]['choose'] == 1 %}
-				        			(现系统值)
-				        		{% endif %}
-				        	</td>
-						</tr>
-					{% endfor %}	
-				</table>
-	        </div>
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png"/></div>
+        <p class="contents-header-p">区域管理和销售团队</p>
+        <p class="contents-header-p text-sm">regional_and_team management</p>
+    </div>
+    <div class="separator"><span></span></div>
+    <form class="form form-horizontal" url="{{url_for('organization.regional_manage_leader',sah_id=sah_id)}}"
+          role="form" method="post">
+        <div class="form-style form-default">
+            <div class="widget_contents padding-0">
+                {{ form.csrf_token }}
+                <table class="tables">
+                    <tr>
+                        <th colspan=2>负责人选择</th>
+                    </tr>
+                    {% for use_info in sorted_user_infos %}
+                    {% if use_info[1]['choose'] ==1 %}
+                    <tr bgcolor="#FFFF99">
+                    {% else %}
+                    <tr>
+                    {% endif %}
+                        <td>
+                            {% if use_info[1]['choose'] ==1 %}
+                            <input type="radio" name="user_id" value="{{use_info[0]}}"
+                                   checked="{{use_info[1]['choose']}}"/>
+                            {% else %}
+                            <input type="radio" name="user_id" value="{{use_info[0]}}"/>
+                            {% endif %}
+                        </td>
+                        <td>{{use_info[1]['name']}}
+                            {% if use_info[1]['choose'] == 1 %}
+                            (现系统值)
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
 
-	        <div class="text-right top-gap-2 right-gap-3">
-	            <button class="btn btn-default my-btn" onclick="{
+            <div class="text-right top-gap-2 right-gap-3">
+                <button class="btn btn-default my-btn" onclick="{
 	            if(confirm('修改区域负责人将会重置此区域下所有销售团队,请知晓')){
 				  this.document.formname.submit();
 				  return true;}return false;
-				 }">提交</button>
-	        </div>
-	    </div>
-	</form>
-	
+				 }">提交
+                </button>
+            </div>
+        </div>
+    </form>
+
     <div class="widget_contents padding-0">
-    	<table class="tables">
-    		<tr>
-    			<th colspan=2>现销售团队信息</th>
-    		</tr>
-			{% for regional_province in regional_province_infos %}
-				<tr>
-                		<td>{{ regional_province_infos[regional_province]["regional_province_name"] }}</td>
-                		<td>{{ regional_province_infos[regional_province]["team_info"][1] }}</td>
-				</tr>
-			{% endfor %}	
-		</table>
+        <table class="tables">
+            <tr>
+                <th colspan=2>现销售团队信息</th>
+            </tr>
+            {% for regional_province in regional_province_infos %}
+            <tr>
+                <td>{{ regional_province_infos[regional_province]["regional_province_name"] }}</td>
+                <td>{{ regional_province_infos[regional_province]["team_info"][1] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 </div>
 
