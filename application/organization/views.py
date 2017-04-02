@@ -571,7 +571,7 @@ def account_password_update():
 def authority_index():
     form = AuthoritySearchForm(request.form, meta={'csrf_context': session})
 
-    wd_infos = WebpageDescribe.query.filter(validate_flag=True)
+    wd_infos = WebpageDescribe.query.filter_by(validate_flag=True)
     if form.web_types.data:
         wd_infos = wd_infos.filter(WebpageDescribe.type.in_(form.web_types.data))
     if form.describe.data:

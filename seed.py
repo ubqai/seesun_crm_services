@@ -98,6 +98,8 @@ webpage_describe_list = [
 dh = DepartmentHierarchy.query.filter_by(name="董事长").first()
 for (endpoint, method, describe) in webpage_describe_list:
     wd = WebpageDescribe(endpoint=endpoint, method=method, describe=describe)
+    if endpoint == "organization.user_index":
+        wd.validate_flag = False
     wd.check_data()
     wd.save
     AuthorityOperation(webpage_id=wd.id, role_id=dh.id, flag="Y").save
