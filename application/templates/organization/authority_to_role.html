@@ -1,0 +1,66 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar with context %}
+{% from 'macros/pc_pagination.html' import render_pagination %}
+{% block main_content %}
+
+{{ sidebar(active = 'organization') }}
+
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png"/></div>
+        <p class="contents-header-p">授权操作</p>
+        <p class="contents-header-p text-sm">authorization operation </p>
+    </div>
+    <div class="separator"><span></span></div>
+    <form class="form form-horizontal" method="post" url="{{ url_for('organization.authority_to_role',webpage_id=page_info[0]) }}"
+          role="form">
+        <div class="form-style form-default">
+            <div class="widget_contents padding-0">
+                {{ form.csrf_token }}
+                <table class="tables">
+                    <tr>
+                        <th colspan=2>授权选择 -- {{page_info[1]}}</th>
+                    </tr>
+                    {% for role_info in sorted_role_infos %}
+                    {% if role_info[2] ==1 %}
+                    <tr bgcolor="#FFFF99">
+                    {% else %}
+                    <tr>
+                    {% endif %}
+                        <td>
+                            {% if role_info[2] ==1 %}
+                            <input type="checkbox" name="role_id" value="{{role_info[0]}}"
+                                   checked="{{role_info[2]}}"/>
+                            {% else %}
+                            <input type="checkbox" name="role_id" value="{{role_info[0]}}"/>
+                            {% endif %}
+                        </td>
+                        <td>{{role_info[1]}}
+                            {% if role_info[2] == 1 %}
+                            (已授权)
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="text-right top-gap-2 right-gap-3">
+                {{ form.submit(class="btn btn-default my-btn",value="授权") }}
+            </div>
+        </div>
+    </form>
+
+
+</div>
+
+<script>
+$(function(){
+	$("#select_user_type").change()
+});
+
+
+
+
+</script>
+{% endblock %}

@@ -2,6 +2,7 @@
 import datetime
 from . import db, login_manager, bcrypt
 from flask import url_for
+from sqlalchemy import distinct
 
 
 @login_manager.user_loader
@@ -501,7 +502,7 @@ class User(db.Model, Rails):
         return max_level_grade
 
     # 是否有授权
-    def is_authorized(self, endpoint, method="get"):
+    def is_authorized(self, endpoint, method="GET"):
         return AuthorityOperation.is_authorized(self, endpoint, method)
 
     # 获取用户所属role -- 暂使用所属部门代替
@@ -599,21 +600,29 @@ class WebpageDescribe(db.Model, Rails):
     __tablename__ = 'webpage_describes'
     id = db.Column(db.Integer, primary_key=True)
     endpoint = db.Column(db.String(200), nullable=False)
-    method = db.Column(db.String(4), default="get")  # get or post
+    method = db.Column(db.String(4), default="GET")  # GET or POST
     describe = db.Column(db.String(200), nullable=False)
     validate_flag = db.Column(db.Boolean, default=True)  # 是否需要校验权限
     type = db.Column(db.String(30), default="pc_sidebar")  # 页面类型
+    authority_operations = db.relationship('AuthorityOperation', backref='web_describe', lazy='dynamic')
+
+    def __repr__(self):
+        return '<WebpageDescribe %r -- %r,%r>' % (self.id, self.endpoint, self.describe)
+
+    @classmethod
+    def get_all_types(cls):
+        return [(web_type[0], web_type[0]) for web_type in db.session.query(distinct(WebpageDescribe.type)).all()]
 
     # 校验endpoint是否合法等
     def check_data(self):
-        if self.method is not None and self.method not in ["get", "post"]:
+        if self.method is not None and self.method not in ["GET", "POST"]:
             raise "method wrong"
 
         # 无对应数据,会抛出异常
         url_for(self.endpoint)
 
         # endpoint + method  唯一数据
-        if WebpageDescribe.query.filter_by(endpoint=self.endpoint, method=(self.method or "get")).first() is not None:
+        if WebpageDescribe.query.filter_by(endpoint=self.endpoint, method=(self.method or "GET")).first() is not None:
             raise "has exists record"
 
 
@@ -627,8 +636,15 @@ class AuthorityOperation(db.Model, Rails):
     remark = db.Column(db.String(200))  # 权限备注
     time = db.Column(db.DateTime, default=datetime.datetime.now)  # 权限设置时间
 
+    def __repr__(self):
+        return '<AuthorityOperation %r -- %r,%r>' % (self.id, self.webpage_id, self.role_id)
+
+    # role_id获取对应中文
+    def get_role_name(self):
+        return DepartmentHierarchy.query.filter_by(id=self.role_id).first().name
+
     @classmethod
-    def is_authorized(cls, user, endpoint, method="get"):
+    def is_authorized(cls, user, endpoint, method="GET"):
         if user is None or endpoint is None:
             raise "is_authorized params wrong:[user,endpoint,method]"
 

@@ -1,7 +1,8 @@
-from wtforms import Form, StringField, TextAreaField, SelectField, PasswordField, validators
+from wtforms import Form, StringField, TextAreaField, SelectField, PasswordField, validators, SelectMultipleField, \
+    SubmitField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from flask_login import current_user
-from ..models import SalesAreaHierarchy, DepartmentHierarchy
+from ..models import SalesAreaHierarchy, DepartmentHierarchy, User, WebpageDescribe
 from ..forms import BaseCsrfForm
 
 
@@ -47,7 +48,7 @@ class UserLoginForm(BaseCsrfForm):
 
 # WECHAT USER_LOGIN
 class WechatUserLoginForm(UserLoginForm):
-    openid = StringField('微信openId', [validators.Required()])
+    openid = StringField('微信openId', [validators.DataRequired()])
 
 
 class BaseForm(Form):
@@ -78,7 +79,7 @@ class UserForm(BaseForm, BaseCsrfForm):
                         [validators.Regexp(r'(^\d{11})$|(^(\d{3,4}-)?\d{7,8}(-\d{1,5})?$)', message="请输入正确格式的电话")])
     title = StringField('头衔')
     user_type = SelectField('用户类型', choices=[('3', '员工'), ('2', '经销商')],
-                            validators=[validators.Required(message="字段不可为空")])
+                            validators=[validators.DataRequired(message="字段不可为空")])
     # dept_ranges = SelectMultipleField('dept_ranges',choices=[ ('-1','选择所属部门')] + [(str(dh.id),dh.name) for dh in DepartmentHierarchy.query.all() ])
     # sale_range = SelectField('sale_range',choices=[ ('-1','选择销售范围')] + [(str(sah.id),sah.name) for sah in SalesAreaHierarchy.query.filter_by(level_grade=4).all() ])
     dept_ranges = QuerySelectMultipleField(u'所属部门', get_label="name", validators=[valid_dept_ranges])
@@ -90,7 +91,8 @@ class UserForm(BaseForm, BaseCsrfForm):
 class UserSearchForm(BaseForm):
     email = StringField('邮箱')
     name = StringField('姓名')
-    user_type = SelectField('用户类型', choices=[(3, '员工'), (2, '经销商')], validators=[validators.Required(message="字段不可为空")])
+    user_type = SelectField('用户类型', choices=[(3, '员工'), (2, '经销商')],
+                            validators=[validators.DataRequired(message="字段不可为空")])
     # dept_ranges = SelectMultipleField('dept_ranges',choices=[ (-1,'选择所属部门')] + [(str(dh.id),dh.name) for dh in DepartmentHierarchy.query.all() ])
     # sale_range = SelectField('sale_range',choices=[ (-1,'选择销售范围')] + [(str(sah.id),sah.name) for sah in SalesAreaHierarchy.query.filter_by(level_grade=3).all() ])
     dept_ranges = QuerySelectMultipleField(u'所属部门', get_label="name")
@@ -103,3 +105,10 @@ class RegionalSearchForm(Form):
 
     def reset_select_field(self):
         self.regional.query = get_dynamic_sale_range_query(2)
+
+
+class AuthoritySearchForm(BaseCsrfForm):
+    roles = SelectMultipleField('角色', choices=[('', '全部')] + User.get_all_roles())
+    web_types = SelectMultipleField('页面类型', choices=WebpageDescribe.get_all_types())
+    describe = StringField('页面描述')
+    submit = SubmitField('筛选条件')

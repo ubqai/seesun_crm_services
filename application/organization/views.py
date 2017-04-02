@@ -1,18 +1,34 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for, session
 
 from .. import app, db
-from ..models import UserAndSaleArea, User, UserInfo, DepartmentHierarchy, SalesAreaHierarchy
+from ..models import UserAndSaleArea, User, UserInfo, DepartmentHierarchy, SalesAreaHierarchy, AuthorityOperation, \
+    WebpageDescribe
 
 import traceback
 import json
 import datetime
-from .forms import BaseForm, UserForm, UserSearchForm, UserLoginForm, RegionalSearchForm, BaseCsrfForm
+from .forms import BaseForm, UserForm, UserSearchForm, UserLoginForm, RegionalSearchForm, BaseCsrfForm, \
+    AuthoritySearchForm
 from sqlalchemy import distinct
 from flask_login import logout_user, login_user, current_user
 
 PAGINATION_PAGE_NUMBER = 20
 
 organization = Blueprint('organization', __name__, template_folder='templates')
+
+
+# 单个使用@login_required
+@organization.before_app_request
+def authority_check():
+    app.logger.info("into authority_check")
+    if request.endpoint == "static" or request.endpoint is None \
+            or current_user is None or not current_user.is_authenticated:
+        pass
+    else:
+        if AuthorityOperation.is_authorized(current_user, request.endpoint, request.method) is False:
+            flash("无权限登入页面 [%s] ,请确认" % WebpageDescribe.query.filter_by(endpoint=request.endpoint,
+                                                                      method=request.method).first().describe)
+            return redirect(url_for('organization.user_index'))
 
 
 # -- login
@@ -553,4 +569,69 @@ def account_password_update():
 # 权限管理
 @organization.route('/authority/index', methods=['GET', 'POST'])
 def authority_index():
-    return "tmp_view: authority_index"
+    form = AuthoritySearchForm(request.form, meta={'csrf_context': session})
+
+    wd_infos = WebpageDescribe.query.filter(validate_flag=True)
+    if form.web_types.data:
+        wd_infos = wd_infos.filter(WebpageDescribe.type.in_(form.web_types.data))
+    if form.describe.data:
+        wd_infos = wd_infos.filter(WebpageDescribe.describe.ilike('%' + form.describe.data + '%'))
+    if form.roles.data and form.roles.data != ['']:
+        app.logger.info("roles data %s" % form.roles.data)
+        wd_infos = wd_infos.join(AuthorityOperation).filter(AuthorityOperation.role_id.in_(form.roles.data))
+
+    wd_infos = wd_infos.order_by(WebpageDescribe.type, WebpageDescribe.endpoint).all()
+    return render_template('organization/authority_index.html', form=form, wd_infos=wd_infos)
+
+
+@organization.route('/authority/to_role/<int:webpage_id>', methods=['GET', 'POST'])
+def authority_to_role(webpage_id):
+    form = AuthoritySearchForm(request.form, meta={'csrf_context': session})
+    wd = WebpageDescribe.query.filter_by(id=webpage_id).first()
+    page_info = (webpage_id, wd.describe)
+
+    if request.method == "POST":
+        try:
+            if form.validate() is False:
+                flash(form.errors)
+
+            app.logger.info(request.form.getlist("role_id"))
+            # 处理现有授权
+            add_rolelist = [int(role_id) for role_id in request.form.getlist("role_id")]
+            for ao in AuthorityOperation.query.filter_by(webpage_id=webpage_id, flag="Y").all():
+                if ao.id in add_rolelist:
+                    add_rolelist.remove(ao.id)
+                else:
+                    ao.flag = "N"
+                    db.session.add(ao)
+
+            # 处理需要增加授权的role
+            for add_role_id in add_rolelist:
+                ao = AuthorityOperation.query.filter_by(webpage_id=webpage_id, role_id=add_role_id).first()
+                if ao is not None:
+                    ao.flag = "Y"
+                    ao.time = datetime.datetime.now()
+                else:
+                    ao = AuthorityOperation(webpage_id=webpage_id, role_id=add_role_id, flag="Y")
+
+                db.session.add(ao)
+
+            db.session.commit()
+            flash("授权成功")
+            return redirect(url_for('organization.authority_index'))
+        except Exception as e:
+            db.sesion.rollback()
+            flash("授权失败: %s" % e)
+            return redirect(url_for('organization.authority_to_role', webpage_id=webpage_id))
+    else:
+        role_infos = []
+        for role_id, role_name in User.get_all_roles():
+            ao = AuthorityOperation.query.filter_by(webpage_id=webpage_id, role_id=role_id).first()
+            choose = 0
+            if ao is not None and ao.flag == "Y":
+                choose = 1
+            role_infos.append((role_id, role_name, choose))
+
+        sorted_role_infos = sorted(role_infos, key=lambda p: p[2], reverse=True)
+        return render_template('organization/authority_to_role.html', form=form, sorted_role_infos=sorted_role_infos,
+                               page_info=page_info)

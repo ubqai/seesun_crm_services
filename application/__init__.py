@@ -20,27 +20,36 @@ login_manager.login_view = "organization.user_login"
 
 bcrypt = Bcrypt(app)
 
-
 from .content.views import content
+
 app.register_blueprint(content, url_prefix='/content')
 from .product.views import product
+
 app.register_blueprint(product, url_prefix='/product')
 from .order_manage.views import order_manage
+
 app.register_blueprint(order_manage, url_prefix='/order_manage')
 from .inventory.views import inventory
+
 app.register_blueprint(inventory, url_prefix='/inventory')
 from .wechat.views import wechat
+
 app.register_blueprint(wechat, url_prefix='/wechat')
 from .design_application.views import design_application
+
 app.register_blueprint(design_application, url_prefix='/design_application')
 from .project_report.views import project_report
+
 app.register_blueprint(project_report, url_prefix='/project_report')
 from .organization.views import organization
+
 app.register_blueprint(organization, url_prefix='/organization')
 from .web_access_log.views import web_access_log
+
 app.register_blueprint(web_access_log, url_prefix='/web_access_log')
 
 from .inventory.api import load_products, load_skus, load_user_inventories, load_inventories_by_code
+
 app.add_template_global(load_products)
 app.add_template_global(load_skus)
 app.add_template_global(load_user_inventories)
@@ -63,7 +72,9 @@ def setup_logging():
 @app.before_request
 def login_check():
     # url_rule
-    if request.endpoint == "static" or request.endpoint is None or request.path.startswith("/static/") or request.path.startswith("/favicon.ico"):
+    app.logger.info("into login_check")
+    if request.endpoint == "static" or request.endpoint is None or request.path.startswith(
+            "/static/") or request.path.startswith("/favicon.ico"):
         if request.endpoint is None:
             app.logger.info("LOGIN_CHECK None?  request.path [%s] , [%s]" % (request.path, request.endpoint))
         # 静态文件
