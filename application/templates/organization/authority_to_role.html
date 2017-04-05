@@ -12,7 +12,7 @@
         <p class="contents-header-p text-sm">authorization operation </p>
     </div>
     <div class="separator"><span></span></div>
-    <form class="form form-horizontal" method="post" url="{{ url_for('organization.authority_to_role',webpage_id=page_info[0]) }}"
+    <form class="form form-horizontal" method="post" action="{{ url_for('organization.authority_to_role',webpage_id=page_info[0]) }}"
           role="form">
         <div class="form-style form-default">
             <div class="widget_contents padding-0">

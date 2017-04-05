@@ -2,7 +2,7 @@
 import os
 from flask import Flask, g, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, current_user
+from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from .utils import num2moneyformat
 
@@ -66,43 +66,6 @@ def setup_logging():
         app.logger.addHandler(logging.StreamHandler())
         app.logger.setLevel(logging.INFO)
         app.logger.info("RUN ENV : [%s]" % os.getenv('FLASK_ENV'))
-
-
-# 单个使用@login_required
-@app.before_request
-def login_check():
-    # url_rule
-    app.logger.info("into login_check")
-    if request.endpoint == "static" or request.endpoint is None or request.path.startswith(
-            "/static/") or request.path.startswith("/favicon.ico"):
-        if request.endpoint is None:
-            app.logger.info("LOGIN_CHECK None?  request.path [%s] , [%s]" % (request.path, request.endpoint))
-        # 静态文件
-        # app.logger.info("static pass")
-        pass
-    elif request.path.startswith("/mobile/") or request.path.startswith("/wechat/mobile/") or request.path == '/':
-        if request.path == "/mobile/user/login" or request.path == '/wechat/mobile/user_binding':
-            pass
-        # 移动端登入界面
-        elif not current_user.is_authenticated or current_user.user_or_origin != 2:
-            app.logger.info("LOGIN_CHECK INTO MOBILE  request.path [%s] , [%s]" % (request.path, request.endpoint))
-            # 后端界面
-            flash("请登入后操作")
-            return redirect(url_for('mobile_user_login'))
-    elif request.path.startswith("/wechat/"):
-        # 微信
-        pass
-    else:
-        if request.path == "/organization/user/login":
-            # 后端登入界面
-            pass
-        elif not current_user.is_authenticated or current_user.user_or_origin != 3:
-            app.logger.info("LOGIN_CHECK INTO BACK END request.path [%s] , [%s]" % (request.path, request.endpoint))
-            # 后端界面
-            flash("请登入后操作")
-            return redirect(url_for('organization.user_login'))
-
-    return None
 
 
 @app.errorhandler(404)

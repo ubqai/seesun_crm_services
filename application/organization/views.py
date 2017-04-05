@@ -19,15 +19,60 @@ organization = Blueprint('organization', __name__, template_folder='templates')
 
 # 单个使用@login_required
 @organization.before_app_request
+def login_check():
+    # url_rule
+    # app.logger.info("into login_check")
+
+    # 图片加载 or 无匹配请求
+    if request.endpoint == "static" or request.endpoint is None:
+        if request.endpoint is None:
+            app.logger.info("LOGIN_CHECK None?  request.path [%s] , [%s]" % (request.path, request.endpoint))
+        pass
+    # 网站root访问 移动端
+    # 所有移动端页面
+    # wechat.mobile_ 使用微信相关JS的移动端页面
+    elif request.endpoint == "root" or \
+            request.endpoint.startswith("mobile_") or \
+            request.endpoint.startswith("wechat.mobile_"):
+        # 访问请求端的页面 不进行拦截
+        if request.endpoint == "mobile_user_login" or request.endpoint == 'wechat.mobile_user_binding':
+            pass
+        # 未登入用户跳转登入界面
+        elif not current_user.is_authenticated or current_user.user_or_origin != 2:
+            app.logger.info("LOGIN_CHECK INTO MOBILE  request.path [%s] , [%s]" % (request.path, request.endpoint))
+            # 后端界面
+            flash("请登入后操作")
+            return redirect(url_for('mobile_user_login'))
+    # 其他与微信服务器交互接口 不进行登入判断
+    elif request.endpoint.startswith("wechat."):
+        # 微信
+        pass
+    # 后端管理界面
+    else:
+        # 访问请求端的页面 不进行拦截
+        if request.endpoint == "organization.user_login":
+            # 后端登入界面
+            pass
+        # 未登入用户跳转登入界面
+        elif not current_user.is_authenticated or current_user.user_or_origin != 3:
+            app.logger.info("LOGIN_CHECK INTO BACK END request.path [%s] , [%s]" % (request.path, request.endpoint))
+            # 后端界面
+            flash("请登入后操作")
+            return redirect(url_for('organization.user_login'))
+
+    return None
+
+
+@organization.before_app_request
 def authority_check():
-    app.logger.info("into authority_check")
+    # app.logger.info("into authority_check")
     if request.endpoint == "static" or request.endpoint is None \
             or current_user is None or not current_user.is_authenticated:
         pass
     else:
         if AuthorityOperation.is_authorized(current_user, request.endpoint, request.method) is False:
             flash("无权限登入页面 [%s] ,请确认" % WebpageDescribe.query.filter_by(endpoint=request.endpoint,
-                                                                      method=request.method).first().describe)
+                                                                        method=request.method).first().describe)
             return redirect(url_for('organization.user_index'))
 
 
@@ -43,6 +88,7 @@ def user_login():
             app.logger.info("移动端用户[%s]自动登出,[%s][%s]" % (current_user.nickname, request.path, request.endpoint))
             logout_user()
 
+    app.logger.info("user_login [%s]" % request.args)
     if request.method == 'POST':
         try:
             form = UserLoginForm(request.form, meta={'csrf_context': session})
@@ -257,7 +303,7 @@ def get_sale_range_by_parent(level_grade):
     for sa in BaseForm.get_sale_range_by_parent(level_grade, parent_id):
         sa_array[sa.id] = sa.name
     json_data = json.dumps(sa_array)
-    app.logger.info("return from get_sale_range_by_province [%s]" % (json_data))
+    app.logger.info("return from get_sale_range_by_province [%s]" % json_data)
 
     return json_data
 
@@ -295,7 +341,7 @@ def regional_and_team_index():
 def regional_manage_leader(sah_id):
     sah = SalesAreaHierarchy.query.filter_by(id=sah_id).first()
     if sah is None:
-        flash("非法区域id[%d]" % (sah_id))
+        flash("非法区域id[%d]" % sah_id)
         return redirect(url_for('organization.regional_and_team_index'))
 
     if request.method == 'POST':
@@ -483,7 +529,7 @@ def regional_manage_province(sah_id):
             for add_province_id in province_id_array:
                 add_province = SalesAreaHierarchy.query.filter_by(id=add_province_id).first()
                 if add_province is None:
-                    raise ValueError("no SalesAreaHierarchy found? [%s]" % (add_province_id))
+                    raise ValueError("no SalesAreaHierarchy found? [%s]" % add_province_id)
 
                 # 删除对应销售团队
                 uasa = UserAndSaleArea.query.filter_by(sales_area_id=add_province.id).first()
