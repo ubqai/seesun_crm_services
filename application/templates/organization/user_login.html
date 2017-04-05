@@ -4,7 +4,7 @@
 {% endblock %}
 {% block main_content %}
 <div>
-	<form id="bm_login_page" method="post" url="{{ url_for('organization.user_index') }}" role="form">
+	<form id="bm_login_page" method="post" action="{{ url_for('organization.user_login') }}" role="form">
 		<div class="login_title text-center">LOGIN IN</div>
 		<div class="login_border">
 			<div class="login_panel">
@@ -18,10 +18,10 @@
 					{{ form.password(class="form-input form-control",placeholder="请输入密码") }}
 				</div>
 				<p class="forgot"><a id="iforget" href="javascript:void(0);">忘记密码?</a></p>
-				<div class="rem_me">
-					<input type="checkbox" name="checkbox" id="save_me">
-					<label for="checkbox">记住我</label>
-				</div>
+				<!--<div class="rem_me">-->
+					<!--<input type="checkbox" name="checkbox" id="save_me">-->
+					<!--<label for="checkbox">记住我</label>-->
+				<!--</div>-->
 				<input type="submit" name="button" id="button" value="登入" style="opacity: 0.7;">
 			</div>
 		</div>

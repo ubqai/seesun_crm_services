@@ -12,7 +12,7 @@
         <p class="contents-header-p text-sm">organization and authority group</p>
     </div>
     <div class="separator"><span></span></div>
-    <form class="form form-horizontal" method="post" url="{{ url_for('organization.authority_index') }}"
+    <form class="form form-horizontal" method="post" action="{{ url_for('organization.authority_index') }}"
           role="form">
         <div class="form-style form-default">
             {{ form.csrf_token }}

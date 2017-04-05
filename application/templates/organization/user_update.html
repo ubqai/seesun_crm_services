@@ -11,7 +11,7 @@
 	<p class="contents-header-p text-sm">user management</p>
     </div>
     <div class="separator"><span></span></div>
-    <form class="form form-horizontal" method="post" url="{{ url_for('organization.user_new') }}" role="form">
+    <form class="form form-horizontal" method="post" action="{{ url_for('organization.user_update',user_id=user_id) }}" role="form">
         <div class="widget_contents padding-0 item-wrapper">
             <div class="form-item item-template">
 		    	{{ form.csrf_token }}
