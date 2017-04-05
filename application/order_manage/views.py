@@ -11,6 +11,7 @@ from ..inventory.api import load_inventories_by_code, update_sku_by_code
 from application.utils import is_number
 from decimal import Decimal
 from flask_login import current_user
+from ..wechat.models import WechatCall
 
 order_manage = Blueprint('order_manage', __name__, template_folder='templates')
 
@@ -137,6 +138,34 @@ def contract_new(id):
         db.session.add(contract)
         db.session.add(order)
         db.session.commit()
+        product_name = ''
+        for content in order.order_contents:
+            "%s%s " % (product_name, content.product_name)
+        WechatCall.send_template_to_user(str(order.user_id),
+                                         "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0",
+                                         {
+                                             "first": {
+                                                 "value": "您的订单状态已更改",
+                                                 "color": "#173177"
+                                             },
+                                             "keyword1": {
+                                                 "value": order.order_no,
+                                                 "color": "#173177"
+                                             },
+                                             "keyword2": {
+                                                 "value": order.order_status,
+                                                 "color": "#173177"
+                                             },
+                                             "keyword3": {
+                                                 "value": product_name,
+                                                 "color": "#173177"
+                                             },
+                                             "remark": {
+                                                 "value": "感谢您的使用！",
+                                                 "color": "#173177"
+                                             },
+                                         })
+        flash("订单状态修改成功", 'success')
         return redirect(url_for('order_manage.contract_index'))
     return render_template('order_manage/contract_new.html', order=order, params={})
 
