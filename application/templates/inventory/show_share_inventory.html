@@ -94,9 +94,11 @@
 
 
         {% if si.status=="新申请待审核" %}
+            {% if si.sale_director_id == current_user.id %}
             <div class="text-right top-gap-3">
                 <a class="btn btn-default my-btn right-gap-2" href="{{ url_for('inventory.audit_share_inventory', id=si.id) }}">审核</a>
             </div>
+            {% endif %}
         {% endif %}
     </div>
 </div>

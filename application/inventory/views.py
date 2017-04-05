@@ -4,6 +4,7 @@ from ..models import *
 from .api import load_categories, create_inventory, load_inventories, update_inventory, delete_inventory, load_inventory
 from decimal import Decimal
 from application.utils import is_number
+from flask_login import current_user
 
 inventory = Blueprint('inventory', __name__, template_folder='templates')
 
@@ -135,8 +136,9 @@ def share_index():
 def share_inventory_list():
     page_size = int(request.args.get('page_size', 10))
     page_index = int(request.args.get('page', 1))
-    sis = ShareInventory.query.order_by(ShareInventory.created_at.desc()) \
-        .paginate(page_index, per_page=page_size, error_out=True)
+    sis = ShareInventory.query.filter(
+        ShareInventory.applicant_id.in_(set([user.id for user in current_user.get_subordinate_dealers()]))).order_by(
+        ShareInventory.created_at.desc()).paginate(page_index, per_page=page_size, error_out=True)
     return render_template('inventory/share_inventory_list.html', sis=sis)
 
 

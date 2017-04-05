@@ -49,7 +49,9 @@
                             </td>
                             <td>
                                 {% if si.status == '新申请待审核' %}
+                                    {% if si.sale_director_id == current_user.id %}
                                     <a href="{{ url_for('inventory.audit_share_inventory', id=si.id) }}" class="text-danger">审核</a>
+                                    {% endif %}
                                 {% endif %}
                             </td>
                         </tr>

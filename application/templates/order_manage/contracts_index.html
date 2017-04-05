@@ -75,7 +75,7 @@
                             <td>{{ contract.contract_date.strftime('%Y%m%d') }}</td>
                             <td>{{ contract.order.order_no }}</td>
                             <td>{{ contract.order.sale_contract }}</td>
-                            <td>{{ contract.order.user.sales_areas.all()[0].name }}</td>
+                            <td>{{ contract.order.sale_director }}</td>
                             <td>{{ contract.order.user.nickname }}</td>
                             <td><span class="text-warning">{{ contract.contract_status }}</span></td>
                             <td><span class="text-warning">{{ contract.production_status }}</span></td>

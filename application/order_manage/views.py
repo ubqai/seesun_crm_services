@@ -10,6 +10,7 @@ from .forms import ContractForm, TrackingInfoForm1, TrackingInfoForm2
 from ..inventory.api import load_inventories_by_code, update_sku_by_code
 from application.utils import is_number
 from decimal import Decimal
+from flask_login import current_user
 
 order_manage = Blueprint('order_manage', __name__, template_folder='templates')
 
@@ -18,8 +19,9 @@ order_manage = Blueprint('order_manage', __name__, template_folder='templates')
 def order_index():
     page_size = int(request.args.get('page_size', 10))
     page_index = int(request.args.get('page', 1))
-    orders_page = Order.query.order_by(Order.created_at.desc())\
-        .paginate(page_index, per_page=page_size, error_out=True)
+    orders_page = Order.query.filter(
+        Order.user_id.in_(set([user.id for user in current_user.get_subordinate_dealers()]))).order_by(
+        Order.created_at.desc()).paginate(page_index, per_page=page_size, error_out=True)
     return render_template('order_manage/index.html', orders_page=orders_page)
 
 
@@ -239,8 +241,9 @@ def payment_status_update(contract_id):
 def contract_index():
     page_size = int(request.args.get('page_size', 10))
     page_index = int(request.args.get('page', 1))
-    contracts = Contract.query.order_by(Contract.created_at.desc())\
-        .paginate(page_index, per_page=page_size, error_out=True)
+    contracts = Contract.query.filter(
+        Contract.user_id.in_(set([user.id for user in current_user.get_subordinate_dealers()]))).order_by(
+        Contract.created_at.desc()).paginate(page_index, per_page=page_size, error_out=True)
     return render_template('order_manage/contracts_index.html', contracts=contracts)
 
 
