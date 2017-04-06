@@ -10,6 +10,8 @@ from .forms import ContractForm, TrackingInfoForm1, TrackingInfoForm2
 from ..inventory.api import load_inventories_by_code, update_sku_by_code
 from application.utils import is_number
 from decimal import Decimal
+from flask_login import current_user
+from ..wechat.models import WechatCall
 
 order_manage = Blueprint('order_manage', __name__, template_folder='templates')
 
@@ -18,8 +20,9 @@ order_manage = Blueprint('order_manage', __name__, template_folder='templates')
 def order_index():
     page_size = int(request.args.get('page_size', 10))
     page_index = int(request.args.get('page', 1))
-    orders_page = Order.query.order_by(Order.created_at.desc())\
-        .paginate(page_index, per_page=page_size, error_out=True)
+    orders_page = Order.query.filter(
+        Order.user_id.in_(set([user.id for user in current_user.get_subordinate_dealers()]))).order_by(
+        Order.created_at.desc()).paginate(page_index, per_page=page_size, error_out=True)
     return render_template('order_manage/index.html', orders_page=orders_page)
 
 
@@ -135,6 +138,34 @@ def contract_new(id):
         db.session.add(contract)
         db.session.add(order)
         db.session.commit()
+        product_name = ''
+        for content in order.order_contents:
+            "%s%s " % (product_name, content.product_name)
+        WechatCall.send_template_to_user(str(order.user_id),
+                                         "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0",
+                                         {
+                                             "first": {
+                                                 "value": "您的订单状态已更改",
+                                                 "color": "#173177"
+                                             },
+                                             "keyword1": {
+                                                 "value": order.order_no,
+                                                 "color": "#173177"
+                                             },
+                                             "keyword2": {
+                                                 "value": order.order_status,
+                                                 "color": "#173177"
+                                             },
+                                             "keyword3": {
+                                                 "value": product_name,
+                                                 "color": "#173177"
+                                             },
+                                             "remark": {
+                                                 "value": "感谢您的使用！",
+                                                 "color": "#173177"
+                                             },
+                                         })
+        flash("订单状态修改成功", 'success')
         return redirect(url_for('order_manage.contract_index'))
     return render_template('order_manage/contract_new.html', order=order, params={})
 
@@ -239,8 +270,9 @@ def payment_status_update(contract_id):
 def contract_index():
     page_size = int(request.args.get('page_size', 10))
     page_index = int(request.args.get('page', 1))
-    contracts = Contract.query.order_by(Contract.created_at.desc())\
-        .paginate(page_index, per_page=page_size, error_out=True)
+    contracts = Contract.query.filter(
+        Contract.user_id.in_(set([user.id for user in current_user.get_subordinate_dealers()]))).order_by(
+        Contract.created_at.desc()).paginate(page_index, per_page=page_size, error_out=True)
     return render_template('order_manage/contracts_index.html', contracts=contracts)
 
 

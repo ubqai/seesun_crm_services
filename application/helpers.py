@@ -45,7 +45,7 @@ def save_upload_file(file):
 def delete_file(file_path):
     try:
         os.remove(app.config['APPLICATION_DIR'] + file_path)
-    except FileNotFoundError:
+    except:
         pass
 
  

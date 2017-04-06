@@ -219,6 +219,19 @@ class ShareInventory(db.Model, Rails):
     def app_user(self):
         return User.query.get_or_404(self.applicant_id)
 
+    @property
+    def sale_director_id(self):
+        province_id = User.query.get_or_404(self.applicant_id).sales_areas.first().parent_id
+        region_id = SalesAreaHierarchy.query.get_or_404(province_id).parent_id
+        us = db.session.query(User).join(User.departments).join(User.sales_areas).filter(
+            User.user_or_origin == 3).filter(
+            DepartmentHierarchy.name == "销售部").filter(
+            SalesAreaHierarchy.id == region_id).first()
+        if us is not None:
+            return us.id
+        else:
+            return 0
+
 
 class TrackingInfo(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
@@ -307,6 +320,19 @@ class Order(db.Model, Rails):
             return us.nickname
         else:
             return ''
+
+    @property
+    def sale_director_id(self):
+        province_id = User.query.get_or_404(self.user_id).sales_areas.first().parent_id
+        region_id = SalesAreaHierarchy.query.get_or_404(province_id).parent_id
+        us = db.session.query(User).join(User.departments).join(User.sales_areas).filter(
+            User.user_or_origin == 3).filter(
+            DepartmentHierarchy.name == "销售部").filter(
+            SalesAreaHierarchy.id == region_id).first()
+        if us is not None:
+            return us.id
+        else:
+            return 0
 
 
 class Contract(db.Model):
@@ -514,6 +540,34 @@ class User(db.Model, Rails):
     def get_all_roles(cls):
         return [(d.id, d.name) for d in DepartmentHierarchy.query.order_by("id asc").all()]
 
+    def get_province_sale_areas(self):
+        if not self.user_or_origin == 3:
+            return []
+        if self.departments.filter_by(level_grade=1).first() is not None:  # 董事长
+            return SalesAreaHierarchy.query.filter_by(level_grade=3).all()
+        elif self.departments.filter_by(name="销售部").first() is not None:  # 销售部员工
+            area = self.sales_areas.first()
+            if area is not None:
+                if area.level_grade == 2:  # 销售总监，管理一个大区
+                    return SalesAreaHierarchy.query.filter_by(level_grade=3, parent_id=area.id).all()
+                elif area.level_grade == 3:  # 普通销售人员，管理一个省
+                    return [area]
+                else:
+                    return []
+            else:
+                return []
+        else:
+            return []
+
+    def get_subordinate_dealers(self):
+        users = []
+        for province in self.get_province_sale_areas():
+            for city in SalesAreaHierarchy.query.filter_by(parent_id=province.id).all():
+                for dealer in db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+                                SalesAreaHierarchy.id == city.id).all():
+                    users.append(dealer)
+        return users
+
 
 class UserInfo(db.Model):
     __tablename__ = 'user_infos'
@@ -593,6 +647,19 @@ class ProjectReport(db.Model):
     @property
     def app_name(self):
         return User.query.get_or_404(self.app_id).nickname
+
+    @property
+    def sale_director_id(self):
+        province_id = User.query.get_or_404(self.app_id).sales_areas.first().parent_id
+        region_id = SalesAreaHierarchy.query.get_or_404(province_id).parent_id
+        us = db.session.query(User).join(User.departments).join(User.sales_areas).filter(
+            User.user_or_origin == 3).filter(
+            DepartmentHierarchy.name == "销售部").filter(
+            SalesAreaHierarchy.id == region_id).first()
+        if us is not None:
+            return us.id
+        else:
+            return 0
 
 
 # 页面说明表

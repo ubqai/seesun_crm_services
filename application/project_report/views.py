@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, flash, redirect, render_template, url_for, request, current_app
 from ..models import *
+from flask_login import current_user
 
 
 project_report = Blueprint('project_report', __name__, template_folder='templates')
@@ -10,8 +11,9 @@ project_report = Blueprint('project_report', __name__, template_folder='template
 def index():
     page_size = int(request.args.get('page_size', 10))
     page_index = int(request.args.get('page', 1))
-    project_reports = ProjectReport.query.order_by(ProjectReport.created_at.desc())\
-        .paginate(page_index, per_page=page_size, error_out=True)
+    project_reports = ProjectReport.query.filter(
+        ProjectReport.app_id.in_(set([user.id for user in current_user.get_subordinate_dealers()]))).order_by(
+        ProjectReport.created_at.desc()).paginate(page_index, per_page=page_size, error_out=True)
     return render_template('project_report/index.html', project_reports=project_reports)
 
 
