@@ -269,6 +269,12 @@ td input{
     border-bottom:1px dotted #ddd;
     width: 100%;
 }
+.divider5{
+    height: 1px;
+    border-bottom:1px dotted #ddd;
+    width: 100%;
+		margin:0.6rem 0rem;
+}
 .light-divider {
     width: 100%;
     height: 1px;
@@ -394,6 +400,11 @@ td input{
   100%{transform: translate(0px, 0px);}
 
 }
+.navbar {
+    margin-left: -5.5%;
+    margin-right: -5.55%;
+}
+
 /*module*/
 .module-1{
 	margin-top:20px;
