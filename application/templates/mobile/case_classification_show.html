@@ -4,12 +4,29 @@
 {{ header('案例展示') }}
 
 <div class="main-content">
-	<div class="nav-tab clearfix">
-	{% for option in classification.options %}
-		<a href="#option_{{ option.id }}">{{ option.name }}</a>
-	{% endfor %}
-	</div>
-
+	
+	<nav class="navbar navbar-default" role="navigation" style="background:#fff">
+		<div class="container-fluid"> 
+			<div>
+				<ul class="nav navbar-nav">
+						<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+										案例分类 
+										<b class="caret"></b>
+										<span class="glyphicon glyphicon-cog pull-right" ></span>
+								</a>
+								<ul class="dropdown-menu">
+										{% for option in classification.options %}
+											<li><a href="#option_{{ option.id }}">{{ option.name }}</a></li>
+											{{ '' if loop.last else '<li class="divider5"></li>' | safe }}
+										{% endfor %}
+								</ul>
+						</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	
 	<div class="module-1">
 		{% for option in classification.options %}
 		<div class="sub-module-1" id="option_{{ option.id }}">
