@@ -18,6 +18,22 @@ $(function(){
 				}
 		})			
 	}
+	
+	if($(".navbar").length>0){
+		var key;
+		$(window).bind("scroll", function(){
+				var dis = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+				if(dis>60&&key!=1) {
+						$(".navbar").addClass("fixed-menu");
+						$(".header").addClass("fixed-margin-2");
+						key=1;
+				}else if(dis<=60){
+						$(".navbar").removeClass("fixed-menu");
+						$(".header").removeClass("fixed-margin-2");
+						key=0;
+				}
+		})			
+	}
 })
 //menu移动 -- not used anymore
 $(function(){

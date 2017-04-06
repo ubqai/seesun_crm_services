@@ -15,7 +15,7 @@
 										<b class="caret"></b>
 										<span class="glyphicon glyphicon-cog pull-right" ></span>
 								</a>
-								<ul class="dropdown-menu">
+								<ul class="dropdown-menu" style="background:#fff">
 										{% for option in classification.options %}
 											<li><a href="#option_{{ option.id }}">{{ option.name }}</a></li>
 											{{ '' if loop.last else '<li class="divider5"></li>' | safe }}
@@ -39,7 +39,7 @@
 						<p>{{ content.name }}</p>
 						<div class="product-divider"></div>
 					</a>
-				<div class="module-row clearfix">
+				<div class="module-row clearfix"></div>
 			{% endfor %}
 			<div class="clearfix"></div>
 		</div>

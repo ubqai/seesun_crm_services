@@ -385,7 +385,18 @@ td input{
 .header.fixed-margin {
     margin-bottom:60px;
 }
+.header.fixed-margin-2 {
+    margin-bottom:80px;
+}
 .nav-tab.fixed-menu {
+    width: 100%;
+    position: fixed;
+    z-index: 10000;
+    top: -1px;
+		margin-left:-5%;
+    animation: MenuFadeIn 0.5s;
+}
+.navbar.fixed-menu {
     width: 100%;
     position: fixed;
     z-index: 10000;
@@ -403,6 +414,8 @@ td input{
 .navbar {
     margin-left: -5.5%;
     margin-right: -5.55%;
+		height:60px !important;
+		z-index:1000;
 }
 
 /*module*/
