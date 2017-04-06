@@ -33,7 +33,8 @@ def login_check():
     # wechat.mobile_ 使用微信相关JS的移动端页面
     elif request.endpoint == "root" or \
             request.endpoint.startswith("mobile_") or \
-            request.endpoint.startswith("wechat.mobile_"):
+            request.endpoint.startswith("wechat.mobile_") or \
+            request.path.startswith("/mobile/"):
         # 访问请求端的页面 不进行拦截
         if request.endpoint == "mobile_user_login" or request.endpoint == 'wechat.mobile_user_binding':
             pass
