@@ -128,7 +128,7 @@
 			if(value==="all"){
 				$(".js-wrapper").removeClass("hidden")
 			}else{
-				$(".js-wrapper").removeClass("hidden").not(".js-"+value).addClass("hidden");
+				$(".js-wrapper").removeClass("hidden").not(".js-"+value.replace(/ /g,"").replace(/\./g,"")).addClass("hidden");
 			}
 		});
 
@@ -138,7 +138,7 @@
 			if(value==="all"){
 				$(".js-"+category).removeClass("hidden")
 			}else{
-				$(".js-wrapper").removeClass("hidden").not(".js-"+value).addClass("hidden");
+				$(".js-wrapper").removeClass("hidden").not(".js-"+value.replace(/ /g,"").replace(/\./g,"")).addClass("hidden");
 			}
 		});
 	})

@@ -1,0 +1,107 @@
+﻿<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0;">
+	<link rel="stylesheet" href="../stylesheets/bootstrap.min.css">
+	<link rel="stylesheet" href="../stylesheets/init.css">
+	<link rel="stylesheet" href="../stylesheets/pc_style.css">
+	<script src="../javascripts/jquery.min.js"></script>
+	<script src="../javascripts/bootstrap.min.js"></script>
+	<script src="../javascripts/echarts.common.min.js"></script>
+	<script src="../javascripts/macarons.js"></script>	
+</head>
+<div class="my-main">
+
+	<div class="contents">
+		<div id="chart-line" style="width:100%; height:600px"></div>
+	</div>
+	
+	<script>		
+		(function(){
+				var chart = echarts.init(document.getElementById('chart-line'), 'macarons');
+				option = {
+					title: {
+							text: '各区域销售量',
+							subtext: 'BY SEESUN',
+							left:"4%",
+							top:"20px"
+					},
+					tooltip: {
+							trigger: 'item',
+							axisPointer: {
+									type: 'shadow'
+							}
+					},
+					legend: {
+							x: '4%',
+							top: '11%',
+							data: ['华东区','华南区','华中区','华北区','东北区','西北区','西南区'],
+					},
+					grid: {
+							left: '4%',
+							borderWidth: 0,
+							top: 110,
+							containLabel: true
+					},
+					xAxis: {
+							type: 'category',
+							data: ['华东区','华南区','华中区','华北区','东北区','西北区','西南区'],
+							axisLine:{
+								lineStyle:{
+									color:"#50979c",
+									shadowColor: 'rgba(0, 0, 0, 0.5)',
+									shadowBlur: 0,
+									width:1,					
+								}
+							},
+							minInterval: 20,
+							axisTick: {
+								show: false
+							},
+							splitLine: {
+								show: false
+							}	
+					},
+					yAxis: {
+							type: 'value',
+							boundaryGap: [0, 0.01],
+							axisLine:{
+								lineStyle:{
+									color:"#50979c",
+									shadowColor: 'rgba(0, 0, 0, 0.5)',
+									shadowBlur: 0,
+									width:1
+								}
+							},
+							axisTick: {
+								show: false
+							},
+							splitLine: {
+								show: false
+							}
+					},
+					series: [
+							{
+									name: 'team',
+									type: 'line',
+									//这是对应Y轴的数据，折线图
+									data: [19325, 23438, 31000, 121594, 134141, 51807],
+									symbolSize: 20,
+									label:{
+										normal:{
+											show:false
+										}
+									}
+							}
+					]
+				};
+
+				chart.setOption(option);
+		})();
+		
+	
+	</script>
+
+
+
+
+</div>

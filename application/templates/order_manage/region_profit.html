@@ -45,24 +45,6 @@
 							containLabel: true
 					},
 					yAxis: {
-							type: 'value',
-							boundaryGap: [0, 0.01],
-							axisLine:{
-								lineStyle:{
-									color:"#90979c",
-									shadowColor: 'rgba(0, 0, 0, 0.5)',
-									shadowBlur: 0,
-									width:1
-								}
-							},
-							axisTick: {
-								show: false
-							},
-							splitLine: {
-								show: false
-							}
-					},
-					xAxis: {
 							type: 'category',
 							//这是y轴的数据
 							data: ['北京','福建','黑龙江','上海','浙江','江苏'],
@@ -82,6 +64,24 @@
 								show: false
 							}
 					},
+					xAxis: {
+							type: 'value',
+							boundaryGap: [0, 0.01],
+							axisLine:{
+								lineStyle:{
+									color:"#90979c",
+									shadowColor: 'rgba(0, 0, 0, 0.5)',
+									shadowBlur: 0,
+									width:1
+								}
+							},
+							axisTick: {
+								show: false
+							},
+							splitLine: {
+								show: false
+							}
+					},
 					series: [
 							{
 									name: '历史销售额',
@@ -92,7 +92,7 @@
 									barMaxWidth: "35px",
 									label:{
 										normal:{
-											position:'top',
+											position:'right',
 											show:true,
 											formatter:function(params){
 												return params.data;
@@ -109,7 +109,7 @@
 									barMaxWidth: "35px",
 									label:{
 										normal:{
-											position:'top',
+											position:'right',
 											show:true,
 											formatter:function(params){
 												return params.data;
