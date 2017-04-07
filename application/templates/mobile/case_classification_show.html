@@ -10,7 +10,7 @@
 			<div>
 				<ul class="nav navbar-nav" style="margin-top: 0px;">
 						<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="line-height: 40px;">
+								<a href="#" class="dropdown-toggle text-center" data-toggle="dropdown" style="line-height: 40px;">
 										案例分类 
 										<b class="caret"></b>
 										<span class="glyphicon glyphicon-cog pull-right" style="line-height: 40px;"></span>
@@ -29,7 +29,7 @@
 	
 	<div class="module-1">
 		{% for option in classification.options %}
-		<div class="sub-module-1" id="option_{{ option.id }}">
+		<div class="sub-module-1 clearfix" id="option_{{ option.id }}">
 			<p class="module-title">{{ option.name }}</p>
 			<div class="divider2"></div>
 			{% for content in option.contents %}
@@ -41,7 +41,6 @@
 					</a>
 				</div>
 			{% endfor %}
-			<div class="clearfix"></div>
 		</div>
 		{% endfor %}		
 	</div>
