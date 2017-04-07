@@ -57,7 +57,7 @@
 			{% for options in option_sorted %}
 				<p class="text-content text-indent-1 text-sm">
 					{{ options[0].get('feature_name') }}：
-					{% for option in options %}{{ '' if loop.first else '/' }}{{ option.get('option_name') }}{% endfor %}
+					{% for option in options %}{{ '' if loop.first else '/ ' }}{{ option.get('option_name') }}{% endfor %}
 				</p>
 			{% endfor %}
 		</div>

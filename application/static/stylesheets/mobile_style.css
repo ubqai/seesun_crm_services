@@ -1039,5 +1039,9 @@ td input{
 .selection:last-child{
 	padding-left:0.5em;
 }	
-	
+.much-more {
+    background: url(/static/images/arrd.png);
+    height: 1.6em;
+    border: none;
+}
 

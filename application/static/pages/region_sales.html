@@ -16,6 +16,9 @@
 	</div>
 	
 	<script>		
+		function randomNum(){
+			return parseInt(Math.random()*40000+10000)
+		}
 		(function(){
 				var chart = echarts.init(document.getElementById('chart-line'), 'macarons');
 				option = {
@@ -26,7 +29,7 @@
 							top:"20px"
 					},
 					tooltip: {
-							trigger: 'item',
+							trigger: 'Axis',
 							axisPointer: {
 									type: 'shadow'
 							}
@@ -44,7 +47,7 @@
 					},
 					xAxis: {
 							type: 'category',
-							data: ['华东区','华南区','华中区','华北区','东北区','西北区','西南区'],
+							data: ['2016年10月','2016年11月','2016年12月','2017年1月','2017年2月','2017年3月'],
 							axisLine:{
 								lineStyle:{
 									color:"#50979c",
@@ -81,18 +84,98 @@
 					},
 					series: [
 							{
-									name: 'team',
+									name: '华东区',
 									type: 'line',
-									//这是对应Y轴的数据，折线图
-									data: [19325, 23438, 31000, 121594, 134141, 51807],
-									symbolSize: 20,
+									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
+									symbolSize: 5,
 									label:{
 										normal:{
 											show:false
 										}
-									}
+									},
+									smooth:false
+							},
+							{
+									name: '华南区',
+									type: 'line',
+									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
+									symbolSize: 5,
+									label:{
+										normal:{
+											show:false
+										}
+									},
+									smooth:false
+							},
+							{
+									name: '华中区',
+									type: 'line',
+									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
+									symbolSize: 5,
+									label:{
+										normal:{
+											show:false
+										}
+									},
+									smooth:false
+							},
+							{
+									name: '华北区',
+									type: 'line',
+									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
+									symbolSize: 5,
+									label:{
+										normal:{
+											show:false
+										}
+									},
+									smooth:false
+							},
+							{
+									name: '东北区',
+									type: 'line',
+									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
+									symbolSize: 5,
+									label:{
+										normal:{
+											show:false
+										}
+									},
+									smooth:false
+							},
+							{
+									name: '西北区',
+									type: 'line',
+									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
+									symbolSize: 5,
+									label:{
+										normal:{
+											show:false
+										}
+									},
+									smooth:false
+							},
+							{
+									name: '西南区',
+									type: 'line',
+									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
+									symbolSize: 5,
+									label:{
+										normal:{
+											show:false
+										}
+									},
+									smooth:false
 							}
-					]
+					],
+					dataZoom: [
+						{
+								type: 'slider',
+								show: true,
+								startValue: 3,
+								endValue:7
+						}
+					],
 				};
 
 				chart.setOption(option);
