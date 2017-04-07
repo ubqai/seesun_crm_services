@@ -754,7 +754,12 @@ def mobile_user_login():
 
             login_user(user)
             app.logger.info("mobile login success [%s]" % (user.nickname))
-            return redirect(url_for('mobile_index'))
+            # 直接跳转至需访问页面
+            if session.get("login_next_url"):
+                next_url = session.pop("login_next_url")
+            else:
+                next_url = url_for('mobile_index.user_index')
+            return redirect(next_url)
         except Exception as e:
             app.logger.info("mobile login failure [%s]" % (e))
             flash(e)

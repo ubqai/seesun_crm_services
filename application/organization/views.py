@@ -43,6 +43,7 @@ def login_check():
             app.logger.info("LOGIN_CHECK INTO MOBILE  request.path [%s] , [%s]" % (request.path, request.endpoint))
             # 后端界面
             flash("请登入后操作")
+            session["login_next_url"] = request.path
             return redirect(url_for('mobile_user_login'))
     # 其他与微信服务器交互接口 不进行登入判断
     elif request.endpoint.startswith("wechat."):
@@ -59,6 +60,7 @@ def login_check():
             app.logger.info("LOGIN_CHECK INTO BACK END request.path [%s] , [%s]" % (request.path, request.endpoint))
             # 后端界面
             flash("请登入后操作")
+            session["login_next_url"] = request.path
             return redirect(url_for('organization.user_login'))
 
     return None
@@ -107,7 +109,12 @@ def user_login():
 
             login_user(user)
             app.logger.info("后端用户[%s][%s]登入成功" % (user.email, user.nickname))
-            return redirect(url_for('organization.user_index'))
+            # 直接跳转至需访问页面
+            if session.get("login_next_url"):
+                next_url = session.pop("login_next_url")
+            else:
+                next_url = url_for('organization.user_index')
+            return redirect(next_url)
         except Exception as e:
             app.logger.info("后端用户登入失败[%s]" % e)
             flash(e)
