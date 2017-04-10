@@ -101,10 +101,10 @@ def index():
         pass
     else:
         ui = current_user.user_infos[0]
-        form.name.data = ui.name or ""
-        form.address.data = ui.address or ""
-        form.phone.data = ui.telephone or ""
-        form.title.data = ui.title or ""
+        form.name.data = ui.name
+        form.address.data = ui.address
+        form.phone.data = ui.telephone
+        form.title.data = ui.title
 
     if current_user.sales_areas.first() is not None:
         form.sale_range.data = ",".join([s.name for s in current_user.sales_areas.all()])
@@ -174,10 +174,10 @@ def account_index():
         pass
     else:
         ui = current_user.user_infos[0]
-        form.name.data = ui.name or ""
-        form.address.data = ui.address or ""
-        form.phone.data = ui.telephone or ""
-        form.title.data = ui.title or ""
+        form.name.data = ui.name
+        form.address.data = ui.address
+        form.phone.data = ui.telephone
+        form.title.data = ui.title
 
     if current_user.sales_areas.first() is not None:
         form.sale_range.data = ",".join([s.name for s in current_user.sales_areas.all()])
