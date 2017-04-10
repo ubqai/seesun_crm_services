@@ -7,12 +7,16 @@
 	<script src="../javascripts/jquery.min.js"></script>
 	<script src="../javascripts/bootstrap.min.js"></script>
 	<script src="../javascripts/echarts.common.min.js"></script>
-	<script src="../javascripts/macarons.js"></script>	
+	<script src="../javascripts/macarons.js"></script>
+	<script src="../javascripts/dark.js"></script>	
 </head>
 <div class="my-main">
 
 	<div class="contents">
 		<div id="chart-line" style="width:100%; height:600px"></div>
+	</div>
+	<div class="contents top-gap-2">
+		<div id="chart-pie" style="width:100%; height:600px"></div>
 	</div>
 	
 	<script>		
@@ -29,25 +33,25 @@
 							top:"20px"
 					},
 					tooltip: {
-							trigger: 'Axis',
+							trigger: 'axis',
 							axisPointer: {
 									type: 'shadow'
 							}
 					},
 					legend: {
 							x: '4%',
-							top: '11%',
-							data: ['华东区','华南区','华中区','华北区','东北区','西北区','西南区'],
+							top: '13%',
+							data: ['华东区','华南区','华中区'],
 					},
 					grid: {
 							left: '4%',
 							borderWidth: 0,
-							top: 110,
+							top: 140,
 							containLabel: true
 					},
 					xAxis: {
 							type: 'category',
-							data: ['2016年10月','2016年11月','2016年12月','2017年1月','2017年2月','2017年3月'],
+							data: ['2016年12月','2017年1月','2017年2月','2017年3月','2017年4月'],
 							axisLine:{
 								lineStyle:{
 									color:"#50979c",
@@ -82,11 +86,20 @@
 								show: false
 							}
 					},
+					dataZoom: [
+            {
+                type: 'slider',
+                show: true,
+                startValue: 1,
+                endValue: 3,
+                handleSize: 30
+            }
+					],
 					series: [
 							{
 									name: '华东区',
 									type: 'line',
-									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
+									data: [randomNum(), randomNum(), randomNum(), randomNum(),randomNum()],
 									symbolSize: 5,
 									label:{
 										normal:{
@@ -98,7 +111,7 @@
 							{
 									name: '华南区',
 									type: 'line',
-									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
+									data: [randomNum(), randomNum(), randomNum(), randomNum(),randomNum()],
 									symbolSize: 5,
 									label:{
 										normal:{
@@ -110,55 +123,7 @@
 							{
 									name: '华中区',
 									type: 'line',
-									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
-									symbolSize: 5,
-									label:{
-										normal:{
-											show:false
-										}
-									},
-									smooth:false
-							},
-							{
-									name: '华北区',
-									type: 'line',
-									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
-									symbolSize: 5,
-									label:{
-										normal:{
-											show:false
-										}
-									},
-									smooth:false
-							},
-							{
-									name: '东北区',
-									type: 'line',
-									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
-									symbolSize: 5,
-									label:{
-										normal:{
-											show:false
-										}
-									},
-									smooth:false
-							},
-							{
-									name: '西北区',
-									type: 'line',
-									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
-									symbolSize: 5,
-									label:{
-										normal:{
-											show:false
-										}
-									},
-									smooth:false
-							},
-							{
-									name: '西南区',
-									type: 'line',
-									data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
+									data: [randomNum(), randomNum(), randomNum(), randomNum(),randomNum()],
 									symbolSize: 5,
 									label:{
 										normal:{
@@ -167,17 +132,75 @@
 									},
 									smooth:false
 							}
-					],
-					dataZoom: [
-						{
-								type: 'slider',
-								show: true,
-								startValue: 3,
-								endValue:7
-						}
-					],
+					]
 				};
+				chart.setOption(option);
+		})();
+		
+		(function(){
+				var chart = echarts.init(document.getElementById('chart-pie'), 'dark');
+				option = {
+					backgroundColor: '#2c343c',
 
+					title: {
+							text: '区域总销售占比',
+							subtext: 'BY SEESUN',
+							left: 'center',
+							top: 20,
+							textStyle: {
+									color: '#ccc'
+							}
+					},
+
+					tooltip : {
+							trigger: 'item',
+							formatter: "{a} <br/>{b} : {c} ({d}%)"
+					},
+					series : [
+							{
+									name:'访问来源',
+									type:'pie',
+									radius : '70%',
+									center: ['50%', '50%'],
+									data:[
+											{value:335, name:'华中区'},
+											{value:310, name:'华南区'},
+											{value:274, name:'华北区'},
+											{value:235, name:'华东区'},
+											{value:300, name:'东北区'},
+											{value:320, name:'西南区'},
+											{value:200, name:'西北区'}
+									].sort(function (a, b) { return a.value - b.value}),
+									label: {
+											normal: {
+													textStyle: {
+															color: 'rgba(255, 255, 255, 0.3)'
+													},
+													formatter: function(data){
+														return data.data.name+" "+":"+" "+data.data.value
+													}
+											}
+									},
+									labelLine: {
+											normal: {
+													lineStyle: {
+															color: 'rgba(255, 255, 255, 0.3)'
+													},
+													smooth: 0.2,
+													length: 10,
+													length2: 20
+											}
+									},
+									roseType:"area",
+									animationType: 'scale',
+									animationEasing: 'elasticOut',
+									animationDelay: function (idx) {
+											return Math.random() * 200;
+									}
+							}
+					]
+			};
+				
 				chart.setOption(option);
 		})();
 		
