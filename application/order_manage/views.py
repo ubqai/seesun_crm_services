@@ -71,7 +71,8 @@ def contract_new(id):
             "full_adhesive_costs": request.form.get('full_adhesive_costs'),
             "material_loss_percent": request.form.get('material_loss_percent'),
             "other_costs": request.form.get('other_costs'),
-            "tax_costs": request.form.get('tax_costs')
+            "tax_costs": request.form.get('tax_costs'),
+            "tax_price": request.form.get('tax_price')
         }
         if not is_number(request.form.get("amount")):
             flash('总金额必须为数字', 'warning')
@@ -123,7 +124,8 @@ def contract_new(id):
                             "material_loss": str(total_amount * Decimal(request.form.get("material_loss_percent")) /
                                                  Decimal("100")),
                             "other_costs": request.form.get('other_costs'),
-                            "tax_costs": request.form.get('tax_costs')}
+                            "tax_costs": request.form.get('tax_costs'),
+                            "tax_price": request.form.get('tax_price')}
         contract = Contract(
             contract_no=contract_no,
             order=order,
@@ -164,7 +166,9 @@ def contract_new(id):
                                                  "value": "感谢您的使用！",
                                                  "color": "#173177"
                                              },
-                                         })
+                                         },
+                                         url_for('mobile_contract_show', id=contract.id)
+                                         )
         flash("订单状态修改成功", 'success')
         return redirect(url_for('order_manage.contract_index'))
     return render_template('order_manage/contract_new.html', order=order, params={})
@@ -236,7 +240,8 @@ def contract_edit(id):
                             "material_loss": str(total_amount * Decimal(request.form.get("material_loss_percent")) /
                                                  Decimal("100")),
                             "other_costs": request.form.get('other_costs'),
-                            "tax_costs": request.form.get('tax_costs')}
+                            "tax_costs": request.form.get('tax_costs'),
+                            "tax_price": request.form.get('tax_price')}
         contract.contract_content = contract_content
         db.session.add(contract)
         db.session.add(order)
