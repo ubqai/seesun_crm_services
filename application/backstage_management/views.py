@@ -93,7 +93,7 @@ def authority_check():
             return redirect(url_for('backstage_management.index'))
 
 
-@backstage_management.route('/backstage_management/index')
+@backstage_management.route('/index')
 def index():
     app.logger.info("into index")
     form = AccountForm(obj=current_user, user_type=current_user.get_user_type_name(), meta={'csrf_context': session})
