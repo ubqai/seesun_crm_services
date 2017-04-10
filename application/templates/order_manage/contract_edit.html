@@ -167,21 +167,21 @@ $(function(){
 			$(".total-amount").val(total_price.toFixed(2));
 		}
 		
-		$(".price").on("keyup",function(){
+		$(".price").on("keyup change",function(){
 			var price=$(this).val();
 			var amount=parseFloat($(this).parent().prev().html());
 			var amount=price*amount;
 			$(this).parent().next().children().val(amount);
 		});
 		
-		$(".countAll-trigger").on("keyup", countAll);
+		$(".countAll-trigger").on("keyup change", countAll);
 		
-		$(".tax-trigger").on("keyup", function(){
+		$(".tax-trigger").on("keyup change", function(){
 			var tax=$("input[name=tax_costs]").val();
 			$(".tax-price").val((tax*sum_first()/100).toFixed(2));
 		})
 		
-		$(".material-loss-trigger").on("keyup", function(){
+		$(".material-loss-trigger").on("keyup change", function(){
 			var material_loss=$("input[name=material_loss_percent]").val();
 			$(".material_loss_price").val((material_loss*sum_second()/100).toFixed(2));
 		})
