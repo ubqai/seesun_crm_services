@@ -178,7 +178,6 @@ def sku_new(product_id):
         sku_infos = []
         sku_info = {
             'code': str(request.form.get('code')),
-            'price': str(request.form.get('price')) or None,
             'barcode': str(request.form.get('barcode')) or None,
             'hscode': str(request.form.get('hscode')) or None,
             'weight': str(request.form.get('weight')) or None,
