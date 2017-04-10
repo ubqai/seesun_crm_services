@@ -58,7 +58,7 @@
                 </div>
 								<div class="form-item-2 col-3">
                     <span>税费</span>
-                    <input class="form-input form-control tax-price" readonly />
+                    <input class="form-input form-control tax-price" name="tax_price" value="{{ contract.contract_content.get('tax_price', 0) }}" readonly />
                 </div>
 
 								<br/>

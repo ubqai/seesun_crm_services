@@ -16,6 +16,7 @@ class ContractForm(Form):
     material_loss_percent = StringField('耗损百分比', validators=[DataRequired(message='耗损百分比必须输入')])
     other_costs = StringField('其他费用')
     tax_costs = StringField('税点')
+    tax_price = StringField('税费')
 
 
 class TrackingInfoForm1(Form):
