@@ -32,20 +32,24 @@ def login_check():
 
             # 微信自动登入拦截 -- code只能使用一次,所以绑定界面不能拦截
             if not request.endpoint == 'wechat.mobile_user_binding' and request.args.get("code") is not None:
-                app.logger.info("微信端code自动登入拦截[%s]" % request.args.get("code"))
+                app.logger.info("微信端code自动登入拦截 code[%s]" % request.args.get("code"))
                 try:
                     openid = WechatCall.get_open_id_by_code(request.args.get("code"))
+                    app.logger.info("微信端code自动登入拦截 openid[%s]" % openid)
                     wui = WechatUserInfo.query.filter_by(open_id=openid, is_active=True).first()
+                    app.logger.info("微信端code自动登入拦截 wui记录[%s]" % wui)
                     if wui is not None:
                         exists_binding_user = User.query.filter_by(id=wui.user_id).first()
+                        app.logger.info("微信端code自动登入拦截 user记录[%s]" % exists_binding_user)
                         if exists_binding_user is not None:
-                            if exists_binding_user.id != current_user.id:
+                            if current_user.is_authenticated and not exists_binding_user == current_user:
                                 app.logger.info(
                                     "微信自动登入用户[%s],登出[%s]" % (exists_binding_user.nickname, current_user.nickname))
                                 logout_user()
                             login_user(exists_binding_user)
                             app.logger.info("binding user login [%s] - [%s]" % (openid, exists_binding_user.nickname))
-                except:
+                except Exception as e:
+                    app.logger.info("微信端code自动登入拦截异常[%s]" % e)
                     pass
 
             # 访问请求端的页面 不进行拦截
