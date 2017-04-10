@@ -206,9 +206,12 @@ def sku_edit(id):
     product_id = request.args.get('product_id')
     if not product_id:
         return redirect(url_for('product.category_index'))
-    _product = load_product(product_id)
     sku = load_sku(product_id=product_id, sku_id=id)
     if request.method == 'POST':
+        option_ids = []
+        for option_id in request.form.getlist('option_ids[]'):
+            if option_id:
+                option_ids.append(option_id)
         image_file = request.files.get('image_file')
         if image_file:
             image_path = save_upload_file(image_file)
@@ -223,7 +226,8 @@ def sku_edit(id):
             'hscode': request.form.get('hscode') or None,
             'weight': request.form.get('weight') or None,
             'isvalid': request.form.get('isvalid'),
-            'thumbnail': image_path
+            'thumbnail': image_path,
+            'options_id': [str(option_id) for option_id in option_ids] or None
         }
         if not request.form.get('code') == sku.get('code'):
             data['code'] = request.form.get('code')
@@ -233,11 +237,14 @@ def sku_edit(id):
         else:
             flash('SKU修改失败', 'danger')
         return redirect(url_for('product.sku_index', product_id=product_id))
+    _product = load_product(product_id, option_sorted=True)
+    option_sorted = _product.get('option_sorted')
     option_set = []
     for option in sku.get('options'):
         for key in option:
             option_set.append([key, option[key]])
-    return render_template('product/sku/edit.html', sku=sku, product=_product, option_set=option_set)
+    return render_template('product/sku/edit.html', sku=sku, product=_product, option_set=option_set,
+                           option_sorted=option_sorted)
 
 
 @product.route('/sku/<int:id>/delete', methods=['POST'])
@@ -411,6 +418,16 @@ def feature_edit(id):
     return render_template('product/feature/edit.html', feature=feature)
 
 
+@product.route('/feature/<int:id>/delete')
+def feature_delete(id):
+    response = delete_feature(id)
+    if response.status_code == 200:
+        flash('产品属性删除成功', 'success')
+    else:
+        flash('产品属性删除失败', 'danger')
+    return redirect(url_for('product.feature_index'))
+
+
 @product.route('/option/new/<int:feature_id>', methods=['GET', 'POST'])
 def option_new(feature_id):
     if request.method == 'POST':
@@ -445,3 +462,13 @@ def option_edit(id):
         return redirect(url_for('product.feature_index'))
     feature = load_feature(request.args.get('feature_id'))
     return render_template('product/option/edit.html', option_id=id, feature=feature)
+
+
+@product.route('/option/<int:id>/delete')
+def option_delete(id):
+    response = delete_option(id)
+    if response.status_code == 200:
+        flash('产品属性值删除成功', 'success')
+    else:
+        flash('产品属性值删除失败', 'danger')
+    return redirect(url_for('product.feature_index'))

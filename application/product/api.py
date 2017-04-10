@@ -166,6 +166,12 @@ def update_feature(feature_id, data={}):
     return response
 
 
+def delete_feature(feature_id):
+    url = '%s/%s/sku_feature/%s' % (site, version, feature_id)
+    response = requests.delete(url)
+    return response  # 200
+
+
 # resource :options, [:create, :update]
 def create_option(data={}):
     url = '%s/%s/sku_options' % (site, version)
@@ -176,4 +182,10 @@ def create_option(data={}):
 def update_option(option_id, data={}):
     url = '%s/%s/sku_options/%s/edit' % (site, version, option_id)
     response = requests.put(url, json=data, headers=headers)
+    return response
+
+
+def delete_option(option_id):
+    url = '%s/%s/sku_option/%s' % (site, version, option_id)
+    response = requests.delete(url)
     return response

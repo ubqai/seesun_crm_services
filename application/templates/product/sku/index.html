@@ -44,7 +44,6 @@
 						<th>Barcode</th>
 						<th>HScode</th>
 						<th>Weight</th>
-						<th>Price</th>
 						<th>State</th>
 						<th>Options</th>
 						<th>操作</th>
@@ -57,7 +56,6 @@
 						<td>{{ sku.get('barcode') or '-' }}</td>
 						<td>{{ sku.get('hscode') or '-' }}</td>
 						<td>{{ sku.get('weight') or '-' }} g/m2</td>
-						<td>¥ {{ sku.get('price') or '' }}</td>
 						{% if sku.get('isvalid') == 'NO' %}
 							<td class="state invalid">{{ '下架' }}</td>
 						{% else %}
