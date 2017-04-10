@@ -10,6 +10,8 @@
         <p class="contents-header-p text-sm">contracts</p>
     </div>
     <div class="separator"><span></span></div>
+		
+		
     <div id="new-contract" class="widget">
     <form class="form form-horizontal" method="post" url="{{ url_for('order_manage.contract_new', id=order.id) }}"
           role="form" enctype="multipart/form-data">
@@ -17,48 +19,48 @@
             <div class="form-item item-template">
                 <div class="form-item-2 col-3">
                     <span>*交货期</span>
-                    <input class="form-input form-control datetimePicker" name="delivery_time" value="{{ params.get('delivery_time', '') }}">
+                    <input v-model="delivery_time" class="form-input form-control datetimePicker" name="delivery_time">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>*要约NO.</span>
-                    <input class="form-input form-control" name="offer_no" value="{{ params.get('offer_no', '') }}">
+                    <input v-model="offer_no" class="form-input form-control" name="offer_no">
                 </div>
 
                 <div class="form-item-2 col-3">
-                    <span>物流费用</span>
-                    <input class="form-input form-control countAll-trigger tax-trigger" name="logistics_costs" value="{{ params.get('logistics_costs', '') }}">
+                    <span>*物流费用</span>
+                    <input v-model="logistics_costs" class="form-input form-control " name="logistics_costs">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>活铺费用</span>
-                    <input class="form-input form-control countAll-trigger tax-trigger" name="live_floor_costs" value="{{ params.get('live_floor_costs', '') }}">
+                    <input v-model="live_floor_costs" class="form-input form-control " name="live_floor_costs">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>自流平费用</span>
-                    <input class="form-input form-control countAll-trigger tax-trigger" name="self_leveling_costs" value="{{ params.get('self_leveling_costs', '') }}">
+                    <input v-model="self_leveling_costs" class="form-input form-control " name="self_leveling_costs">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>划线费用</span>
-                    <input class="form-input form-control countAll-trigger tax-trigger" name="crossed_line_costs" value="{{ params.get('crossed_line_costs', '') }}">
+                    <input v-model="crossed_line_costs" class="form-input form-control " name="crossed_line_costs">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>点粘费用</span>
-                    <input class="form-input form-control countAll-trigger tax-trigger" name="sticky_costs" value="{{ params.get('sticky_costs', '') }}">
+                    <input v-model="sticky_costs" class="form-input form-control " name="sticky_costs">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>全胶粘费用</span>
-                    <input class="form-input form-control countAll-trigger tax-trigger" name="full_adhesive_costs" value="{{ params.get('full_adhesive_costs', '') }}">
+                    <input v-model="full_adhesive_costs" class="form-input form-control " name="full_adhesive_costs">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>其他费用</span>
-                    <input class="form-input form-control countAll-trigger tax-trigger" name="other_costs" value="{{ params.get('other_costs', '') }}">
+                    <input v-model="other_costs" class="form-input form-control " name="other_costs">
                 </div>
                 <div class="form-item-2 col-3">
                     <span>税点</span>
-                    <input class="form-input form-control countAll-trigger tax-trigger" name="tax_costs" value="{{ params.get('tax_costs', '') }}">
+                    <input v-model="tax_costs" class="form-input form-control " name="tax_costs">
                 </div>
 								<div class="form-item-2 col-3">
                     <span>税费</span>
-                    <input class="form-input form-control tax-price" name="tax_price"  value="{{ params.get('tax_price', '')}}" readonly />
+                    <input v-model="tax_price" class="form-input form-control" name="tax_price" readonly />
                 </div>
 
 								<br/>
@@ -76,44 +78,32 @@
                                 <th>*总价</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {% for content in order.order_contents %}
-                            <tr>
-                                <td><a class="table-link">{{ content.product_name }}</a></td>
-                                <td>{{ content.sku_specification }}</td>
-                                <td>
-                                        {% if not (content.batch_info == {} or content.batch_info == None) %}
-                                                {{ content.batch_info.get('batch_no') }}
-                                                (经销商：{{ content.batch_info.get('dealer') }})
-                                        {% endif %}
-                                </td>
-                                <td>{{ content.number }}</td>
-                                <td><input class="form-control price countAll-trigger material-loss-trigger" name="{{ content.id }}price"></td>
-                                <td><input class="form-control product-amount" name="{{ content.id }}amount" readonly></td>                               
-                            </tr>
-														<tr>
-															<td colspan='6' class="bg-grass padding-0">
-																<div class="col-5">备注</div>
-																<div class="col-5-re"><input class="form-control border-0 radius-0 border-left-1" name="{{ content.id }}memo" placeholder="请在这儿填写备注"></div>
-															</td>
-														</tr>
-														<tr><td colspan="6" style="background: url(/static/images/home-bg.gif)"><div class="separator"></div></td></tr>
-                            {% endfor %}
-                        </tbody>
+												<tbody v-for="product in products" is="product-tr"  
+													:id="product.id" 
+													:specification="product.specification"
+													:product_name="product.product_name"
+													:batch_no="product.batch_no"
+													:dealer="product.dealer"
+													:quantity="product.quantity"
+													:memo="product.memo"
+													@refresh_price="refresh_price"
+													ref="product_ref"
+												>
+												</tbody>
                     </table>
                 </div>
 								<div class="separator-2"></div>
 								<div class="form-item-2 col-3">
                     <span>*耗损百分比</span>
-                    <input class="form-input form-control countAll-trigger material-loss-trigger" name="material_loss_percent" value="{{ params.get('material_loss_percent', '') }}">
+                    <input v-model="material_loss_percent" class="form-input form-control" name="material_loss_percent">
                 </div>
 								<div class="form-item-2 col-3">
                     <span>耗损费用</span>
-                    <input class="form-input form-control material_loss_price" readonly>
+                    <input v-model="material_loss_price" class="form-input form-control" readonly>
                 </div>
                 <div class="form-item-2 col-3">
                     <span>*总金额</span>
-                    <input class="form-input form-control total-amount" name="amount" value="{{ params.get('amount', '') }}" readonly>
+                    <input v-model="total_price" class="form-input form-control" name="amount" readonly>
                 </div>
 								<div class="clearfix"></div>
                 <div class="text-right top-gap-1">
@@ -125,72 +115,139 @@
     </div>
 </div>
 
+<script type="text/x-template" id="product_row">
+
+	<tbody>
+		<tr>
+				<td><a class="table-link">{{ "{{product_name}}" }}</a></td>
+				<td>{{ "{{specification}}" }}</td>
+				<td>
+					<template v-if=" batch_no!=='' && batch_no!=='None' && batch_no!==undefined ">
+						{{ "{{batch_no}}" }}
+							<br>
+						{{ "经销商：{{dealer}}" }}
+					</template>
+				</td>
+				<td>{{ "{{quantity}}" }}</td>
+				<td><input class="form-control" v-model="price" @input="upload_price" :name="id+'price'"></td>
+				<td><input class="form-control" v-model="amount" :name="id+'amount'"  readonly></td>  	
+		</tr>
+		<tr>
+			<td colspan='6' class="bg-grass padding-0">
+				<div class="col-5">备注</div>
+				<div class="col-5-re"><input class="form-control border-0 radius-0 border-left-1" v-model="memo" :name="id+'memo'" placeholder="请在这儿填写备注"></div>
+			</td>
+		</tr>
+		<tr><td colspan="6" style="background: url(/static/images/home-bg.gif)"><div class="separator"></div></td></tr>	
+	</tbody>
+
+</script>
+
 <script>
-	$(function(){
-
-		function sum_first(){
-		
-			var logistics=parseFloat($("input[name=logistics_costs]").val()==="" ? 0 : $("input[name=logistics_costs]").val());
-			var live_floor=parseFloat($("input[name=live_floor_costs]").val()==="" ? 0 : $("input[name=live_floor_costs]").val());
-			var self_leveling=parseFloat($("input[name=self_leveling_costs]").val()==="" ? 0 : $("input[name=self_leveling_costs]").val());
-			var crossed_line=parseFloat($("input[name=crossed_line_costs]").val()==="" ? 0 : $("input[name=crossed_line_costs]").val());
-			var sticky=parseFloat($("input[name=sticky_costs]").val()==="" ? 0 : $("input[name=sticky_costs]").val());
-			var full_adhesive=parseFloat($("input[name=full_adhesive_costs]").val()==="" ? 0 : $("input[name=full_adhesive_costs]").val());
-			var other=parseFloat($("input[name=other_costs]").val()==="" ? 0 : $("input[name=other_costs]").val());
-			
-			var sum_others=logistics+live_floor+self_leveling+crossed_line+sticky+full_adhesive+other;
-			
-			return sum_others;
-		}
-		
-		function sum_second(){
-		
-			var products=0;
-			$(".product-amount").each(function(index,ele){
-				var cost=parseFloat($(ele).val()==="" ? 0 : $(ele).val());
-				products+=cost;
+	//(function(){
+	
+		Vue.component("product-tr",{
+			template:"#product_row",
+			props:{
+				id:String,
+				product_name:String,
+				specification:String,
+				batch_no:String,
+				dealer:String,
+				quantity:Number,
+				memo:String
+			},
+			data:function(){
+				return {price:0}
+			},
+			computed:{
+				amount:function(){
+					return parseFloat(this.quantity*this.price).toFixed(2)
+				}
+			},
+			methods:{
+				upload_price:function(){
+					this.$emit("refresh_price",this.amount,this.price,this.id)
+				}
+			}
+		});
+	
+		var products=[];
+		{% for content in order.order_contents %}
+			products.push({
+				id:"{{ content.id }}",
+				product_name:"{{ content.product_name }}",
+				specification:"{{ content.sku_specification }}",
+				batch_no:"{{ content.batch_info.get('batch_no') }}",
+				dealer:"{{ content.batch_info.get('dealer') }}",
+				quantity:Number("{{ content.number }}"),
+				price:0,
+				amount:0,
+				memo:''
 			});
-			
-			return products;
-		}
-
-		function countAll(){
-				
-			var sum_others=sum_first();
-			var tax=parseFloat($("input[name=tax_costs]").val()==="" ? 0 : $("input[name=tax_costs]").val());		
-			var tax_cost=sum_others*tax/100.00;
-			var after_tax=sum_others+tax_cost;
-			
-			var products=sum_second();
-			var material_loss_percent=parseFloat($("input[name=material_loss_percent]").val()==="" ? 0 : $("input[name=material_loss_percent]").val());			
-			var material_loss_cost=products*material_loss_percent/100.00;
-			var after_material_loss=products+material_loss_cost;
-			
-			var total_price=after_tax+after_material_loss;
-			
-			$(".total-amount").val(total_price.toFixed(2));
+		{% endfor %}
+		
+		var parent_data={
+			delivery_time:"{{ params.get('delivery_time', '') }}",
+			offer_no:"{{ params.get('offer_no', '') }}",
+			logistics_costs:Number("{{ params.get('logistics_costs', '') }}"),
+			live_floor_costs:Number("{{ params.get('live_floor_costs', '') }}"),
+			self_leveling_costs:Number("{{ params.get('self_leveling_costs', '') }}"),
+			crossed_line_costs:Number("{{ params.get('crossed_line_costs', '') }}"),
+			sticky_costs:Number("{{ params.get('sticky_costs', '') }}"),
+			full_adhesive_costs:Number("{{ params.get('full_adhesive_costs', '') }}"),
+			other_costs:Number("{{ params.get('other_costs', '') }}"),
+			tax_costs:Number("{{ params.get('tax_costs', '') }}"),
+			material_loss_percent:Number("{{ params.get('material_loss_percent', '') }}"),
+			products:products,
+			material_price:0
 		}
 		
-		$(".price").on("keyup",function(){
-			var price=$(this).val();
-			var amount=parseFloat($(this).parent().prev().html());
-			var amount=price*amount;
-			$(this).parent().next().children().val(amount);
+		var app=new Vue({
+			el:"#new-contract",
+			data:parent_data,
+			computed:{
+				total_price:function(){
+					return (parseFloat(this.other_price)+parseFloat(this.material_loss_price)+parseFloat(this.tax_price)+parseFloat(this.material_price)).toFixed(2)
+				},
+				other_price:function(){
+					var price=parseFloat(this.logistics_costs)+parseFloat(this.live_floor_costs)+parseFloat(this.self_leveling_costs)
+						+parseFloat(this.crossed_line_costs)+parseFloat(this.sticky_costs)+parseFloat(this.full_adhesive_costs)+parseFloat(this.other_costs);
+					return price
+				},
+				material_loss_price:function(){
+					return parseFloat(this.material_price)*parseFloat(this.material_loss_percent)/100
+				},
+				tax_price:function(){
+					return (this.other_price*parseFloat(this.tax_costs)/100).toFixed(2)
+				}
+			},
+			methods:{
+				refresh_price:function(amount,price,id){
+					var that=this;
+					this.material_price=0;
+					this.products.forEach(function(ele,index,arr){
+						if(ele.id===id){
+							ele.amount=amount;
+							ele.price=price;
+						}
+						that.material_price+=parseFloat(ele.amount);
+						
+					});
+				}
+			},
+			mounted:function(){
+				var components=this.$refs.product_ref;
+				components.forEach(function(ele,index,arr){
+					if(ele.id===products[index].id){
+						ele.price=products[index].price;
+					}		
+				});
+			}
 		});
 		
-		$(".countAll-trigger").on("keyup", countAll);
 		
-		$(".tax-trigger").on("keyup", function(){
-			var tax=$("input[name=tax_costs]").val();
-			$(".tax-price").val((tax*sum_first()/100).toFixed(2));
-		})
-		
-		$(".material-loss-trigger").on("keyup", function(){
-			var material_loss=$("input[name=material_loss_percent]").val();
-			$(".material_loss_price").val((material_loss*sum_second()/100).toFixed(2));
-		})
-
-	})
+	//})()
 </script>
 
 {% endblock %}
