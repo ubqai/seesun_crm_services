@@ -425,7 +425,7 @@ class WechatCall:
 
     # 推送消息模板
     @classmethod
-    def send_template_to_user(cls, user_id, template_id, params_hash, is_test=TEST_MODE):
+    def send_template_to_user(cls, user_id, template_id, params_hash, url=None, is_test=TEST_MODE):
         if not user_id or not template_id:
             raise ValueError("user_id and template_id can not null")
 
@@ -439,10 +439,22 @@ class WechatCall:
                 post_params = {
                     "touser": wui.open_id,
                     "template_id": template_id,
-                    "topcolor": "#FF0000",
-                    # "url": "",   # 模板跳转地址
-                    "data": {}
+                    "topcolor": "#FF0000"
                 }
+
+                if url:
+                    if is_test is False:
+                        use_appid = WECHAT_APPID
+                    else:
+                        use_appid = WECHAT_TEST_APPID
+
+                    post_params["url"] = "https://open.weixin.qq.com/connect/oauth2/authorize?" + \
+                                         "appid=" + use_appid + \
+                                         "&redirect_uri=" + urllib.parse.quote_plus(url) + \
+                                         "&response_type=code&scope=snsapi_base&state=wechat_template#wechat_redirect"
+
+                post_params["data"] = {}
+
                 for key_var in params_hash.keys():
                     value = params_hash[key_var].get("value", "").encode("utf-8").decode("latin1")
                     color = params_hash[key_var].get("color", "#173177")

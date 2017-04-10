@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, render_template, request, session, redirect, url_for
 from .models import WechatAccessToken, app, WECHAT_SERVER_AUTHENTICATION_TOKEN, WechatCall, WechatUserInfo, \
     WechatPushMsg
-from ..organization.forms import WechatUserLoginForm
+from ..backstage_management.forms import WechatUserLoginForm
 from ..models import User, TrackingInfo, Contract
 from flask_login import login_user, current_user, logout_user
 import hashlib

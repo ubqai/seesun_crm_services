@@ -3,7 +3,7 @@
 <!--{% from 'macros/pc_form_field_error.html' import render_form_field_error %}-->
 {% block main_content %}
 
-{{ sidebar(active = 'organization') }}
+{{ sidebar(active = 'home') }}
 
 <div class="contents">
     <div class="contents-header">
@@ -18,7 +18,7 @@
                 <button type="button" class="btn my-btn" id="btn_click_display">密码</button>
                 <div id="div_click_display" style="display:none">
                     <form class="form form-horizontal" method="post"
-                          action="{{url_for('organization.account_password_update')}}" role="form">
+                          action="{{url_for('backstage_management.account_password_update')}}" role="form">
                         {{ form.csrf_token }}
                         {{ form.email(class = 'form-input form-control',placeholder="请输入email",type='hidden') }}
                         <div class="form-item-2">
@@ -44,34 +44,44 @@
             <div class="form-style form-default">
                 <div class="form-item-2 col-3">
                     <span>{{ form.user_type.label }}</span>
-                    {{ form.user_type(class = 'form-input form-control',id="select_user_type",disabled="disabled") }}
+                    {{ form.user_type(class = 'form-input form-control',readonly="readonly") }}
                 </div>
                 <div class="form-item-2 col-3">
                     <span>* {{ form.email.label }}</span>
-                    {{ form.email(class = 'form-input form-control',placeholder="请输入email",readonly="readonly") }}
+                    {{ form.email(class = 'form-input form-control',readonly="readonly") }}
                 </div>
                 <div class="form-item-2 col-3">
                     <span>* {{ form.name.label }}</span>
-                    {{ form.name(class = 'form-input form-control',placeholder="请输入姓名",readonly="readonly") }}
+                    {{ form.name(class = 'form-input form-control',readonly="readonly") }}
                 </div>
 
                 <div class="form-item-2 col-3">
                     <span>{{ form.title.label }}</span>
-                    {{ form.title(class = 'form-input form-control',placeholder="请输入头衔",readonly="readonly") }}
+                    {{ form.title(class = 'form-input form-control',readonly="readonly") }}
                 </div>
 
                 <div class="form-item-2 col-3">
                     <span>{{ form.nickname.label(id='label_nickname') }}</span>
-                    {{ form.nickname(class = 'form-input form-control',placeholder="请输入昵称",readonly="readonly") }}
+                    {{ form.nickname(class = 'form-input form-control',readonly="readonly") }}
                 </div>
                 <div class="form-item-2 col-3">
                     <span>* {{ form.phone.label(id='label_phone') }}</span>
-                    {{ form.phone(class = 'form-input form-control',placeholder="请输入电话",readonly="readonly") }}
+                    {{ form.phone(class = 'form-input form-control',readonly="readonly") }}
                 </div>
 
                 <div class="form-item-2 col-3 vertical">
                     <span>* {{ form.address.label }}</span>
-                    {{ form.address(class = 'form-input form-control',placeholder="请输入地址",readonly="readonly")|safe }}
+                    {{ form.address(class = 'form-input form-control',readonly="readonly")|safe }}
+                </div>
+
+                <div class="form-item-2 col-3 vertical">
+                    <span>* {{ form.dept_ranges.label }}</span>
+                    {{ form.dept_ranges(class = 'form-input form-control',readonly="readonly")|safe }}
+                </div>
+
+                <div class="form-item-2 col-3 vertical">
+                    <span>* {{ form.sale_range.label }}</span>
+                    {{ form.sale_range(class = 'form-input form-control',readonly="readonly")|safe }}
                 </div>
             </div>
         </div>

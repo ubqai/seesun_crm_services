@@ -1,0 +1,64 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar with context %}
+<!--{% from 'macros/pc_form_field_error.html' import render_form_field_error %}-->
+{% block main_content %}
+
+{{ sidebar(active = 'home') }}
+
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png"/></div>
+        <p class="contents-header-p">帐号信息</p>
+        <p class="contents-header-p text-sm">user management</p>
+    </div>
+    <div class="separator"><span></span></div>
+    <div class="widget_contents padding-0 item-wrapper">
+        <div class="form-item item-template">
+            <div class="form-style form-default">
+                <div class="form-item-2">
+                    <span>{{ form.user_type.label }}</span>
+                    <labe>{{form.user_type.data}}</labe>
+                </div>
+                <div class="form-item-2">
+                    <span>* {{ form.email.label }}</span>
+                    <labe>{{form.email.data}}</labe>
+                </div>
+                <div class="form-item-2">
+                    <span>* {{ form.name.label }}</span>
+                    <labe>{{form.name.data}}</labe>
+                </div>
+
+                <div class="form-item-2">
+                    <span>{{ form.title.label }}</span>
+                    <labe>{{form.title.data}}</labe>
+                </div>
+
+                <div class="form-item-2">
+                    <span>{{ form.nickname.label(id='label_nickname') }}</span>
+                    <labe>{{form.nickname.data}}</labe>
+                </div>
+                <div class="form-item-2">
+                    <span>* {{ form.phone.label(id='label_phone') }}</span>
+                    <labe>{{form.phone.data}}</labe>
+                </div>
+
+                <div class="form-item-2">
+                    <span>* {{ form.address.label }}</span>
+                    <labe>{{form.address.data}}</labe>
+                </div>
+
+                <div class="form-item-2">
+                    <span>* {{ form.dept_ranges.label }}</span>
+                    <labe>{{form.dept_ranges.data}}</labe>
+                </div>
+
+                <div class="form-item-2">
+                    <span>* {{ form.sale_range.label }}</span>
+                    <labe>{{form.sale_range.data}}</labe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

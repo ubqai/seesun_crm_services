@@ -465,6 +465,9 @@ class User(db.Model, Rails):
 
         return ""
 
+    def get_user_type_name(self):
+        return {2: "经销商", 3: "员工"}[self.user_or_origin]
+
     # 前台查询,新增,修改用户权限控制
     def authority_control_to_user(self, other_user):
         # 可操作任意经销商
@@ -533,12 +536,12 @@ class User(db.Model, Rails):
 
     # 获取用户所属role -- 暂使用所属部门代替
     def get_roles(self):
-        return [(d.id, d.name) for d in self.departments.order_by("id asc").all()]
+        return [(d.id, d.name) for d in self.departments.order_by(DepartmentHierarchy.id.asc()).all()]
 
     # 获取所有role -- 暂使用所属部门代替
     @classmethod
     def get_all_roles(cls):
-        return [(d.id, d.name) for d in DepartmentHierarchy.query.order_by("id asc").all()]
+        return [(d.id, d.name) for d in DepartmentHierarchy.query.order_by(DepartmentHierarchy.id.asc()).all()]
 
     def get_province_sale_areas(self):
         if not self.user_or_origin == 3:

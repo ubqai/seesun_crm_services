@@ -25,15 +25,15 @@
             <li><a class="notify-icon glyphicon glyphicon-bell"><span class="notify-badge yellow">5</a></span></li>
             <span>
                 用户
-                <a href="{{ url_for('organization.account_index') }}">
+                <a href="{{ url_for('backstage_management.account_index') }}">
                     {{ current_user.nickname }}
                 </a>
             </span>
         </ul>
 
-        <a href="{{url_for('organization.user_logout')}}" class="logout glyphicon glyphicon-log-out" title="注销"></a>
+        <a href="{{url_for('backstage_management.account_logout')}}" class="logout glyphicon glyphicon-log-out" title="注销"></a>
         {% else %}
-        <a href="{{url_for('organization.user_login')}}" class="login glyphicon glyphicon-log-in" title="登录"></a>
+        <a href="{{url_for('backstage_management.account_login')}}" class="login glyphicon glyphicon-log-in" title="登录"></a>
         {% endif %}
     </header>
     <div class="my-main">

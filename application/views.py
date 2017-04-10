@@ -12,7 +12,7 @@ from .product.api import *
 from .inventory.api import create_inventory, load_user_inventories
 from .helpers import save_upload_file, resize_image_by_width
 from flask_login import *
-from .organization.forms import UserLoginForm
+from .backstage_management.forms import AccountLoginForm
 from .forms import *
 from .wechat.models import WechatCall, WechatUserInfo
 from .utils import is_number
@@ -739,7 +739,7 @@ def mobile_user_login():
 
     if request.method == 'POST':
         try:
-            form = UserLoginForm(request.form, meta={'csrf_context': session})
+            form = AccountLoginForm(request.form, meta={'csrf_context': session})
             if form.validate() is False:
                 raise ValueError("")
 
@@ -765,20 +765,21 @@ def mobile_user_login():
             flash(e)
             return render_template('mobile/user_login.html', form=form)
     else:
-        if request.args.get("code") is not None:
-            try:
-                openid = WechatCall.get_open_id_by_code(request.args.get("code"))
-                wui = WechatUserInfo.query.filter_by(open_id=openid, is_active=True).first()
-                if wui is not None:
-                    exists_binding_user = User.query.filter_by(id=wui.user_id).first()
-                    if exists_binding_user is not None:
-                        login_user(exists_binding_user)
-                        app.logger.info("binding user login [%s] - [%s]" % (openid, exists_binding_user.nickname))
-                        return redirect(url_for('mobile_index'))
-            except Exception:
-                pass
+        # 已在拦截中处理
+        # if request.args.get("code") is not None:
+        #     try:
+        #         openid = WechatCall.get_open_id_by_code(request.args.get("code"))
+        #         wui = WechatUserInfo.query.filter_by(open_id=openid, is_active=True).first()
+        #         if wui is not None:
+        #             exists_binding_user = User.query.filter_by(id=wui.user_id).first()
+        #             if exists_binding_user is not None:
+        #                 login_user(exists_binding_user)
+        #                 app.logger.info("binding user login [%s] - [%s]" % (openid, exists_binding_user.nickname))
+        #                 return redirect(url_for('mobile_index'))
+        #     except Exception:
+        #         pass
 
-        form = UserLoginForm(meta={'csrf_context': session})
+        form = AccountLoginForm(meta={'csrf_context': session})
         return render_template('mobile/user_login.html', form=form)
 
 

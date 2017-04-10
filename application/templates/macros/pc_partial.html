@@ -2,8 +2,11 @@
 <aside class="my-nav">
     <div id="sidebar">
         <ul class="sidebar-menu">
-            <li class="{% if active == 'home' %}active{% endif %}"><a><i
-                    class="glyphicon glyphicon-dashboard"></i><span>首页</span></a></li>
+            <li class="{% if active == 'home' %}active{% endif %}">
+                <a href="{{ url_for('backstage_management.index') }}">
+                    <i class="glyphicon glyphicon-dashboard"></i><span>首页</span>
+                </a>
+            </li>
             <li class="sub-menu {% if active == 'dealer' %}active{% endif %}">
                 <a><i class="glyphicon glyphicon-comment"></i><span>经销商视图</span><span class="dcjq-icon"></span></a>
                 <ul class="sub">

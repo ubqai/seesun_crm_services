@@ -7,127 +7,14 @@ from ..models import UserAndSaleArea, User, UserInfo, DepartmentHierarchy, Sales
 import traceback
 import json
 import datetime
-from .forms import BaseForm, UserForm, UserSearchForm, UserLoginForm, RegionalSearchForm, BaseCsrfForm, \
+from .forms import BaseForm, UserForm, UserSearchForm, RegionalSearchForm, BaseCsrfForm, \
     AuthoritySearchForm
 from sqlalchemy import distinct
-from flask_login import logout_user, login_user, current_user
+from flask_login import current_user
 
 PAGINATION_PAGE_NUMBER = 20
 
 organization = Blueprint('organization', __name__, template_folder='templates')
-
-
-# 单个使用@login_required
-@organization.before_app_request
-def login_check():
-    # url_rule
-    # app.logger.info("into login_check")
-
-    # 图片加载 or 无匹配请求
-    if request.endpoint == "static" or request.endpoint is None:
-        if request.endpoint is None:
-            app.logger.info("LOGIN_CHECK None?  request.path [%s] , [%s]" % (request.path, request.endpoint))
-        pass
-    # 网站root访问 移动端
-    # 所有移动端页面
-    # wechat.mobile_ 使用微信相关JS的移动端页面
-    elif request.endpoint == "root" or \
-            request.endpoint.startswith("mobile_") or \
-            request.endpoint.startswith("wechat.mobile_") or \
-            request.path.startswith("/mobile/"):
-        # 访问请求端的页面 不进行拦截
-        if request.endpoint == "mobile_user_login" or request.endpoint == 'wechat.mobile_user_binding':
-            pass
-        # 未登入用户跳转登入界面
-        elif not current_user.is_authenticated or current_user.user_or_origin != 2:
-            app.logger.info("LOGIN_CHECK INTO MOBILE  request.path [%s] , [%s]" % (request.path, request.endpoint))
-            # 后端界面
-            flash("请登入后操作")
-            session["login_next_url"] = request.path
-            return redirect(url_for('mobile_user_login'))
-    # 其他与微信服务器交互接口 不进行登入判断
-    elif request.endpoint.startswith("wechat."):
-        # 微信
-        pass
-    # 后端管理界面
-    else:
-        # 访问请求端的页面 不进行拦截
-        if request.endpoint == "organization.user_login":
-            # 后端登入界面
-            pass
-        # 未登入用户跳转登入界面
-        elif not current_user.is_authenticated or current_user.user_or_origin != 3:
-            app.logger.info("LOGIN_CHECK INTO BACK END request.path [%s] , [%s]" % (request.path, request.endpoint))
-            # 后端界面
-            flash("请登入后操作")
-            session["login_next_url"] = request.path
-            return redirect(url_for('organization.user_login'))
-
-    return None
-
-
-@organization.before_app_request
-def authority_check():
-    # app.logger.info("into authority_check")
-    if request.endpoint == "static" or request.endpoint is None \
-            or current_user is None or not current_user.is_authenticated:
-        pass
-    else:
-        if AuthorityOperation.is_authorized(current_user, request.endpoint, request.method) is False:
-            flash("无权限登入页面 [%s] ,请确认" % WebpageDescribe.query.filter_by(endpoint=request.endpoint,
-                                                                        method=request.method).first().describe)
-            return redirect(url_for('organization.user_index'))
-
-
-# -- login
-# 需要区分pc or wechat ?
-@organization.route('/user/login', methods=['GET', 'POST'])
-def user_login():
-    if current_user.is_authenticated:
-        if current_user.user_or_origin == 3:
-            return redirect(url_for('organization.user_index'))
-        else:
-            # 不运行前后端同时登入在一个WEB上
-            app.logger.info("移动端用户[%s]自动登出,[%s][%s]" % (current_user.nickname, request.path, request.endpoint))
-            logout_user()
-
-    app.logger.info("user_login [%s]" % request.args)
-    if request.method == 'POST':
-        try:
-            form = UserLoginForm(request.form, meta={'csrf_context': session})
-            if form.validate() is False:
-                raise ValueError(form.errors)
-
-            # 后台只能员工登入
-            user = User.login_verification(form.email.data, form.password.data, 3)
-            if user is None:
-                raise ValueError("用户名或密码错误")
-
-            login_valid_errmsg = user.check_can_login()
-            if not login_valid_errmsg == "":
-                raise ValueError(login_valid_errmsg)
-
-            login_user(user)
-            app.logger.info("后端用户[%s][%s]登入成功" % (user.email, user.nickname))
-            # 直接跳转至需访问页面
-            if session.get("login_next_url"):
-                next_url = session.pop("login_next_url")
-            else:
-                next_url = url_for('organization.user_index')
-            return redirect(next_url)
-        except Exception as e:
-            app.logger.info("后端用户登入失败[%s]" % e)
-            flash(e)
-    else:
-        form = UserLoginForm(meta={'csrf_context': session})
-
-    return render_template('organization/user_login.html', form=form)
-
-
-@organization.route('/user/logout')
-def user_logout():
-    logout_user()
-    return redirect(url_for('organization.user_login'))
 
 
 # --- user service ---
@@ -575,49 +462,6 @@ def regional_manage_province(sah_id):
         app.logger.info("sorted_province_info [%s]" % sorted_province_info)
         return render_template('organization/regional_manage_province.html', sah_id=sah.id,
                                sorted_province_info=sorted_province_info, form=form)
-
-
-# 帐号信息管理
-@organization.route('/account/index')
-def account_index():
-    app.logger.info("into account_index")
-    form = UserForm(obj=current_user, user_type=current_user.user_or_origin, meta={'csrf_context': session})
-    form.reset_select_field()
-    if len(current_user.user_infos) == 0:
-        pass
-    else:
-        ui = current_user.user_infos[0]
-        form.name.data = ui.name
-        form.address.data = ui.address
-        form.phone.data = ui.telephone
-        form.title.data = ui.title
-
-    return render_template('organization/account_index.html', form=form)
-
-
-# 帐号信息管理
-@organization.route('/account/password_update', methods=['POST'])
-def account_password_update():
-    app.logger.info("into account_password_update")
-    try:
-        form = BaseCsrfForm(request.form, meta={'csrf_context': session})
-        if form.validate() is False:
-            raise ValueError("非法提交,请通过正常页面进行修改")
-
-        if request.form.get("email") != current_user.email:
-            raise ValueError("非法提交,请通过正常页面进行修改")
-
-        User.update_password(request.form.get("email"),
-                             request.form.get("password_now"),
-                             request.form.get("password_new"),
-                             request.form.get("password_new_confirm"),
-                             current_user.user_or_origin)
-
-        flash("密码修改成功")
-    except Exception as e:
-        flash("密码修改失败: %s" % e)
-
-    return redirect(url_for('organization.account_index'))
 
 
 # 权限管理

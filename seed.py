@@ -103,3 +103,9 @@ for (endpoint, method, describe) in webpage_describe_list:
     wd.check_data()
     wd.save
     AuthorityOperation(webpage_id=wd.id, role_id=dh.id, flag="Y").save
+
+
+wd = WebpageDescribe.query.filter_by(endpoint="organization.user_index").first()
+if wd:
+    wd.validate_flag = True
+    wd.save

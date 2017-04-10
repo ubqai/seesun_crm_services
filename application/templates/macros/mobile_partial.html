@@ -5,10 +5,5 @@
 		<div class="header-title">
 			{{ name }}
 		</div>
-		{% if current_user and current_user.is_authenticated %}
-			<div class="header-title">
-				经销商 {{ current_user.nickname }}
-			</div>
-		{% endif %}
 	</header>
 {% endmacro %}

@@ -38,19 +38,6 @@ def get_dynamic_dept_ranges_query():
     return dhs.order_by(DepartmentHierarchy.id).all()
 
 
-# BASE USER_LOGIN
-class UserLoginForm(BaseCsrfForm):
-    email = StringField('邮箱', [validators.Email(message="请填写正确格式的email")])
-    password = PasswordField('密码', validators=[
-        validators.Length(min=8, max=20, message="字段长度必须大等于8小等于20"),
-    ])
-
-
-# WECHAT USER_LOGIN
-class WechatUserLoginForm(UserLoginForm):
-    openid = StringField('微信openId', [validators.DataRequired()])
-
-
 class BaseForm(Form):
     def reset_select_field(self):
         self.dept_ranges.query = get_dynamic_dept_ranges_query()

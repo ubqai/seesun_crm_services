@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "organization.user_login"
+login_manager.login_view = "backstage_management.account_login"
 
 bcrypt = Bcrypt(app)
 
@@ -47,6 +47,9 @@ app.register_blueprint(organization, url_prefix='/organization')
 from .web_access_log.views import web_access_log
 
 app.register_blueprint(web_access_log, url_prefix='/web_access_log')
+
+from .backstage_management.views import backstage_management
+app.register_blueprint(backstage_management, url_prefix='/backstage_management')
 
 from .inventory.api import load_products, load_skus, load_user_inventories, load_inventories_by_code
 
