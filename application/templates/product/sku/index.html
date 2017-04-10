@@ -24,7 +24,7 @@
 				<div class="form-item">
 					<span class="form-label">{{ feature.get('feature_name') }}</span>
 					<div class="label-block">
-					{% for option in feature.get('options') %}
+					{% for option in feature.get('options')|sort(attribute='option_name') %}
 						<div class="label-item">
 							<input name="option_ids[]" value="{{ option.get('option_id') }}" type="checkbox" id="option_{{ option.get('option_id') }}" class="chk_1"
 							{% if option.get('option_id') in option_ids %}checked=""{% endif %} disabled/>

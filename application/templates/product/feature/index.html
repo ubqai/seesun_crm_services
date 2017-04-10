@@ -43,7 +43,7 @@
 							</span>
 						</td>
 						<td class="text-left-i too-long-td">
-							{% for option in feature.get('options') %}
+							{% for option in feature.get('options')|sort(attribute='option_name') %}
 								<span style="display:inline-block; word-break: break-word;" class="hover-attr">
 									&nbsp;&nbsp;{{ option.get('option_name') }}
 									<a class="text-primary glyphicon glyphicon-edit" href="{{ url_for('product.option_edit', id = option.get('option_id'), feature_id = feature.get('feature_id')) }}"></a>
