@@ -758,7 +758,7 @@ def mobile_user_login():
             if session.get("login_next_url"):
                 next_url = session.pop("login_next_url")
             else:
-                next_url = url_for('mobile_index.user_index')
+                next_url = url_for('mobile_index')
             return redirect(next_url)
         except Exception as e:
             app.logger.info("mobile login failure [%s]" % (e))
