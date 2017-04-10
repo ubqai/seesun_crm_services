@@ -448,9 +448,16 @@ class WechatCall:
                     else:
                         use_appid = WECHAT_TEST_APPID
 
+                    if template_url.startswith("http"):
+                        use_template_url = template_url
+                    elif template_url[0] == "/":
+                        use_template_url = HOOK_URL + template_url
+                    else:
+                        use_template_url = HOOK_URL + "/" + template_url
+
                     post_params["url"] = "https://open.weixin.qq.com/connect/oauth2/authorize?" + \
                                          "appid=" + use_appid + \
-                                         "&redirect_uri=" + urllib.parse.quote_plus(template_url) + \
+                                         "&redirect_uri=" + urllib.parse.quote_plus(use_template_url) + \
                                          "&response_type=code&scope=snsapi_base&state=wechat_template#wechat_redirect"
 
                 post_params["data"] = {}

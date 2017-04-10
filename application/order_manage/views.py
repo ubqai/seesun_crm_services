@@ -166,7 +166,9 @@ def contract_new(id):
                                                  "value": "感谢您的使用！",
                                                  "color": "#173177"
                                              },
-                                         })
+                                         },
+                                         url_for('mobile_contract_show', id=contract.id)
+                                         )
         flash("订单状态修改成功", 'success')
         return redirect(url_for('order_manage.contract_index'))
     return render_template('order_manage/contract_new.html', order=order, params={})
