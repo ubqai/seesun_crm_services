@@ -86,7 +86,11 @@
 											全胶粘费用 :{{ contract.contract_content.get('full_adhesive_costs') }}
 										{% endif %}
 									</td>
-									<td></td>
+									<td>
+										{% if not (contract.contract_content.get('other_costs') == None or contract.contract_content.get('other_costs') == '') %}
+											其他费用 :{{ contract.contract_content.get('other_costs') }}
+										{% endif %}
+									</td>
 							</tr>
 							<tr>
 									<td colspan="3">
@@ -95,8 +99,8 @@
 										{% endif %}
 									</td>
 									<td colspan="3">
-										{% if not (contract.contract_content.get('other_costs') == None or contract.contract_content.get('other_costs') == '') %}
-											其他费用 :{{ contract.contract_content.get('other_costs') }}
+										{% if not (contract.contract_content.get('tax_price') == None or contract.contract_content.get('tax_price') == '') %}
+											税费 :{{ contract.contract_content.get('tax_price') }}
 										{% endif %}
 									</td>
 									<td></td>

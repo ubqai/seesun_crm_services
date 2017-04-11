@@ -9,7 +9,7 @@
 
 {{ sidebar(active = 'statistics') }}
 	<div class="contents">
-		<div id="chart" style="width:100%; height:{{ len(teams)*100 }}px"></div>
+		<div id="chart" style="width:100%; height:{% if len(teams)*100>600 %}{{len(teams)*100}}{% else %}600{% endif %}px"></div>
 	</div>
 	
 	<script>		
