@@ -9,7 +9,7 @@
 
 {{ sidebar(active = 'statistics') }}
 	<div class="contents">
-		<div id="chart" style="width:100%; height:600px"></div>
+		<div id="chart" style="width:100%; height:{{ len(teams)*100 }}px"></div>
 	</div>
 	
 	<script>		
@@ -69,7 +69,7 @@
 					yAxis: {
 							type: 'category',
 							//这是y轴的数据
-							data: ['李于团队','王林团队','林药团队','苏爷团队','赵四团队','纪灵团队'],
+							data: {{ teams|safe }},
 							axisLine:{
 								lineStyle:{
 									color:"#90979c",
@@ -91,7 +91,7 @@
 									name: 'team',
 									type: 'bar',
 									//这是对应Y轴的数据，柱状图
-									data: [19325, 23438, 31000, 121594, 134141, 51807],
+									data: {{ total_amount|safe }},
 									barMaxWidth: 20,
 									label:{
 										normal:{
@@ -103,7 +103,7 @@
 									name: 'team',
 									type: 'line',
 									//这是对应Y轴的数据，折线图
-									data: [19325, 23438, 31000, 121594, 134141, 51807],
+									data: {{ total_amount|safe }},
 									symbolSize: 20,
 									label:{
 										normal:{
