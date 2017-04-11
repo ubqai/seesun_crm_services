@@ -12,52 +12,43 @@
         <p class="contents-header-p text-sm">user management</p>
     </div>
     <div class="separator"><span></span></div>
-    <div class="widget_contents padding-0 item-wrapper">
-        <div class="form-item item-template">
-            <div class="form-style form-default">
-                <div class="form-item-2">
-                    <span>{{ form.user_type.label }}</span>
-                    <labe>{{form.user_type.data}}</labe>
-                </div>
-                <div class="form-item-2">
-                    <span>* {{ form.email.label }}</span>
-                    <labe>{{form.email.data}}</labe>
-                </div>
-                <div class="form-item-2">
-                    <span>* {{ form.name.label }}</span>
-                    <labe>{{form.name.data}}</labe>
-                </div>
-
-                <div class="form-item-2">
-                    <span>{{ form.title.label }}</span>
-                    <labe>{{form.title.data}}</labe>
-                </div>
-
-                <div class="form-item-2">
-                    <span>{{ form.nickname.label(id='label_nickname') }}</span>
-                    <labe>{{form.nickname.data}}</labe>
-                </div>
-                <div class="form-item-2">
-                    <span>* {{ form.phone.label(id='label_phone') }}</span>
-                    <labe>{{form.phone.data}}</labe>
-                </div>
-
-                <div class="form-item-2">
-                    <span>* {{ form.address.label }}</span>
-                    <labe>{{form.address.data}}</labe>
-                </div>
-
-                <div class="form-item-2">
-                    <span>* {{ form.dept_ranges.label }}</span>
-                    <labe>{{form.dept_ranges.data}}</labe>
-                </div>
-
-                <div class="form-item-2">
-                    <span>* {{ form.sale_range.label }}</span>
-                    <labe>{{form.sale_range.data}}</labe>
-                </div>
-            </div>
-        </div>
+    <div class="widget_contents padding-0" style="background: #f5f8fa;">
+		
+			<div class="info">
+				<div class="info-header clearfix">
+					<div class="info-header-item col-3">
+						<i class="glyphicon glyphicon-user"></i>
+						&nbsp;
+						<span>{{form.name.data}}</span>
+					</div>
+					<div class="info-header-item col-3" style="margin-top:26px; padding-bottom:0px;">
+						<span>{{form.dept_ranges.label}} : {{form.dept_ranges.data}}</span>
+					</div>
+					<div class="info-header-item col-3" style="margin-top:26px; padding-bottom:0px;">
+						<span>{{form.sale_range.label}} : {{form.sale_range.data}}</span>
+					</div>
+				</div>
+				<div class="info-body clearfix">
+					<div class="info-body-item col-2">
+						<span>{{ form.user_type.label }} : {{ form.user_type.data }}</span>
+					</div>
+					<div class="info-body-item col-2">
+						<span>{{form.email.label}} : {{form.email.data}}</span>
+					</div>
+					<div class="info-body-item col-2">
+						<span>{{form.title.label}} : {{form.title.data}}</span>
+					</div>
+					<div class="info-body-item col-2">
+						<span>{{form.nickname.label(id='label_nickname')}} : {{form.nickname.data}}</span>
+					</div>
+					<div class="info-body-item col-2">
+						<span>{{form.phone.label(id='label_phone')}} : {{form.phone.data}}</span>
+					</div>
+					<div class="info-body-item col-2">
+						<span>{{form.address.label}} : {{form.address.data}}</span>
+					</div>
+				</div>
+			</div>
     </div>
 </div>
 

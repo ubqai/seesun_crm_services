@@ -1037,3 +1037,34 @@ p.contract-subtitle {
 .hover-attr:hover a {
     display: inline-block;
 }
+
+.info {
+    border: 1px solid #e4eaee;
+    margin-bottom: 23px;
+    font-size: 12px;
+    color: #4b4b4b;
+    position: relative;
+    z-index: 3;
+}
+.info-header {
+    padding: 5px 0;
+    font-size: 12px;
+    vertical-align: middle;
+    color: #546d7e;
+    background: #f5f8fa;
+    border-bottom: 1px solid #e4eaee;
+}
+.info-header-item {
+    padding-left: 30px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+.info-header-item i {
+    font-size: 40px;
+}
+.info-body-item{
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+    letter-spacing: 1px;
+		background-color:#fff;
+}
