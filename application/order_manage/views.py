@@ -449,7 +449,25 @@ def tracking_info_qrcode(id):
 
 @order_manage.route('/region_profit')
 def region_profit():
-    return render_template('order_manage/region_profit.html')
+    provinces = []
+    total_amount = []
+    current_amount = []
+    for area in SalesAreaHierarchy.query.filter_by(level_grade=3):
+        amount = float('0')
+        amount1 = float('0')
+        for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
+            for user in sarea.users.all():
+                for contract in Contract.query.filter_by(user_id=user.id, payment_status='已付款').all():
+                    amount += float(contract.contract_content.get('amount', '0'))
+                for contract1 in Contract.query.filter_by(user_id=user.id, payment_status='已付款').filter(
+                        Contract.created_at.between(datetime.datetime.utcnow() - datetime.timedelta(days=30),
+                                                    datetime.datetime.utcnow())).all():
+                    amount1 += float(contract1.contract_content.get('amount', '0'))
+        provinces.append(str(area.name))
+        total_amount.append(amount)
+        current_amount.append(amount1)
+    return render_template('order_manage/region_profit.html', provinces=provinces, total_amount=total_amount,
+                           current_amount=current_amount)
 
 
 @order_manage.route('/team_profit')
@@ -470,4 +488,5 @@ def dealer_index():
                 datas.append([user.nickname, amount])
         current_app.logger.info(datas)
     return render_template('order_manage/dealer_index.html', datas=datas)
+
 
