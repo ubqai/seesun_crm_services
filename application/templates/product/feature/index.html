@@ -34,16 +34,24 @@
 						<td>
 							<span style="display:inline-block; word-break: break-word;" class="hover-attr">
 								&nbsp;&nbsp;{{ feature.get('feature_name') }}
-								<a class="text-primary glyphicon glyphicon-edit" href="{{ url_for('product.feature_edit', id = feature.get('feature_id')) }}"></a>
-								<a class="text-danger glyphicon glyphicon-remove-circle"></a>
+								<a class="text-primary glyphicon glyphicon-edit" href="{{ url_for('product.feature_edit', id=feature.get('feature_id')) }}"></a>
+								{% if feature.get('is_used') == True %}
+									<a class="glyphicon glyphicon-remove-circle" style="color: #aaa;"></a>
+								{% else %}
+									<a class="text-danger glyphicon glyphicon-remove-circle" href="{{ url_for('product.feature_delete', id=feature.get('feature_id')) }}"></a>
+								{% endif %}
 							</span>
 						</td>
 						<td class="text-left-i too-long-td">
-							{% for option in feature.get('options') %}
+							{% for option in feature.get('options')|sort(attribute='option_name') %}
 								<span style="display:inline-block; word-break: break-word;" class="hover-attr">
 									&nbsp;&nbsp;{{ option.get('option_name') }}
 									<a class="text-primary glyphicon glyphicon-edit" href="{{ url_for('product.option_edit', id = option.get('option_id'), feature_id = feature.get('feature_id')) }}"></a>
-									<a class="text-danger glyphicon glyphicon-remove-circle"></a>
+									{% if option.get('is_used') == True %}
+										<a class="text-muted glyphicon glyphicon-remove-circle"  style="color: #aaa;"></a>
+									{% else %}
+										<a class="text-danger glyphicon glyphicon-remove-circle" href="{{ url_for('product.option_delete', id=option.get('option_id')) }}"></a>
+									{% endif %}
 								</span>				
 							{% endfor %}
 						</td>

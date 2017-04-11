@@ -24,28 +24,41 @@
 						<span class="form-label">{{ option[0] }}</span>
 						<input class="form-input form-control" name="code" value="{{ option[1] }}" disabled=""/>
 					{% endfor %}
+					<a class="new-item" onclick="$('#edit_options_form').toggle();"><span class="glyphicon glyphicon-edit"></span></a>
+				</div>
+
+				<div id="edit_options_form" class="form-item inline-2" style="display: none; background: #eee;">
+					{% for options in option_sorted %}
+					<div class="col-3" style="display:table; margin:10px 0px; ">
+						<span class="form-label">{{ options[0].get('feature_name') }}</span>
+						<select name="option_ids[]" class="form-input form-control">
+							<option	value=""></option>
+							{% for option in options %}
+								<option value="{{ option.get('option_id') }}">{{ option.get('option_name') }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					{% endfor %}
 				</div>
 
 				<div class="form-item inline-2">
 					<span class="form-label">sku代码</span>
 					<input class="form-input form-control" name="code" value="{{ sku.get('code') or '' }}"/>
+					<span class="form-label">Barcode</span>
+					<input class="form-input form-control" name="barcode" value="{{ sku.get('barcode') or '' }}"/>
+				</div>
+				<div class="form-item inline-2">
+					<span class="form-label">hscode</span>
+					<input class="form-input form-control" name="hscode" value="{{ sku.get('hscode') or '' }}"/>
+					<span class="form-label">重量(g/m2)</span>
+					<input class="form-input form-control" name="weight" value="{{ sku.get('weight') or '' }}"/>
+				</div>
+				<div class="form-item inline-2">
 					<span class="form-label">状态</span>
 					<select name="isvalid" id="isvalid" class="form-input form-control">
 						<option value="YES">上架</option>
 						<option value="NO" {{ 'selected' if sku.get('isvalid') == 'NO' else '' }}>下架</option>
 					</select>
-				</div>
-				<div class="form-item inline-2">
-					<span class="form-label">Barcode</span>
-					<input class="form-input form-control" name="barcode" value="{{ sku.get('barcode') or '' }}"/>
-					<span class="form-label">hscode</span>
-					<input class="form-input form-control" name="hscode" value="{{ sku.get('hscode') or '' }}"/>
-				</div>
-				<div class="form-item inline-2">
-					<span class="form-label">重量(g/m2)</span>
-					<input class="form-input form-control" name="weight" value="{{ sku.get('weight') or '' }}"/>
-					<span class="form-label">价格(元)</span>
-					<input class="form-input form-control" name="price" value="{{ sku.get('price') or '' }}"/>
 				</div>
 				<div class="form-item small-pic">
 					<span class="form-label">产品图片</span>
