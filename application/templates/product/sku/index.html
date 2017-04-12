@@ -41,11 +41,13 @@
 				<thead>
 					<tr>
 						<th>SKU code</th>
+						<th>名称</th>
 						<th>Barcode</th>
 						<th>HScode</th>
-						<th>Weight</th>
-						<th>State</th>
-						<th>Options</th>
+						<th>重量</th>
+						<th>状态</th>
+						<th>属性</th>
+						<th>备注</th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -53,6 +55,7 @@
 				{% for sku in skus.get('skus') %}
 					<tr>
 						<td>{{ sku.get('code') }}</td>
+						<td>{{ sku.get('name') or '-' }}</td>
 						<td>{{ sku.get('barcode') or '-' }}</td>
 						<td>{{ sku.get('hscode') or '-' }}</td>
 						<td>{{ sku.get('weight') or '-' }} g/m2</td>
@@ -66,6 +69,7 @@
 							{% for key in option %}{{ key }}:{{ option[key] }}{% endfor %}&nbsp;&nbsp;
 						{% endfor %}
 						</td>
+						<td>{{ sku.get('memo') or '' }}</td>
 						<td>
 							<a class="table-edit text-info" href="{{ url_for('product.sku_edit', id = sku.get('sku_id'), product_id = product_id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
 							<form action="{{ url_for('product.sku_delete', id = sku.get('sku_id'), product_id = product_id) }}" method="post" style="display: inline;">

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
+from flask_login import current_user
 
 from .. import app, db
 from ..helpers import object_list, save_upload_file, delete_file, clip_image
@@ -252,7 +253,8 @@ def option_delete(id):
 # --- Material need ---
 @content.route('/material_application/index')
 def material_application_index():
-    applications = MaterialApplication.query.order_by(MaterialApplication.created_at.desc())
+    applications = MaterialApplication.query.filter(
+        MaterialApplication.user_id.in_(set([user.id for user in current_user.get_subordinate_dealers()]))).order_by(MaterialApplication.created_at.desc())
     return render_template('content/material_application/index.html', applications=applications)
 
 

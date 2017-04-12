@@ -18,7 +18,7 @@
 			{% for product in products_hash.get(category.get('category_id')) %}
                 {% if not product.get('isvalid')=="NO" %}
 				<a href="{{ url_for('mobile_product_show', id = product.get('product_id')) }}" class="col-6-gap product top-gap-1">
-					<img class="full-img" src="{{ product.get('images')[0] }}">
+					<img class="full-img" src="{{ product.get('images')[0] or '/static/images/alt.jpg' }}">
 					<p class="text-center">{{ product.get('name') }}</p>
 					<div class="product-divider"></div>
 				</a>

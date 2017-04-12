@@ -11,15 +11,20 @@
 			<li data-target="#myCarousel" data-slide-to="1"></li>
 		</ol>   
 		<div class="carousel-inner">
-		{% for image in product.get('images') %}
-			<div class="item {% if product.get('images').index(image) == 0 %}active{% endif %}">
-				<div id="banner">
+			<div class="item active">
+				<div>
 					<a style="display: block; ">
-						<img src="{{ image }}" class="full-img" />
+						<img src="{{ product.get('images')[0] or '/static/images/alt.jpg' }}" class="full-img" />
 					</a>
 				</div>
 			</div>
-		{% endfor %}			
+			<div class="item">
+				<div >
+					<a style="display: block; ">
+						<img src="{{ product.get('images')[1] or product.get('images')[0] or '/static/images/alt.jpg' }}" class="full-img" />
+					</a>
+				</div>
+			</div>
 		</div>
 	</div>
 	
