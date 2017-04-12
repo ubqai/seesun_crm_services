@@ -1,4 +1,4 @@
-{% macro sidebar(active = 'category') %}
+{% macro sidebar(active = 'category',work_stream='false') %}
 <aside class="my-nav">
     <div id="sidebar">
         <ul class="sidebar-menu">
@@ -39,9 +39,9 @@
                     <li><a href='javascript:void(0)' class="a_disabled">合同列表</a></li>
                     {% endif %}
 
-                    <li>
+                    <li class="{% if work_stream == 'true' %}active{% endif %}">
                         <a>工作流与审批<span class="dcjq-icon"></span></a>
-                        <ul class="t-sub">
+                        <ul class="t-sub {% if work_stream == 'true' %}in{% endif %}">
                             {% if current_user.is_authorized('content.material_application_index') %}
                             <li><a href="{{ url_for('content.material_application_index') }}">物料申请</a></li>
                             {% else %}

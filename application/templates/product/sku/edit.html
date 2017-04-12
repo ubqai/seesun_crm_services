@@ -44,14 +44,20 @@
 				<div class="form-item inline-2">
 					<span class="form-label">sku代码</span>
 					<input class="form-input form-control" name="code" value="{{ sku.get('code') or '' }}"/>
-					<span class="form-label">Barcode</span>
-					<input class="form-input form-control" name="barcode" value="{{ sku.get('barcode') or '' }}"/>
+					<span class="form-label">名称</span>
+					<input class="form-input form-control" name="name" value="{{ sku.get('name') or '' }}"/>
 				</div>
 				<div class="form-item inline-2">
+					<span class="form-label">Barcode</span>
+					<input class="form-input form-control" name="barcode" value="{{ sku.get('barcode') or '' }}"/>
 					<span class="form-label">hscode</span>
 					<input class="form-input form-control" name="hscode" value="{{ sku.get('hscode') or '' }}"/>
+				</div>
+				<div class="form-item inline-2">
 					<span class="form-label">重量(g/m2)</span>
 					<input class="form-input form-control" name="weight" value="{{ sku.get('weight') or '' }}"/>
+					<span class="form-label">备注</span>
+					<input class="form-input form-control" name="memo" value="{{ sku.get('memo') or '' }}"/>
 				</div>
 				<div class="form-item inline-2">
 					<span class="form-label">状态</span>

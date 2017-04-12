@@ -119,3 +119,11 @@ $(function(){
 		$(ele).width()>max_width? $(ele).css("max-width","100%").css("height","auto"):"";
 	})
 })
+
+//下拉框
+$(function(){
+	$(".slide-trigger").click(function(){
+		$(this).parent().find(".slide-panel").slideToggle();
+		$(this).toggleClass("border-none");
+	});
+})

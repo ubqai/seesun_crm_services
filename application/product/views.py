@@ -177,11 +177,13 @@ def sku_new(product_id):
             image_path = ''
         sku_infos = []
         sku_info = {
-            'code': str(request.form.get('code')),
-            'barcode': str(request.form.get('barcode')) or None,
-            'hscode': str(request.form.get('hscode')) or None,
-            'weight': str(request.form.get('weight')) or None,
+            'code': request.form.get('code'),
+            'barcode': request.form.get('barcode') or None,
+            'hscode': request.form.get('hscode') or None,
+            'weight': request.form.get('weight') or None,
             'thumbnail': image_path,
+            'name': request.form.get('name') or None,
+            'memo': request.form.get('memo') or None,
             'options_id': [str(option_id) for option_id in option_ids]
         }
         sku_infos.append(sku_info)
@@ -226,6 +228,8 @@ def sku_edit(id):
             'weight': request.form.get('weight') or None,
             'isvalid': request.form.get('isvalid'),
             'thumbnail': image_path,
+            'name': request.form.get('name') or None,
+            'memo': request.form.get('memo') or None,
             'options_id': [str(option_id) for option_id in option_ids] or None
         }
         if not request.form.get('code') == sku.get('code'):
