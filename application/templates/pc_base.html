@@ -20,9 +20,16 @@
         <div class="logo"><img src="/static/images/logo.png" alt="logo" class="full-img"><span> CRM</span></div>
         {% if current_user.is_authenticated %}
         <ul class="header-notify">
-            <li><a class="notify-icon glyphicon glyphicon-envelope"><span class="notify-badge green">1</a></span></li>
-            <li><a class="notify-icon glyphicon glyphicon-calendar"><span class="notify-badge red">3</a></span></li>
-            <li><a class="notify-icon glyphicon glyphicon-bell"><span class="notify-badge yellow">5</a></span></li>
+            <li><a class="notify-icon glyphicon glyphicon-envelope">
+                {% if current_user.get_orders_num > 0 %}
+                <span class="notify-badge green">{{ current_user.get_orders_num }}</span>
+                {% endif %}
+            </a></li>
+            <li><a class="notify-icon glyphicon glyphicon-calendar">
+                {% if current_user.get_other_app_num > 0 %}
+                <span class="notify-badge red">{{ current_user.get_other_app_num }}</span>
+                {% endif %}
+            </a></li>
             <span>
                 用户
                 <a href="{{ url_for('backstage_management.account_index') }}">

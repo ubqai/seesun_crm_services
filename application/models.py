@@ -571,6 +571,36 @@ class User(db.Model, Rails):
                     users.append(dealer)
         return users
 
+    @property
+    def is_sales_department(self):
+        sales_department = DepartmentHierarchy.query.filter_by(name='销售部').first()
+        if sales_department in self.departments:
+            return True
+        else:
+            return False
+
+    @property
+    def get_orders_num(self):
+        if self.is_sales_department:
+            num = len(Order.query.filter_by(order_status='新订单').filter(
+                Order.user_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).all())
+            return num
+        else:
+            return 0
+
+    @property
+    def get_other_app_num(self):
+        if self.is_sales_department:
+            num1 = len(MaterialApplication.query.filter_by(status='新申请').filter(
+                MaterialApplication.user_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).all())
+            num2 = len(ProjectReport.query.filter_by(status='新创建待审核').filter(
+                ProjectReport.app_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).all())
+            num3 = len(ShareInventory.query.filter_by(status='新申请待审核').filter(
+                ShareInventory.applicant_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).all())
+            return num1 + num2 + num3
+        else:
+            return 0
+
 
 class UserInfo(db.Model):
     __tablename__ = 'user_infos'
