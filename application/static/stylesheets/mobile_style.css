@@ -1044,4 +1044,9 @@ td input{
     height: 1.6em;
     border: none;
 }
-
+.border-none {
+	border:none !important;
+}
+.slide-panel{
+	display:none;
+}
