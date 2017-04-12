@@ -223,13 +223,13 @@ def sku_edit(id):
         else: 
             image_path = sku.get('thumbnail')
         data = {
-            'barcode': request.form.get('barcode') or None,
-            'hscode': request.form.get('hscode') or None,
+            'barcode': request.form.get('barcode'),
+            'hscode': request.form.get('hscode'),
             'weight': request.form.get('weight') or None,
             'isvalid': request.form.get('isvalid'),
             'thumbnail': image_path,
-            'name': request.form.get('name') or None,
-            'memo': request.form.get('memo') or None,
+            'name': request.form.get('name'),
+            'memo': request.form.get('memo'),
             'options_id': [str(option_id) for option_id in option_ids] or None
         }
         if not request.form.get('code') == sku.get('code'):
