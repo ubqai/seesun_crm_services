@@ -1,0 +1,198 @@
+{% extends 'pc_base.html' %}
+
+{% block custom_scripts %}
+    <script src="{{ url_for('static', filename = 'javascripts/echarts.common.min.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'javascripts/macarons.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'javascripts/dark.js') }}"></script>
+{% endblock %}
+{% from 'macros/pc_partial.html' import sidebar with context %}
+{% block main_content %}
+
+{{ sidebar(active = 'dealer') }}
+	<div class="contents">
+		<div id="chart-line" style="width:100%; height:600px"></div>
+	</div>
+    <div class="contents top-gap-2">
+		<div id="chart-pie" style="width:100%; height:600px"></div>
+	</div>
+
+	<script>
+
+		function randomNum(){
+			return parseInt(Math.random()*40000+10000)
+		}
+		(function(){
+				var chart = echarts.init(document.getElementById('chart-line'), 'macarons');
+				option = {
+					title: {
+							text: '各区域经销商数量',
+							subtext: 'BY SEESUN',
+							left:"4%",
+							top:"20px"
+					},
+					tooltip: {
+							trigger: 'axis',
+							axisPointer: {
+									type: 'shadow'
+							}
+					},
+					legend: {
+							x: '4%',
+							top: '13%',
+							data: ['华东区','华南区','华中区'],
+					},
+					grid: {
+							left: '4%',
+							borderWidth: 0,
+							top: 140,
+							containLabel: true
+					},
+					xAxis: {
+							type: 'category',
+							data: ['2016年12月','2017年1月','2017年2月','2017年3月','2017年4月'],
+							axisLine:{
+								lineStyle:{
+									color:"#50979c",
+									shadowColor: 'rgba(0, 0, 0, 0.5)',
+									shadowBlur: 0,
+									width:1,
+								}
+							},
+							minInterval: 20,
+							axisTick: {
+								show: false
+							},
+							splitLine: {
+								show: false
+							}
+					},
+					yAxis: {
+							type: 'value',
+							boundaryGap: [0, 0.01],
+							axisLine:{
+								lineStyle:{
+									color:"#50979c",
+									shadowColor: 'rgba(0, 0, 0, 0.5)',
+									shadowBlur: 0,
+									width:1
+								}
+							},
+							axisTick: {
+								show: false
+							},
+							splitLine: {
+								show: false
+							}
+					},
+					dataZoom: [
+            {
+                type: 'slider',
+                show: true,
+                startValue: 1,
+                endValue: 3,
+                handleSize: 30
+            }
+					],
+					series: [
+							{
+									name: '华东区',
+									type: 'line',
+									data: [randomNum(), randomNum(), randomNum(), randomNum(),randomNum()],
+									symbolSize: 5,
+									label:{
+										normal:{
+											show:false
+										}
+									},
+									smooth:false
+							},
+							{
+									name: '华南区',
+									type: 'line',
+									data: [randomNum(), randomNum(), randomNum(), randomNum(),randomNum()],
+									symbolSize: 5,
+									label:{
+										normal:{
+											show:false
+										}
+									},
+									smooth:false
+							},
+							{
+									name: '华中区',
+									type: 'line',
+									data: [randomNum(), randomNum(), randomNum(), randomNum(),randomNum()],
+									symbolSize: 5,
+									label:{
+										normal:{
+											show:false
+										}
+									},
+									smooth:false
+							}
+					]
+				};
+				chart.setOption(option);
+		})();
+
+		(function(){
+				var chart = echarts.init(document.getElementById('chart-pie'), 'dark');
+				option = {
+					backgroundColor: '#2c343c',
+
+					title: {
+							text: '各区域经销商数量占比',
+							subtext: 'BY SEESUN',
+							left: 'center',
+							top: 20,
+							textStyle: {
+									color: '#ccc'
+							}
+					},
+
+					tooltip : {
+							trigger: 'item',
+							formatter: "{a} <br/>{b} : {c} ({d}%)"
+					},
+					series : [
+							{
+									name:'访问来源',
+									type:'pie',
+									radius : '70%',
+									center: ['50%', '50%'],
+									data:{{ percentage|safe }}.sort(function (a, b) { return a.value - b.value}),
+									label: {
+											normal: {
+													textStyle: {
+															color: 'rgba(255, 255, 255, 0.3)'
+													},
+													formatter: function(data){
+														return data.data.name+" "+":"+" "+data.data.value
+													}
+											}
+									},
+									labelLine: {
+											normal: {
+													lineStyle: {
+															color: 'rgba(255, 255, 255, 0.3)'
+													},
+													smooth: 0.2,
+													length: 10,
+													length2: 20
+											}
+									},
+									roseType:"area",
+									animationType: 'scale',
+									animationEasing: 'elasticOut',
+									animationDelay: function (idx) {
+											return Math.random() * 200;
+									}
+							}
+					]
+			};
+
+				chart.setOption(option);
+		})();
+	</script>
+
+{% endblock %}

@@ -506,3 +506,14 @@ def dealer_index():
     return render_template('order_manage/dealer_index.html', datas=datas)
 
 
+@order_manage.route('/region_dealers')
+def region_dealers():
+    percentage = []
+    for region in SalesAreaHierarchy.query.filter_by(level_grade=2):
+        count = float('0')
+        for area in SalesAreaHierarchy.query.filter_by(parent_id=region.id).all():
+            for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
+                count += len(sarea.users.filter_by(user_or_origin='2').all())
+        percentage.append({'value': count, 'name': region.name})
+    return render_template('order_manage/region_dealers.html', percentage=percentage)
+
