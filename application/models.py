@@ -569,8 +569,7 @@ class User(db.Model, Rails):
         users = []
         for province in self.get_province_sale_areas():
             for city in SalesAreaHierarchy.query.filter_by(parent_id=province.id).all():
-                for dealer in db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
-                                SalesAreaHierarchy.id == city.id).all():
+                for dealer in city.users.filter_by(user_or_origin='2').all():
                     users.append(dealer)
         return users
 
@@ -585,8 +584,8 @@ class User(db.Model, Rails):
     @property
     def get_orders_num(self):
         if self.is_sales_department:
-            num = len(Order.query.filter_by(order_status='新订单').filter(
-                Order.user_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).all())
+            num = Order.query.filter_by(order_status='新订单').filter(
+                Order.user_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).count()
             return num
         else:
             return 0
@@ -594,12 +593,12 @@ class User(db.Model, Rails):
     @property
     def get_other_app_num(self):
         if self.is_sales_department:
-            num1 = len(MaterialApplication.query.filter_by(status='新申请').filter(
-                MaterialApplication.user_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).all())
-            num2 = len(ProjectReport.query.filter_by(status='新创建待审核').filter(
-                ProjectReport.app_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).all())
-            num3 = len(ShareInventory.query.filter_by(status='新申请待审核').filter(
-                ShareInventory.applicant_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).all())
+            num1 = MaterialApplication.query.filter_by(status='新申请').filter(
+                MaterialApplication.user_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).count()
+            num2 = ProjectReport.query.filter_by(status='新创建待审核').filter(
+                ProjectReport.app_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).count()
+            num3 = ShareInventory.query.filter_by(status='新申请待审核').filter(
+                ShareInventory.applicant_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).count()
             return num1 + num2 + num3
         else:
             return 0
