@@ -65,7 +65,7 @@
 						{% if not (contract.contract_content.get('tax_costs') == None or contract.contract_content.get('tax_costs') == '') %}
 								<p class="text-sm">税点 :<span class="text-dark inline-display">{{ contract.contract_content.get('tax_costs') }}</span></p>
 						{% endif %}
-						{% if not (contract.contract_content.get('tax_price') == None or contract.contract_content.get('tax_price') == '') %}
+						{% if not (contract.contract_content.get('tax_costs') == None or contract.contract_content.get('tax_costs') == '') %}
 								<p class="text-sm">税费 :<span class="text-dark inline-display">{{ contract.contract_content.get('tax_price') }}</span></p>
 						{% endif %}
 				</div>
