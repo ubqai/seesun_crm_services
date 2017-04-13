@@ -97,3 +97,9 @@ def update_sku_by_code(data={}):
     url = '%s/%s/product_skus/edit_by_code' % (site, version)
     response = requests.put(url, json=data, headers=headers)
     return response   # 200
+
+
+def load_all_skus(data={}):
+    url = '%s/%s/product_skus/search' % (site, version)
+    response = requests.post(url, json=data, headers=headers)
+    return response.json()   # 200
