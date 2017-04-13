@@ -58,7 +58,7 @@ def mobile_product_cases():
     categories = load_categories()
     products_hash = {}
     for category in categories:
-        products = load_products(category.get('category_id'))
+        products = load_products(category.get('category_id'), only_valid=True)
         products_hash[category.get('category_id')] = products
     return render_template('mobile/product_cases.html', categories=categories, products_hash=products_hash)
 
@@ -566,7 +566,7 @@ def stocks_share_for_order(area_id):
             if request.args.get("category_name", '') == '' or \
                     (request.args.get("category_name", '') != '' and category.get('category_name') == request.args.get(
                         "category_name")):
-                products_json = load_products(category.get('category_id'))
+                products_json = load_products(category.get('category_id'), only_valid=True)
                 if len(products_json) > 0:
                     for product_json in products_json:
                         if not product_json.get('isvalid') == "NO":
@@ -602,7 +602,7 @@ def stocks_share_for_order(area_id):
         if request.args.get("category_name", '') == '' or \
                 (request.args.get("category_name", '') != '' and category.get('category_name') == request.args.get(
                     "category_name")):
-            products_json = load_products(category.get('category_id'))
+            products_json = load_products(category.get('category_id'), only_valid=True)
             if len(products_json) > 0:
                 for product_json in products_json:
                     if not product_json.get('isvalid') == "NO":
