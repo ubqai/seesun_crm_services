@@ -7,12 +7,12 @@ from ..forms import BaseCsrfForm
 
 
 def valid_sale_range(form, field):
-    if form.user_type.data == "2" and form.sale_range.data is None:
+    if form.user_type.data == "2" and field.data is None:
         raise validators.ValidationError('请选择销售范围')
 
 
 def valid_dept_ranges(form, field):
-    if form.user_type.data == "3" and form.dept_ranges.data == []:
+    if form.user_type.data == "3" and field.data == []:
         raise validators.ValidationError('请选择所属部门')
 
 

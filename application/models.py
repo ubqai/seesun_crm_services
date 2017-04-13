@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
-from . import db, login_manager, bcrypt
+from . import db, login_manager, bcrypt, cache
 from flask import url_for
 from sqlalchemy import distinct
 
@@ -530,8 +530,11 @@ class User(db.Model, Rails):
 
         return max_level_grade
 
+    # 授权加载2小时
+    @cache.memoize(7200)
     # 是否有授权
     def is_authorized(self, endpoint, method="GET"):
+        print("User[%s] endpoint[%s] is authorized cache" % (self.nickname, endpoint))
         return AuthorityOperation.is_authorized(self, endpoint, method)
 
     # 获取用户所属role -- 暂使用所属部门代替
