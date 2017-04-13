@@ -11,7 +11,7 @@ def load_products(category_id, only_valid=True):
     url = '%s/%s/product_category/%s/products' % (site, version, category_id)
     response = requests.get(url)
     if response.status_code == 200:
-        return filter(lambda x: x.get('isvalid') != 'NO', response.json()) if only_valid is True else response.json()
+        return list(filter(lambda x: x.get('isvalid') != 'NO', response.json())) if only_valid is True else response.json()
     else:
         return []
 
