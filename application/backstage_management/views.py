@@ -130,7 +130,7 @@ def account_login():
             app.logger.info("移动端用户[%s]自动登出,[%s][%s]" % (current_user.nickname, request.path, request.endpoint))
             logout_user()
 
-    app.logger.info("account_login [%s]" % request.args)
+    # app.logger.info("account_login [%s]" % request.args)
     if request.method == 'POST':
         try:
             form = AccountLoginForm(request.form, meta={'csrf_context': session})
@@ -146,7 +146,7 @@ def account_login():
             if not login_valid_errmsg == "":
                 raise ValueError(login_valid_errmsg)
 
-            login_user(user)
+            login_user(user, form.remember_me.data)
             app.logger.info("后端用户[%s][%s]登入成功" % (user.email, user.nickname))
             # 直接跳转至需访问页面
             if session.get("login_next_url"):

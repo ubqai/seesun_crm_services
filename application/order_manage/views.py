@@ -513,7 +513,7 @@ def region_dealers():
         count = float('0')
         for area in SalesAreaHierarchy.query.filter_by(parent_id=region.id).all():
             for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
-                count += len(sarea.users.filter_by(user_or_origin='2').all())
+                count += sarea.users.filter_by(user_or_origin='2').count()
         percentage.append({'value': count, 'name': region.name})
     return render_template('order_manage/region_dealers.html', percentage=percentage)
 
