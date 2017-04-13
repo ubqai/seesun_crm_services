@@ -5,23 +5,7 @@ Execute this file will create a bunch of sample data for mobile application disp
 """
 from application.models import *
 
-if not SalesAreaHierarchy.query.filter_by(name='上海市').first():
-    sa = SalesAreaHierarchy(name='上海市')
-    db.session.add(sa)
-    db.session.commit()
-
-sales_area = SalesAreaHierarchy.query.filter_by(name='上海市').first()
-if not User.query.filter(User.email == 'abc@hotmail.con').first():
-    user1 = User(email='abc@hotmail.con', nickname='普陀区经销商', user_or_origin=2,
-                 password_hash='$2b$12$4FCkZd8nJohWa7MfqrHmIec7JVYe/oiHOR4q.8.dYWnN3ahdQViF2')
-    user1.sales_areas.append(sales_area)
-    user1.save
-if not User.query.filter(User.email == 'bcd@hotmail.con').first():
-    user2 = User(email='bcd@hotmail.con', nickname='长宁区经销商', user_or_origin=2,
-                 password_hash='$2b$12$4FCkZd8nJohWa7MfqrHmIec7JVYe/oiHOR4q.8.dYWnN3ahdQViF2')
-    user2.sales_areas.append(sales_area)
-    user2.save
-
+# 案例目录基础数据(default)
 if not ContentCategory.query.filter(ContentCategory.name == '案例展示').first():
     cases = ContentCategory(name='案例展示').save
     classification1 = ContentClassification(name='按场景选择案例', description='按场景选择案例', category_id=cases.id).save
@@ -50,6 +34,8 @@ if not ContentCategory.query.filter(ContentCategory.name == '施工指导').firs
     for name in option_list:
         option = ContentClassificationOption(name=name, classification_id=cls1.id).save
 
+
+# 物料申请基础数据(展示)
 material_list = '运动展柜 商用展柜 家用展柜 博格画册 专版画册 锐动系列 帝彩尚丽 帝彩尚高 认证证书'.split()
 for i in material_list:
     if not Material.query.filter(Material.name == i).first():

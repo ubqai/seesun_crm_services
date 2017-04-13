@@ -13,7 +13,7 @@ sku_image_size = (290, 290)
 
 @product.route('/index/<int:category_id>')
 def index(category_id):
-    products = load_products(category_id)
+    products = load_products(category_id, only_valid=False)
     category = load_category(category_id)
     return render_template('product/index.html', products=products, category=category)
 

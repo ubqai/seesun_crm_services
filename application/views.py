@@ -83,7 +83,7 @@ def mobile_product():
     categories = load_categories()
     products_hash = {}
     for category in categories:
-        products = load_products(category.get('category_id'))
+        products = load_products(category.get('category_id'), only_valid=True)
         products_hash[category.get('category_id')] = products
     return render_template('mobile/product.html', categories=categories, products_hash=products_hash)
 
@@ -121,7 +121,7 @@ def mobile_storage():
     categories = load_categories()
     products_hash = {}
     for category in categories:
-        products = load_products(category.get('category_id'))
+        products = load_products(category.get('category_id'), only_valid=True)
         products_hash[category.get('category_id')] = products
     return render_template('mobile/storage.html', categories=categories, products_hash=products_hash)
 

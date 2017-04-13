@@ -10,7 +10,7 @@ def index():
     query = WebAccessLog.query
     query = filter_by_request_args(query)
     logs = query.order_by(WebAccessLog.created_at.desc())
-    return object_list('web_access_log/index.html', logs, paginate_by=500,
+    return object_list('web_access_log/index.html', logs, paginate_by=100,
                        platform_list=platform_list, browser_list=browser_list)
 
 
