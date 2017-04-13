@@ -46,7 +46,9 @@
 					<div class="modal-content">
 						<div class="modal-body">
 							<img src="{{ sku.get('thumbnail') }}" class="full-img">
-							<p class="text-center text-md text-gray">卷长 : 100cm</p>
+							{% if sku.get('memo') %}
+							<p class="text-center text-md text-gray">{{ sku.get('memo') }}</p>
+							{% endif %}
 						</div>
 					</div><!-- /.modal-content -->
 				</div><!-- /.modal -->

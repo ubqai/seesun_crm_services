@@ -43,7 +43,7 @@
 
 				<div class="form-item inline-2">
 					<span class="form-label">sku代码</span>
-					<input class="form-input form-control" name="code" value="{{ sku.get('code') or '' }}"/>
+					<input class="form-input form-control" name="code" value="{{ sku.get('code') or '' }}" required/>
 					<span class="form-label">名称</span>
 					<input class="form-input form-control" name="name" value="{{ sku.get('name') or '' }}"/>
 				</div>
@@ -55,7 +55,7 @@
 				</div>
 				<div class="form-item inline-2">
 					<span class="form-label">重量(g/m2)</span>
-					<input class="form-input form-control" name="weight" value="{{ sku.get('weight') or '' }}"/>
+					<input class="form-input form-control" name="weight" value="{{ sku.get('weight') or '' }}" required/>
 					<span class="form-label">备注</span>
 					<input class="form-input form-control" name="memo" value="{{ sku.get('memo') or '' }}"/>
 				</div>

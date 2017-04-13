@@ -22,6 +22,12 @@
                     {% else %}
                     <li><a href='javascript:void(0)' class="a_disabled">各省销售统计</a></li>
                     {% endif %}
+
+                    {% if current_user.is_authorized('order_manage.region_dealers') %}
+                    <li><a href="{{ url_for('order_manage.region_dealers') }}">各区经销商数量</a></li>
+                    {% else %}
+                    <li><a href='javascript:void(0)' class="a_disabled">各区经销商数量</a></li>
+                    {% endif %}
                 </ul>
             </li>
             <li class="sub-menu {% if active == 'sale' %}active{% endif %}">

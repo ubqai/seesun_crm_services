@@ -22,6 +22,9 @@
 					<p class="light-font-sm">
 						规格 ：{{ sku.get('options') }}
 					</p>
+					<p class="light-font-sm">
+						备注 ：{{ sku.get('memo') or '--' }}
+					</p>
 				</div>
 				<div class="p-input">
 					<input name="product_name_{{ sku.get('sku_id') }}" value="{{ skus.get('name') }}" type="hidden">

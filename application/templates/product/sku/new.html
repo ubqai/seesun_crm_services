@@ -24,6 +24,7 @@
 					<div class="col-3" style="display:table; margin:10px 0px;">
 						<span class="form-label">{{ options[0].get('feature_name') }}</span>
 						<select name="option_ids[]" class="form-input form-control">
+							<option value=""></option>
 							{% for option in options %}
 								<option value="{{ option.get('option_id') }}">{{ option.get('option_name') }}</option>
 							{% endfor %}
@@ -34,7 +35,7 @@
 
 				<div class="form-item inline-2">
 					<span class="form-label">sku代码</span>
-					<input class="form-input form-control" name="code"/>
+					<input class="form-input form-control" name="code" required/>
 					<span class="form-label">名称</span>
 					<input class="form-input form-control" name="name"/>
 				</div>
@@ -46,7 +47,7 @@
 				</div>
 				<div class="form-item inline-2">
 					<span class="form-label">重量(g/m2)</span>
-					<input class="form-input form-control" name="weight"/>
+					<input class="form-input form-control" name="weight" required/>
 					<span class="form-label">备注</span>
 					<input class="form-input form-control" name="memo"/>
 				</div>
