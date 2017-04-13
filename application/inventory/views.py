@@ -5,14 +5,16 @@ from .api import load_categories, create_inventory, load_inventories, update_inv
 from decimal import Decimal
 from application.utils import is_number
 from flask_login import current_user
+from .api import load_all_skus
 
 inventory = Blueprint('inventory', __name__, template_folder='templates')
 
 
 @inventory.route('/', methods=['GET'])
 def index():
-    categories = load_categories()
-    return render_template('inventory/index.html', categories=categories)
+    skus = load_all_skus({'option_ids': []})
+    current_app.logger.info(skus)
+    return render_template('inventory/index.html', skus=skus)
 
 
 @inventory.route('/sku/<int:id>', methods=['GET'])

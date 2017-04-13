@@ -1,4 +1,4 @@
-from wtforms import StringField, PasswordField, validators, TextAreaField
+from wtforms import StringField, PasswordField, validators, TextAreaField, BooleanField
 from ..forms import BaseCsrfForm
 
 
@@ -8,6 +8,7 @@ class AccountLoginForm(BaseCsrfForm):
     password = PasswordField('密码', validators=[
         validators.Length(min=8, max=20, message="字段长度必须大等于8小等于20"),
     ])
+    remember_me = BooleanField('记住我')
 
 
 # WECHAT USER_LOGIN
