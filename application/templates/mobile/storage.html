@@ -22,6 +22,7 @@
 					<div class="product-divider"></div>
 				</a>
                 {% endif %}
+				{{ loop.cycle("","<div class='clearfix'></div>"|safe) }}
 			{% endfor %}
 			<div class="text-right pull-left top-gap-3 col-12">
 				<a class="much-more text-sm btn btn-default" style="font-weight:700"></a>
