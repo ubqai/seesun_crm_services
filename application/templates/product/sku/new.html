@@ -24,6 +24,7 @@
 					<div class="col-3" style="display:table; margin:10px 0px;">
 						<span class="form-label">{{ options[0].get('feature_name') }}</span>
 						<select name="option_ids[]" class="form-input form-control">
+							<option value=""></option>
 							{% for option in options %}
 								<option value="{{ option.get('option_id') }}">{{ option.get('option_name') }}</option>
 							{% endfor %}
