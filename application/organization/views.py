@@ -286,9 +286,8 @@ def regional_manage_leader(sah_id):
         app.logger.info("regional_manage_leader us get count: [%d]" % (us.count()))
         user_infos = {}
         for u in us.all():
-            uasa = UserAndSaleArea.query.filter(UserAndSaleArea.user_id == u.id,
-                                                UserAndSaleArea.parent_id != None).first()
-            if uasa is not None:
+            # 屏蔽 不允许 非负责人
+            if u.is_sale_manage() == "N":
                 continue
 
             choose = 0
@@ -360,10 +359,9 @@ def regional_manage_team(sah_id, leader_id, region_province_id):
         app.logger.info("regional_manage_team us get count: [%d]" % (us.count()))
         user_infos = {}
         for u in us.all():
-            # 排除负责人
-            uasa = UserAndSaleArea.query.filter(UserAndSaleArea.user_id == u.id,
-                                                UserAndSaleArea.parent_id == None).first()
-            if uasa is not None:
+            # 允许 负责人也管理销售区域
+            # 排除 其他区域的负责人
+            if u.is_sale_manage() == "Y" and not u.is_manage_province(sah_id):
                 continue
 
             # 排除其他负责人的团队成员
