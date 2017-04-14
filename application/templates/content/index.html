@@ -12,6 +12,19 @@
 		<a class="new-one" href="{{ url_for('content.new', category_id = category.id) }}" title="新增内容"><span class="glyphicon glyphicon-plus"></span></a>
 	</div>
 	<div class="separator"><span></span></div>
+	<form action="{{ url_for('content.index', category_id=category.id) }}" method="get" role="form" class="form form-horizontal" >
+        <div class="form-style form-default">
+            <div class="form-item-2 col-3">
+                <span>标题名称</span>
+                <input class="form-control" name="name" value="{{ request.args.get('name') or '' }}">
+            </div>
+            <div class="form-item-2 col-3">
+				<button class="btn btn-default my-btn">筛选条件</button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </form>
+	<div class="clearfix"></div>
 	<div class="widget">
 		<div class="widget_header">
 			<h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>
