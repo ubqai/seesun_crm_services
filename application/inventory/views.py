@@ -17,7 +17,7 @@ def index():
     option_ids = [x for x in request.args.getlist('options[]') if x != '']
     current_app.logger.info(option_ids)
     skus = load_all_skus({'option_ids': option_ids, 'page': str(request.args.get('page', 1)),
-                          'page_size': '1'})
+                          'page_size': '20'})
     return render_template('inventory/index.html', skus=skus, sku_features=sku_features, option_ids=option_ids)
 
 
