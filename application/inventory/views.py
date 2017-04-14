@@ -12,10 +12,9 @@ inventory = Blueprint('inventory', __name__, template_folder='templates')
 
 
 @inventory.route('/', methods=['GET'])
-@cache.cached(timeout=500)
 def index():
-    skus = load_all_skus({'option_ids': []})
-    current_app.logger.info(skus)
+    skus = load_all_skus({'option_ids': [], 'page': str(request.args.get('page', 1)),
+                          'page_size': '20'})
     return render_template('inventory/index.html', skus=skus)
 
 

@@ -48,7 +48,7 @@
 							<a class="table-del text-success" href="{{ url_for('product.relate_cases', product_id = product.get('product_id')) }}"><span class="glyphicon glyphicon-link"></span>&nbsp;&nbsp;关联案例</a>
 							<a class="table-edit text-info" href="{{ url_for('product.edit', id = product.get('product_id'), category_id = category.get('category_id') ) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
 							<form action="{{ url_for('product.delete', id = product.get('product_id'), category_id = category.get('category_id')) }}" method="post" style="display: inline;">
-								<button type="submit" data-confirm="Are you sure?" class="btn-link table-del" style="color: #843534; text-decoration: none; "><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</button>
+								<button type="submit" data-confirm="确定删除产品[ {{ product.get('name') }} ]?" data-confirmType="post" class="btn-link table-del" style="color: #843534; text-decoration: none; "><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</button>
 							</form>
 						</td>
 					</tr>
