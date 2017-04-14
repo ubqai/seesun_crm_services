@@ -2,6 +2,7 @@
 from flask import Blueprint, flash, redirect, render_template, url_for, request, current_app
 from ..models import *
 from flask_login import current_user
+from .. import cache
 
 
 project_report = Blueprint('project_report', __name__, template_folder='templates')
@@ -31,6 +32,7 @@ def audit(id):
         db.session.add(pr)
         db.session.commit()
         flash('项目报备申请审核成功', 'success')
+        cache.delete_memoized(current_user.get_other_app_num)
         return redirect(url_for('project_report.index'))
     return render_template('project_report/audit.html', project_report=pr)
 
@@ -42,4 +44,5 @@ def cancel(id):
     db.session.add(pr)
     db.session.commit()
     flash('项目报备申请取消成功', 'success')
+    cache.delete_memoized(current_user.get_other_app_num)
     return redirect(url_for("project_report.index"))

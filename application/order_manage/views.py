@@ -3,7 +3,7 @@ import json
 import base64
 from flask import Blueprint, flash, redirect, render_template, url_for, request, send_file, current_app
 from flask.helpers import make_response
-from .. import app
+from .. import app, cache
 from ..models import *
 from ..helpers import gen_qrcode, gen_random_string
 from .forms import ContractForm, TrackingInfoForm1, TrackingInfoForm2
@@ -170,6 +170,7 @@ def contract_new(id):
                                          },
                                          url_for('mobile_contract_show', id=contract.id)
                                          )
+        cache.delete_memoized(current_user.get_orders_num)
         flash("订单状态修改成功", 'success')
         return redirect(url_for('order_manage.contract_index'))
     return render_template('order_manage/contract_new.html', order=order, params={})

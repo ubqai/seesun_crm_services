@@ -3,7 +3,7 @@ import os
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 from flask_login import current_user
 
-from .. import app, db
+from .. import app, db, cache
 from ..helpers import object_list, save_upload_file, delete_file, clip_image
 from ..models import Content, ContentCategory, ContentClassification, ContentClassificationOption
 from ..models import Material, MaterialApplication, MaterialApplicationContent
@@ -280,6 +280,7 @@ def material_application_edit(id):
                         db.session.add(content)
             db.session.commit()
             flash('审核成功', 'success')
+            cache.delete_memoized(current_user.get_other_app_num)
         else:
             flash('审核失败', 'danger')
         return redirect(url_for('content.material_application_index'))
