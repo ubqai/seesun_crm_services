@@ -6,14 +6,20 @@
 <div class="main-content">
 	{% for content in contents %}
 		<div class="wrapper">
+			<div class="text">
+				<p class="text-title">{{ content.name }}</p>
+			</div>
+		</div>
+		<div class="wrapper">
 			{{ content.description|safe }}
-
+			<!--
 			<div class="top-gap-2">
 				<input class="form-control" placeholder="输入邮箱"/>
 			</div>			
 			<div class="fixed-bot">
 				<a class="orange">一键下载</a>
 			</div>
+			-->
 		</div>
 	{% endfor %}
 </div>

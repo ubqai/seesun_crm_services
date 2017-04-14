@@ -428,6 +428,8 @@ class User(db.Model, Rails):
     email = db.Column(db.String(60), nullable=False, unique=True)
     nickname = db.Column(db.String(200))
     user_or_origin = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     user_infos = db.relationship('UserInfo', backref='user')
     orders = db.relationship('Order', backref='user', lazy='dynamic')
     contracts = db.relationship('Contract', backref='user', lazy='dynamic')
@@ -549,9 +551,7 @@ class User(db.Model, Rails):
     def get_province_sale_areas(self):
         if not self.user_or_origin == 3:
             return []
-        if self.departments.filter_by(level_grade=1).first() is not None:  # 董事长
-            return SalesAreaHierarchy.query.filter_by(level_grade=3).all()
-        elif self.departments.filter_by(name="销售部").first() is not None:  # 销售部员工
+        if self.departments.filter_by(name="销售部").first() is not None:  # 销售部员工
             area = self.sales_areas.first()
             if area is not None:
                 if area.level_grade == 2:  # 销售总监，管理一个大区
@@ -569,8 +569,7 @@ class User(db.Model, Rails):
         users = []
         for province in self.get_province_sale_areas():
             for city in SalesAreaHierarchy.query.filter_by(parent_id=province.id).all():
-                for dealer in city.users.filter_by(user_or_origin='2').all():
-                    users.append(dealer)
+                users.extend([dealer for dealer in city.users.filter_by(user_or_origin='2').all()])
         return users
 
     @property
@@ -581,7 +580,7 @@ class User(db.Model, Rails):
         else:
             return False
 
-    @property
+    @cache.memoize(7200)
     def get_orders_num(self):
         if self.is_sales_department:
             num = Order.query.filter_by(order_status='新订单').filter(
@@ -590,7 +589,7 @@ class User(db.Model, Rails):
         else:
             return 0
 
-    @property
+    @cache.memoize(7200)
     def get_other_app_num(self):
         if self.is_sales_department:
             num1 = MaterialApplication.query.filter_by(status='新申请').filter(

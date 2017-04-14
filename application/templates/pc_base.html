@@ -21,13 +21,13 @@
         {% if current_user.is_authenticated %}
         <ul class="header-notify">
             <li><a class="notify-icon glyphicon glyphicon-envelope">
-                {% if current_user.get_orders_num > 0 %}
-                <span class="notify-badge green">{{ current_user.get_orders_num }}</span>
+                {% if current_user.get_orders_num() > 0 %}
+                <span class="notify-badge green">{{ current_user.get_orders_num() }}</span>
                 {% endif %}
             </a></li>
             <li><a class="notify-icon glyphicon glyphicon-calendar">
-                {% if current_user.get_other_app_num > 0 %}
-                <span class="notify-badge red">{{ current_user.get_other_app_num }}</span>
+                {% if current_user.get_other_app_num() > 0 %}
+                <span class="notify-badge red">{{ current_user.get_other_app_num() }}</span>
                 {% endif %}
             </a></li>
             <span>

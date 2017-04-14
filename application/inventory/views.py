@@ -6,14 +6,17 @@ from decimal import Decimal
 from application.utils import is_number
 from flask_login import current_user
 from .api import load_all_skus
+from .. import cache
 
 inventory = Blueprint('inventory', __name__, template_folder='templates')
 
 
 @inventory.route('/', methods=['GET'])
+@cache.cached(timeout=500)
 def index():
-    skus = load_all_skus({'option_ids': []})
-    current_app.logger.info(skus)
+    skus = load_all_skus({'option_ids': [], 'page': request.args.get('page', 1),
+                          'page_size': request.args.get('page', 20)})
+
     return render_template('inventory/index.html', skus=skus)
 
 
@@ -181,6 +184,7 @@ def audit_share_inventory(id):
         db.session.add(si)
         db.session.commit()
         flash('工程剩余库存申请审核成功', 'success')
+        cache.delete_memoized(current_user.get_other_app_num)
         return redirect(url_for('inventory.share_inventory_list'))
     return render_template('inventory/audit_share_inventory.html', si=si, params={})
 
