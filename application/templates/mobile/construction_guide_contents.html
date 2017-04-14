@@ -5,7 +5,14 @@
 
 <div class="main-content">
 	{% for content in contents %}
-		<div class="wrapper">{{ content.description|safe }}</div>
+		<div class="wrapper">
+			<div class="text">
+				<p class="text-title">{{ content.name }}</p>
+			</div>
+		</div>
+		<div class="wrapper">
+			{{ content.description|safe }}
+		</div>
 	{% endfor %}
 </div>
 

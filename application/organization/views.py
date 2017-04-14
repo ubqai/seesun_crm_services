@@ -89,7 +89,7 @@ def user_new():
 
             u.save
 
-            flash("添加经销商 %s,%s 成功" % (u.email, u.nickname))
+            flash("添加 %s,%s 成功" % (u.email, u.nickname))
             # return render_template('organization/user_new.html', form=form)
             return redirect(url_for('organization.user_index'))
         except Exception as e:
@@ -162,7 +162,7 @@ def user_update(user_id):
 
             u.save
 
-            flash("修改经销商 %s,%s 成功" % (u.email, u.nickname))
+            flash("修改 %s,%s 成功" % (u.email, u.nickname))
             # return render_template('organization/user_update.html', form=form, user_id=u.id)
             return redirect(url_for('organization.user_update', user_id=u.id))
         except ValueError as e:
