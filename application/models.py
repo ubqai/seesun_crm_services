@@ -552,7 +552,7 @@ class User(db.Model, Rails):
         if not self.user_or_origin == 3:
             return []
         if self.departments.filter_by(level_grade=1).first() is not None:  # 董事长
-            return SalesAreaHierarchy.query.filter_by(level_grade=3).all()
+            return []
         elif self.departments.filter_by(name="销售部").first() is not None:  # 销售部员工
             area = self.sales_areas.first()
             if area is not None:
