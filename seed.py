@@ -95,3 +95,8 @@ wd = WebpageDescribe.query.filter_by(endpoint="organization.user_index").first()
 if wd:
     wd.validate_flag = True
     wd.save
+
+SalesAreaHierarchy.query.filter_by(level_grade=2).delete()
+for regional_name in ["华东区", "华中华北区", "华西华南区"]:
+    db.session.add(SalesAreaHierarchy(name=regional_name, level_grade=2))
+db.session.commit()
