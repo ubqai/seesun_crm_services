@@ -54,6 +54,18 @@
 				</tbody>
 			</table>
 		</div>
+        <ul class="pagination">
+            <li>
+                {% if skus.get('has_prev') %}
+                    <a href="{{ url_for('inventory.index', page = int(skus.get('page'))-1 ) }}">上一页</a>
+                {% endif %}
+            </li>
+             <li>
+                {% if skus.get('has_next') %}
+                    <a href="{{ url_for('inventory.index', page = int(skus.get('page'))+1 ) }}">下一页 </a>
+                {% endif %}
+            </li>
+	    </ul>
 	</div>
 </div>
 
