@@ -571,8 +571,7 @@ class User(db.Model, Rails):
         users = []
         for province in self.get_province_sale_areas():
             for city in SalesAreaHierarchy.query.filter_by(parent_id=province.id).all():
-                for dealer in city.users.filter_by(user_or_origin='2').all():
-                    users.append(dealer)
+                users.extend([dealer for dealer in city.users.filter_by(user_or_origin='2').all()])
         return users
 
     @property
