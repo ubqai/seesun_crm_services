@@ -35,8 +35,8 @@
 							<a href="{{ url_for('content.index', category_id = category.id) }}" class="table-edit text-default"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;内容列表</a>
 							<a href="{{ url_for('content.category_show', id = category.id) }}" class="table-del text-success"><span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;目录管理</a>						
 							<a class="table-edit text-info" href="{{ url_for('content.category_edit', id = category.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
-							<form action="{{ url_for('content.category_delete', id = category.id) }}" method="post" style="display: inline;">
-								<button type="submit" data-confirm="确定删除？" data-confirmType="post" class="btn-link table-del" style="color: #843534; text-decoration: none; "><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</button>
+							<form action="{{ url_for('content.category_delete', id=category.id) }}" method="post" style="display: inline;">
+								<button type="submit" data-confirm="删除目录[ {{ category.name }} ]后, 将会一并删除其下的子目录, 确定删除吗？" data-confirmType="post" class="btn-link table-del" style="color: #843534; text-decoration: none; "><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</button>
 							</form>
 						</td>
 					</tr>

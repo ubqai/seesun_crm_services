@@ -94,7 +94,7 @@ def edit(id):
             return redirect(url_for('content.index', category_id=content.category_id))
     else:
         form = ContentForm(obj = content)
-    return render_template('content/edit.html', form=form, content=content, options = options)
+    return render_template('content/edit.html', form=form, content=content, options=options)
 
 
 @content.route('/<int:id>/delete', methods=['POST'])
@@ -103,7 +103,9 @@ def delete(id):
     if request.method == 'POST':
         content.delete
         flash('Content "{name}" has been deleted.'.format(name=content.name), 'success')
-        return redirect(url_for('content.title_index'))
+        if request.args.get('back_url'):
+            return redirect(request.args.get('back_url'))
+        return redirect(url_for('content.category_index'))
 
 
 # url -- /content/category/..
