@@ -551,9 +551,7 @@ class User(db.Model, Rails):
     def get_province_sale_areas(self):
         if not self.user_or_origin == 3:
             return []
-        if self.departments.filter_by(level_grade=1).first() is not None:  # 董事长
-            return []
-        elif self.departments.filter_by(name="销售部").first() is not None:  # 销售部员工
+        if self.departments.filter_by(name="销售部").first() is not None:  # 销售部员工
             area = self.sales_areas.first()
             if area is not None:
                 if area.level_grade == 2:  # 销售总监，管理一个大区
