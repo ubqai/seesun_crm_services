@@ -40,7 +40,7 @@
 						<td>
 							<a class="table-edit text-info" href="{{ url_for('content.option_edit', id = option.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
 							<form action="{{ url_for('content.option_delete', id = option.id) }}" method="post" style="display: inline;">
-								<button type="submit" data-confirm="Are you sure?" class="btn-link table-del" style="color: #843534; text-decoration: none; "><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</button>
+								<button type="submit" data-confirm="确定删除[ {{ option.name }} ]?" data-confirmType="post" class="btn-link table-del" style="color: #843534; text-decoration: none; "><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</button>
 							</form>
 						</td>
 					</tr>								

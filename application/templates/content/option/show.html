@@ -36,7 +36,9 @@
 						<td>{{ content.created_at.strftime('%F %T') }}</td>
 						<td>
 							<a class="table-edit text-info" href="{{ url_for('content.edit', id = content.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
-							<a class="table-del text-danger"><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</a>
+							<form action="{{ url_for('content.delete', id=content.id, back_url=request.path) }}" method="post" style="display: inline;">
+								<button type="submit" data-confirm="确定删除[ {{ content.name }} ]？" data-confirmType="post" class="btn-link table-del" style="color: #843534; text-decoration: none; "><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;删除</button>
+							</form>
 						</td>
 					</tr>								
 				{% endfor %}
