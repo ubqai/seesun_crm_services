@@ -428,6 +428,8 @@ class User(db.Model, Rails):
     email = db.Column(db.String(60), nullable=False, unique=True)
     nickname = db.Column(db.String(200))
     user_or_origin = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     user_infos = db.relationship('UserInfo', backref='user')
     orders = db.relationship('Order', backref='user', lazy='dynamic')
     contracts = db.relationship('Contract', backref='user', lazy='dynamic')

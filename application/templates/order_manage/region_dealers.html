@@ -18,9 +18,6 @@
 
 	<script>
 
-		function randomNum(){
-			return parseInt(Math.random()*40000+10000)
-		}
 		(function(){
 				var chart = echarts.init(document.getElementById('chart-line'), 'macarons');
 				option = {
@@ -39,7 +36,7 @@
 					legend: {
 							x: '4%',
 							top: '13%',
-							data: ['华东区','华南区','华中区'],
+							data: {{ regions|safe }},
 					},
 					grid: {
 							left: '4%',
@@ -49,7 +46,7 @@
 					},
 					xAxis: {
 							type: 'category',
-							data: ['2016年12月','2017年1月','2017年2月','2017年3月','2017年4月'],
+							data: {{ months|safe }},
 							axisLine:{
 								lineStyle:{
 									color:"#50979c",
@@ -93,44 +90,7 @@
                 handleSize: 30
             }
 					],
-					series: [
-							{
-									name: '华东区',
-									type: 'line',
-									data: [randomNum(), randomNum(), randomNum(), randomNum(),randomNum()],
-									symbolSize: 5,
-									label:{
-										normal:{
-											show:false
-										}
-									},
-									smooth:false
-							},
-							{
-									name: '华南区',
-									type: 'line',
-									data: [randomNum(), randomNum(), randomNum(), randomNum(),randomNum()],
-									symbolSize: 5,
-									label:{
-										normal:{
-											show:false
-										}
-									},
-									smooth:false
-							},
-							{
-									name: '华中区',
-									type: 'line',
-									data: [randomNum(), randomNum(), randomNum(), randomNum(),randomNum()],
-									symbolSize: 5,
-									label:{
-										normal:{
-											show:false
-										}
-									},
-									smooth:false
-							}
-					]
+					series: {{ datas|safe }}
 				};
 				chart.setOption(option);
 		})();

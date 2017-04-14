@@ -12,6 +12,7 @@ from application.utils import is_number
 from decimal import Decimal
 from flask_login import current_user
 from ..wechat.models import WechatCall
+from ..utils import add_months
 
 order_manage = Blueprint('order_manage', __name__, template_folder='templates')
 
@@ -509,11 +510,55 @@ def dealer_index():
 @order_manage.route('/region_dealers')
 def region_dealers():
     percentage = []
+    regions = []
+    datas = []
+    months = [add_months(datetime.datetime.utcnow(), -4).strftime("%Y年%m月"),
+              add_months(datetime.datetime.utcnow(), -3).strftime("%Y年%m月"),
+              add_months(datetime.datetime.utcnow(), -2).strftime("%Y年%m月"),
+              add_months(datetime.datetime.utcnow(), -1).strftime("%Y年%m月"),
+              add_months(datetime.datetime.utcnow(), 0).strftime("%Y年%m月")]
     for region in SalesAreaHierarchy.query.filter_by(level_grade=2):
         count = float('0')
+        month1 = float('0')
+        month2 = float('0')
+        month3 = float('0')
+        month4 = float('0')
+        month5 = float('0')
+        regions.append(region.name)
         for area in SalesAreaHierarchy.query.filter_by(parent_id=region.id).all():
             for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
                 count += sarea.users.filter_by(user_or_origin='2').count()
+                month1 += sarea.users.filter_by(user_or_origin='2').filter(
+                    User.created_at.between("2017-01-01",
+                                            add_months(datetime.datetime.utcnow(), -4))).count()
+                month2 += sarea.users.filter_by(user_or_origin='2').filter(
+                    User.created_at.between("2017-01-01",
+                                            add_months(datetime.datetime.utcnow(), -3))).count()
+                month3 += sarea.users.filter_by(user_or_origin='2').filter(
+                    User.created_at.between("2017-01-01",
+                                            add_months(datetime.datetime.utcnow(), -2))).count()
+                month4 += sarea.users.filter_by(user_or_origin='2').filter(
+                    User.created_at.between("2017-01-01",
+                                            add_months(datetime.datetime.utcnow(), -1))).count()
+                month5 += sarea.users.filter_by(user_or_origin='2').filter(
+                    User.created_at.between("2017-01-01",
+                                            add_months(datetime.datetime.utcnow(), 0))).count()
+        # datas.append({'name': region.name, 'data': [month1, month2, month3, month4, month5]})
+        datas.append(
+            {
+                'name': region.name,
+                'type': 'line',
+                'data': [month1, month2, month3, month4, month5],
+                'symbolSize': 5,
+                'label': {
+                    'normal': {
+                        'show': False
+                    }
+                },
+                'smooth': False
+            }
+        )
         percentage.append({'value': count, 'name': region.name})
-    return render_template('order_manage/region_dealers.html', percentage=percentage)
+    return render_template('order_manage/region_dealers.html', percentage=percentage,
+                           regions=regions, datas=datas, months=months)
 
