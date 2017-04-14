@@ -29,7 +29,7 @@
 				</thead>
 				<tbody>
 				
-				{% for sku in skus %}
+				{% for sku in skus.get('skus') %}
                     <tr>
                         <td>{{ sku.get('category_info').get('category_name') }}</td>
                         <td>{{ sku.get('product_info').get('name') }}</td>
