@@ -552,10 +552,10 @@ def region_dealers():
                 'symbolSize': 5,
                 'label': {
                     'normal': {
-                        'show': False
+                        'show': 'false'
                     }
                 },
-                'smooth': False
+                'smooth': 'false'
             }
         )
         percentage.append({'value': count, 'name': region.name})

@@ -548,6 +548,7 @@ class User(db.Model, Rails):
     def get_all_roles(cls):
         return [(d.id, d.name) for d in DepartmentHierarchy.query.order_by(DepartmentHierarchy.id.asc()).all()]
 
+    @cache.memoize(7200)
     def get_province_sale_areas(self):
         if not self.user_or_origin == 3:
             return []
@@ -567,6 +568,7 @@ class User(db.Model, Rails):
         else:
             return []
 
+    @cache.memoize(7200)
     def get_subordinate_dealers(self):
         users = []
         for province in self.get_province_sale_areas():
@@ -575,6 +577,7 @@ class User(db.Model, Rails):
                     users.append(dealer)
         return users
 
+    @cache.memoize(7200)
     @property
     def is_sales_department(self):
         sales_department = DepartmentHierarchy.query.filter_by(name='销售部').first()
@@ -583,6 +586,7 @@ class User(db.Model, Rails):
         else:
             return False
 
+    @cache.memoize(7200)
     @property
     def get_orders_num(self):
         if self.is_sales_department:
@@ -592,6 +596,7 @@ class User(db.Model, Rails):
         else:
             return 0
 
+    @cache.memoize(7200)
     @property
     def get_other_app_num(self):
         if self.is_sales_department:
