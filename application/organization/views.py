@@ -147,6 +147,10 @@ def user_update(user_id):
                 dh_array = [dh_data.id for dh_data in form.dept_ranges.data]
                 if sorted([i.id for i in u.departments]) != sorted(dh_array):
                     for d in u.departments:
+                        # 判断是否存在 管理的销售区域,不允许修改掉
+                        if d.name == "销售部" and d not in form.dept_ranges.data:
+                            if u.sales_areas.first():
+                                raise ValueError("此用户尚有管理的销售地区,请在'组织架构及权限组模块'中先行删除")
                         u.departments.remove(d)
                     # for d_id in dh_array:
                     # u.departments.append(DepartmentHierarchy.query.filter_by(id=d_id).first())
