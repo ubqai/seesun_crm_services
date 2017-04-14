@@ -127,3 +127,9 @@ $(function(){
 		$(this).toggleClass("border-none");
 	});
 })
+
+$(function(){
+	$(".much-more").click(function(){
+		$(this).parent().parent().find(".over-p").toggleClass("hidden");
+	})
+})

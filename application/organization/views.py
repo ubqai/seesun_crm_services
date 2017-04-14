@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for, session
 
-from .. import app, db
+from .. import app, db, cache
 from ..models import UserAndSaleArea, User, UserInfo, DepartmentHierarchy, SalesAreaHierarchy, AuthorityOperation, \
     WebpageDescribe
 
@@ -63,7 +63,7 @@ def user_new():
                 app.logger.info("form valid fail: [%s]" % form.errors)
                 raise ValueError(form.errors)
 
-            if User.query.filter_by(email=form.email.data).count() > 0:
+            if User.query.filter_by(email=form.email.data).first():
                 raise ValueError("邮箱[%s]已被注册,请更换!" % form.email.data)
 
             ui = UserInfo(name=form.name.data, telephone=form.phone.data, address=form.address.data,
@@ -151,6 +151,8 @@ def user_update(user_id):
                     # for d_id in dh_array:
                     # u.departments.append(DepartmentHierarchy.query.filter_by(id=d_id).first())
                     u.departments.extend(form.dept_ranges.data)
+                    cache.delete_memoized(u.is_authorized)
+                    app.logger.info("delete user.is_authorized cache")
             else:
                 if u.sales_areas.count() == 0 or u.sales_areas.first().id != form.sale_range.data.id:
                     if not u.sales_areas.count() == 0:

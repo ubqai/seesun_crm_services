@@ -18,10 +18,10 @@
 					{{ form.password(class="form-input form-control",placeholder="请输入密码") }}
 				</div>
 				<p class="forgot"><a id="iforget" href="javascript:void(0);">忘记密码?</a></p>
-				<!--<div class="rem_me">-->
-					<!--<input type="checkbox" name="checkbox" id="save_me">-->
-					<!--<label for="checkbox">记住我</label>-->
-				<!--</div>-->
+				<div class="rem_me">
+					<input type="checkbox" name="remember_me" id="save_me">
+					<label for="checkbox">{{form.remember_me.label}}</label>
+				</div>
 				<input type="submit" name="button" id="button" value="登入" style="opacity: 0.7;">
 			</div>
 		</div>

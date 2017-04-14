@@ -6,7 +6,7 @@
 <div class="main-content">
 	<div class="nav-tab clearfix">
 	{% for category in categories %}
-		<a id="category_{{ category.get('category_id') }}">{{ category.get('category_name') }}</a>
+		<a id="category_{{ category.get('category_id') }}" href="#p_category_{{ category.get('category_id') }}" >{{ category.get('category_name') }}</a>
 	{% endfor %}
 	</div>
 	<div class="module-1">
@@ -19,7 +19,8 @@
 					<img class="full-img" src="{{ product.get('images')[0] or '/static/images/alt.jpg' }}">
 					<p class="text-center">{{ product.get('name') }}</p>
 					<div class="product-divider"></div>
-				</a>		
+				</a>
+				{{ loop.cycle("","<div class='clearfix'></div>"|safe) }}				
 			{% endfor %}
 		</div>
 		<div class="clearfix"></div>
