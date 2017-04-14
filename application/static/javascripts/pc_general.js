@@ -212,3 +212,71 @@ $(function(){
 	})
 })
 
+//删除确认
+function str2asc(string){
+	var num="";
+	while(string.length!=0){
+		num=num+string.charCodeAt(0);
+		string=string.substr(1);
+	}
+	return num;
+}
+$(function(){
+	$("button[data-confirm],a[data-confirm]").click(function(e){
+		e.preventDefault();
+		var type=$(this).data("confirmtype");
+		
+		if(type=="get"){
+			var href=$(this).attr("href");
+		}else if(type=="post"){
+			var href=$(this).parent("form").attr("action");
+		}
+			
+		var msg=$(this).data("confirm");
+		var id=str2asc(href);
+		if($("#"+id).length<=0){
+			
+			if(type=="get"){
+				var modal=$(
+					"<div id=modal"+id+" class='modal' >"+
+						"<div class='modal-dialog'>"+
+							"<div class='modal-content'>"+
+								"<div class='modal-body'>"+
+									msg+
+								"</div>"+
+								"<div class='modal-footer'>"+
+									"<a href="+href+" class='btn btn-default'>删除"+
+									"</a>"+
+									"<button type='button' class='btn btn-default' data-dismiss='modal'>关闭</button>"+
+								"</div>"+
+							"</div>"+
+						"</div>"+
+					"</div>"
+				);			
+			}else if(type=="post"){
+				var modal=$(
+					"<div id=modal"+id+" class='modal' >"+
+						"<form action="+href+" method='post'>"+
+							"<div class='modal-dialog'>"+
+								"<div class='modal-content'>"+
+									"<div class='modal-body'>"+
+										msg+
+									"</div>"+
+									"<div class='modal-footer'>"+
+										"<button type='submit' class='btn btn-default'>删除"+
+										"</button>"+
+										"<button type='button' class='btn btn-default' data-dismiss='modal'>关闭</button>"+
+									"</div>"+
+								"</div>"+
+							"</div>"+
+						"</form>"+
+					"</div>"
+				);	
+			}
+
+			$("body").append(modal);
+		}
+		$("#modal"+id).modal('show');
+	})
+})
+
