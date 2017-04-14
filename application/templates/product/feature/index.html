@@ -38,7 +38,7 @@
 								{% if feature.get('is_used') == True %}
 									<a class="glyphicon glyphicon-remove-circle" style="color: #aaa;"></a>
 								{% else %}
-									<a class="text-danger glyphicon glyphicon-remove-circle" href="{{ url_for('product.feature_delete', id=feature.get('feature_id')) }}"></a>
+									<a class="text-danger glyphicon glyphicon-remove-circle" data-confirm="确定删除[ {{ feature.get('feature_name') }} ]？" data-confirmType="get" href="{{ url_for('product.feature_delete', id=feature.get('feature_id')) }}"></a>
 								{% endif %}
 							</span>
 						</td>
@@ -50,7 +50,7 @@
 									{% if option.get('is_used') == True %}
 										<a class="text-muted glyphicon glyphicon-remove-circle"  style="color: #aaa;"></a>
 									{% else %}
-										<a class="text-danger glyphicon glyphicon-remove-circle" data-confirm="确定删除？" data-confirmType="get" href="{{ url_for('product.option_delete', id=option.get('option_id')) }}"></a>
+										<a class="text-danger glyphicon glyphicon-remove-circle" data-confirm="确定删除[ {{ option.get('option_name') }} ]？" data-confirmType="get" href="{{ url_for('product.option_delete', id=option.get('option_id')) }}"></a>
 									{% endif %}
 								</span>				
 							{% endfor %}

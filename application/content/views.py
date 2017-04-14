@@ -22,8 +22,11 @@ def root():
 @content.route('/index/<int:category_id>/')
 def index(category_id):
     category = ContentCategory.query.get_or_404(category_id)
-    contents = Content.query.filter(Content.category_id == category_id).order_by(Content.created_at.desc())
-    return object_list('content/index.html', contents, paginate_by=30, category=category)
+    query = Content.query.filter(Content.category_id == category_id)
+    if request.args.get('name'):
+        query = query.filter(Content.name.contains(request.args.get('name')))
+    contents = query.order_by(Content.created_at.desc())
+    return object_list('content/index.html', contents, paginate_by=20, category=category)
 
 
 @content.route('/new/<int:category_id>', methods=['GET', 'POST'])
@@ -94,7 +97,7 @@ def edit(id):
             return redirect(url_for('content.index', category_id=content.category_id))
     else:
         form = ContentForm(obj = content)
-    return render_template('content/edit.html', form=form, content=content, options = options)
+    return render_template('content/edit.html', form=form, content=content, options=options)
 
 
 @content.route('/<int:id>/delete', methods=['POST'])
@@ -103,7 +106,9 @@ def delete(id):
     if request.method == 'POST':
         content.delete
         flash('Content "{name}" has been deleted.'.format(name=content.name), 'success')
-        return redirect(url_for('content.title_index'))
+        if request.args.get('back_url'):
+            return redirect(request.args.get('back_url'))
+        return redirect(url_for('content.category_index'))
 
 
 # url -- /content/category/..
