@@ -112,3 +112,9 @@ def load_skufeatures():
         return response.json()
     else:
         return []
+
+
+def load_users_inventories(data={}):
+    url = '%s/%s/sku/users_inventories' % (site, version)
+    response = requests.post(url, json=data, headers=headers)
+    return response.json()
