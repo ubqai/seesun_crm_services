@@ -4,64 +4,33 @@
 {{ header('共享库存列表') }}
 
 <div class="main-content">
-    {% for user in users %}
-	<div class="wrapper">
-		{% for category in categories %}
-				{% with products_json = load_products(category.get('category_id')) %}
-						{% if len(products_json) > 0 %}
-								{% for product_json in products_json %}
-                                    {% if not product_json.get('isvalid') == "NO" %}
-										{% with skus_json = load_skus(product_json.get('product_id')) %}
-												{% if len(skus_json.get('skus')) > 0 %}
-														{% for sku in skus_json.get('skus') %}
-                                                            {% if not sku.get('isvalid') == "NO" %}
-																{% with invs = load_user_inventories(user.id,sku.get('sku_id'), "2") %}
-																		{% for inv in invs %}
-																				{% for batch in inv.get('batches') %}
-																					<div class="wrapper-style rect top-gap-2">
-																						<div class="wrapper-header"><span class="wrapper-header-title">{{ category.get('category_name') }}</span><span class="wrapper-header-icon glyphicon glyphicon-globe pull-right"></span></div>
-																						<div class="wrapper-inner clearfix">
-																							<div class="wrapper-inner-content full clearfix">
-																								<div class="wrapper-row">
-																									<p class="set-1">产品-sku :
-																										<span class="text-dark inline-display">
-																											{{ product_json.get('name') }}：
-																											{% for option in sku.get('options') %}
-																													{% for key, value in option.items() %}
-																															{{ value }}
-																													{% endfor %}
-																											{% endfor %}
-																										</span>
-																									</p>	
-																								</div>
-																								<div class="wrapper-row">
-																									<p class="set-2">经销商 :<span class="text-dark inline-display">{{ inv.get('user_name') }}</span></p>
-																									<p class="set-2">创建日期 :<span class="text-dark inline-display">{{ batch.get('created_at') }}</span></p>
-																								</div>
-																								<div class="wrapper-row">
-																									<p class="set-2">生产日期 :<span class="text-dark inline-display">{{ batch.get('production_date') }}</span></p>
-																									<p class="set-2">批次号 :<span class="text-dark inline-display">{{ batch.get('batch_no') }}</span></p>
-																								</div>
-																								<div class="wrapper-row">
-                                                                                                    <p class="set-2">库存代码 :<span class="text-dark inline-display"> {{ sku.get('code') }}</span></p>
-																									<p class="set-2">库存量 :<span class="text-dark inline-display"> {{ batch.get('stocks') }}</span></p>
-																								</div>
-																							</div>
-																						</div>
-																					</div>
-																			{% endfor %}
-																		{% endfor %}
-																{% endwith %}
-                                                            {% endif %}
-														{% endfor %}
-												{% endif %}
-										{% endwith %}
-                                    {% endif %}
-								{% endfor %}
-						{% endif %}
-				{% endwith %}
-		{% endfor %}
-	</div>
+    {% for batch in batch_infos %}
+        <div class="wrapper-style rect top-gap-2">
+            <div class="wrapper-header"><span class="wrapper-header-title">{{ batch.get('category_name') }}</span><span class="wrapper-header-icon glyphicon glyphicon-globe pull-right"></span></div>
+            <div class="wrapper-inner clearfix">
+                <div class="wrapper-inner-content full clearfix">
+                    <div class="wrapper-row">
+                        <p class="set-1">产品-sku :
+                            <span class="text-dark inline-display">
+                                {{ batch.get('product_name') }}
+                            </span>
+                        </p>
+                    </div>
+                    <div class="wrapper-row">
+                        <p class="set-2">经销商 :<span class="text-dark inline-display">{{ batch.get('user') }}</span></p>
+                        <p class="set-2">创建日期 :<span class="text-dark inline-display">{{ batch.get('created_at') }}</span></p>
+                    </div>
+                    <div class="wrapper-row">
+                        <p class="set-2">生产日期 :<span class="text-dark inline-display">{{ batch.get('production_date') }}</span></p>
+                        <p class="set-2">批次号 :<span class="text-dark inline-display">{{ batch.get('batch_no') }}</span></p>
+                    </div>
+                    <div class="wrapper-row">
+                        <p class="set-2">库存代码 :<span class="text-dark inline-display"> {{ batch.get('sku_code') }}</span></p>
+                        <p class="set-2">库存量 :<span class="text-dark inline-display"> {{ batch.get('stocks') }}</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endfor %}
 </div>
 
