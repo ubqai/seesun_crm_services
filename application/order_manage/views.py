@@ -489,7 +489,7 @@ def team_profit():
                     for user in sarea.users.all():
                         for contract in Contract.query.filter_by(user_id=user.id, payment_status='已付款').all():
                             amount += float(contract.contract_content.get('amount', '0'))
-                total_amount.append(amount)
+            total_amount.append(amount)
     return render_template('order_manage/team_profit.html', teams=teams, total_amount=total_amount)
 
 
