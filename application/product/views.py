@@ -104,7 +104,7 @@ def edit(id):
     _product = load_product(id)
     category = load_category(category_id)
     features = load_features()
-    option_ids = [x.get('option_id') for x in _product.get('options')]
+    option_ids = [x.get('option_id') for x in load_product_options(_product.get('product_id')).get('options')]
     if request.method == 'POST':
         option_ids = request.form.getlist('option_ids[]')
         product_image_links = _product.get('images') or []
@@ -157,9 +157,9 @@ def delete(id):
 @product.route('/sku/index/<int:product_id>')
 def sku_index(product_id):
     skus = load_skus(product_id)
-    _product = load_product(product_id)
+    # _product = load_product(product_id)
     features = load_features()
-    option_ids = [x.get('option_id') for x in _product.get('options')]
+    option_ids = [x.get('option_id') for x in load_product_options(product_id).get('options')]
     return render_template('product/sku/index.html', skus=skus, product_id=product_id,
                            features=features, option_ids=option_ids)
 

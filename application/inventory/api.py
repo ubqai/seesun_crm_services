@@ -103,3 +103,18 @@ def load_all_skus(data={}):
     url = '%s/%s/product_skus/search' % (site, version)
     response = requests.post(url, json=data, headers=headers)
     return response.json()   # 200
+
+
+def load_skufeatures():
+    url = '%s/%s/sku_features' % (site, version)
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return []
+
+
+def load_users_inventories(data={}):
+    url = '%s/%s/sku/users_inventories' % (site, version)
+    response = requests.post(url, json=data, headers=headers)
+    return response.json()
