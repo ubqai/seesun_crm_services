@@ -519,6 +519,7 @@ def authority_to_role(webpage_id):
                 db.session.add(ao)
 
             db.session.commit()
+            cache.delete_memoized(User.is_authorized)
             flash("授权成功")
             return redirect(url_for('organization.authority_index'))
         except Exception as e:
