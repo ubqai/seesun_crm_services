@@ -62,6 +62,7 @@ app.add_template_global(load_user_inventories)
 app.add_template_global(load_inventories_by_code)
 app.add_template_global(len)
 app.add_template_global(int)
+app.add_template_global(str)
 app.add_template_global(num2moneyformat)
 
 

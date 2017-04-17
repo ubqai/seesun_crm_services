@@ -494,35 +494,6 @@ class User(db.Model, Rails):
     def password(self, value):
         self.password_hash = bcrypt.generate_password_hash(value).decode('utf-8')
 
-    # 根据emal+密码获取用户实例
-    @classmethod
-    def login_verification(cls, email, password, user_or_origin):
-        user = User.query.filter(User.email == email, User.user_or_origin == user_or_origin).first()
-        if user is not None:
-            if not bcrypt.check_password_hash(user.password, password):
-                user = None
-
-        return user
-
-    # 验证并修改用户密码
-    @classmethod
-    def update_password(cls, email, password_now, password_new, password_new_confirm, user_or_origin):
-        user = User.login_verification(email, password_now, user_or_origin)
-
-        if user is None:
-            raise ValueError("密码错误")
-
-        if password_now == password_new:
-            raise ValueError("新旧密码不可相同")
-
-        if password_new != password_new_confirm:
-            raise ValueError("新密码两次输入不匹配")
-        if len(password_new) < 8 or len(password_new) > 20:
-            raise ValueError("密码长度必须大等于8小等于20")
-
-        user.password = password_new
-        user.save
-
     # 获取用户的最大部门等级
     def get_max_level_grade(self):
         max_level_grade = 99
@@ -542,11 +513,6 @@ class User(db.Model, Rails):
     # 获取用户所属role -- 暂使用所属部门代替
     def get_roles(self):
         return [(d.id, d.name) for d in self.departments.order_by(DepartmentHierarchy.id.asc()).all()]
-
-    # 获取所有role -- 暂使用所属部门代替
-    @classmethod
-    def get_all_roles(cls):
-        return [(d.id, d.name) for d in DepartmentHierarchy.query.order_by(DepartmentHierarchy.id.asc()).all()]
 
     def get_province_sale_areas(self):
         if not self.user_or_origin == 3:
@@ -601,6 +567,67 @@ class User(db.Model, Rails):
             return num1 + num2 + num3
         else:
             return 0
+
+    # 是否为销售总监
+    # Y - 是 ； N - 否 ; U - 未知
+    def is_sale_manage(self):
+        # 存在已有的销售记录
+        if self.get_sale_manage_provinces():
+            return "Y"
+        # 什么记录都没
+        if self.user_or_origin == 3 and self.departments.filter_by(
+                name="销售部").first() is not None and self.sales_areas.first() is None:
+            return "U"
+
+        return "N"
+
+    # 获取销售总监所管理的大区
+    def get_sale_manage_provinces(self):
+        if not self.user_or_origin == 3:
+            return []
+        if self.departments.filter_by(name="销售部").first() is None:
+            return []
+
+        return [uasa.sales_area_id for uasa in UserAndSaleArea.query.filter(UserAndSaleArea.user_id == self.id,
+                                                                            UserAndSaleArea.parent_id == None).all()]
+
+    # 是否管理某一大区
+    def is_manage_province(self, sale_area_id):
+        return sale_area_id in self.get_sale_manage_provinces()
+
+    # 根据emal+密码获取用户实例
+    @classmethod
+    def login_verification(cls, email, password, user_or_origin):
+        user = User.query.filter(User.email == email, User.user_or_origin == user_or_origin).first()
+        if user is not None:
+            if not bcrypt.check_password_hash(user.password, password):
+                user = None
+
+        return user
+
+    # 验证并修改用户密码
+    @classmethod
+    def update_password(cls, email, password_now, password_new, password_new_confirm, user_or_origin):
+        user = User.login_verification(email, password_now, user_or_origin)
+
+        if user is None:
+            raise ValueError("密码错误")
+
+        if password_now == password_new:
+            raise ValueError("新旧密码不可相同")
+
+        if password_new != password_new_confirm:
+            raise ValueError("新密码两次输入不匹配")
+        if len(password_new) < 8 or len(password_new) > 20:
+            raise ValueError("密码长度必须大等于8小等于20")
+
+        user.password = password_new
+        user.save
+
+    # 获取所有role -- 暂使用所属部门代替
+    @classmethod
+    def get_all_roles(cls):
+        return [(d.id, d.name) for d in DepartmentHierarchy.query.order_by(DepartmentHierarchy.id.asc()).all()]
 
 
 class UserInfo(db.Model):

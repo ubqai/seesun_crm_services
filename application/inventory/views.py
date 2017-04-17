@@ -5,7 +5,7 @@ from .api import load_categories, create_inventory, load_inventories, update_inv
 from decimal import Decimal
 from application.utils import is_number
 from flask_login import current_user
-from .api import load_all_skus
+from .api import load_all_skus, load_skufeatures
 from .. import cache
 
 inventory = Blueprint('inventory', __name__, template_folder='templates')
@@ -13,9 +13,12 @@ inventory = Blueprint('inventory', __name__, template_folder='templates')
 
 @inventory.route('/', methods=['GET'])
 def index():
-    skus = load_all_skus({'option_ids': [], 'page': str(request.args.get('page', 1)),
-                          'page_size': '20'})
-    return render_template('inventory/index.html', skus=skus)
+    sku_features = load_skufeatures()
+    option_ids = [x for x in request.args.getlist('options[]') if x != '']
+    current_app.logger.info(option_ids)
+    skus = load_all_skus({'option_ids': option_ids, 'page': str(request.args.get('page', 1)),
+                          'page_size': '50'})
+    return render_template('inventory/index.html', skus=skus, sku_features=sku_features, option_ids=option_ids)
 
 
 @inventory.route('/sku/<int:id>', methods=['GET'])

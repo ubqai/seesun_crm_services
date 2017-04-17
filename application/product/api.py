@@ -22,7 +22,7 @@ def load_product(product_id, option_sorted=False):
     if response.status_code == 200:
         product = response.json()
         if option_sorted:
-            options = product.get('options')
+            options = load_product_options(product.get('product_id')).get('options')
             feature_list = []
             for option in options:
                 if not option.get('feature_name') in feature_list:
@@ -189,3 +189,12 @@ def delete_option(option_id):
     url = '%s/%s/sku_option/%s' % (site, version, option_id)
     response = requests.delete(url)
     return response
+
+
+def load_product_options(product_id):
+    url = '%s/%s/product/%s/options' % (site, version, product_id)
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return []
