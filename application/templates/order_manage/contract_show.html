@@ -58,30 +58,27 @@
             <div class="form-item inline-2">
                 <span class="form-label">物流费用</span>
                 <input class="form-input form-control" value="{{ contract.contract_content.get('logistics_costs') }}" disabled/>
-                <span class="form-label">原料损耗费用</span>
-                <input class="form-input form-control" value="{{ contract.contract_content.get('material_loss') }}" disabled/>
-                <span class="form-label">原料耗损百分比</span>
-                <input class="form-input form-control" value="{{ contract.contract_content.get('material_loss_percent') }}%" disabled/>
-            </div>
-            <div class="form-item inline-2">
                 <span class="form-label">活铺费用</span>
                 <input class="form-input form-control" value="{{ contract.contract_content.get('live_floor_costs') }}" disabled/>
                 <span class="form-label">自流平费用</span>
                 <input class="form-input form-control" value="{{ contract.contract_content.get('self_leveling_costs') }}" disabled/>
-                <span class="form-label">划线费用</span>
-                <input class="form-input form-control" value="{{ contract.contract_content.get('crossed_line_costs') }}" disabled/>
             </div>
             <div class="form-item inline-2">
+
+                <span class="form-label">划线费用</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('crossed_line_costs') }}" disabled/>
                 <span class="form-label">点粘费用</span>
                 <input class="form-input form-control" value="{{ contract.contract_content.get('sticky_costs') }}" disabled/>
                 <span class="form-label">全胶粘费用</span>
                 <input class="form-input form-control" value="{{ contract.contract_content.get('full_adhesive_costs') }}" disabled/>
-                <span class="form-label">其他费用</span>
-                <input class="form-input form-control" value="{{ contract.contract_content.get('other_costs') }}" disabled/>
             </div>
             <div class="form-item inline-2">
+                <span class="form-label">其他费用</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('other_costs') }}" disabled/>
                 <span class="form-label">税点</span>
                 <input class="form-input form-control" value="{{ contract.contract_content.get('tax_costs') }}" disabled/>
+								<span class="form-label">税费</span>
+                <input class="form-input form-control" value="{{ contract.contract_content.get('tax_price') }}" disabled/>
             </div>
         </div>
         <div class="widget_contents padding-0">
@@ -150,6 +147,10 @@
                         </tr>
                     {% endif %}
                     {% endfor %}
+										<tr>
+												<td colspan="4">原料耗损百分比 ： {{ contract.contract_content.get('material_loss_percent') }}%</a></td>
+												<td colspan="4">原料耗损费用 ： {{ contract.contract_content.get('material_loss') }}</td>
+										</tr>
                 </tbody>
             </table>
         </div>

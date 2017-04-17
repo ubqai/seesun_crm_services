@@ -14,19 +14,19 @@
                     {% if current_user.is_authorized('order_manage.dealer_index') %}
                     <li><a href="{{ url_for('order_manage.dealer_index') }}">各省经销商销售统计</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">各省经销商销售统计</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>各省经销商销售统计</a></li>
                     {% endif %}
 
                     {% if current_user.is_authorized('order_manage.region_profit') %}
                     <li><a href="{{ url_for('order_manage.region_profit') }}">各省销售统计</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">各省销售统计</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>各省销售统计</a></li>
                     {% endif %}
 
                     {% if current_user.is_authorized('order_manage.region_dealers') %}
                     <li><a href="{{ url_for('order_manage.region_dealers') }}">各区经销商数量</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">各区经销商数量</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>各区经销商数量</a></li>
                     {% endif %}
                 </ul>
             </li>
@@ -36,13 +36,13 @@
                     {% if current_user.is_authorized('order_manage.order_index') %}
                     <li><a href="{{ url_for('order_manage.order_index') }}">订单列表</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">订单列表</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>订单列表</a></li>
                     {% endif %}
 
                     {% if current_user.is_authorized('order_manage.contract_index') %}
                     <li><a href="{{ url_for('order_manage.contract_index') }}">合同列表</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">合同列表</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>合同列表</a></li>
                     {% endif %}
 
                     <li class="{% if work_stream == 'true' %}active{% endif %}">
@@ -51,19 +51,19 @@
                             {% if current_user.is_authorized('content.material_application_index') %}
                             <li><a href="{{ url_for('content.material_application_index') }}">物料申请</a></li>
                             {% else %}
-                            <li><a href='javascript:void(0)' class="a_disabled">物料申请</a></li>
+                            <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>物料申请</a></li>
                             {% endif %}
 
                             {% if current_user.is_authorized('project_report.index') %}
                             <li><a href="{{ url_for('project_report.index') }}">项目报备申请</a></li>
                             {% else %}
-                            <li><a href='javascript:void(0)' class="a_disabled">项目报备申请</a></li>
+                            <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>项目报备申请</a></li>
                             {% endif %}
 
                             {% if current_user.is_authorized('inventory.share_inventory_list') %}
                             <li><a href="{{ url_for('inventory.share_inventory_list') }}">工程剩余库存申请审核</a></li>
                             {% else %}
-                            <li><a href='javascript:void(0)' class="a_disabled">工程剩余库存申请审核</a></li>
+                            <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>工程剩余库存申请审核</a></li>
                             {% endif %}
                         </ul>
                     </li>
@@ -75,7 +75,7 @@
                     {% if current_user.is_authorized('order_manage.finance_contract_index') %}
                     <li><a href="{{ url_for('order_manage.finance_contract_index') }}">合同列表</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">合同列表</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>合同列表</a></li>
                     {% endif %}
                 </ul>
             </li>
@@ -85,13 +85,13 @@
                     {% if current_user.is_authorized('product.category_index') %}
                     <li><a href="{{ url_for('product.category_index') }}">产品</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">产品</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>产品</a></li>
                     {% endif %}
 
                     {% if current_user.is_authorized('inventory.index') %}
                     <li><a href="{{ url_for('inventory.index') }}">库存</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">库存</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>库存</a></li>
                     {% endif %}
                 </ul>
             </li>
@@ -103,7 +103,7 @@
                             class="badge badge-info"></div>
                     </a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">待设计列表 &nbsp;&nbsp;<div
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>待设计列表 &nbsp;&nbsp;<div
                             class="badge badge-info"></div>
                     </a></li>
                     {% endif %}
@@ -115,7 +115,7 @@
                     {% if current_user.is_authorized('content.category_index') %}
                     <li><a href="{{ url_for('content.category_index') }}">内容</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">内容</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>内容</a></li>
                     {% endif %}
                 </ul>
             </li>
@@ -125,13 +125,13 @@
                     {% if current_user.is_authorized('order_manage.contracts_for_tracking') %}
                     <li><a href="{{ url_for('order_manage.contracts_for_tracking') }}">生产合同列表</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">生产合同列表</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>生产合同列表</a></li>
                     {% endif %}
 
                     {% if current_user.is_authorized('order_manage.tracking_infos') %}
                     <li><a href="{{ url_for('order_manage.tracking_infos') }}">物流状态列表</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">物流状态列表</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>物流状态列表</a></li>
                     {% endif %}
                 </ul>
             </li>
@@ -141,13 +141,13 @@
                     {% if current_user.is_authorized('web_access_log.statistics') %}
                     <li><a href="{{ url_for('web_access_log.statistics') }}">点击率统计</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">点击率统计</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>点击率统计</a></li>
                     {% endif %}
 
                     {% if current_user.is_authorized('order_manage.team_profit') %}
                     <li><a href="{{ url_for('order_manage.team_profit') }}">销售团队销售统计</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">销售团队销售统计</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>销售团队销售统计</a></li>
                     {% endif %}
                 </ul>
             </li>
@@ -157,19 +157,19 @@
                     {% if current_user.is_authorized('organization.user_index') %}
                     <li><a href="{{ url_for('organization.user_index') }}">用户管理</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">用户管理</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>用户管理</a></li>
                     {% endif %}
 
                     {% if current_user.is_authorized('organization.authority_index') %}
                     <li><a href="{{ url_for('organization.authority_index') }}">组织架构及权限组</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">组织架构及权限组</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>组织架构及权限组</a></li>
                     {% endif %}
 
                     {% if current_user.is_authorized('organization.regional_and_team_index') %}
                     <li><a href="{{ url_for('organization.regional_and_team_index') }}">区域管理和销售团队</a></li>
                     {% else %}
-                    <li><a href='javascript:void(0)' class="a_disabled">区域管理和销售团队</a></li>
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>区域管理和销售团队</a></li>
                     {% endif %}
                 </ul>
             </li>

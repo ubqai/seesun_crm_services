@@ -12,7 +12,7 @@
 		<div id="chart" style="width:100%; height:{% if len(teams)*100>600 %}{{len(teams)*100}}{% else %}600{% endif %}px"></div>
 	</div>
 	
-	<script>		
+	<script>
 		(function(){
 				var chart = echarts.init(document.getElementById('chart'), 'dark');
 				option = {

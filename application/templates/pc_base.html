@@ -30,12 +30,12 @@
                 <span class="notify-badge red">{{ current_user.get_other_app_num() }}</span>
                 {% endif %}
             </a></li>
-            <span>
+            <li class="left-gap-2">
                 用户
                 <a href="{{ url_for('backstage_management.account_index') }}">
                     {{ current_user.nickname }}
                 </a>
-            </span>
+            </li>
         </ul>
 
         <a href="{{url_for('backstage_management.account_logout')}}" class="logout glyphicon glyphicon-log-out" title="注销"></a>
