@@ -13,6 +13,7 @@ from decimal import Decimal
 from flask_login import current_user
 from ..wechat.models import WechatCall
 from ..utils import add_months
+from functools import reduce
 
 order_manage = Blueprint('order_manage', __name__, template_folder='templates')
 
@@ -455,19 +456,24 @@ def region_profit():
     total_amount = []
     current_amount = []
     for area in SalesAreaHierarchy.query.filter_by(level_grade=3):
-        amount = float('0')
-        amount1 = float('0')
-        for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
-            for user in sarea.users.all():
-                for contract in Contract.query.filter_by(user_id=user.id, payment_status='已付款').all():
-                    amount += float(contract.contract_content.get('amount', '0'))
-                for contract1 in Contract.query.filter_by(user_id=user.id, payment_status='已付款').filter(
+
+        user_ids = [user.id for user in db.session.query(User).join(User.sales_areas).filter(
+            User.user_or_origin == 2).filter(
+            SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                SalesAreaHierarchy.parent_id == area.id)])).all()]
+        contracts = Contract.query.filter_by(payment_status='已付款').filter(Contract.user_id.in_(user_ids)).all()
+        amount = reduce(lambda x, y: x + y, [float(contract.contract_content.get('amount', '0'))
+                                             for contract in contracts], 0)
+        contract1s = Contract.query.filter_by(payment_status='已付款').filter(Contract.user_id.in_(user_ids)).filter(
                         Contract.created_at.between(datetime.datetime.utcnow() - datetime.timedelta(days=30),
-                                                    datetime.datetime.utcnow())).all():
-                    amount1 += float(contract1.contract_content.get('amount', '0'))
+                                                    datetime.datetime.utcnow())).all()
+        amount1 = reduce(lambda x, y: x + y, [float(contract.contract_content.get('amount', '0'))
+                                              for contract in contract1s], 0)
         provinces.append(str(area.name))
         total_amount.append(amount)
         current_amount.append(amount1)
+
     return render_template('order_manage/region_profit.html', provinces=provinces, total_amount=total_amount,
                            current_amount=current_amount)
 
@@ -483,12 +489,15 @@ def team_profit():
             SalesAreaHierarchy.id == region.id).first()
         if us is not None:
             teams.append(us.nickname)
-            amount = float('0')
-            for area in SalesAreaHierarchy.query.filter_by(parent_id=region.id):
-                for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
-                    for user in sarea.users.all():
-                        for contract in Contract.query.filter_by(user_id=user.id, payment_status='已付款').all():
-                            amount += float(contract.contract_content.get('amount', '0'))
+            user_ids = [user.id for user in db.session.query(User).join(User.sales_areas).filter(
+                User.user_or_origin == 2).filter(SalesAreaHierarchy.level_grade == 4).filter(
+                SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                    SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                        SalesAreaHierarchy.parent_id == region.id)]))]))]
+            contracts = Contract.query.filter_by(payment_status='已付款').filter(Contract.user_id.in_(user_ids)).all()
+            amount = reduce(lambda x, y: x + y, [float(contract.contract_content.get('amount', '0'))
+                                                 for contract in contracts], 0)
+
             total_amount.append(amount)
     return render_template('order_manage/team_profit.html', teams=teams, total_amount=total_amount)
 
@@ -498,12 +507,14 @@ def dealer_index():
     area = SalesAreaHierarchy.query.filter_by(name=request.args.get('province'), level_grade=3).first()
     datas = []
     if area is not None:
-        for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
-            for user in sarea.users.all():
-                amount = float('0')
-                for contract in Contract.query.filter_by(user_id=user.id, payment_status='已付款').all():
-                    amount += float(contract.contract_content.get('amount', '0'))
-                datas.append([user.nickname, amount])
+        for user in db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+                        SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                        SalesAreaHierarchy.parent_id == area.id)])).all():
+            contracts = Contract.query.filter_by(user_id=user.id, payment_status='已付款').all()
+            amount = reduce(lambda x, y: x + y, [float(contract.contract_content.get('amount', '0'))
+                                                 for contract in contracts], 0)
+            datas.append([user.nickname, amount])
         current_app.logger.info(datas)
     return render_template('order_manage/dealer_index.html', datas=datas)
 
@@ -519,32 +530,43 @@ def region_dealers():
               add_months(datetime.datetime.utcnow(), -1).strftime("%Y年%m月"),
               add_months(datetime.datetime.utcnow(), 0).strftime("%Y年%m月")]
     for region in SalesAreaHierarchy.query.filter_by(level_grade=2):
-        count = float('0')
-        month1 = float('0')
-        month2 = float('0')
-        month3 = float('0')
-        month4 = float('0')
-        month5 = float('0')
+        count = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+            SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                    SalesAreaHierarchy.parent_id == region.id)]))])).count()
+        month1 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+            SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                    SalesAreaHierarchy.parent_id == region.id)]))])).filter(
+                    User.created_at.between("2017-01-01", add_months(datetime.datetime.utcnow(), -4))).count()
+        month2 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+            SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                    SalesAreaHierarchy.parent_id == region.id)]))])).filter(
+                    User.created_at.between("2017-01-01", add_months(datetime.datetime.utcnow(), -3))).count()
+        month3 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+            SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                    SalesAreaHierarchy.parent_id == region.id)]))])).filter(
+                    User.created_at.between("2017-01-01", add_months(datetime.datetime.utcnow(), -2))).count()
+        month4 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+            SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                    SalesAreaHierarchy.parent_id == region.id)]))])).filter(
+                    User.created_at.between("2017-01-01", add_months(datetime.datetime.utcnow(), -1))).count()
+        month5 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+            SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                    SalesAreaHierarchy.parent_id == region.id)]))])).filter(
+                    User.created_at.between("2017-01-01", datetime.datetime.utcnow() + datetime.timedelta(days=1))).count()
         regions.append(region.name)
-        for area in SalesAreaHierarchy.query.filter_by(parent_id=region.id).all():
-            for sarea in SalesAreaHierarchy.query.filter_by(parent_id=area.id).all():
-                count += sarea.users.filter_by(user_or_origin='2').count()
-                month1 += sarea.users.filter_by(user_or_origin='2').filter(
-                    User.created_at.between("2017-01-01",
-                                            add_months(datetime.datetime.utcnow(), -4))).count()
-                month2 += sarea.users.filter_by(user_or_origin='2').filter(
-                    User.created_at.between("2017-01-01",
-                                            add_months(datetime.datetime.utcnow(), -3))).count()
-                month3 += sarea.users.filter_by(user_or_origin='2').filter(
-                    User.created_at.between("2017-01-01",
-                                            add_months(datetime.datetime.utcnow(), -2))).count()
-                month4 += sarea.users.filter_by(user_or_origin='2').filter(
-                    User.created_at.between("2017-01-01",
-                                            add_months(datetime.datetime.utcnow(), -1))).count()
-                month5 += sarea.users.filter_by(user_or_origin='2').filter(
-                    User.created_at.between("2017-01-01",
-                                            add_months(datetime.datetime.utcnow(), 0))).count()
-        # datas.append({'name': region.name, 'data': [month1, month2, month3, month4, month5]})
+
         datas.append(
             {
                 'name': region.name,
