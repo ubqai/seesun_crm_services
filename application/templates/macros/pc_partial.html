@@ -15,11 +15,6 @@
                     {% else %}
                     <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>经销商列表管理</a></li>
                     {% endif %}
-                    {% if current_user.is_authorized('order_manage.dealer_index') %}
-                    <li><a href="{{ url_for('order_manage.dealer_index') }}">各省经销商销售统计</a></li>
-                    {% else %}
-                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>各省经销商销售统计</a></li>
-                    {% endif %}
 
                     {% if current_user.is_authorized('order_manage.region_profit') %}
                     <li><a href="{{ url_for('order_manage.region_profit') }}">各省销售统计</a></li>
@@ -148,6 +143,12 @@
                     <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>点击率统计</a></li>
                     {% endif %}
 
+                    {% if current_user.is_authorized('order_manage.dealer_index') %}
+                    <li><a href="{{ url_for('order_manage.dealer_index') }}">各省经销商销售统计</a></li>
+                    {% else %}
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>各省经销商销售统计</a></li>
+                    {% endif %}
+										
                     {% if current_user.is_authorized('order_manage.team_profit') %}
                     <li><a href="{{ url_for('order_manage.team_profit') }}">销售团队销售统计</a></li>
                     {% else %}

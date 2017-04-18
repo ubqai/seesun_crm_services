@@ -57,15 +57,6 @@ def load_inventories_by_code(code):
         return []
 
 
-def load_user_inventories(user_id, sku_id, inv_type):
-    url = '%s/%s/sku/%s/%s/%s/inventories' % (site, version, user_id, sku_id, inv_type)
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return []
-
-
 def update_inventory(inv_id, data={}):
     url = '%s/%s/inventories/%s/edit' % (site, version, inv_id)
     response = requests.put(url, json=data, headers=headers)
