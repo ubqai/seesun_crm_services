@@ -85,20 +85,13 @@ webpage_describe_list = [
 
 dh = DepartmentHierarchy.query.filter_by(name="董事长").first()
 for (endpoint, method, describe) in webpage_describe_list:
-<<<<<<< HEAD
-    if not WebpageDescribe.query.filter(WebpageDescribe.endpoint == endpoint and WebpageDescribe.method == method).first():
+    if not WebpageDescribe.query.filter_by(endpoint=endpoint, method=method).first():
         wd = WebpageDescribe(endpoint=endpoint, method=method, describe=describe)
         if endpoint == "organization.user_index":
             wd.validate_flag = False
         #wd.check_data()
         wd.save
         AuthorityOperation(webpage_id=wd.id, role_id=dh.id, flag="Y").save
-=======
-    wd = WebpageDescribe(endpoint=endpoint, method=method, describe=describe)
-    wd.check_data()
-    wd.save
-    AuthorityOperation(webpage_id=wd.id, role_id=dh.id, flag="Y").save
->>>>>>> cfccc6c658fb7a61934ab57640ae368ab53b4a09
 
 
 wd = WebpageDescribe.query.filter_by(endpoint="organization.user_index").first()
@@ -108,17 +101,14 @@ if wd:
 
 # SalesAreaHierarchy.query.filter_by(level_grade=2).delete()
 for regional_name in ["华东区", "华中华北区", "华西华南区"]:
-<<<<<<< HEAD
     if not SalesAreaHierarchy.query.filter(
                             SalesAreaHierarchy.name == regional_name and SalesAreaHierarchy.level_grade == 2).first():
         db.session.add(SalesAreaHierarchy(name=regional_name, level_grade=2))
         db.session.commit()
-=======
-    db.session.add(SalesAreaHierarchy(name=regional_name, level_grade=2))
-db.session.commit()
 
 
 new_webpage_describe_list={
+    ("order_manage.dealers_management", "GET", "经销商视图-->经销商列表管理"),
     ("order_manage.dealer_index", "GET", "数据统计-->各省经销商销售统计"),
     ("order_manage.region_profit", "GET", "经销商视图-->各省销售统计"),
     ("order_manage.order_index", "GET", "销售管理-->订单列表"),
@@ -142,6 +132,10 @@ new_webpage_describe_list={
 
 for (endpoint, method, new_describe) in new_webpage_describe_list:
     wd = WebpageDescribe.query.filter_by(endpoint=endpoint, method=method).first()
-    wd.describe = new_describe
-    wd.save
->>>>>>> cfccc6c658fb7a61934ab57640ae368ab53b4a09
+    if wd:
+        wd.describe = new_describe
+        wd.save
+    else:
+        wd = WebpageDescribe(endpoint=endpoint, method=method, describe=new_describe)
+        wd.save
+        AuthorityOperation(webpage_id=wd.id, role_id=dh.id, flag="Y").save
