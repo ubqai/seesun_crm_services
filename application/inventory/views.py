@@ -113,10 +113,7 @@ def edit(id):
             flash('库存修改成功', 'success')
         else:
             flash('库存修改失败', 'danger')
-        if from_path == 'company':
-            return redirect(url_for('inventory.index'))
-        elif from_path == 'dealer':
-            return redirect(url_for('inventory.share_index'))
+        return redirect(url_for('inventory.index'))
     return render_template('inventory/edit.html', id=id, inventory=inv, from_path=from_path)
 
 
@@ -129,13 +126,6 @@ def delete(id):
         else:
             flash('库存批次删除失败', 'danger')
     return redirect(url_for('inventory.index'))
-
-
-@inventory.route('/share_index', methods=['GET'])
-def share_index():
-    categories = load_categories()
-    user_id = User.query.filter_by(user_or_origin=2, nickname='普陀区经销商').first().id
-    return render_template('inventory/share_index.html', categories=categories, user_id=user_id)
 
 
 @inventory.route('/share_inventory_list', methods=['GET'])
