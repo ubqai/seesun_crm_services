@@ -661,8 +661,9 @@ def new_share_inventory(product_name, sku_id):
         filenames = []
         for file in upload_files:
             file_path = save_upload_file(file)
-            filenames.append(file_path)
-        if filenames == [None]:
+            if file_path is not None:
+                filenames.append(file_path)
+        if len(filenames) == 0:
             flash('材料图片必须上传', 'danger')
             return render_template('mobile/new_share_inventory.html', sku_id=sku_id, product_name=product_name,
                                    params=params)
