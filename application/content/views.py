@@ -260,7 +260,8 @@ def option_delete(id):
 @content.route('/material_application/index/')
 def material_application_index():
     form = MaterialApplicationSearchForm(request.args)
-    query = MaterialApplication.query
+    query = MaterialApplication.query.filter(
+        MaterialApplication.user_id.in_(set([user.id for user in current_user.get_subordinate_dealers()])))
     if form.created_at_gt.data:
         query = query.filter(MaterialApplication.created_at >= form.created_at_gt.data)
     if form.created_at_lt.data:
@@ -270,11 +271,8 @@ def material_application_index():
     if request.args.get('dealer'):
         query = query.filter(MaterialApplication.user_id == request.args.get('dealer'))
     if request.args.get('status'):
-        query = query.filter(MaterialApplication.status == request.args.get('status'))
+        query = query.filter(MaterialApplication.status == request.args.get('stat'))
     applications = query.order_by(MaterialApplication.created_at.desc())
-    # applications = MaterialApplication.query.filter(
-    #     MaterialApplication.user_id.in_(set([user.id for user in current_user.get_subordinate_dealers()]))
-    # ).order_by(MaterialApplication.created_at.desc())
     return object_list('content/material_application/index.html', applications, paginate_by=20, form=form)
 
 
