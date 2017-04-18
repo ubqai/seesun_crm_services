@@ -554,18 +554,17 @@ def stocks_share(area_id):
         for option in sku.get('options'):
             for key, value in option.items():
                 sku_option = "%s %s" % (sku_option, value)
-        for inv in sku_and_invs.get('invs'):
-            for batch in inv.get('batches'):
-                user = User.query.get(batch.get('user_id'))
-                batch_infos.append({"product_name": "%s: %s" % (sku.get('product_info').get('name'), sku_option),
-                                    "category_name": sku.get('category_info').get('category_name'),
-                                    "user": "公司" if user is None else user.nickname,
-                                    "production_date": batch.get('production_date'),
-                                    "batch_no": batch.get('batch_no'),
-                                    "batch_id": batch.get('inv_id'),
-                                    "created_at": batch.get('created_at'),
-                                    "sku_code": sku.get('code'),
-                                    "stocks": batch.get('stocks')})
+        batch = sku_and_invs.get('inv')
+        user = User.query.get(batch.get('user_id'))
+        batch_infos.append({"product_name": "%s: %s" % (sku.get('product_info').get('name'), sku_option),
+                            "category_name": sku.get('category_info').get('category_name'),
+                            "user": "公司" if user is None else user.nickname,
+                            "production_date": batch.get('production_date'),
+                            "batch_no": batch.get('batch_no'),
+                            "batch_id": batch.get('inv_id'),
+                            "created_at": batch.get('created_at'),
+                            "sku_code": sku.get('code'),
+                            "stocks": batch.get('stocks')})
     return render_template('mobile/share_index.html', categories=categories, users=users, batch_infos=batch_infos)
 
 
@@ -593,22 +592,21 @@ def stocks_share_for_order(area_id):
             for option in sku.get('options'):
                 for key, value in option.items():
                     sku_option = "%s %s" % (sku_option, value)
-            for inv in sku_and_invs.get('invs'):
-                for batch in inv.get('batches'):
-                    user = User.query.get(batch.get('user_id'))
-                    batch_infos.append({"product_name": sku.get('product_info').get('name'),
-                                        "category_name": sku.get('category_info').get('category_name'),
-                                        "sku_specification": sku_option,
-                                        "thumbnail": sku.get('thumbnail'),
-                                        "user": "公司" if user is None else user.nickname,
-                                        "city": "公司工程剩余库存" if user is None else "%s工程剩余库存" % user.sales_areas.first().name,
-                                        "sku_id": sku.get('sku_id'),
-                                        "production_date": batch.get('production_date'),
-                                        "batch_no": batch.get('batch_no'),
-                                        "batch_id": batch.get('inv_id'),
-                                        "sku_code": sku.get('code'),
-                                        "price": batch.get('price'),
-                                        "stocks": batch.get('stocks')})
+            batch = sku_and_invs.get("inv")
+            user = User.query.get(batch.get('user_id'))
+            batch_infos.append({"product_name": sku.get('product_info').get('name'),
+                                "category_name": sku.get('category_info').get('category_name'),
+                                "sku_specification": sku_option,
+                                "thumbnail": sku.get('thumbnail'),
+                                "user": "公司" if user is None else user.nickname,
+                                "city": "公司工程剩余库存" if user is None else "%s工程剩余库存" % user.sales_areas.first().name,
+                                "sku_id": sku.get('sku_id'),
+                                "production_date": batch.get('production_date'),
+                                "batch_no": batch.get('batch_no'),
+                                "batch_id": batch.get('inv_id'),
+                                "sku_code": sku.get('code'),
+                                "price": batch.get('price'),
+                                "stocks": batch.get('stocks')})
 
     return render_template('mobile/share_index_for_order.html', batch_infos=batch_infos, area_id=area_id,
                            categories=categories)
