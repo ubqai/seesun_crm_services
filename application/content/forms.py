@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import wtforms
 from wtforms.validators import *
+from ..models import User
 
 
 class ContentForm(wtforms.Form):
@@ -55,3 +56,19 @@ class MaterialApplicationForm(wtforms.Form):
     def save(self, obj):
         self.populate_obj(obj)
         return obj
+
+
+class MaterialApplicationSearchForm(wtforms.Form):
+    created_at_gt = wtforms.StringField('申请时间从')
+    created_at_lt = wtforms.StringField('到')
+    app_no = wtforms.StringField('申请号')
+    dealer = wtforms.SelectField(
+        '经销商',
+        choices=[('', '')] + [(user.id, user.nickname) for user in User.query.filter(User.user_or_origin == 2)]
+    )
+    status = wtforms.SelectField(
+        '申请状态',
+        choices=[('', ''), ('新申请', '新申请'), ('同意申请', '同意申请'), ('拒绝申请', '拒绝申请'), ('等待经销商再次确认', '等待经销商再次确认'),
+                 ('经销商已确认', '经销商已确认'), ('已完成', '已完成'), ('已取消', '已取消')]
+    )
+

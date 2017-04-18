@@ -518,7 +518,7 @@ ul.sidebar-menu li a:hover i,ul.sidebar-menu li a:focus i {
 }
 .tables th, .tables td {
     border: 1px solid #E0E0E0;
-    padding: 4px 15px;
+    padding: 4px 8px;
 }
 .tables th {
     color: #9D9D9D;

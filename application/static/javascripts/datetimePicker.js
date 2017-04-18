@@ -9,10 +9,10 @@
 		i18n:{
 			ru:{ // Russian
 				months:[
-					'§Á§ß§Ó§Ñ§â§î','§¶§Ö§Ó§â§Ñ§Ý§î','§®§Ñ§â§ä','§¡§á§â§Ö§Ý§î','§®§Ñ§Û','§ª§ð§ß§î','§ª§ð§Ý§î','§¡§Ó§Ô§å§ã§ä','§³§Ö§ß§ä§ñ§Ò§â§î','§°§Ü§ä§ñ§Ò§â§î','§¯§à§ñ§Ò§â§î','§¥§Ö§Ü§Ñ§Ò§â§î'
+					'ï¿½ï¿½ï¿½ß§Ó§Ñ§ï¿½ï¿½','ï¿½ï¿½ï¿½Ö§Ó§ï¿½Ñ§Ý§ï¿½','ï¿½ï¿½ï¿½Ñ§ï¿½ï¿½','ï¿½ï¿½ï¿½ï¿½ï¿½Ö§Ý§ï¿½','ï¿½ï¿½ï¿½Ñ§ï¿½','ï¿½ï¿½ï¿½ï¿½ß§ï¿½','ï¿½ï¿½ï¿½ï¿½Ý§ï¿½','ï¿½ï¿½ï¿½Ó§Ô§ï¿½ï¿½ï¿½','ï¿½ï¿½ï¿½Ö§ß§ï¿½ï¿½Ò§ï¿½ï¿½','ï¿½ï¿½ï¿½Ü§ï¿½ï¿½Ò§ï¿½ï¿½','ï¿½ï¿½ï¿½ï¿½ï¿½Ò§ï¿½ï¿½','ï¿½ï¿½ï¿½Ö§Ü§Ñ§Ò§ï¿½ï¿½'
 				],
 				dayOfWeek:[
-					"§£§ã§Ü", "§±§ß", "§£§ä", "§³§â", "§¹§ä", "§±§ä", "§³§Ò"
+					"ï¿½ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½"
 				]
 			},
 			en:{ // English
@@ -41,7 +41,7 @@
 			},
 			tr:{ // Turkish
 				months:[
-					"Ocak", "?ubat", "Mart", "Nisan", "May?s", "Haziran", "Temmuz", "A?ustos", "Eyl¨¹l", "Ekim", "Kas?m", "Aral?k"
+					"Ocak", "?ubat", "Mart", "Nisan", "May?s", "Haziran", "Temmuz", "A?ustos", "Eylï¿½ï¿½l", "Ekim", "Kas?m", "Aral?k"
 				],
 				dayOfWeek:[
 					"Paz", "Pts", "Sal", "?ar", "Per", "Cum", "Cts"
@@ -49,7 +49,7 @@
 			},
 			fr:{ //French
 				months:[
-			    "Janvier", "F¨¦vrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Ao?t", "Septembre", "Octobre", "Novembre", "D¨¦cembre"
+			    "Janvier", "Fï¿½ï¿½vrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Ao?t", "Septembre", "Octobre", "Novembre", "Dï¿½ï¿½cembre"
 				],
 				dayOfWeek:[
 					"Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"
@@ -60,7 +60,7 @@
 					"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
 				],
 				dayOfWeek: [
-					"Dom", "Lun", "Mar", "Mi¨¦", "Jue", "Vie", "S¨¢b"
+					"Dom", "Lun", "Mar", "Miï¿½ï¿½", "Jue", "Vie", "Sï¿½ï¿½b"
 				]
 			},
 			th:{ // Thai
@@ -73,7 +73,7 @@
 			},
 			pl:{ // Polish
 				months: [
-					"stycze¨½", "luty", "marzec", "kwiecie¨½", "maj", "czerwiec", "lipiec", "sierpie¨½", "wrzesie¨½", "pa?dziernik", "listopad", "grudzie¨½"
+					"styczeï¿½ï¿½", "luty", "marzec", "kwiecieï¿½ï¿½", "maj", "czerwiec", "lipiec", "sierpieï¿½ï¿½", "wrzesieï¿½ï¿½", "pa?dziernik", "listopad", "grudzieï¿½ï¿½"
 				],
 				dayOfWeek: [
 					"nd", "pn", "wt", "?r", "cz", "pt", "sb"
@@ -89,10 +89,10 @@
 			},
 			ch:{ // Simplified Chinese
 				months: [
-					"Ò»ÔÂ","¶þÔÂ","ÈýÔÂ","ËÄÔÂ","ÎåÔÂ","ÁùÔÂ","ÆßÔÂ","°ËÔÂ","¾ÅÔÂ","Ê®ÔÂ","Ê®Ò»ÔÂ","Ê®¶þÔÂ"
+					"Ò»ï¿½ï¿½","ï¿½ï¿½ï¿½ï¿½","ï¿½ï¿½ï¿½ï¿½","ï¿½ï¿½ï¿½ï¿½","ï¿½ï¿½ï¿½ï¿½","ï¿½ï¿½ï¿½ï¿½","ï¿½ï¿½ï¿½ï¿½","ï¿½ï¿½ï¿½ï¿½","ï¿½ï¿½ï¿½ï¿½","Ê®ï¿½ï¿½","Ê®Ò»ï¿½ï¿½","Ê®ï¿½ï¿½ï¿½ï¿½"
 				],
 				dayOfWeek: [
-					"ÈÕ", "Ò»","¶þ","Èý","ËÄ","Îå","Áù"
+					"ï¿½ï¿½", "Ò»","ï¿½ï¿½","ï¿½ï¿½","ï¿½ï¿½","ï¿½ï¿½","ï¿½ï¿½"
 				]
 			},
 			se:{ // Swedish
@@ -159,7 +159,7 @@
 		scrollInput:true,
 		mask:false,
 		validateOnBlur:true,
-		allowBlank:false,
+		allowBlank:true,
 		yearStart:1950,
 		yearEnd:2050,
 		style:'',
