@@ -532,11 +532,10 @@ class User(db.Model, Rails):
             return []
 
     def get_subordinate_dealers(self):
-        users = []
-        for province in self.get_province_sale_areas():
-            for city in SalesAreaHierarchy.query.filter_by(parent_id=province.id).all():
-                users.extend([dealer for dealer in city.users.filter_by(user_or_origin='2').all()])
-        return users
+        return db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+            SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                SalesAreaHierarchy.parent_id.in_([province.id for province in self.get_province_sale_areas()]))])).all()
 
     @property
     def is_sales_department(self):
