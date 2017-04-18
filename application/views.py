@@ -9,7 +9,7 @@ from . import app
 from .models import *
 from .web_access_log.models import WebAccessLog, can_take_record
 from .product.api import *
-from .inventory.api import create_inventory, load_user_inventories, load_users_inventories
+from .inventory.api import load_users_inventories
 from .helpers import save_upload_file, resize_image_by_width
 from flask_login import *
 from .backstage_management.forms import AccountLoginForm
