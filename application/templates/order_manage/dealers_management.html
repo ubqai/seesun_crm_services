@@ -72,9 +72,15 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.nickname }}</td>
                     <td>{% for sa in user.sales_areas %}{{ sa.name }}{{ '' if loop.last else ', ' }}{% endfor %}</td>
-                    <td>{{ user.user_infos[0].name }}</td>
-                    <td>{{ user.user_infos[0].telephone }}</td>
-                    <td>{{ user.user_infos[0].address }}</td>
+                    {% if user.user_infos %}
+                        <td>{{ user.user_infos[0].name }}</td>
+                        <td>{{ user.user_infos[0].telephone }}</td>
+                        <td>{{ user.user_infos[0].address }}</td>
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    {% endif %}
                     <!--
                     <td><a href="{{ url_for('organization.user_update',user_id=user.id)}}">update</a></td>
                     -->
