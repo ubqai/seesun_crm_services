@@ -55,11 +55,11 @@
                 <tbody>
                 {% for wd in wd_infos %}
                 <tr>
-                    <td> {{wd.describe }}</td>
+                    <td style="text-align:left"> {{wd.describe }}</td>
                     <td> {{wd.type}}</td>
                     <td>
                         {% for ao in wd.authority_operations.filter_by(flag="Y").all() %}
-                            {{ ao.get_role_name() }},
+                        {{ ao.get_role_name() }},
                         {% endfor %}
                     </td>
                     <td><a href="{{ url_for('organization.authority_to_role',webpage_id = wd.id) }}"> 授权 </a></td>
@@ -75,6 +75,7 @@
 $(function(){
 	$("#select_user_type").change()
 });
+
 
 
 
