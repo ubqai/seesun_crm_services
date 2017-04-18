@@ -84,8 +84,6 @@ webpage_describe_list = [
 dh = DepartmentHierarchy.query.filter_by(name="董事长").first()
 for (endpoint, method, describe) in webpage_describe_list:
     wd = WebpageDescribe(endpoint=endpoint, method=method, describe=describe)
-    if endpoint == "organization.user_index":
-        wd.validate_flag = False
     wd.check_data()
     wd.save
     AuthorityOperation(webpage_id=wd.id, role_id=dh.id, flag="Y").save
@@ -100,3 +98,31 @@ SalesAreaHierarchy.query.filter_by(level_grade=2).delete()
 for regional_name in ["华东区", "华中华北区", "华西华南区"]:
     db.session.add(SalesAreaHierarchy(name=regional_name, level_grade=2))
 db.session.commit()
+
+
+new_webpage_describe_list={
+    ("order_manage.dealer_index", "GET", "数据统计-->各省经销商销售统计"),
+    ("order_manage.region_profit", "GET", "经销商视图-->各省销售统计"),
+    ("order_manage.order_index", "GET", "销售管理-->订单列表"),
+    ("order_manage.contract_index", "GET", "销售管理-->合同列表"),
+    ("content.material_application_index", "GET", "销售管理-->工作流与审批-->物料申请"),
+    ("project_report.index", "GET", "销售管理-->工作流与审批-->项目报备申请"),
+    ("inventory.share_inventory_list", "GET", "销售管理-->工作流与审批-->工程剩余库存申请审核"),
+    ("order_manage.finance_contract_index", "GET", "财务管理-->合同列表"),
+    ("product.category_index", "GET", "产品管理-->产品"),
+    ("inventory.index", "GET", "产品管理-->库存"),
+    ("design_application.index", "GET", "产品设计-->待设计列表"),
+    ("content.category_index", "GET", "归档中心-->内容"),
+    ("order_manage.contracts_for_tracking", "GET", "售后服务-->生产合同列表"),
+    ("order_manage.tracking_infos", "GET", "售后服务-->物流状态列表"),
+    ("web_access_log.statistics", "GET", "数据统计-->点击率统计"),
+    ("order_manage.team_profit", "GET", "数据统计-->销售团队销售统计"),
+    ("organization.user_index", "GET", "系统组织架构-->用户管理"),
+    ("organization.authority_index", "GET", "系统组织架构-->组织架构及权限组"),
+    ("organization.regional_and_team_index", "GET", "系统组织架构-->区域管理和销售团队"),
+}
+
+for (endpoint, method, new_describe) in new_webpage_describe_list:
+    wd = WebpageDescribe.query.filter_by(endpoint=endpoint, method=method).first()
+    wd.describe = new_describe
+    wd.save

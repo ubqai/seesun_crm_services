@@ -482,7 +482,7 @@ def authority_index():
         app.logger.info("roles data %s" % form.roles.data)
         wd_infos = wd_infos.join(AuthorityOperation).filter(AuthorityOperation.role_id.in_(form.roles.data))
 
-    wd_infos = wd_infos.order_by(WebpageDescribe.type, WebpageDescribe.endpoint).all()
+    wd_infos = wd_infos.order_by(WebpageDescribe.type, WebpageDescribe.describe).all()
     return render_template('organization/authority_index.html', form=form, wd_infos=wd_infos)
 
 
