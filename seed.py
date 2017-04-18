@@ -37,9 +37,10 @@ if not ContentCategory.query.filter(ContentCategory.name == '施工指导').firs
 
 # 物料申请基础数据(展示)
 material_list = '运动展柜 商用展柜 家用展柜 博格画册 专版画册 锐动系列 帝彩尚丽 帝彩尚高 认证证书'.split()
-for i in material_list:
-    if not Material.query.filter(Material.name == i).first():
-        Material(name=i).save
+if Material.query.count() == 0:
+    for i in material_list:
+        if not Material.query.filter(Material.name == i).first():
+            Material(name=i).save
 
 dh_array = '董事长 销售部 仓储物流部 电商部 设计部 市场部 售后部'.split()
 for dh_name in dh_array:
@@ -60,6 +61,7 @@ if not User.query.filter_by(email="admin@hotmail.com").first():
     u.save
 
 webpage_describe_list = [
+    ("order_manage.dealers_management", "GET", "经销商列表管理"),
     ("order_manage.dealer_index", "GET", "各省经销商销售统计"),
     ("order_manage.region_profit", "GET", "各省销售统计"),
     ("order_manage.order_index", "GET", "订单列表"),
@@ -83,12 +85,13 @@ webpage_describe_list = [
 
 dh = DepartmentHierarchy.query.filter_by(name="董事长").first()
 for (endpoint, method, describe) in webpage_describe_list:
-    wd = WebpageDescribe(endpoint=endpoint, method=method, describe=describe)
-    if endpoint == "organization.user_index":
-        wd.validate_flag = False
-    wd.check_data()
-    wd.save
-    AuthorityOperation(webpage_id=wd.id, role_id=dh.id, flag="Y").save
+    if not WebpageDescribe.query.filter(WebpageDescribe.endpoint == endpoint and WebpageDescribe.method == method).first():
+        wd = WebpageDescribe(endpoint=endpoint, method=method, describe=describe)
+        if endpoint == "organization.user_index":
+            wd.validate_flag = False
+        #wd.check_data()
+        wd.save
+        AuthorityOperation(webpage_id=wd.id, role_id=dh.id, flag="Y").save
 
 
 wd = WebpageDescribe.query.filter_by(endpoint="organization.user_index").first()
@@ -96,7 +99,9 @@ if wd:
     wd.validate_flag = True
     wd.save
 
-SalesAreaHierarchy.query.filter_by(level_grade=2).delete()
+# SalesAreaHierarchy.query.filter_by(level_grade=2).delete()
 for regional_name in ["华东区", "华中华北区", "华西华南区"]:
-    db.session.add(SalesAreaHierarchy(name=regional_name, level_grade=2))
-db.session.commit()
+    if not SalesAreaHierarchy.query.filter(
+                            SalesAreaHierarchy.name == regional_name and SalesAreaHierarchy.level_grade == 2).first():
+        db.session.add(SalesAreaHierarchy(name=regional_name, level_grade=2))
+        db.session.commit()

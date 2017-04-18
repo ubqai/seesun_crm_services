@@ -5,8 +5,8 @@ from flask import Blueprint, flash, redirect, render_template, url_for, request,
 from flask.helpers import make_response
 from .. import app, cache
 from ..models import *
-from ..helpers import gen_qrcode, gen_random_string
-from .forms import ContractForm, TrackingInfoForm1, TrackingInfoForm2
+from ..helpers import object_list, gen_qrcode, gen_random_string
+from .forms import ContractForm, TrackingInfoForm1, TrackingInfoForm2, UserSearchForm
 from ..inventory.api import load_inventories_by_code, update_sku_by_code
 from application.utils import is_number
 from decimal import Decimal
@@ -563,3 +563,21 @@ def region_dealers():
     return render_template('order_manage/region_dealers.html', percentage=percentage,
                            regions=regions, datas=datas, months=months)
 
+
+@order_manage.route('/dealers_management/')
+def dealers_management():
+    form = UserSearchForm(request.args)
+    form.reset_select_field()
+    query = User.query.filter(User.user_or_origin == 2)
+    if form.email.data:
+        query = query.filter(User.email.contains(form.email.data))
+    if form.nickname.data:
+        query = query.filter(User.nickname.contains(form.nickname.data))
+    if form.name.data:
+        query = query.join(User.user_infos).filter(UserInfo.name.contains(form.name.data))
+    if form.telephone.data:
+        query = query.join(User.user_infos).filter(UserInfo.telephone.contains(form.telephone.data))
+    if form.sale_range.data:
+        query = query.join(User.sales_areas).filter(SalesAreaHierarchy.id == form.sale_range.data.id)
+    users = query.order_by(User.created_at.desc())
+    return object_list('order_manage/dealers_management.html', users, paginate_by=20, form=form)

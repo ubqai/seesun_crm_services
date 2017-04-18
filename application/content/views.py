@@ -256,10 +256,13 @@ def option_delete(id):
 
 
 # --- Material need ---
+# 所有物料申请审批都转到市场部
 @content.route('/material_application/index')
 def material_application_index():
-    applications = MaterialApplication.query.filter(
-        MaterialApplication.user_id.in_(set([user.id for user in current_user.get_subordinate_dealers()]))).order_by(MaterialApplication.created_at.desc())
+    applications = MaterialApplication.query.order_by(MaterialApplication.created_at.desc())
+    # applications = MaterialApplication.query.filter(
+    #     MaterialApplication.user_id.in_(set([user.id for user in current_user.get_subordinate_dealers()]))
+    # ).order_by(MaterialApplication.created_at.desc())
     return render_template('content/material_application/index.html', applications=applications)
 
 

@@ -10,7 +10,11 @@
             <li class="sub-menu {% if active == 'dealer' %}active{% endif %}">
                 <a><i class="glyphicon glyphicon-comment"></i><span>经销商视图</span><span class="dcjq-icon"></span></a>
                 <ul class="sub">
-                    <li><a>经销商列表管理</a></li>
+                    {% if current_user.is_authorized('order_manage.dealers_management') %}
+                    <li><a href="{{ url_for('order_manage.dealers_management') }}">经销商列表管理</a></li>
+                    {% else %}
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>经销商列表管理</a></li>
+                    {% endif %}
                     {% if current_user.is_authorized('order_manage.dealer_index') %}
                     <li><a href="{{ url_for('order_manage.dealer_index') }}">各省经销商销售统计</a></li>
                     {% else %}
