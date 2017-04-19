@@ -941,6 +941,9 @@ td input{
   padding-top:0.5em;
 	color:#888;
 	word-wrap: break-word;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .file a:hover {
     background: #ddd;

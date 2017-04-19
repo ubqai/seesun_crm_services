@@ -35,7 +35,7 @@
                             {% if len(skus_json.get('skus')) > 0 %}
                                 {% for sku in skus_json.get('skus') %}
                                     {% if not sku.get('isvalid') == "NO" %}
-                                    <div class="wrapper-style rect top-gap-2 js-{{ category.get('category_name')|replace(" ","")|replace(".","") }} js-{{ product_json.get('name')|replace(" ","")|replace(".","") }} js-wrapper">
+                                    <div class="wrapper-style rect top-gap-2 js-{{ category.get('category_name')|replace(" ","")|replace(".","")|replace("/","") }} js-{{ product_json.get('name')|replace(" ","")|replace(".","")|replace("/","") }} js-wrapper">
                                         <div class="wrapper-header"><span class="wrapper-header-title">{{ category.get('category_name') }}</span><span class="wrapper-header-icon glyphicon glyphicon-shopping-cart pull-right"></span></div>
                                         <div class="wrapper-inner clearfix">
                                             <div class="wrapper-inner-img"><img class="full-img" src="/static/images/doc.png"></div>
@@ -109,7 +109,7 @@
 		if(value==="all"){
 			$(".js-wrapper").removeClass("hidden")
 		}else{
-			$(".js-wrapper").removeClass("hidden").not(String(".js-"+value.replace(/ /g,"").replace(/\./g,""))).addClass("hidden");
+			$(".js-wrapper").removeClass("hidden").not(String(".js-"+value.replace(/ /g,"").replace(/\./g,"").replace(/\//g,""))).addClass("hidden");
 		}
 	});
 	
@@ -119,7 +119,7 @@
 		if(value==="all"){
 			$(".js-"+category).removeClass("hidden")
 		}else{
-			$(".js-wrapper").removeClass("hidden").not(".js-"+value.replace(/ /g,"").replace(/\./g,"")).addClass("hidden");
+			$(".js-wrapper").removeClass("hidden").not(".js-"+value.replace(/ /g,"").replace(/\./g,"").replace(/\//g,"")).addClass("hidden");
 		}
 	});
 	
