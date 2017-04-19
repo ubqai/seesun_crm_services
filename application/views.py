@@ -274,7 +274,7 @@ def mobile_contract_show(id):
 # --- Design ---
 @app.route('/mobile/design', methods=['GET', 'POST'])
 def mobile_design():
-    project_reports = ProjectReport.query.filter_by(status='项目报备审核通过')
+    project_reports = ProjectReport.query.filter_by(status='申请通过，项目已被保护')
     if request.method == 'POST':
         if request.form.get('filing_no') and request.files.get('ul_file'):
             project_report = ProjectReport.query.filter_by(report_no=request.form.get('filing_no')).first()
