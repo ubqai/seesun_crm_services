@@ -145,12 +145,16 @@
         <form action="{{ url_for('design_application.edit', id = application.id) }}" enctype="multipart/form-data" method="post">
             <div class="widget_contents padding-0">
                 <div class="form-item">
-                    <span class="form-label">申请状态</span>
+                    <span class="form-label">{{ form.status.label }}</span>
                     {{ form.status(class='form-input form-control')}}
                 </div>
                 <div class="form-item">
                     <span class="form-label">上传设计文件<br>(微信端下载)</span>
                     <input name="dl_file" class="form-input form-control" type="file"/>
+                </div>
+                <div class="form-item">
+                    <span class="form-label">{{ form.dl_file_memo.label }}</span>
+                    {{ form.dl_file_memo(class='form-input form-control', placeholder='申请审批或上传设计文件时填写的备注, 不超过200字') }}
                 </div>
             </div>
             <div class="text-right top-gap-1">

@@ -188,6 +188,7 @@ class DesignApplication(db.Model, Rails):
     status = db.Column(db.String(50))
     ul_file = db.Column(db.String(200))
     dl_file = db.Column(db.String(200))
+    dl_file_memo = db.Column(db.String(500))
     applicant_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     operator_id = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)

@@ -300,12 +300,10 @@ def mobile_design_applications():
     return render_template('mobile/design_applications.html', applications=applications)
 
 
-@app.route('/mobile/design_download/<int:id>')
-def mobile_design_download(id):
+@app.route('/mobile/design_file/<int:id>')
+def mobile_design_file(id):
     application = DesignApplication.query.get_or_404(id)
-    response = make_response(send_file(app.config['APPLICATION_DIR'] + application.dl_file))
-    response.headers['Content-Disposition'] = 'attachment; filename = %s' % application.dl_file.rsplit('/', 1)[1]
-    return response
+    return render_template('mobile/design_file_show.html', application=application)
 
 
 # --- Material need ---

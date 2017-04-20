@@ -1,0 +1,14 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('产品设计') }}
+
+<div class="main-content">
+	<div class="wrapper top-gap-2">
+        <p class="text-title bot-gap-1">设计文件</p>
+        <p class="text-content text-sm bot-gap-1"><i class="glyphicon glyphicon-exclamation-sign" style="top:2px"></i> {{ application.dl_file_memo }} </p>
+        <img src="{{ application.dl_file }}" style="width: 100%;">
+	</div>
+</div>
+
+{% endblock %}
