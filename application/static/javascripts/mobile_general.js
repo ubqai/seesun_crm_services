@@ -93,15 +93,19 @@ $(function(){
 })
 
 //file
-$(function(){
-  //to change the text as the file uploaded
-  $(".file input").bind("change",function(){
+function fileText(ele){
+	ele.bind("change",function(){
     var text=this.value;
     var text_array=text.split("\\");
     var file_name=text_array[text_array.length-1];
     $(this).parent().find("label").html(file_name);
     var format=file_name.split(".")[1];
   })
+}
+$(function(){
+  //to change the text as the file uploaded
+	fileText($(".file input"));
+	pre_pic($(".file input"));
 })
 
 //datetimePicker
@@ -133,3 +137,36 @@ $(function(){
 		$(this).parent().parent().find(".over-p").toggleClass("hidden");
 	})
 })
+
+//预览图片
+function preview1(file,ele) {
+	var img = new Image(), url = img.src = URL.createObjectURL(file)
+	var $img = $(img);
+	$img.addClass("full-img");
+	$img.css("height","96px")
+	img.onload = function() {
+			URL.revokeObjectURL(url)
+			ele.replaceWith($img);
+	}
+}
+function pre_pic(elem){
+	elem.bind("change",function(e){
+		var file = e.target.files[0];
+		var ele=$(this).parent().find("img");
+		preview1(file,ele)	
+	})	
+}	
+//增加图片
+$(function(){
+	$(".pic-add").click(function(){
+		var clone=$(".pic-template").clone();
+		clone.removeClass("hidden").removeClass("pic-template");
+		pre_pic(clone.find("input"));
+		fileText(clone.find("input"));
+		clone.find(".pic-del").click(function(){
+			$(this).parent().remove();
+		})	
+		$(this).before(clone);
+	})	
+})
+

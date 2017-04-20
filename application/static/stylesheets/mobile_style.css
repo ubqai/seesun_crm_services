@@ -1053,3 +1053,14 @@ td input{
 .slide-panel{
 	display:none;
 }
+.pic-del {
+    position: absolute;
+    right: 27px;
+    z-index: 100;
+    top: -9px;
+    background: #ed222e;
+    color: #fff;
+    border-radius: 30px;
+    padding: 2px 4px;
+    font-size: 12px;
+}
