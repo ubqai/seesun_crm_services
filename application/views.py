@@ -151,7 +151,7 @@ def mobile_cart():
                 if 'number' in param and request.form.get(param):
                     index = param.rsplit('_', 1)[1]
                     current_app.logger.info("%s-%s" % (index, request.form.get('number_%s' % index)))
-                    if int(request.form.get('number_%s' % index)) > 0:
+                    if float(request.form.get('number_%s' % index)) > 0:
                         order_content = {'product_name': request.form.get('product_name_%s' % index),
                                          'sku_specification': request.form.get('sku_specification_%s' % index),
                                          'sku_code': request.form.get('sku_code_%s' % index),
@@ -161,8 +161,8 @@ def mobile_cart():
                                          'production_date': request.form.get('production_date_%s' % index),
                                          'batch_id': request.form.get('batch_id_%s' % index),
                                          'dealer': request.form.get('user_%s' % index),
-                                         'number': int(request.form.get('number_%s' % index)),
-                                         'square_num': "%.2f" % (0.3 * int(request.form.get('number_%s' % index)))}
+                                         'number': float(request.form.get('number_%s' % index)),
+                                         'square_num': "%.2f" % (0.3 * float(request.form.get('number_%s' % index)))}
                         order.append(order_content)
         session['order'] = order
         flash('成功加入购物车', 'success')
@@ -274,7 +274,7 @@ def mobile_contract_show(id):
 # --- Design ---
 @app.route('/mobile/design', methods=['GET', 'POST'])
 def mobile_design():
-    project_reports = ProjectReport.query.filter_by(status='项目报备审核通过')
+    project_reports = ProjectReport.query.filter_by(status='申请通过，项目已被保护')
     if request.method == 'POST':
         if request.form.get('filing_no') and request.files.get('ul_file'):
             project_report = ProjectReport.query.filter_by(report_no=request.form.get('filing_no')).first()
