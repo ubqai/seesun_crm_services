@@ -163,6 +163,10 @@ $(function(){
 		clone.removeClass("hidden").removeClass("pic-template");
 		pre_pic(clone.find("input"));
 		fileText(clone.find("input"));
+		clone.find(".pic-del").click(function(){
+			$(this).parent().remove();
+		})	
 		$(this).before(clone);
 	})	
 })
+
