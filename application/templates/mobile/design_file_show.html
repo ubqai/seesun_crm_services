@@ -6,7 +6,9 @@
 <div class="main-content">
 	<div class="wrapper top-gap-2">
         <p class="text-title bot-gap-1">设计文件</p>
+        {% if application.dl_file_memo %}
         <p class="text-content text-sm bot-gap-1"><i class="glyphicon glyphicon-exclamation-sign" style="top:2px"></i> {{ application.dl_file_memo }} </p>
+        {% endif %}
         <img src="{{ application.dl_file }}" style="width: 100%;">
 	</div>
 </div>
