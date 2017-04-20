@@ -4,7 +4,7 @@ import datetime
 import random
 import traceback
 from flask.helpers import make_response
-from flask import flash, redirect, render_template, request, url_for, session, current_app
+from flask import flash, redirect, render_template, request, url_for, session, current_app, send_file
 from . import app
 from .models import *
 from .web_access_log.models import WebAccessLog, can_take_record
@@ -298,6 +298,14 @@ def mobile_design_applications():
     # list design applications of current user
     applications = current_user.design_applications
     return render_template('mobile/design_applications.html', applications=applications)
+
+
+@app.route('/mobile/design_download/<int:id>')
+def mobile_design_download(id):
+    application = DesignApplication.query.get_or_404(id)
+    response = make_response(send_file(app.config['APPLICATION_DIR'] + application.dl_file))
+    response.headers['Content-Disposition'] = 'attachment; filename = %s' % application.dl_file.rsplit('/', 1)[1]
+    return response
 
 
 # --- Material need ---

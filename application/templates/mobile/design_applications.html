@@ -23,7 +23,7 @@
                             <td>{{ application.status }}</td>
                             <td>
                             {% if application.status == '申请通过' and application.dl_file %}
-                                <a href="{{ url_for('design_application.dl_file', id = application.id) }}" class="text-success">下载设计文件</a>
+                                <a href="{{ url_for('mobile_design_download', id = application.id) }}" class="text-success">下载设计文件</a>
                             {% endif %}
                             </td>
                         </tr>

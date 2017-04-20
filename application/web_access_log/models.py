@@ -38,7 +38,8 @@ module5_paths = """
 # Design
 module6_paths = """
 /mobile/design
-/mobile/design_applications""".split()
+/mobile/design_applications
+/mobile/design_download/\d+""".split()
 # Material
 module7_paths = """
 /mobile/material_need
