@@ -18,14 +18,14 @@
 		<div class="wrapper-style">
 			<div class="wrapper-header"><span class="wrapper-header-title"></span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
 			<div class="wrapper-inner">
-                <p class="text-content text-sm"><input class="form-control datetimePicker" name="production_date" placeholder="生产日期" value="{{ params.get('production_date', '') }}"></p>
+                <p class="text-content text-sm"><input class="form-control datetimePicker" name="production_date" placeholder="生产日期" value="{{ params.get('production_date', '') }}" readonly="readonly"></p>
 				<div class="light-divider top-gap-1 bot-gap-1"></div>
 				<p class="text-content text-sm"><input class="form-control" name="stocks" placeholder="库存数量" value="{{ params.get('stocks', '') }}"></p>
 			    <div class="light-divider top-gap-1 bot-gap-1"></div>
 				<p class="text-content text-sm"><input class="form-control" name="price" placeholder="价格" value="{{ params.get('price', '') }}"></p>
             </div>
 						
-      <div class="file form-item bot-gap-2" style="float:left; width:50%;position:relative">
+      		<div class="file form-item bot-gap-2" style="float:left; width:50%;position:relative">
 				<a href="javascript:;">
 					<img src="/static/images/upload-cloud.png" style="display: block; margin: 0px auto; width: 96px; height:96px">
 					<label>上传图片</label>
