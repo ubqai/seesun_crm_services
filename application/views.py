@@ -594,7 +594,7 @@ def stocks_share_for_order(area_id):
         sku_option = ""
         sku = sku_and_invs.get('sku')
         if request.args.get("sku_code", '') == '' or (
-                request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
+                        request.args.get("sku_code", '') != '' and sku.get('code') == request.args.get("sku_code")):
             for option in sku.get('options'):
                 for key, value in option.items():
                     sku_option = "%s %s" % (sku_option, value)
@@ -710,14 +710,10 @@ def share_inventory_list():
 # --- mobile user---
 @app.route('/mobile/user/login', methods=['GET', 'POST'])
 def mobile_user_login():
+    # 允许所有用户登入
     if current_user.is_authenticated:
-        if current_user.user_or_origin == 2:
-            app.logger.info("已登入用户[%s],重定向至mobile_index" % (current_user.nickname))
-            return redirect(url_for('mobile_index'))
-        else:
-            # 不运行前后端同时登入在一个WEB上
-            app.logger.info("后台用户[%s]自动登出,[%s][%s]" % (current_user.nickname, request.path, request.endpoint))
-            logout_user()
+        app.logger.info("已登入用户[%s],重定向至mobile_index" % (current_user.nickname))
+        return redirect(url_for('mobile_index'))
 
     if request.method == 'POST':
         try:
@@ -726,7 +722,7 @@ def mobile_user_login():
                 raise ValueError("")
 
             # 微信只能经销商登入
-            user = User.login_verification(form.email.data, form.password.data, 2)
+            user = User.login_verification(form.email.data, form.password.data, None)
             if user is None:
                 raise ValueError("用户名或密码错误")
 
@@ -793,7 +789,8 @@ def mobile_user_info(user_id):
         form.title.data = ui.title
 
     if u.sales_areas.first() is not None:
-        form.sale_range.data = u.sales_areas.first().name
+        form.sale_range.data = ",".join([sa.name for sa in u.sales_areas.order_by(SalesAreaHierarchy.level_grade.asc(),
+                                                                                  SalesAreaHierarchy.parent_id.asc())])
 
     return render_template('mobile/user_info.html', form=form)
 

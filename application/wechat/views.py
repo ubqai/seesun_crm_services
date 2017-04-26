@@ -56,8 +56,8 @@ def mobile_user_binding():
                 app.logger.info("form valid fail: [%s]" % form.errors)
                 raise ValueError("")
 
-            # 微信只能经销商登入
-            user = User.login_verification(form.email.data, form.password.data, 2)
+            # 微信只能经销商登入 - 取消此限制
+            user = User.login_verification(form.email.data, form.password.data, None)
             if user is None:
                 raise ValueError("用户名或密码错误")
 

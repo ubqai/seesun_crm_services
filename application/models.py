@@ -598,7 +598,10 @@ class User(db.Model, Rails):
     # 根据emal+密码获取用户实例
     @classmethod
     def login_verification(cls, email, password, user_or_origin):
-        user = User.query.filter(User.email == email, User.user_or_origin == user_or_origin).first()
+        user = User.query.filter(User.email == email)
+        if user_or_origin:
+            user = user.filter(User.user_or_origin == user_or_origin)
+        user = user.first()
         if user is not None:
             if not bcrypt.check_password_hash(user.password, password):
                 user = None

@@ -56,7 +56,7 @@ def login_check():
             if request.endpoint == "mobile_user_login" or request.endpoint == 'wechat.mobile_user_binding':
                 pass
             # 未登入用户跳转登入界面
-            elif not current_user.is_authenticated or current_user.user_or_origin != 2:
+            elif not current_user.is_authenticated:
                 app.logger.info("LOGIN_CHECK INTO MOBILE  request.path [%s] , [%s]" % (request.path, request.endpoint))
                 # 后端界面
                 flash("请登入后操作")
