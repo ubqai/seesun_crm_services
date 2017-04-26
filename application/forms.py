@@ -30,3 +30,4 @@ class UserInfoForm(BaseCsrfForm):
     user_type = StringField('user_type')
     dept_ranges = StringField('dept_ranges')
     sale_range = StringField('sale_range')
+    join_dealer = StringField('join_dealer')

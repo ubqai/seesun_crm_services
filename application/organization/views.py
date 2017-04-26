@@ -55,6 +55,7 @@ def user_new():
         try:
             form = UserForm(request.form, meta={'csrf_context': session})
             form.reset_select_field()
+            app.logger.info("form: [%s]" %  form.join_dealer.data)
 
             if form.nickname.data == "":
                 form.nickname.data = form.name.data
@@ -68,6 +69,12 @@ def user_new():
 
             ui = UserInfo(name=form.name.data, telephone=form.phone.data, address=form.address.data,
                           title=form.title.data)
+
+            # 组装extra_attributes
+            if form.user_type.data == "2" and form.join_dealer.data:
+                ui.extra_attributes = form.join_dealer.data
+            else:
+                ui.extra_attributes = ""
 
             u = User(email=form.email.data, user_or_origin=int(form.user_type.data), nickname=form.nickname.data)
             u.password = form.password.data
@@ -140,6 +147,12 @@ def user_update(user_id):
             ui.address = form.address.data
             ui.title = form.title.data
 
+            # 组装extra_attributes
+            if u.user_or_origin == 2 and form.join_dealer.data:
+                ui.extra_attributes = str(form.join_dealer.data)
+            else:
+                ui.extra_attributes = ""
+
             if len(u.user_infos) == 0:
                 u.user_infos.append(ui)
 
@@ -183,7 +196,12 @@ def user_update(user_id):
             form.address.data = ui.address
             form.phone.data = ui.telephone
             form.title.data = ui.title
+            if u.is_join_dealer():
+                form.join_dealer.data = 1
+            else:
+                form.join_dealer.data = 0
 
+            app.logger.info("join_delaer: [%s]" % form.join_dealer.default)
         if u.sales_areas.first() is not None:
             form.sale_range.default = u.sales_areas.first().id
         if u.departments.first() is not None:

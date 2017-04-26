@@ -595,6 +595,13 @@ class User(db.Model, Rails):
     def is_manage_province(self, sale_area_id):
         return sale_area_id in self.get_sale_manage_provinces()
 
+    # 是否加盟经销商
+    def is_join_dealer(self):
+        return self.user_or_origin == 2 and \
+               len(self.user_infos)>0 and \
+               self.user_infos[0].extra_attributes is not None and \
+               self.user_infos[0].extra_attributes[0:1] == "1"
+
     # 根据emal+密码获取用户实例
     @classmethod
     def login_verification(cls, email, password, user_or_origin):
@@ -641,6 +648,10 @@ class UserInfo(db.Model):
     address = db.Column(db.String(500))
     title = db.Column(db.String(200))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    # 特殊属性 - 每一位使用0,1作为区分
+    # 经销商用户 - 首位表示是否加盟 0:未加盟 , 1:加盟
+    # 员工 - 暂未使用此字段
+    extra_attributes = db.Column(db.String(10))
 
     def __repr__(self):
         return '<UserInfo %r -- %r>' % (self.id, self.name)

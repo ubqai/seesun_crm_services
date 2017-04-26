@@ -27,11 +27,13 @@
             </div>
         </div>
         <form action="{{ url_for('mobile_user_logout') }}" method="get">
+            {{ form.user_type(class="form-control",readonly="readonly") }}
             {{ form.email(class="form-control",readonly="readonly") }}
             {{ form.name(class="form-control top-gap-3",readonly="readonly") }}
             {{ form.address(class="form-control top-gap-3",readonly="readonly") }}
             {{ form.phone(class="form-control top-gap-3",readonly="readonly") }}
             {{ form.sale_range(class="form-control top-gap-3",readonly="readonly") }}
+            {{ form.join_dealer(class="form-control top-gap-3",readonly="readonly") }}
             <button type="submit" class="btn btn-block btn-warning top-gap-3">退出登入</button>
         </form>
     </div>

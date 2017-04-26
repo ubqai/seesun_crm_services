@@ -72,6 +72,7 @@ class UserForm(BaseForm, BaseCsrfForm):
     dept_ranges = QuerySelectMultipleField(u'所属部门', get_label="name", validators=[valid_dept_ranges])
     sale_range_province = QuerySelectField(u'销售范围(省)', get_label="name", allow_blank=True)
     sale_range = QuerySelectField(u'销售范围', get_label="name", allow_blank=True, validators=[valid_sale_range])
+    join_dealer = SelectField(u'是否加盟', coerce=int, choices=[(1, '是'), (0, '否')])
 
 
 # BASE USER_SEARCH

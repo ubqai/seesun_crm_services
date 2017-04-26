@@ -68,6 +68,10 @@
                     {{ form.sale_range(class="form-input form-control",id="select_sale_range") }}
                     <input type="hidden" id="sale_range_hidden" class="sale_range_hidden" value="{{form.sale_range.default}}">
                 </div>
+                <div class="form-item-2 col-3" id="search_join_dealer" style="display:none">
+                    <span>* {{ form.join_dealer.label }}</span>
+                    {{ form.join_dealer(class="form-input form-control",id="join_dealer") }}
+                </div>
 
                 <div class="text-right top-gap-1">
                     <button type="submit" class="btn btn-default my-btn">修改</button>

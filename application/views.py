@@ -787,6 +787,14 @@ def mobile_user_info(user_id):
         form.address.data = ui.address
         form.phone.data = ui.telephone
         form.title.data = ui.title
+        if u.is_join_dealer():
+            form.join_dealer.data = "加盟经销商"
+        else:
+            form.join_dealer.data = "非加盟经销商"
+
+    form.user_type.data = u.get_user_type_name()
+    if u.user_or_origin == 3:
+        form.join_dealer.data = ""
 
     if u.sales_areas.first() is not None:
         form.sale_range.data = ",".join([sa.name for sa in u.sales_areas.order_by(SalesAreaHierarchy.level_grade.asc(),

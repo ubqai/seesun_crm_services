@@ -126,6 +126,7 @@ $(function(){
 			$(this).parent().parent().children('#search_user_dept_ranges').css("display", "")
 			$(this).parent().parent().children('#search_user_sale_range').css("display", "none")
 			$(this).parent().parent().children('#search_user_sale_range_province').css("display", "none")
+			$(this).parent().parent().children('#search_join_dealer').css("display", "none")
 
 			document.getElementById("phone").setAttribute("placeholder","请输入电话");
 			document.getElementById("label_nickname").innerHTML="昵称";
@@ -135,6 +136,7 @@ $(function(){
 			$(this).parent().parent().children('#search_user_dept_ranges').css("display", "none")
 			$(this).parent().parent().children('#search_user_sale_range').css("display", "")
 			$(this).parent().parent().children('#search_user_sale_range_province').css("display", "")
+			$(this).parent().parent().children('#search_join_dealer').css("display", "")
 			
 			document.getElementById("phone").setAttribute("placeholder","请输入联系人电话");
 			document.getElementById("label_nickname").innerHTML="联系人姓名";
