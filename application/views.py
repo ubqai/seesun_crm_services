@@ -430,6 +430,14 @@ def mobile_tracking_info(id):
     return render_template('mobile/tracking_info.html', tracking_info=tracking_info)
 
 
+# --- Verification ---
+@app.route('/mobile/verification/<int:order_id>')
+def mobile_verification_show(order_id):
+    order = Order.query.get_or_404(order_id)
+    contract = order.contracts.all()[0]
+    return render_template('mobile/verification_show.html', order=order, contract=contract)
+
+
 # --- Construction guide ---
 @app.route('/mobile/construction_guide')
 def mobile_construction_guide():

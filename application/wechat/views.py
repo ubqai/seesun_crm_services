@@ -30,7 +30,7 @@ def mobile_verification():
                 raise ValueError("二维码记录异常")
 
             flash('校验成功', 'success')
-            return redirect(url_for('mobile_contract_show', id=contract.order_id))
+            return redirect(url_for('mobile_verification_show', id=contract.order_id))
         except Exception as e:
             flash('校验失败,%s' % e)
             return redirect(url_for('wechat.mobile_verification'))

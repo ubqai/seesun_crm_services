@@ -49,7 +49,7 @@
                         <tr>
                             <td>{{ content.material_name }}</td>
                             <td>{{ content.number }}</td>
-                            <td><input class="form-control" name="content_{{ content.id }}" value="{{ content.available_number or content.number }}" type="number" step="1" min="0" max="{{ content.number }}" {{ 'disabled' if content.available_number else '' }}></td>
+                            <td><input class="form-control" name="content_{{ content.id }}" value="{{ content.available_number or content.number }}" type="number" step="1" min="0" {{ 'disabled' if content.available_number else '' }}></td>
                         </tr>
                         {% endfor %}
                     </tbody>

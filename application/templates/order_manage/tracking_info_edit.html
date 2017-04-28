@@ -145,7 +145,7 @@
                 <div class="form-item item-template">
                     <div class="form-item-2 col-3">
                         <span>{{ form.delivery_date.label }}</span>
-                        {{ form.delivery_date(class = 'form-input form-control  datetimePicker') }}
+                        {{ form.delivery_date(class='form-input form-control  datetimePicker', value=form.delivery_date.data.strftime('%F') if form.delivery_date.data else today) }}
                     </div>
                     {% for info in delivery_infos_dict %}
                     <div class="form-item-2 col-3">
