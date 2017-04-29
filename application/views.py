@@ -9,7 +9,7 @@ from . import app
 from .models import *
 from .web_access_log.models import WebAccessLog, can_take_record
 from .product.api import *
-from .inventory.api import load_users_inventories
+from .inventory.api import load_users_inventories, delete_inventory
 from .helpers import save_upload_file, resize_image_by_width
 from flask_login import *
 from .backstage_management.forms import AccountLoginForm
@@ -757,6 +757,22 @@ def share_inventory_list():
     sis = ShareInventory.query.filter_by(applicant_id=current_user.id).order_by(ShareInventory.created_at.desc()) \
         .paginate(page_index, per_page=page_size, error_out=True)
     return render_template('mobile/share_inventory_list.html', sis=sis)
+
+
+@app.route('/mobile/share_inventory_show/<int:sid>', methods=['GET'])
+def share_inventory_show(sid):
+    si = ShareInventory.query.get_or_404(sid)
+    return render_template('mobile/share_inventory_show.html', si=si)
+
+
+@app.route('/mobile/<int:id>/delete_inv', methods=['GET'])
+def delete_inv(id):
+    response = delete_inventory(id)
+    if response.status_code == 200:
+        flash('库存批次删除成功', 'success')
+    else:
+        flash('库存批次删除失败', 'danger')
+    return redirect(url_for('stocks_share', area_id=0))
 
 
 # --- mobile user---
