@@ -168,7 +168,7 @@ def contract_new(id):
                                          url_for('mobile_contract_show', id=contract.id)
                                          )
         cache.delete_memoized(current_user.get_orders_num)
-        flash("订单状态修改成功", 'success')
+        flash("合同生成成功", 'success')
         return redirect(url_for('order_manage.contract_index'))
     return render_template('order_manage/contract_new.html', order=order, params={})
 
@@ -240,7 +240,7 @@ def contract_edit(id):
         db.session.add(contract)
         db.session.add(order)
         db.session.commit()
-        flash("订单修改成功", 'success')
+        flash("合同修改成功", 'success')
         return redirect(url_for('order_manage.contract_index'))
     return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
 
@@ -263,6 +263,7 @@ def payment_status_update(contract_id):
     contract.payment_status = '已付款'
     db.session.add(contract)
     db.session.commit()
+    flash("付款状态修改成功", 'success')
     return redirect(url_for('order_manage.finance_contract_index'))
 
 
@@ -318,6 +319,16 @@ def tracking_infos():
 @order_manage.route('/tracking_info/new/<int:contract_id>', methods = ['GET', 'POST'])
 def tracking_info_new(contract_id):
     contract = Contract.query.get_or_404(contract_id)
+    default_production_num = {}
+    for order_content in contract.order.order_contents:
+        default_production_num[order_content.sku_code] = order_content.number
+        if not (order_content.batch_info == {} or order_content.batch_info is None):
+            default_production_num[order_content.sku_code] = 0
+        else:
+            for inv in load_inventories_by_code(order_content.sku_code):
+                for i in range(1, (len(inv.get("batches")) + 1)):
+                    if int(inv.get("batches")[i - 1].get('stocks')) > order_content.number:
+                        default_production_num[order_content.sku_code] = 0
     if not contract.shipment_status == '未出库':
         flash('不能重复生成物流状态', 'warning')
         return redirect(url_for('order_manage.contract_index'))
@@ -362,10 +373,11 @@ def tracking_info_new(contract_id):
             return redirect(url_for('order_manage.tracking_infos'))
         else:
             flash('对接人姓名和电话必须填写', 'danger')
-            return redirect(url_for('order_manage.tracking_info_new', contract_id = contract.id))
+            return redirect(url_for('order_manage.tracking_info_new', contract_id=contract.id))
     else:
         form = TrackingInfoForm1()
-    return render_template('order_manage/tracking_info_new.html', contract = contract, form = form)
+    return render_template('order_manage/tracking_info_new.html', contract=contract, form=form,
+                           default_production_num=default_production_num)
 
 
 @order_manage.route('/tracking_info/<int:id>/edit', methods=['GET', 'POST'])

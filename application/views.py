@@ -214,13 +214,13 @@ def mobile_create_order():
         if pickup_way.strip() == '':
             flash('取货方式必须选择', 'warning')
             return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
+        if buyer_recipient.strip() == '':
+            flash('收件人必须填写', 'warning')
+            return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
+        if buyer_phone.strip() == '':
+            flash('收件人电话号码必须填写', 'warning')
+            return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
         if pickup_way.strip() == '送货上门':
-            if buyer_recipient.strip() == '':
-                flash('送货上门时收件人必须填写', 'warning')
-                return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
-            if buyer_phone.strip() == '':
-                flash('送货上门时收件人电话号码必须填写', 'warning')
-                return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
             if buyer_address.strip() == '':
                 flash('送货上门时收件人地址必须填写', 'warning')
                 return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
