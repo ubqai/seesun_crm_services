@@ -295,7 +295,7 @@ def mobile_contract_show(id):
 # --- Design ---
 @app.route('/mobile/design', methods=['GET', 'POST'])
 def mobile_design():
-    project_reports = ProjectReport.query.filter_by(status='申请通过，项目已被保护')
+    project_reports = ProjectReport.query.filter_by(status='申请通过，项目已被保护(有效期三个月)')
     if request.method == 'POST':
         if request.form.get('filing_no') and request.files.get('ul_file'):
             project_report = ProjectReport.query.filter_by(report_no=request.form.get('filing_no')).first()
@@ -532,14 +532,26 @@ def ckupload():
 @app.route('/mobile/project_report/new', methods=['GET', 'POST'])
 def new_project_report():
     if request.method == 'POST':
-        report_content = {"buyer": request.form.get("buyer"),
-                          "buyer_company": request.form.get("buyer_company"),
-                          "buyer_address": request.form.get("buyer_address"),
+        report_content = {"app_company": request.form.get("app_company"),
+                          "project_follower": request.form.get("project_follower"),
+                          "contract_phone": request.form.get("contract_phone"),
+                          "contract_fax": request.form.get("contract_fax"),
                           "project_name": request.form.get("project_name"),
-                          "product_series": request.form.get("product_series"),
-                          "contact_phone": request.form.get("contact_phone"),
-                          "contact_name": request.form.get("contact_name"),
-                          "project_memo": request.form.get("project_memo")}
+                          "report_date": request.form.get("report_date"),
+                          "project_address": request.form.get("project_address"),
+                          "project_area": request.form.get("project_area"),
+                          "product_place": request.form.get("product_place"),
+                          "recommended_product_line": request.form.get("recommended_product_line"),
+                          "recommended_product_color": request.form.get("recommended_product_color"),
+                          "project_completion_time": request.form.get("project_completion_time"),
+                          "expected_order_time": request.form.get("expected_order_time"),
+                          "competitive_brand_situation": request.form.get("competitive_brand_situation"),
+                          "project_owner": request.form.get("project_owner"),
+                          "project_decoration_total": request.form.get("project_decoration_total"),
+                          "project_design_company": request.form.get("project_design_company"),
+                          "is_authorization_needed": request.form.get("is_authorization_needed"),
+                          "expected_authorization_date": request.form.get("expected_authorization_date"),
+                          "authorize_company_name": request.form.get('authorize_company_name')}
         project_report = ProjectReport(
             app_id=current_user.id,
             status="新创建待审核",

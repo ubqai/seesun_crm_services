@@ -12,38 +12,60 @@
 		<p class="text-title bot-gap-1">填写项目报备信息</p>
 		
 		<div class="wrapper-style">
-			<div class="wrapper-header"><span class="wrapper-header-title">项目详情</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
-            <div class="wrapper-inner">
-                <p class="text-content text-sm"><input class="form-control" name="buyer" placeholder="要约方(买方)"></p>
-                <div class="light-divider"></div>
-                <p class="text-content text-sm"><input class="form-control" name="buyer_company" placeholder="收货单位"></p>
-                <div class="light-divider"></div>
-                <p class="text-content text-sm"><input class="form-control" name="buyer_address" placeholder="收货地址"></p>
-                <div class="light-divider"></div>
-                <p class="text-content text-sm"><input class="form-control" name="project_name" placeholder="项目名称"></p>
-                <div class="light-divider"></div>
-                <p class="text-content text-sm">
-                    <select class="form-control" name="product_series" placeholder="产品系列">
-                        <option value="">项目产品系列</option>
-                        <option value="商用">商用</option>
-                        <option value="运动">运动</option>
-                        <option value="家用">家用</option>
-                    </select>
-                </p>
-                <div class="light-divider"></div>
-            </div>
+			<div class="wrapper-header"><span class="wrapper-header-title">FIRST STEP</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
+			<div class="wrapper-inner">
+				<p class="text-content text-sm"><input class="form-control" name="app_company" placeholder="申请公司名称"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control" name="project_follower" placeholder="项目跟进人"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control" name="contract_phone" placeholder="联系电话"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control" name="contract_fax" placeholder="联系传真"></p>
+			</div>
 		</div>
 		<div class="wrapper-style top-gap-3">
-			<div class="wrapper-header"><span class="wrapper-header-title">经销商详情</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
-            <div class="wrapper-inner">
-                <p class="text-content text-sm"><input class="form-control" name="dealer_name" value="{{ current_user.nickname }}" readonly="readonly"></p>
-                <div class="light-divider"></div>
-                <p class="text-content text-sm"><input class="form-control" name="contact_phone" value="{{ current_user.user_infos[0].telephone }}"></p>
-				<div class="light-divider"></div>
-                <p class="text-content text-sm"><input class="form-control" name="contact_name" value="{{ current_user.user_infos[0].name }}"></p>
-				<div class="light-divider"></div>
-                <p class="text-content text-sm"><input class="form-control" name="project_memo" placeholder="备注："></p>
-				<div class="light-divider"></div>
+			<div class="wrapper-header"><span class="wrapper-header-title">SECOND STEP</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
+			<div class="wrapper-inner">
+				<p class="text-content text-sm"><input class="form-control" name="project_name" placeholder="项目名称"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control datetimePicker" name="report_date" placeholder="项目报备日期"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control" name="project_address" placeholder="项目地址"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control" name="project_area" placeholder="项目面积"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+			</div>
+		</div>
+		<div class="wrapper-style top-gap-3">
+			<div class="wrapper-header"><span class="wrapper-header-title">THIRD STEP</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
+			<div class="wrapper-inner">
+                <p class="text-content text-sm"><input class="form-control" name="product_place" placeholder="产品使用场所"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control" name="recommended_product_line" placeholder="推荐产品系列"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control" name="recommended_product_color" placeholder="推荐产品颜色"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control datetimePicker" name="project_completion_time" placeholder="项目完工时间"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control datetimePicker" name="expected_order_time" placeholder="预计订购产品时间"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control" name="competitive_brand_situation" placeholder="竞争品牌情况"></p>
+			</div>
+		</div>
+		<div class="wrapper-style top-gap-3">
+			<div class="wrapper-header"><span class="wrapper-header-title">FOURTH STEP</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
+			<div class="wrapper-inner">
+				<p class="text-content text-sm"><input class="form-control" name="project_owner" placeholder="项目业主"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control" name="project_decoration_total" placeholder="项目装饰总包"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control" name="project_design_company" placeholder="项目设计公司"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control" name="is_authorization_needed" placeholder="是否需要授权书"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control datetimePicker" name="expected_authorization_date" placeholder="授权预计开具日期"></p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm"><input class="form-control" name="authorize_company_name" placeholder="需授权公司名称"></p>
 			</div>
 		</div>
 	</div>

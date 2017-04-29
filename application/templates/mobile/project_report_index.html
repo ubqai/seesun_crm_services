@@ -9,26 +9,14 @@
 
 		{% for project_report in project_reports.items %}
 			<div class="wrapper-style rect top-gap-2">
-				<div class="wrapper-header"><span class="wrapper-header-title">{{ project_report.report_no }}</span><span class="wrapper-header-icon glyphicon glyphicon-book pull-right"></span></div>
+				<div class="wrapper-header"><span class="wrapper-header-title">{{ project_report.report_no }}</span></div>
 				<div class="wrapper-inner clearfix">
 					<div class="wrapper-inner-img"><img class="full-img" src="/static/images/doc.png"></div>
 					<div class="wrapper-inner-content clearfix">
-						<div class="wrapper-row">
-							<p class="set-2">要约方(买方) :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ project_report.report_content.get('buyer') }}</span></p>
-							<p class="set-2">创建日期 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ project_report.created_at.strftime('%Y-%m-%d') }}</span></p>
-						</div>
-						<div class="wrapper-row">
-							<p class="set-2">项目名称 :<br> <span class="text-dark"><span class="glyphicon glyphicon-leaf text-gray"></span> {{ project_report.report_content.get('project_name') }}</span></p>
-							<p class="set-2">状态 :<br> 
-									{% if project_report.status == '新创建待审核' %}
-											<span class="text-primary"><span class="glyphicon glyphicon-leaf"></span> {{ project_report.status }}</span>
-									{% elif project_report.status == '申请通过，项目已被保护' or project_report.status == '项目报备审核通过' %}
-											<span class="text-success"><span class="glyphicon glyphicon-leaf"></span> {{ project_report.status }}</span>
-									{% else %}
-											<span class="text-danger"><span class="glyphicon glyphicon-leaf"></span> {{ project_report.status }}</span>
-									{% endif %}
-							</p>
-						</div>
+						<p class="set-2">申请公司名称 :<br> <span class="text-dark">-- {{ project_report.report_content.get('app_company') }}</span></p>
+						<p class="set-2">创建日期 :<br> <span class="text-dark">-- {{ project_report.created_at.strftime('%Y-%m-%d') }}</span></p>
+						<p class="set-2">项目名称 :<br> <span class="text-dark">-- {{ project_report.report_content.get('project_name') }}</span></p>
+						<p class="set-2">状态 :<br> <span class="text-dark">-- {{ project_report.status }}</span></p>
 					</div>
 				</div>
 				<div class="wrapper-footer text-center">

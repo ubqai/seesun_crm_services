@@ -39,42 +39,100 @@
 						</div>
             <div class="form-item">
 								<div class="sub-form-item">
-									<span>要约方(买方):</span>
-									<span>{{ project_report.report_content.get('buyer') }}</span>
+									<span>申请公司名称:</span>
+									<span>{{ project_report.report_content.get('app_company') }}</span>
 								</div>
 								<div class="sub-form-item">
-									<span>收货单位:</span>
-									<span>{{ project_report.report_content.get('buyer_company') }}</span>
+									<span>项目跟进人:</span>
+									<span>{{ project_report.report_content.get('project_follower') }}</span>
 								</div>
 								<div class="sub-form-item">
-									<span>收货地址:</span>
-									<span>{{ project_report.report_content.get('buyer_address') }}</span>
+									<span>联系电话:</span>
+									<span>{{ project_report.report_content.get('contract_phone') }}</span>
 								</div>
             </div>
 						<div class="form-item">
+								<div class="sub-form-item">
+									<span>联系传真:</span>
+									<span>{{ project_report.report_content.get('contract_fax') }}</span>
+								</div>
 								<div class="sub-form-item">
 									<span>项目名称:</span>
 									<span>{{ project_report.report_content.get('project_name') }}</span>
 								</div>
 								<div class="sub-form-item">
-									<span>产品系列:</span>
-									<span>{{ project_report.report_content.get('product_series') }}</span>
-								</div>
-								<div class="sub-form-item">
-									<span>联系人:</span>
-									<span>{{ project_report.report_content.get('contact_name') }}</span>
+									<span>项目报备日期:</span>
+									<span>{{ project_report.report_content.get('report_date') }}</span>
 								</div>
             </div>
 						<div class="form-item">
 								<div class="sub-form-item">
-									<span>联系电话:</span>
-									<span>{{ project_report.report_content.get('contact_phone') }}</span>
+									<span>项目地址:</span>
+									<span>{{ project_report.report_content.get('project_address') }}</span>
 								</div>
 								<div class="sub-form-item">
-									<span>备注:</span>
-									<span>{{ project_report.report_content.get('project_memo') }}</span>
+									<span>项目面积:</span>
+									<span>{{ project_report.report_content.get('project_area') }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>产品使用场所:</span>
+									<span>{{ project_report.report_content.get('product_place') }}</span>
 								</div>
             </div>
+						<div class="form-item">
+								<div class="sub-form-item">
+									<span>推荐产品系列:</span>
+									<span>{{ project_report.report_content.get('recommended_product_line') }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>推荐产品颜色:</span>
+									<span>{{ project_report.report_content.get('recommended_product_color') }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>项目完工时间:</span>
+									<span>{{ project_report.report_content.get('project_completion_time') }}</span>
+								</div>
+            </div>
+						<div class="form-item">
+								<div class="sub-form-item">
+									<span>预计订购产品时间:</span>
+									<span>{{ project_report.report_content.get('expected_order_time') }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>竞争品牌情况:</span>
+									<span>{{ project_report.report_content.get('competitive_brand_situation') }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>项目业主:</span>
+									<span>{{ project_report.report_content.get('project_owner') }}</span>
+								</div>
+            </div>
+						<div class="form-item">
+								<div class="sub-form-item">
+									<span>项目装饰总包:</span>
+									<span>{{ project_report.report_content.get('project_decoration_total') }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>项目设计公司:</span>
+									<span>{{ project_report.report_content.get('project_design_company') }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>是否需要授权书:</span>
+									<span>{{ project_report.report_content.get('is_authorization_needed') }}</span>
+								</div>
+            </div>
+						<div class="form-item">
+								<div class="sub-form-item">
+									<span>授权预计开具日期:</span>
+									<span>{{ project_report.report_content.get('expected_authorization_date') }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>需授权公司名称:</span>
+									<span>{{ project_report.report_content.get('authorize_company_name') }}</span>
+								</div>
+
+            </div>
+
         </div>
 				
 				
