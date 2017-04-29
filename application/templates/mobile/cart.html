@@ -14,13 +14,26 @@
 			<div class="wrapper-style top-gap-3">
 				<div class="wrapper-header"><span class="wrapper-header-title">项目详情</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
 				<div class="wrapper-inner">
-					<p class="text-content text-sm"><input class="form-control" name="buyer" placeholder="要约方(买方)"></p>
+					<p class="text-content text-sm"><span class="wrapper-header-title">要约方(买方)：</span><input class="form-control" name="buyer" value="{{ buyer_info.get('buyer', '')}}"></p>
 					<div class="light-divider"></div>
-					<p class="text-content text-sm"><input class="form-control" name="buyer_company" placeholder="收货单位"></p>
+					<p class="text-content text-sm"><span class="wrapper-header-title">收货单位：</span><input class="form-control" name="buyer_company" value="{{ buyer_info.get('buyer_company', '')}}"></p>
 					<div class="light-divider"></div>
-					<p class="text-content text-sm"><input class="form-control" name="buyer_address" placeholder="收货地址"></p>
+					<p class="text-content text-sm"><span class="wrapper-header-title">收货地址：</span><input class="form-control" name="buyer_address" value="{{ buyer_info.get('buyer_address', '')}}"></p>
 					<div class="light-divider"></div>
-					<p class="text-content text-sm"><input class="form-control" name="project_name" placeholder="项目名称"></p>
+					<p class="text-content text-sm"><span class="wrapper-header-title">收件人：</span><input class="form-control" name="buyer_recipient" value="{{ buyer_info.get('buyer_recipient', '')}}"></p>
+					<div class="light-divider"></div>
+					<p class="text-content text-sm"><span class="wrapper-header-title">收件人电话号码：</span><input class="form-control" name="buyer_phone" value="{{ buyer_info.get('buyer_phone', '')}}"></p>
+					<div class="light-divider"></div>
+                    <p class="text-content text-sm">
+                        <span class="wrapper-header-title">取货方式：</span>
+                        <select class="form-control" name="pickup_way">
+                            <option value=""></option>
+                            <option value="送货上门" {{ 'selected' if buyer_info.get('pickup_way', '') == '送货上门' else '' }}>送货上门</option>
+                            <option value="客户自提" {{ 'selected' if buyer_info.get('pickup_way', '') == '客户自提' else '' }}>客户自提</option>
+                        </select>
+                    </p>
+					<div class="light-divider"></div>
+					<p class="text-content text-sm"><span class="wrapper-header-title">项目名称：</span><input class="form-control" name="project_name" value="{{buyer_info.get('project_name', '')}}"></p>
 					<div class="light-divider"></div>
 				</div>
 			</div>
@@ -28,13 +41,13 @@
 			<div class="wrapper-style top-gap-3">
 				<div class="wrapper-header"><span class="wrapper-header-title">经销商详情</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
 				<div class="wrapper-inner">
-            <p class="text-content text-sm"><input class="form-control" name="dealer_name" value="{{ current_user.nickname }}" readonly="readonly"></p>
+            <p class="text-content text-sm"><span class="wrapper-header-title">经销商：</span><input class="form-control" name="dealer_name" value="{{ current_user.nickname }}" readonly="readonly"></p>
 						<div class="light-divider"></div>
-            <p class="text-content text-sm"><input class="form-control" name="contact_phone" value="{{ current_user.user_infos[0].telephone }}"></p>
+            <p class="text-content text-sm"><span class="wrapper-header-title">经销商联系电话：</span><input class="form-control" name="contact_phone" value="{{ current_user.user_infos[0].telephone }}"></p>
 						<div class="light-divider"></div>
-            <p class="text-content text-sm"><input class="form-control" name="contact_name" value="{{ current_user.user_infos[0].name }}"></p>
+            <p class="text-content text-sm"><span class="wrapper-header-title">经销商联系人：</span><input class="form-control" name="contact_name" value="{{ current_user.user_infos[0].name }}"></p>
 						<div class="light-divider"></div>
-            <p class="text-content text-sm"><input class="form-control" name="order_memo" placeholder="备注："></p>
+            <p class="text-content text-sm"><span class="wrapper-header-title">备注：</span><input class="form-control" name="order_memo" value="{{ buyer_info.get('order_memo', '')}}"></p>
 						<div class="light-divider"></div>
 					</div>
 			</div>

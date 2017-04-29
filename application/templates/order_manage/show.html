@@ -56,12 +56,26 @@
 									<span>{{ order.buyer_info['project_name'] }}</span>
 								</div>
 								<div class="sub-form-item">
-									<span>联系姓名:</span>
+									<span>经销商联系人:</span>
 									<span>{{ order.buyer_info['contact_name'] }}</span>
 								</div>
 								<div class="sub-form-item">
-									<span>联系电话:</span>
+									<span>经销商联系电话:</span>
 									<span>{{ order.buyer_info['contact_phone'] }}</span>
+								</div>
+            </div>
+						<div class="form-item">
+								<div class="sub-form-item">
+									<span>收件人:</span>
+									<span>{{ order.buyer_info['buyer_recipient'] }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>收件人电话号码:</span>
+									<span>{{ order.buyer_info['buyer_phone'] }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>取货方式:</span>
+									<span>{{ order.buyer_info['pickup_way'] }}</span>
 								</div>
             </div>
 						<div class="title-style">

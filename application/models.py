@@ -335,6 +335,10 @@ class Order(db.Model, Rails):
         else:
             return 0
 
+    @property
+    def sale_contract_phone(self):
+        return '' if self.sale_contract_id is None else User.query.get(self.sale_contract_id).user_infos[0].telephone
+
 
 class Contract(db.Model):
     __tablename__ = 'contracts'
@@ -377,7 +381,7 @@ class OrderContent(db.Model, Rails):
     product_name = db.Column(db.String(300))
     sku_specification = db.Column(db.String(500))
     sku_code = db.Column(db.String(30))
-    number = db.Column(db.Integer)
+    number = db.Column(db.Float)
     square_num = db.Column(db.Float)
     price = db.Column(db.Float, default=0)
     amount = db.Column(db.Float, default=0)

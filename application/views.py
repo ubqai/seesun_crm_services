@@ -170,7 +170,7 @@ def mobile_cart():
             return redirect(url_for('mobile_storage_show', product_id=request.form.get('product_id')))
         elif request.form.get('area_id') is not None:
             return redirect(url_for('stocks_share_for_order', area_id=request.form.get('area_id')))
-    return render_template('mobile/cart.html', order=order)
+    return render_template('mobile/cart.html', order=order, buyer_info={})
 
 
 @app.route('/mobile/cart_delete/<int:sku_id>', methods=['GET', 'POST'])
@@ -193,13 +193,37 @@ def cart_delete(sku_id):
 def mobile_create_order():
     if 'order' in session and session['order']:
         order_no = 'SS' + datetime.datetime.now().strftime('%y%m%d%H%M%S')
-        buyer = request.args.get('buyer')
-        buyer_company = request.args.get('buyer_company')
-        buyer_address = request.args.get('buyer_address')
-        contact_phone = request.args.get('contact_phone')
-        contact_name = request.args.get('contact_name')
-        project_name = request.args.get('project_name')
-        dealer_name = request.args.get('dealer_name')
+        buyer = request.args.get('buyer', '')
+        buyer_company = request.args.get('buyer_company', '')
+        buyer_address = request.args.get('buyer_address', '')
+        contact_phone = request.args.get('contact_phone', '')
+        contact_name = request.args.get('contact_name', '')
+        project_name = request.args.get('project_name', '')
+        dealer_name = request.args.get('dealer_name', '')
+        buyer_recipient = request.args.get('buyer_recipient', '')
+        buyer_phone = request.args.get('buyer_phone', '')
+        pickup_way = request.args.get('pickup_way', '')
+        order_memo = request.args.get('order_memo')
+        buyer_info = {"buyer": buyer, "buyer_company": buyer_company,
+                      "buyer_address": buyer_address, "contact_phone": contact_phone,
+                      "contact_name": contact_name, "project_name": project_name,
+                      "dealer_name": dealer_name, "buyer_recipient": buyer_recipient,
+                      "buyer_phone": buyer_phone, "pickup_way": pickup_way,
+                      "order_memo": order_memo}
+        current_app.logger.info(buyer_recipient)
+        if pickup_way.strip() == '':
+            flash('取货方式必须选择', 'warning')
+            return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
+        if pickup_way.strip() == '送货上门':
+            if buyer_recipient.strip() == '':
+                flash('送货上门时收件人必须填写', 'warning')
+                return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
+            if buyer_phone.strip() == '':
+                flash('送货上门时收件人电话号码必须填写', 'warning')
+                return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
+            if buyer_address.strip() == '':
+                flash('送货上门时收件人地址必须填写', 'warning')
+                return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
         province_id = current_user.sales_areas.first().parent_id
         us = db.session.query(User).join(User.departments).join(User.sales_areas).filter(
             User.user_or_origin == 3).filter(DepartmentHierarchy.name == "销售部").filter(
@@ -211,13 +235,10 @@ def mobile_create_order():
             sale_contract_id = None
             sale_contract = None
         order = Order(order_no=order_no, user=current_user, order_status='新订单',
-                      order_memo=request.args.get('order_memo'),
+                      order_memo=order_memo,
                       sale_contract_id=sale_contract_id,
                       sale_contract=sale_contract,
-                      buyer_info={"buyer": buyer, "buyer_company": buyer_company,
-                                  "buyer_address": buyer_address, "contact_phone": contact_phone,
-                                  "contact_name": contact_name, "project_name": project_name,
-                                  "dealer_name": dealer_name})
+                      buyer_info=buyer_info)
         db.session.add(order)
         for order_content in session['order']:
             batch_info = {}
