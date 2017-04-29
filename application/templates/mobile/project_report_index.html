@@ -11,7 +11,7 @@
 			<div class="wrapper-style rect top-gap-2">
 				<div class="wrapper-header"><span class="wrapper-header-title">{{ project_report.report_no }}</span></div>
 				<div class="wrapper-inner clearfix">
-					<div class="wrapper-inner-img"><img class="full-img" src="/static/images/doc.png"></div>
+					<div class="wrapper-inner-img"><img class="full-img" src="{{ project_report.pic_files[0] }}"></div>
 					<div class="wrapper-inner-content clearfix">
 						<p class="set-2">申请公司名称 :<br> <span class="text-dark">-- {{ project_report.report_content.get('app_company') }}</span></p>
 						<p class="set-2">创建日期 :<br> <span class="text-dark">-- {{ project_report.created_at.strftime('%Y-%m-%d') }}</span></p>

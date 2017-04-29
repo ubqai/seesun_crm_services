@@ -7,7 +7,7 @@
     <div class="bot-gap-2">
 		<a href="{{ url_for('project_report_index') }}" class="btn btn-style-1 text-sm">项目报备申请列表</a>
 	</div>
-    <form action="{{ url_for('new_project_report') }}" method="post">
+    <form action="{{ url_for('new_project_report') }}"  enctype="multipart/form-data" method="post">
 	<div class="text bot-gap-2">
 		<p class="text-title bot-gap-1">填写项目报备信息</p>
 		
@@ -66,6 +66,25 @@
 				<p class="text-content text-sm"><input class="form-control datetimePicker" name="expected_authorization_date" placeholder="授权预计开具日期"></p>
 				<div class="light-divider top-gap-1 bot-gap-1"></div>
 				<p class="text-content text-sm"><input class="form-control" name="authorize_company_name" placeholder="需授权公司名称"></p>
+			</div>
+		</div>
+		<div class="wrapper-style top-gap-3">
+			<div class="wrapper-header"><span class="wrapper-header-title">FIFTH STEP(上传现场图片)</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
+			<div class="wrapper-inner">
+				<div class="file form-item bot-gap-2" style="float:left; width:50%;position:relative">
+					<a href="javascript:;">
+						<img src="/static/images/upload-cloud.png" style="display: block; margin: 0px auto; width: 96px; height:96px">
+						<label>上传现场图片</label>
+						<input type="file" name="pic_files[]" class="form-control" multiple="multiple" id="test">
+					</a>
+				</div>
+
+				<div class="file form-item bot-gap-2 pic-add" style="float:left; width:50%">
+					<a href="javascript:;">
+						<img src="/static/images/pic-add-1.png" style="display: block; margin: 0px auto; width: 96px;">
+						<label>添加图片</label>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>

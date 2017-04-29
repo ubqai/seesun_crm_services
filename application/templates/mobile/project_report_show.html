@@ -75,6 +75,11 @@
 						<p class="text-sm">需授权公司名称：<span class="contract-value">{{ project_report.report_content.get('authorize_company_name') }}</span></p>
 					</div>
 				</div>
+				<div class="contract-item">
+					{% for pic_file in project_report.pic_files %}
+                        <img class="full-img" src="{{ pic_file }}">
+                    {% endfor %}
+				</div>
 
 				</div>
 

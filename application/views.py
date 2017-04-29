@@ -552,11 +552,22 @@ def new_project_report():
                           "is_authorization_needed": request.form.get("is_authorization_needed"),
                           "expected_authorization_date": request.form.get("expected_authorization_date"),
                           "authorize_company_name": request.form.get('authorize_company_name')}
+        upload_files = request.files.getlist('pic_files[]')
+        current_app.logger.info("upload_files")
+        current_app.logger.info(upload_files)
+        filenames = []
+        for file in upload_files:
+            file_path = save_upload_file(file)
+            current_app.logger.info("file_path")
+            current_app.logger.info(file_path)
+            if file_path is not None:
+                filenames.append(file_path)
         project_report = ProjectReport(
             app_id=current_user.id,
             status="新创建待审核",
             report_no="PR%s" % datetime.datetime.now().strftime('%y%m%d%H%M%S'),
-            report_content=report_content
+            report_content=report_content,
+            pic_files=filenames
         )
         db.session.add(project_report)
         db.session.commit()

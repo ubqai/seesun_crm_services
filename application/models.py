@@ -722,6 +722,7 @@ class ProjectReport(db.Model):
     audit_content = db.Column(db.JSON, default={})
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    pic_files = db.Column(db.JSON)
 
     @property
     def app_name(self):

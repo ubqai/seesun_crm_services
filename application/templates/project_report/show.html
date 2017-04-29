@@ -132,6 +132,14 @@
 								</div>
 
             </div>
+			<div class="form-item">
+								{% for file in project_report.pic_files %}
+								<div class="col-3 thumbnail">
+										<img src="{{ file }}" class="full-img">
+								</div>
+								{% endfor %}
+
+            </div>
 
         </div>
 				
