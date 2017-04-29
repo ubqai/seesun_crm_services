@@ -134,7 +134,7 @@
             </table>
         </div>
         {% if order.order_status=="新订单" %}
-            {% if order.sale_director_id == current_user.id %}
+            {% if order.sale_director_id == current_user.id or order.sale_contract_id == current_user.id%}
             <div class="text-right top-gap-3">
                 <a class="btn btn-default my-btn right-gap-2" href="{{ url_for('order_manage.contract_new', id=order.id) }}">同意生成合同</a>
                 <a class="btn btn-default my-btn" href="{{ url_for('order_manage.order_cancel', id=order.id) }}">取消订单</a>

@@ -64,7 +64,6 @@ def contract_new(id):
         params = {
             "amount": request.form.get("amount"),
             "delivery_time": request.form.get("delivery_time"),
-            "offer_no": request.form.get("offer_no"),
             "logistics_costs": request.form.get('logistics_costs'),
             "live_floor_costs": request.form.get('live_floor_costs'),
             "self_leveling_costs": request.form.get('self_leveling_costs'),
@@ -82,9 +81,6 @@ def contract_new(id):
         current_app.logger.info(request.form.get("delivery_time"))
         if request.form.get("delivery_time") is None or request.form.get("delivery_time") == '':
             flash('交货期必须填写', 'warning')
-            return render_template('order_manage/contract_new.html', order=order, params=params)
-        if request.form.get("offer_no") is None or request.form.get("offer_no") == '':
-            flash('要约NO.必须填写', 'warning')
             return render_template('order_manage/contract_new.html', order=order, params=params)
         if not request.form.get("tax_costs", '') == '':
             if not is_number(request.form.get("tax_costs")):
@@ -115,7 +111,7 @@ def contract_new(id):
             db.session.add(order_content)
         contract_content = {"amount": request.form.get("amount"),
                             "delivery_time": request.form.get("delivery_time"),
-                            "offer_no": request.form.get("offer_no"),
+                            "offer_no": 'YYS' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
                             "logistics_costs": request.form.get('logistics_costs'),
                             "live_floor_costs": request.form.get('live_floor_costs'),
                             "self_leveling_costs": request.form.get('self_leveling_costs'),
@@ -183,7 +179,6 @@ def contract_edit(id):
     order = contract.order
     form = ContractForm(amount=contract.contract_content.get('amount'),
                         delivery_time=contract.contract_content.get('delivery_time'),
-                        offer_no=contract.contract_content.get('offer_no'),
                         logistics_costs=contract.contract_content.get('logistics_costs'),
                         live_floor_costs=contract.contract_content.get('live_floor_costs'),
                         self_leveling_costs=contract.contract_content.get('self_leveling_costs'),
@@ -200,9 +195,6 @@ def contract_edit(id):
         current_app.logger.info(request.form.get("delivery_time"))
         if request.form.get("delivery_time") is None or request.form.get("delivery_time") == '':
             flash('交货期必须填写', 'warning')
-            return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
-        if request.form.get("offer_no") is None or request.form.get("offer_no") == '':
-            flash('要约NO.必须填写', 'warning')
             return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
         if not request.form.get("tax_costs", '') == '':
             if not is_number(request.form.get("tax_costs")):
@@ -232,7 +224,6 @@ def contract_edit(id):
             db.session.add(order_content)
         contract_content = {"amount": request.form.get("amount"),
                             "delivery_time": request.form.get("delivery_time"),
-                            "offer_no": request.form.get("offer_no"),
                             "logistics_costs": request.form.get('logistics_costs'),
                             "live_floor_costs": request.form.get('live_floor_costs'),
                             "self_leveling_costs": request.form.get('self_leveling_costs'),
@@ -249,6 +240,7 @@ def contract_edit(id):
         db.session.add(contract)
         db.session.add(order)
         db.session.commit()
+        flash("订单修改成功", 'success')
         return redirect(url_for('order_manage.contract_index'))
     return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
 
