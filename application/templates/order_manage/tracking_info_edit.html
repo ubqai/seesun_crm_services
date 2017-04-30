@@ -154,6 +154,18 @@
                                class="form-input form-control" type="text">
                     </div>
                     {% endfor %}
+                    <div class="form-item-2 col-3">
+                        <span style="font-size: 12px;"><label for="recipient">收货人</label></span>
+                        <input name="recipient" id="recipient" value="{{ tracking_info.delivery_infos.get('recipient') or contract.order.buyer_info.get('buyer') or '' }}" class="form-input form-control" type="text">
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span style="font-size: 12px;"><label for="recipient_phone">收货人电话</label></span>
+                        <input name="recipient_phone" id="recipient_phone" value="{{ tracking_info.delivery_infos.get('recipient_phone') or contract.order.buyer_info.get('buyer_phone') or '' }}" class="form-input form-control" type="text">
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span style="font-size: 12px;"><label for="recipient_address">收货人地址</label></span>
+                        <input name="recipient_address" id="recipient_address" value="{{ tracking_info.delivery_infos.get('recipient_address') or contract.order.buyer_info.get('buyer_address') or '' }}" class="form-input form-control" type="text">
+                    </div>
                 </div>
             </div>
             <div class="text-right top-gap-1">

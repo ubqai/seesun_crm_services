@@ -385,7 +385,6 @@ def tracking_info_edit(id):
     tracking_info = TrackingInfo.query.get_or_404(id)
     contract = Contract.query.filter(Contract.contract_no == tracking_info.contract_no).first()
     delivery_infos_dict = {
-        'recipient': '收货人',
         'tracking_no': '物流单号',
         'delivery_company': '货运公司名称',
         'delivery_tel': '货运公司电话',
@@ -395,12 +394,15 @@ def tracking_info_edit(id):
         'freight': '运费(元)',
         'pickup_no': '提货号码'
     }
+    # 需默认值 recipient, recipient_phone, recipient_address
     today = datetime.datetime.now().strftime('%F')
     if request.method == 'POST':
         form = TrackingInfoForm2(request.form)
         tracking_info = form.save(tracking_info)
         tracking_info.delivery_infos = {
             'recipient': request.form.get('recipient'),
+            'recipient_phone': request.form.get('recipient_phone'),
+            'recipient_address': request.form.get('recipient_address'),
             'tracking_no': request.form.get('tracking_no'),
             'delivery_company': request.form.get('delivery_company'),
             'delivery_tel': request.form.get('delivery_tel'),

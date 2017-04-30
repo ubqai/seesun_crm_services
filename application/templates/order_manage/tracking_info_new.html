@@ -23,11 +23,11 @@
                 </div>
                 <div class="form-item-2 col-3">
                     <span>*{{ form.receiver_name.label }}</span>
-                    {{ form.receiver_name(class = 'form-input form-control', value = contract.order.buyer_info.get('buyer_recipient', ''), disabled='') }}
+                    {{ form.receiver_name(class = 'form-input form-control', value = contract.order.buyer_info.get('buyer_recipient', ''), readonly='') }}
                 </div>
                 <div class="form-item-2 col-3">
                     <span>*{{ form.receiver_tel.label }}</span>
-                    {{ form.receiver_tel(class = 'form-input form-control', value = contract.order.buyer_info.get('buyer_phone', ''), disabled='') }}
+                    {{ form.receiver_tel(class = 'form-input form-control', value = contract.order.buyer_info.get('buyer_phone', ''), readonly='') }}
                 </div>
             </div>
         </div>

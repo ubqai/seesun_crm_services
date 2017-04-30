@@ -9,7 +9,7 @@ class Configuration(object):
     IMAGES_DIR = os.path.join(STATIC_DIR, 'images')
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
-    ALLOWED_EXTENSIONS = set('jpg JPG png PNG gif GIF pdf PDF cad CAD'.split())
+    ALLOWED_EXTENSIONS = set('jpg JPG png PNG gif GIF pdf PDF cad CAD rar RAR zip ZIP'.split())
 
 
 class DevelopmentConfiguration(Configuration):
