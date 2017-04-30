@@ -338,6 +338,18 @@ def material_index():
     return render_template('content/material_application/material_index.html', materials=materials)
 
 
+@content.route('/material/statistics')
+def material_statistics():
+    materials = Material.query.order_by(Material.created_at.desc())
+    material_names = [material.name for material in materials]
+    material_stock_nums = [material.stock_num for material in materials]
+    material_used_nums = [material.used_num for material in materials]
+    material_remain_nums = [material.remain_num for material in materials]
+    return render_template('content/material_application/material_statistics.html', material_names=material_names,
+                           material_stock_nums=material_stock_nums, material_used_nums=material_used_nums,
+                           material_remain_nums=material_remain_nums)
+
+
 @content.route('/material/new', methods=['GET', 'POST'])
 def material_new():
     if request.method == 'POST':

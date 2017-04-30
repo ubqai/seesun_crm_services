@@ -8,13 +8,14 @@
         <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
         <p class="contents-header-p">物料列表</p>
         <p class="contents-header-p text-sm">list of materials</p>
-        <a class="new-one" href="{{ url_for('content.material_new') }}" title="新增物料"><span class="glyphicon glyphicon-plus"></span></a>
+        <a class="new-one" href="{{ url_for('content.material_statistics') }}" title="物料统计"><span class="glyphicon glyphicon-stats"></span></a>
     </div>
     <div class="separator"><span></span></div>
 
     <div class="widget">
         <div class="widget_header">
             <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;物料列表</h4>
+            <a class="new-item" href="{{ url_for('content.material_new') }}" title="新增物料"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
         <div class="widget_contents padding-0">
             <table class="tables">
