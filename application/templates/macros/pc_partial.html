@@ -33,7 +33,13 @@
                 <a><i class="glyphicon glyphicon-shopping-cart"></i><span>销售管理</span><span class="dcjq-icon"></span></a>
                 <ul class="sub">
                     {% if current_user.is_authorized('order_manage.order_index') %}
-                    <li><a href="{{ url_for('order_manage.order_index') }}">订单列表</a></li>
+                    <li>
+                        <a href="{{ url_for('order_manage.order_index') }}">订单列表
+                            {% if current_user.get_orders_num() > 0 %}
+                            <span class="badge" style="background: #a9d86e">{{ current_user.get_orders_num() }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
                     {% else %}
                     <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>订单列表</a></li>
                     {% endif %}
@@ -48,19 +54,37 @@
                         <a>工作流与审批<span class="dcjq-icon"></span></a>
                         <ul class="t-sub {% if work_stream == 'true' %}in{% endif %}">
                             {% if current_user.is_authorized('content.material_application_index') %}
-                            <li><a href="{{ url_for('content.material_application_index') }}">物料申请</a></li>
+                            <li>
+                                <a href="{{ url_for('content.material_application_index') }}">物料申请
+                                    {% if current_user.get_material_application_num() > 0 %}
+                                    <span class="badge" style="background: #ff6c60">{{ current_user.get_material_application_num() }}</span>
+                                    {% endif %}
+                                </a>
+                            </li>
                             {% else %}
                             <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>物料申请</a></li>
                             {% endif %}
 
                             {% if current_user.is_authorized('project_report.index') %}
-                            <li><a href="{{ url_for('project_report.index') }}">项目报备申请</a></li>
+                            <li>
+                                <a href="{{ url_for('project_report.index') }}">项目报备申请
+                                    {% if current_user.get_project_report_num() > 0 %}
+                                    <span class="badge" style="background: #ff6c60">{{ current_user.get_project_report_num() }}</span>
+                                    {% endif %}
+                                </a>
+                            </li>
                             {% else %}
                             <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>项目报备申请</a></li>
                             {% endif %}
 
                             {% if current_user.is_authorized('inventory.share_inventory_list') %}
-                            <li><a href="{{ url_for('inventory.share_inventory_list') }}">工程剩余库存申请审核</a></li>
+                            <li>
+                                <a href="{{ url_for('inventory.share_inventory_list') }}">工程剩余库存申请审核
+                                    {% if current_user.get_share_inventory_num() > 0 %}
+                                    <span class="badge" style="background: #ff6c60">{{ current_user.get_share_inventory_num() }}</span>
+                                    {% endif %}
+                                </a>
+                            </li>
                             {% else %}
                             <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>工程剩余库存申请审核</a></li>
                             {% endif %}

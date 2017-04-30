@@ -7,6 +7,7 @@ from .. import app, db, cache
 from ..helpers import object_list, save_upload_file, delete_file, clip_image
 from ..models import Content, ContentCategory, ContentClassification, ContentClassificationOption
 from ..models import Material, MaterialApplication, MaterialApplicationContent
+from ..wechat.models import WechatCall
 from .forms import *
 
 content = Blueprint('content', __name__, template_folder='templates')
@@ -290,17 +291,42 @@ def material_application_edit(id):
         if form.validate():
             application = form.save(application)
             db.session.add(application)
-            if application.status == '等待经销商再次确认':
-                for param in request.form:
-                    if 'content' in param and request.form.get(param):
-                        content = MaterialApplicationContent.query.get(param.rsplit('_', 1)[1])
-                        content.available_number = request.form.get(param)
-                        db.session.add(content)
+            for param in request.form:
+                if 'content' in param and request.form.get(param):
+                    content = MaterialApplicationContent.query.get(param.rsplit('_', 1)[1])
+                    content.available_number = request.form.get(param)
+                    db.session.add(content)
             db.session.commit()
             flash('审核成功', 'success')
-            cache.delete_memoized(current_user.get_other_app_num)
+            cache.delete_memoized(current_user.get_material_application_num)
         else:
             flash('审核失败', 'danger')
+        WechatCall.send_template_to_user(str(application.user_id),
+                                         "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0",
+                                         {
+                                             "first": {
+                                                 "value": "您的物料申请订单状态已更改",
+                                                 "color": "#173177"
+                                             },
+                                             "keyword1": {
+                                                 "value": application.app_no,
+                                                 "color": "#173177"
+                                             },
+                                             "keyword2": {
+                                                 "value": application.status,
+                                                 "color": "#173177"
+                                             },
+                                             "keyword3": {
+                                                 "value": application.memo,
+                                                 "color": "#173177"
+                                             },
+                                             "remark": {
+                                                 "value": "感谢您的使用！",
+                                                 "color": "#173177"
+                                             },
+                                         },
+                                         url_for('mobile_material_application_show', id=application.id)
+                                         )
         return redirect(url_for('content.material_application_index'))
     form = MaterialApplicationForm(obj=application)
     return render_template('content/material_application/edit.html', application=application, form=form)

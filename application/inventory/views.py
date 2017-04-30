@@ -175,7 +175,7 @@ def audit_share_inventory(id):
         db.session.add(si)
         db.session.commit()
         flash('工程剩余库存申请审核成功', 'success')
-        cache.delete_memoized(current_user.get_other_app_num)
+        cache.delete_memoized(current_user.get_share_inventory_num)
         return redirect(url_for('inventory.share_inventory_list'))
     return render_template('inventory/audit_share_inventory.html', si=si, params={})
 

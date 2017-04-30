@@ -47,9 +47,10 @@ class MaterialForm(wtforms.Form):
 
 
 class MaterialApplicationForm(wtforms.Form):
+    # delete '等待经销商再次确认', '经销商已确认', '已取消'
     status = wtforms.SelectField(
         '审核意见',
-        choices=[('同意申请', '同意申请'), ('等待经销商再次确认', '等待经销商再次确认'), ('拒绝申请', '拒绝申请')],
+        choices=[('同意申请', '同意申请'), ('拒绝申请', '拒绝申请')],
         validators=[DataRequired(message='status is necessary')])
     memo = wtforms.TextAreaField('审核备注')
 
@@ -68,7 +69,6 @@ class MaterialApplicationSearchForm(wtforms.Form):
     )
     status = wtforms.SelectField(
         '申请状态',
-        choices=[('', ''), ('新申请', '新申请'), ('同意申请', '同意申请'), ('拒绝申请', '拒绝申请'), ('等待经销商再次确认', '等待经销商再次确认'),
-                 ('经销商已确认', '经销商已确认'), ('已完成', '已完成'), ('已取消', '已取消')]
+        choices=[('', ''), ('新申请', '新申请'), ('同意申请', '同意申请'), ('拒绝申请', '拒绝申请'), ('已完成', '已完成')]
     )
 
