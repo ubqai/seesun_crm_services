@@ -4,18 +4,27 @@
 {{ header('物料申请') }}
 
 <div class="main-content">
-	<div class="top-gap-2 table-responsive" style="border:none">
-		<table class="table table-striped">
-			<thead>
-				<tr>
-				  <th class="text-md">物料名称</th>
-				  <th class="text-md">物料数量</th>
-				</tr>
-			</thead>
-		</table>
-	</div>
+
 
 	<form action="{{ url_for('mobile_material_application_new') }}" method="post">
+		<div class="wrapper-style top-gap-3 bot-gap-2">
+			<div class="wrapper-inner">
+            	<p class="text-content text-sm">
+					<span class="wrapper-header-title">备注：</span>
+					<textarea class="form-control" name="app_memo" placeholder="如申请物料不在列表中,如产品样块,请在此填写备注"></textarea>
+				</p>
+			</div>
+		</div>
+		<div class="top-gap-2 table-responsive" style="border:none">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+					  <th class="text-md">物料名称</th>
+					  <th class="text-md">物料数量</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
 		{% for material in materials %}
 		<div class="wrapper">
 			<div class="col-6-gap line-height-34 text-md text-center">{{ material.name }}</div>

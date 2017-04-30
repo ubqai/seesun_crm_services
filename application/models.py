@@ -147,8 +147,22 @@ class Material(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     memo = db.Column(db.Text)
+    stock_num = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    application_contents = db.relationship('MaterialApplicationContent', backref='material', lazy='dynamic')
+
+    @property
+    def used_num(self):
+        count = 0
+        for application_content in self.application_contents:
+            if application_content.available_number:
+                count += application_content.available_number
+        return count
+
+    @property
+    def remain_num(self):
+        return self.stock_num - self.used_num
 
     def __repr__(self):
         return 'Material(id: %s, name: %s, ...)' % (self.id, self.name)
@@ -158,6 +172,7 @@ class MaterialApplication(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
     app_no = db.Column(db.String(30), unique=True)
     status = db.Column(db.String(50))
+    app_memo = db.Column(db.String(500))
     memo = db.Column(db.String(200))
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
@@ -170,6 +185,7 @@ class MaterialApplication(db.Model, Rails):
 
 class MaterialApplicationContent(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
+    material_id = db.Column(db.Integer, db.ForeignKey('material.id'))
     material_name = db.Column(db.String(100))
     number = db.Column(db.Integer)
     available_number = db.Column(db.Integer)

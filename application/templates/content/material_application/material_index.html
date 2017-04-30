@@ -21,16 +21,22 @@
                 <thead>
                     <tr>
                         <th>物料名称</th>
+                        <th>库存数量</th>
+                        <th>已发放数量</th>
+                        <th>剩余数量</th>
                         <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for material in materials %}
                     <tr>
-                        <td>{{ material.name }}</a></td>
+                        <td>{{ material.name }}</td>
+                        <td>{{ material.stock_num }}</td>
+                        <td>{{ material.used_num }}</td>
+                        <td>{{ material.remain_num }}</td>
                         <td>
 							<a class="table-edit text-info" href="{{ url_for('content.material_edit', id = material.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
-							<a class="table-edit text-danger" href="{{ url_for('content.material_delete', id = material.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;删除</a>
+							<a class="table-edit text-danger" data-confirm="确定删除[ {{ material.name }} ]？" data-confirmType="get" href="{{ url_for('content.material_delete', id = material.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;删除</a>
                         </td>
                     </tr>
                     {% endfor %}

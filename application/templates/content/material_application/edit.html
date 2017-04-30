@@ -52,6 +52,10 @@
                             <td><input class="form-control" name="content_{{ content.id }}" value="{{ content.available_number or content.number }}" type="number" step="1" min="0" {{ 'disabled' if content.available_number else '' }}></td>
                         </tr>
                         {% endfor %}
+                        <tr>
+                            <td style="background: #a9d86e;">申请备注</td>
+                            <td colspan="2">{{ application.app_memo }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

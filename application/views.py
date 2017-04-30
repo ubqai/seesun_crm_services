@@ -360,19 +360,19 @@ def mobile_material_application_new():
                         app_contents.append([param.split('_', 1)[1], request.form.get(param)])
         if app_contents:
             application = MaterialApplication(app_no='MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
-                                              user=current_user, status='新申请')
+                                              user=current_user, status='新申请', app_memo=request.form.get('app_memo'))
             db.session.add(application)
             for app_content in app_contents:
                 material = Material.query.get_or_404(app_content[0])
-                content = MaterialApplicationContent(material_name=material.name, number=app_content[1],
-                                                     application=application)
+                content = MaterialApplicationContent(material_id=material.id, material_name=material.name,
+                                                     number=app_content[1], application=application)
                 db.session.add(content)
             db.session.commit()
             flash('物料申请提交成功', 'success')
         else:
             flash('Please input correct number!', 'danger')
         return redirect(url_for('mobile_material_application_new'))
-    materials = Material.query.all()
+    materials = Material.query.order_by(Material.created_at.asc())
     return render_template('mobile/material_application_new.html', materials=materials)
 
 

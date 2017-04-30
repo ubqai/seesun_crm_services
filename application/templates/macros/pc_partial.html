@@ -36,7 +36,7 @@
                     <li>
                         <a href="{{ url_for('order_manage.order_index') }}">订单列表
                             {% if current_user.get_orders_num() > 0 %}
-                            <span class="badge" style="background: #a9d86e">{{ current_user.get_orders_num() }}</span>
+                            <span class="badge" style="background: #a9d86e;">{{ current_user.get_orders_num() }}</span>
                             {% endif %}
                         </a>
                     </li>
@@ -57,7 +57,7 @@
                             <li>
                                 <a href="{{ url_for('content.material_application_index') }}">物料申请
                                     {% if current_user.get_material_application_num() > 0 %}
-                                    <span class="badge" style="background: #ff6c60">{{ current_user.get_material_application_num() }}</span>
+                                    <span class="badge" style="background: #ff6c60;">{{ current_user.get_material_application_num() }}</span>
                                     {% endif %}
                                 </a>
                             </li>
@@ -69,7 +69,7 @@
                             <li>
                                 <a href="{{ url_for('project_report.index') }}">项目报备申请
                                     {% if current_user.get_project_report_num() > 0 %}
-                                    <span class="badge" style="background: #ff6c60">{{ current_user.get_project_report_num() }}</span>
+                                    <span class="badge" style="background: #ff6c60;">{{ current_user.get_project_report_num() }}</span>
                                     {% endif %}
                                 </a>
                             </li>
@@ -81,7 +81,7 @@
                             <li>
                                 <a href="{{ url_for('inventory.share_inventory_list') }}">工程剩余库存申请审核
                                     {% if current_user.get_share_inventory_num() > 0 %}
-                                    <span class="badge" style="background: #ff6c60">{{ current_user.get_share_inventory_num() }}</span>
+                                    <span class="badge" style="background: #ff6c60;">{{ current_user.get_share_inventory_num() }}</span>
                                     {% endif %}
                                 </a>
                             </li>

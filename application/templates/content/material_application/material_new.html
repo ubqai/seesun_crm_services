@@ -6,21 +6,22 @@
 <div class="contents">
 	<div class="contents-header">
 		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
-		<p class="contents-header-p">新建物料名称</p>
+		<p class="contents-header-p">新建物料</p>
 		<p class="contents-header-p text-sm">new material</p>
 	</div>
 	<div class="separator"><span></span></div>
 	<div class="widget">
 		<div class="widget_header">
-			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;新建物料名称</h4>
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;新建物料</h4>
 		</div>
 
 		<form action="{{ url_for('content.material_new') }}" method="post">
 			<div class="widget_contents padding-0">
 				<div class="form-item">
-					{% for field in form %}
-					<span class="form-label">{{ field.label }}</span>{{ field(class = 'form-input form-control') }}
-					{% endfor %}
+					<span class="form-label">{{ form.name.label }}</span>{{ form.name(class='form-input form-control', required='required') }}
+				</div>
+				<div class="form-item">
+					<span class="form-label">{{ form.stock_num.label }}</span>{{ form.stock_num(class='form-input form-control', required='required', type='number', min=0, step=1) }}
 				</div>
 			</div>
 			<div class="text-right top-gap-1">

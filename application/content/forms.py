@@ -39,7 +39,8 @@ class ContentClassificationOptionForm(wtforms.Form):
 
 
 class MaterialForm(wtforms.Form):
-    name = wtforms.StringField('物料名称', validators=[DataRequired(message='material name is necessary')])
+    name = wtforms.StringField('物料名称', validators=[DataRequired(message='物料名称必填')])
+    stock_num = wtforms.StringField('库存数量', validators=[DataRequired(message='库存数量必填')])
 
     def save(self, obj):
         self.populate_obj(obj)
