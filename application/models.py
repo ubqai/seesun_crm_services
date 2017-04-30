@@ -162,7 +162,7 @@ class Material(db.Model, Rails):
 
     @property
     def remain_num(self):
-        return self.stock_num - self.used_num
+        return (self.stock_num or 0) - self.used_num
 
     def __repr__(self):
         return 'Material(id: %s, name: %s, ...)' % (self.id, self.name)
