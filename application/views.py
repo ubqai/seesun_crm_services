@@ -264,6 +264,7 @@ def mobile_create_order():
         # should modify sku stocks info meanwhile
         # call sku edit api
         session.pop('order', None)
+        flash("订单创建成功", 'success')
         return redirect(url_for('mobile_created_orders'))
     else:
         return redirect(url_for('root'))
@@ -274,6 +275,12 @@ def mobile_orders():
     if 'order' in session and session['order']:
         return redirect(url_for('mobile_cart'))
     return redirect(url_for('mobile_created_orders'))
+
+
+@app.route('/mobile/<int:id>/order_show')
+def order_show(id):
+    order = Order.query.get_or_404(id)
+    return render_template('mobile/order_show.html', order=order)
 
 
 @app.route('/mobile/created_orders')

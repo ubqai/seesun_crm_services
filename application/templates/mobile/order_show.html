@@ -1,0 +1,61 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('订单详情') }}
+
+<!--这是要添加的内容-->
+<div class="main-content">
+	<div class="text bot-gap-2">
+		<p class="text-title bot-gap-1">订单详情</p>
+		<div class="contract-block top-gap-3">
+			<div class="contract-header">
+				<p class="text-md text-center">{{ order.order_no}}</p>
+			</div>
+			{% for content in order.order_contents %}
+					<div class="contract-item">
+							<div class="contract-table">
+									<p class="text-sm">品名：{{ content.product_name }}</p>
+									<p class="text-sm">型号：{{ content.sku_code }}</p>
+							</div>
+							<div class="contract-table">
+									<p class="text-sm">规格：{{ content.sku_specification }}</p>
+									<p class="text-sm">数量：{{ content.number }}㎡</p>
+							</div>
+							<div class="contract-table">
+									<p class="text-sm">单价：{{ content.price }}</p>
+									<p class="text-sm">金额：{{ content.amount }}</p>
+							</div>
+							<div class="contract-table">
+									<p class="text-sm">备注：{{ content.memo }}</p>
+							</div>
+					</div>
+			{% endfor %}
+			<div class="contract-item">
+				<div class="contract-float clearfix">
+                    <p class="text-sm">订单日期 :<span class="text-dark inline-display">{{ order.created_at.strftime('%Y-%m-%d') }}</span></p>
+                    <p class="text-sm">经销商 :<span class="text-dark inline-display">{{ order.user.nickname }}</span></p>
+                    <p class="text-sm">取货方式 :<span class="text-dark inline-display">{{ order.buyer_info.get('pickup_way', '') }}</span></p>
+                    <p class="text-sm">订单状态 :
+                        <span class="text-dark inline-display">
+                            {% if order.order_status != '新订单' and order.order_status !='订单取消' %}
+                                    <a  class="text-success">{{ order.order_status }}</a>
+                            {% else %}
+                                    <a  class="text-danger">{{ order.order_status }}</a>
+                            {% endif %}
+                        </span>
+                    </p>
+					<p class="text-sm">项目名称 :<span class="text-dark inline-display">{{ order.buyer_info.get('project_name', '') }}</span></p>
+                    <p class="text-sm">经销商联系人 :<span class="text-dark inline-display">{{ order.buyer_info.get('contact_name', '') }}</span></p>
+                    <p class="text-sm">销售联系人 :<span class="text-dark inline-display">{{ '未指定' if order.sale_contract == None else order.sale_contract }}</span></p>
+                    <p class="text-sm">销售联系电话 :<span class="text-dark inline-display">{{ order.sale_contract_phone }}</span></p>
+				    <p class="text-sm">收件人 :<span class="text-dark inline-display">{{ order.buyer_info.get('buyer_recipient','') }}</span></p>
+                    <p class="text-sm">收件人电话号码 :<span class="text-dark inline-display">{{ order.buyer_info.get('buyer_phone', '') }}</span></p>
+                </div>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}
