@@ -123,7 +123,8 @@
                 <div style="width: 33%; display: inline;">
                     <div id="qrcode_field_wrapper" class="form-item-2">
                     {% if tracking_info.qrcode_image %}
-                        <a href="{{ url_for('order_manage.tracking_info_qrcode', id = tracking_info.id) }}">
+                        <a class="close" href="{{ url_for('order_manage.tracking_info_delete_qrcode', id=tracking_info.id) }}" data-confirm="确认删除该二维码吗?" data-confirmType="get">&times;</a>
+                        <a href="{{ url_for('order_manage.tracking_info_qrcode', id=tracking_info.id) }}">
                             <img src="{{ tracking_info.qrcode_image_path }}" style="width: 100%;">
                         </a>
                     {% else %}

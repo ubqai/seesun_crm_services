@@ -5,7 +5,7 @@ from flask import Blueprint, flash, redirect, render_template, url_for, request,
 from flask.helpers import make_response
 from .. import app, cache
 from ..models import *
-from ..helpers import object_list, gen_qrcode, gen_random_string
+from ..helpers import object_list, gen_qrcode, gen_random_string, delete_file
 from .forms import ContractForm, TrackingInfoForm1, TrackingInfoForm2, UserSearchForm
 from ..inventory.api import load_inventories_by_code, update_sku_by_code
 from application.utils import is_number
@@ -448,6 +448,21 @@ def tracking_info_generate_qrcode(id):
         'status': 'success',
         'image_path': tracking_info.qrcode_image_path
         })
+
+
+@order_manage.route('/tracking_info/<int:id>/delete_qrcode')
+def tracking_info_delete_qrcode(id):
+    tracking_info = TrackingInfo.query.get_or_404(id)
+    if tracking_info.qrcode_token and tracking_info.qrcode_image:
+        qrcode_image_path = tracking_info.qrcode_image_path
+        tracking_info.qrcode_token = None
+        tracking_info.qrcode_image = None
+        tracking_info.save
+        delete_file(qrcode_image_path)
+        flash('二维码删除成功', 'success')
+    else:
+        flash('操作失败', 'danger')
+    return redirect(url_for('order_manage.tracking_info_edit', id=id))
 
 
 # download qrcode image
