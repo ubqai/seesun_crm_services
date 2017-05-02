@@ -57,7 +57,7 @@
 												{% endif %}
 												<div class="sub-form-item">
 														<span>需生产数量(㎡):</span>
-														<span><input class="form-control" name="{{ order_content.sku_code }}_production_num" value="{{default_production_num.get(order_content.sku_code)|int}}" type="number" min="0" step="1"></span>
+														<span><input class="form-control" name="{{ order_content.sku_code }}_production_num" value="{{default_production_num.get(order_content.sku_code)}}"></span>
 												</div>
 										</div>
 			
