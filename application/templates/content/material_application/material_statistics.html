@@ -1,0 +1,150 @@
+{% extends 'pc_base.html' %}
+
+{% block custom_scripts %}
+    <script src="{{ url_for('static', filename = 'javascripts/echarts.common.min.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'javascripts/dark.js') }}"></script>
+{% endblock %}
+{% from 'macros/pc_partial.html' import sidebar with context %}
+{% block main_content %}
+
+{{ sidebar(active = 'sale', work_stream = 'true') }}
+	<div class="contents">
+        <div class="contents-header">
+            <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+            <p class="contents-header-p">物料统计</p>
+            <p class="contents-header-p text-sm">Material Statistics</p>
+            <a class="new-one" href="{{ url_for('content.material_index') }}" title="访问列表"><span class="glyphicon glyphicon-list"></span></a>
+        </div>
+        <div class="separator"><span></span></div>
+            <div id="chart2" style="width:100%; height:{{ len(material_names)*70 }}px"></div>
+        </div>
+	<script>
+
+		(function(){
+				var chart = echarts.init(document.getElementById('chart2'), 'dark');
+				option = {
+					backgroundColor: "#344b58",
+					title: {
+							text: '物料统计',
+							subtext: 'BY SEESUN',
+							left:"4%",
+							top:"10px"
+					},
+					tooltip: {
+							trigger: 'axis',
+							axisPointer: {
+									type: 'shadow'
+							}
+					},
+					legend: {
+							x: '4%',
+							top: '70px',
+							textStyle: {
+									color: '#90979c',
+							},
+							data: ['库存数量','已发放数量','剩余数量'],
+					},
+					grid: {
+							left: '4%',
+							borderWidth: 0,
+							top: 110,
+							containLabel: true
+					},
+					yAxis: {
+							type: 'category',
+							//这是y轴的数据
+							data: {{ material_names|safe }},
+							axisLine:{
+								lineStyle:{
+									color:"#90979c",
+									shadowColor: 'rgba(0, 0, 0, 0.5)',
+									shadowBlur: 0,
+									width:1,
+								}
+							},
+							minInterval: 20,
+							axisTick: {
+								show: false
+							},
+							splitLine: {
+								show: false
+							}
+					},
+					xAxis: {
+							type: 'value',
+							boundaryGap: [0, 0.01],
+							axisLine:{
+								lineStyle:{
+									color:"#90979c",
+									shadowColor: 'rgba(0, 0, 0, 0.5)',
+									shadowBlur: 0,
+									width:1
+								}
+							},
+							axisTick: {
+								show: false
+							},
+							splitLine: {
+								show: false
+							}
+					},
+					series: [
+							{
+									name: '库存数量',
+									type: 'bar',
+									//这是对应Y轴的数据，柱状图
+									data: {{ material_stock_nums|safe }},
+									barGap: "0%",
+									barMaxWidth: "35px",
+									label:{
+										normal:{
+											position:'right',
+											show:true,
+											formatter:function(params){
+												return params.data;
+											}
+										}
+									}
+							},
+							{
+									name: '已发放数量',
+									type: 'bar',
+									//这是对应Y轴的数据，折线图
+									data: {{ material_used_nums|safe }},
+									barGap: "0%",
+									barMaxWidth: "35px",
+									label:{
+										normal:{
+											position:'right',
+											show:true,
+											formatter:function(params){
+												return params.data;
+											}
+										}
+									}
+							},
+							{
+									name: '剩余数量',
+									type: 'bar',
+									//这是对应Y轴的数据，折线图
+									data: {{ material_remain_nums|safe }},
+									barGap: "0%",
+									barMaxWidth: "35px",
+									label:{
+										normal:{
+											position:'right',
+											show:true,
+											formatter:function(params){
+												return params.data;
+											}
+										}
+									}
+							}
+					]
+				};
+
+				chart.setOption(option);
+		})()
+	</script>
+
+{% endblock %}

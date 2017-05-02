@@ -9,7 +9,7 @@ from . import app
 from .models import *
 from .web_access_log.models import WebAccessLog, can_take_record
 from .product.api import *
-from .inventory.api import load_users_inventories
+from .inventory.api import load_users_inventories, delete_inventory
 from .helpers import save_upload_file, resize_image_by_width
 from flask_login import *
 from .backstage_management.forms import AccountLoginForm
@@ -170,7 +170,7 @@ def mobile_cart():
             return redirect(url_for('mobile_storage_show', product_id=request.form.get('product_id')))
         elif request.form.get('area_id') is not None:
             return redirect(url_for('stocks_share_for_order', area_id=request.form.get('area_id')))
-    return render_template('mobile/cart.html', order=order)
+    return render_template('mobile/cart.html', order=order, buyer_info={})
 
 
 @app.route('/mobile/cart_delete/<int:sku_id>', methods=['GET', 'POST'])
@@ -193,13 +193,37 @@ def cart_delete(sku_id):
 def mobile_create_order():
     if 'order' in session and session['order']:
         order_no = 'SS' + datetime.datetime.now().strftime('%y%m%d%H%M%S')
-        buyer = request.args.get('buyer')
-        buyer_company = request.args.get('buyer_company')
-        buyer_address = request.args.get('buyer_address')
-        contact_phone = request.args.get('contact_phone')
-        contact_name = request.args.get('contact_name')
-        project_name = request.args.get('project_name')
-        dealer_name = request.args.get('dealer_name')
+        buyer = request.args.get('buyer', '')
+        buyer_company = request.args.get('buyer_company', '')
+        buyer_address = request.args.get('buyer_address', '')
+        contact_phone = request.args.get('contact_phone', '')
+        contact_name = request.args.get('contact_name', '')
+        project_name = request.args.get('project_name', '')
+        dealer_name = request.args.get('dealer_name', '')
+        buyer_recipient = request.args.get('buyer_recipient', '')
+        buyer_phone = request.args.get('buyer_phone', '')
+        pickup_way = request.args.get('pickup_way', '')
+        order_memo = request.args.get('order_memo')
+        buyer_info = {"buyer": buyer, "buyer_company": buyer_company,
+                      "buyer_address": buyer_address, "contact_phone": contact_phone,
+                      "contact_name": contact_name, "project_name": project_name,
+                      "dealer_name": dealer_name, "buyer_recipient": buyer_recipient,
+                      "buyer_phone": buyer_phone, "pickup_way": pickup_way,
+                      "order_memo": order_memo}
+        current_app.logger.info(buyer_recipient)
+        if pickup_way.strip() == '':
+            flash('取货方式必须选择', 'warning')
+            return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
+        if buyer_recipient.strip() == '':
+            flash('收件人必须填写', 'warning')
+            return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
+        if buyer_phone.strip() == '':
+            flash('收件人电话号码必须填写', 'warning')
+            return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
+        if pickup_way.strip() == '送货上门':
+            if buyer_address.strip() == '':
+                flash('送货上门时收件人地址必须填写', 'warning')
+                return render_template('mobile/cart.html', order=session['order'], buyer_info=buyer_info)
         province_id = current_user.sales_areas.first().parent_id
         us = db.session.query(User).join(User.departments).join(User.sales_areas).filter(
             User.user_or_origin == 3).filter(DepartmentHierarchy.name == "销售部").filter(
@@ -211,13 +235,10 @@ def mobile_create_order():
             sale_contract_id = None
             sale_contract = None
         order = Order(order_no=order_no, user=current_user, order_status='新订单',
-                      order_memo=request.args.get('order_memo'),
+                      order_memo=order_memo,
                       sale_contract_id=sale_contract_id,
                       sale_contract=sale_contract,
-                      buyer_info={"buyer": buyer, "buyer_company": buyer_company,
-                                  "buyer_address": buyer_address, "contact_phone": contact_phone,
-                                  "contact_name": contact_name, "project_name": project_name,
-                                  "dealer_name": dealer_name})
+                      buyer_info=buyer_info)
         db.session.add(order)
         for order_content in session['order']:
             batch_info = {}
@@ -243,6 +264,7 @@ def mobile_create_order():
         # should modify sku stocks info meanwhile
         # call sku edit api
         session.pop('order', None)
+        flash("订单创建成功", 'success')
         return redirect(url_for('mobile_created_orders'))
     else:
         return redirect(url_for('root'))
@@ -253,6 +275,12 @@ def mobile_orders():
     if 'order' in session and session['order']:
         return redirect(url_for('mobile_cart'))
     return redirect(url_for('mobile_created_orders'))
+
+
+@app.route('/mobile/<int:id>/order_show')
+def order_show(id):
+    order = Order.query.get_or_404(id)
+    return render_template('mobile/order_show.html', order=order)
 
 
 @app.route('/mobile/created_orders')
@@ -274,7 +302,7 @@ def mobile_contract_show(id):
 # --- Design ---
 @app.route('/mobile/design', methods=['GET', 'POST'])
 def mobile_design():
-    project_reports = ProjectReport.query.filter_by(status='申请通过，项目已被保护')
+    project_reports = ProjectReport.query.filter_by(status='申请通过，项目已被保护(有效期三个月)')
     if request.method == 'POST':
         if request.form.get('filing_no') and request.files.get('ul_file'):
             project_report = ProjectReport.query.filter_by(report_no=request.form.get('filing_no')).first()
@@ -339,19 +367,19 @@ def mobile_material_application_new():
                         app_contents.append([param.split('_', 1)[1], request.form.get(param)])
         if app_contents:
             application = MaterialApplication(app_no='MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
-                                              user=current_user, status='新申请')
+                                              user=current_user, status='新申请', app_memo=request.form.get('app_memo'))
             db.session.add(application)
             for app_content in app_contents:
                 material = Material.query.get_or_404(app_content[0])
-                content = MaterialApplicationContent(material_name=material.name, number=app_content[1],
-                                                     application=application)
+                content = MaterialApplicationContent(material_id=material.id, material_name=material.name,
+                                                     number=app_content[1], application=application)
                 db.session.add(content)
             db.session.commit()
             flash('物料申请提交成功', 'success')
         else:
             flash('Please input correct number!', 'danger')
         return redirect(url_for('mobile_material_application_new'))
-    materials = Material.query.all()
+    materials = Material.query.order_by(Material.created_at.asc())
     return render_template('mobile/material_application_new.html', materials=materials)
 
 
@@ -430,6 +458,14 @@ def mobile_tracking_info(id):
     return render_template('mobile/tracking_info.html', tracking_info=tracking_info)
 
 
+# --- Verification ---
+@app.route('/mobile/verification/<int:order_id>')
+def mobile_verification_show(order_id):
+    order = Order.query.get_or_404(order_id)
+    contract = order.contracts.all()[0]
+    return render_template('mobile/verification_show.html', order=order, contract=contract)
+
+
 # --- Construction guide ---
 @app.route('/mobile/construction_guide')
 def mobile_construction_guide():
@@ -503,19 +539,42 @@ def ckupload():
 @app.route('/mobile/project_report/new', methods=['GET', 'POST'])
 def new_project_report():
     if request.method == 'POST':
-        report_content = {"buyer": request.form.get("buyer"),
-                          "buyer_company": request.form.get("buyer_company"),
-                          "buyer_address": request.form.get("buyer_address"),
+        report_content = {"app_company": request.form.get("app_company"),
+                          "project_follower": request.form.get("project_follower"),
+                          "contract_phone": request.form.get("contract_phone"),
+                          "contract_fax": request.form.get("contract_fax"),
                           "project_name": request.form.get("project_name"),
-                          "product_series": request.form.get("product_series"),
-                          "contact_phone": request.form.get("contact_phone"),
-                          "contact_name": request.form.get("contact_name"),
-                          "project_memo": request.form.get("project_memo")}
+                          "report_date": request.form.get("report_date"),
+                          "project_address": request.form.get("project_address"),
+                          "project_area": request.form.get("project_area"),
+                          "product_place": request.form.get("product_place"),
+                          "recommended_product_line": request.form.get("recommended_product_line"),
+                          "recommended_product_color": request.form.get("recommended_product_color"),
+                          "project_completion_time": request.form.get("project_completion_time"),
+                          "expected_order_time": request.form.get("expected_order_time"),
+                          "competitive_brand_situation": request.form.get("competitive_brand_situation"),
+                          "project_owner": request.form.get("project_owner"),
+                          "project_decoration_total": request.form.get("project_decoration_total"),
+                          "project_design_company": request.form.get("project_design_company"),
+                          "is_authorization_needed": request.form.get("is_authorization_needed"),
+                          "expected_authorization_date": request.form.get("expected_authorization_date"),
+                          "authorize_company_name": request.form.get('authorize_company_name')}
+        upload_files = request.files.getlist('pic_files[]')
+        current_app.logger.info("upload_files")
+        current_app.logger.info(upload_files)
+        filenames = []
+        for file in upload_files:
+            file_path = save_upload_file(file)
+            current_app.logger.info("file_path")
+            current_app.logger.info(file_path)
+            if file_path is not None:
+                filenames.append(file_path)
         project_report = ProjectReport(
             app_id=current_user.id,
             status="新创建待审核",
             report_no="PR%s" % datetime.datetime.now().strftime('%y%m%d%H%M%S'),
-            report_content=report_content
+            report_content=report_content,
+            pic_files=filenames
         )
         db.session.add(project_report)
         db.session.commit()
@@ -705,6 +764,22 @@ def share_inventory_list():
     sis = ShareInventory.query.filter_by(applicant_id=current_user.id).order_by(ShareInventory.created_at.desc()) \
         .paginate(page_index, per_page=page_size, error_out=True)
     return render_template('mobile/share_inventory_list.html', sis=sis)
+
+
+@app.route('/mobile/share_inventory_show/<int:sid>', methods=['GET'])
+def share_inventory_show(sid):
+    si = ShareInventory.query.get_or_404(sid)
+    return render_template('mobile/share_inventory_show.html', si=si)
+
+
+@app.route('/mobile/<int:id>/delete_inv', methods=['GET'])
+def delete_inv(id):
+    response = delete_inventory(id)
+    if response.status_code == 200:
+        flash('库存批次删除成功', 'success')
+    else:
+        flash('库存批次删除失败', 'danger')
+    return redirect(url_for('stocks_share', area_id=0))
 
 
 # --- mobile user---

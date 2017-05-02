@@ -49,9 +49,13 @@
                         <tr>
                             <td>{{ content.material_name }}</td>
                             <td>{{ content.number }}</td>
-                            <td><input class="form-control" name="content_{{ content.id }}" value="{{ content.available_number or content.number }}" type="number" step="1" min="0" max="{{ content.number }}" {{ 'disabled' if content.available_number else '' }}></td>
+                            <td><input class="form-control" name="content_{{ content.id }}" value="{{ content.available_number or content.number }}" type="number" step="1" min="0" {{ 'disabled' if content.available_number else '' }}></td>
                         </tr>
                         {% endfor %}
+                        <tr>
+                            <td style="background: #a9d86e;">申请备注</td>
+                            <td colspan="2">{{ application.app_memo }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -64,7 +68,7 @@
                 {% endif %}
                 <div class="form-item inline-2">
                     <span class="form-label">审核备注</span>
-                    {{ form.memo(class='form-input form-control', placeholder='如果不能按申请数量提供物料, 需返回经销商再次确认的, 可填写此备注') }}
+                    {{ form.memo(class='form-input form-control', placeholder='填写审核备注') }}
                 </div>
             </div>
             {% if application.status=="新申请" %}

@@ -123,7 +123,8 @@
                 <div style="width: 33%; display: inline;">
                     <div id="qrcode_field_wrapper" class="form-item-2">
                     {% if tracking_info.qrcode_image %}
-                        <a href="{{ url_for('order_manage.tracking_info_qrcode', id = tracking_info.id) }}">
+                        <a class="close" href="{{ url_for('order_manage.tracking_info_delete_qrcode', id=tracking_info.id) }}" data-confirm="确认删除该二维码吗?" data-confirmType="get">&times;</a>
+                        <a href="{{ url_for('order_manage.tracking_info_qrcode', id=tracking_info.id) }}">
                             <img src="{{ tracking_info.qrcode_image_path }}" style="width: 100%;">
                         </a>
                     {% else %}
@@ -145,7 +146,7 @@
                 <div class="form-item item-template">
                     <div class="form-item-2 col-3">
                         <span>{{ form.delivery_date.label }}</span>
-                        {{ form.delivery_date(class = 'form-input form-control  datetimePicker') }}
+                        {{ form.delivery_date(class='form-input form-control  datetimePicker', value=form.delivery_date.data.strftime('%F') if form.delivery_date.data else today) }}
                     </div>
                     {% for info in delivery_infos_dict %}
                     <div class="form-item-2 col-3">
@@ -154,6 +155,18 @@
                                class="form-input form-control" type="text">
                     </div>
                     {% endfor %}
+                    <div class="form-item-2 col-3">
+                        <span style="font-size: 12px;"><label for="recipient">收货人</label></span>
+                        <input name="recipient" id="recipient" value="{{ tracking_info.delivery_infos.get('recipient') or contract.order.buyer_info.get('buyer') or '' }}" class="form-input form-control" type="text">
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span style="font-size: 12px;"><label for="recipient_phone">收货人电话</label></span>
+                        <input name="recipient_phone" id="recipient_phone" value="{{ tracking_info.delivery_infos.get('recipient_phone') or contract.order.buyer_info.get('buyer_phone') or '' }}" class="form-input form-control" type="text">
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span style="font-size: 12px;"><label for="recipient_address">收货人地址</label></span>
+                        <input name="recipient_address" id="recipient_address" value="{{ tracking_info.delivery_infos.get('recipient_address') or contract.order.buyer_info.get('buyer_address') or '' }}" class="form-input form-control" type="text">
+                    </div>
                 </div>
             </div>
             <div class="text-right top-gap-1">

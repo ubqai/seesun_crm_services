@@ -24,7 +24,7 @@
 						<div class="wrapper-row">
 							<p class="set-2">订单日期 :<span class="text-dark inline-display">{{ order.created_at.strftime('%Y-%m-%d') }}</span></p>
 							<p class="set-2">经销商 :<span class="text-dark inline-display">{{ order.user.nickname }}</span></p>
-                            <p class="set-2">区域负责人 :<span class="text-dark inline-display">{{ order.sale_director }}</span></p>
+                            <p class="set-2">取货方式 :<span class="text-dark inline-display">{{ order.buyer_info.get('pickup_way', '') }}</span></p>
 							<p class="set-2">订单状态 :
 								<span class="text-dark inline-display">
 									{% if order.order_status != '新订单' and order.order_status !='订单取消' %}
@@ -36,10 +36,14 @@
 							</p>
 						</div>
 						<div class="wrapper-row">
-							<p class="set-2">项目名称 :<span class="text-dark inline-display">{{ order.buyer_info['project_name'] }}</span></p>
-                            <p class="set-2">联系电话 :<span class="text-dark inline-display">{{ order.buyer_info['contact_phone'] }}</span></p>
-                            <p class="set-2">联系姓名 :<span class="text-dark inline-display">{{ order.buyer_info['contact_name'] }}</span></p>
+							<p class="set-2">项目名称 :<span class="text-dark inline-display">{{ order.buyer_info.get('project_name', '') }}</span></p>
+                            <p class="set-2">经销商联系人 :<span class="text-dark inline-display">{{ order.buyer_info.get('contact_name', '') }}</span></p>
                             <p class="set-2">销售联系人 :<span class="text-dark inline-display">{{ '未指定' if order.sale_contract == None else order.sale_contract }}</span></p>
+							<p class="set-2">销售联系电话 :<span class="text-dark inline-display">{{ order.sale_contract_phone }}</span></p>
+                        </div>
+						<div class="wrapper-row">
+							<p class="set-2">收件人 :<span class="text-dark inline-display">{{ order.buyer_info.get('buyer_recipient','') }}</span></p>
+							<p class="set-2">收件人电话号码 :<span class="text-dark inline-display">{{ order.buyer_info.get('buyer_phone', '') }}</span></p>
                         </div>
 					</div>
 				</div>
@@ -47,7 +51,7 @@
 					{% if order.order_status != '新订单' and order.order_status !='订单取消' %}
 							<a href="{{ url_for('mobile_contract_show', id=order.id) }}" class="text-success">查看订单要约</a>
 					{% else %}
-					<a  class="text-danger">暂无订单要约详情</a>
+							<a href="{{ url_for('order_show', id=order.id) }}" class="text-success">查看订单详情</a>
 					{% endif %}
 				</div>
 			</div>

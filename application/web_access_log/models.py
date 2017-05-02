@@ -66,7 +66,8 @@ module9_paths = """
 module10_paths = """
 /wechat/mobile/verification
 /wechat/mobile/user_binding
-/wechat/server/authentication""".split()
+/wechat/server/authentication
+/mobile/verification/\d+""".split()
 # Guide
 module11_paths = """
 /mobile/construction_guide

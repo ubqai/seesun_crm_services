@@ -91,4 +91,4 @@ def root():
 
 @app.route('/admin')
 def admin():
-    return redirect(url_for('content.category_index'))
+    return redirect(url_for('backstage_management.index'))

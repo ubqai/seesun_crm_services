@@ -5,7 +5,7 @@ from flask import Blueprint, flash, redirect, render_template, url_for, request,
 from flask.helpers import make_response
 from .. import app, cache
 from ..models import *
-from ..helpers import object_list, gen_qrcode, gen_random_string
+from ..helpers import object_list, gen_qrcode, gen_random_string, delete_file
 from .forms import ContractForm, TrackingInfoForm1, TrackingInfoForm2, UserSearchForm
 from ..inventory.api import load_inventories_by_code, update_sku_by_code
 from application.utils import is_number
@@ -64,7 +64,6 @@ def contract_new(id):
         params = {
             "amount": request.form.get("amount"),
             "delivery_time": request.form.get("delivery_time"),
-            "offer_no": request.form.get("offer_no"),
             "logistics_costs": request.form.get('logistics_costs'),
             "live_floor_costs": request.form.get('live_floor_costs'),
             "self_leveling_costs": request.form.get('self_leveling_costs'),
@@ -82,9 +81,6 @@ def contract_new(id):
         current_app.logger.info(request.form.get("delivery_time"))
         if request.form.get("delivery_time") is None or request.form.get("delivery_time") == '':
             flash('交货期必须填写', 'warning')
-            return render_template('order_manage/contract_new.html', order=order, params=params)
-        if request.form.get("offer_no") is None or request.form.get("offer_no") == '':
-            flash('要约NO.必须填写', 'warning')
             return render_template('order_manage/contract_new.html', order=order, params=params)
         if not request.form.get("tax_costs", '') == '':
             if not is_number(request.form.get("tax_costs")):
@@ -115,7 +111,7 @@ def contract_new(id):
             db.session.add(order_content)
         contract_content = {"amount": request.form.get("amount"),
                             "delivery_time": request.form.get("delivery_time"),
-                            "offer_no": request.form.get("offer_no"),
+                            "offer_no": 'YYS' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
                             "logistics_costs": request.form.get('logistics_costs'),
                             "live_floor_costs": request.form.get('live_floor_costs'),
                             "self_leveling_costs": request.form.get('self_leveling_costs'),
@@ -172,7 +168,7 @@ def contract_new(id):
                                          url_for('mobile_contract_show', id=contract.id)
                                          )
         cache.delete_memoized(current_user.get_orders_num)
-        flash("订单状态修改成功", 'success')
+        flash("合同生成成功", 'success')
         return redirect(url_for('order_manage.contract_index'))
     return render_template('order_manage/contract_new.html', order=order, params={})
 
@@ -183,7 +179,6 @@ def contract_edit(id):
     order = contract.order
     form = ContractForm(amount=contract.contract_content.get('amount'),
                         delivery_time=contract.contract_content.get('delivery_time'),
-                        offer_no=contract.contract_content.get('offer_no'),
                         logistics_costs=contract.contract_content.get('logistics_costs'),
                         live_floor_costs=contract.contract_content.get('live_floor_costs'),
                         self_leveling_costs=contract.contract_content.get('self_leveling_costs'),
@@ -200,9 +195,6 @@ def contract_edit(id):
         current_app.logger.info(request.form.get("delivery_time"))
         if request.form.get("delivery_time") is None or request.form.get("delivery_time") == '':
             flash('交货期必须填写', 'warning')
-            return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
-        if request.form.get("offer_no") is None or request.form.get("offer_no") == '':
-            flash('要约NO.必须填写', 'warning')
             return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
         if not request.form.get("tax_costs", '') == '':
             if not is_number(request.form.get("tax_costs")):
@@ -232,7 +224,6 @@ def contract_edit(id):
             db.session.add(order_content)
         contract_content = {"amount": request.form.get("amount"),
                             "delivery_time": request.form.get("delivery_time"),
-                            "offer_no": request.form.get("offer_no"),
                             "logistics_costs": request.form.get('logistics_costs'),
                             "live_floor_costs": request.form.get('live_floor_costs'),
                             "self_leveling_costs": request.form.get('self_leveling_costs'),
@@ -249,6 +240,7 @@ def contract_edit(id):
         db.session.add(contract)
         db.session.add(order)
         db.session.commit()
+        flash("合同修改成功", 'success')
         return redirect(url_for('order_manage.contract_index'))
     return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
 
@@ -271,6 +263,7 @@ def payment_status_update(contract_id):
     contract.payment_status = '已付款'
     db.session.add(contract)
     db.session.commit()
+    flash("付款状态修改成功", 'success')
     return redirect(url_for('order_manage.finance_contract_index'))
 
 
@@ -326,6 +319,16 @@ def tracking_infos():
 @order_manage.route('/tracking_info/new/<int:contract_id>', methods = ['GET', 'POST'])
 def tracking_info_new(contract_id):
     contract = Contract.query.get_or_404(contract_id)
+    default_production_num = {}
+    for order_content in contract.order.order_contents:
+        default_production_num[order_content.sku_code] = order_content.number
+        if not (order_content.batch_info == {} or order_content.batch_info is None):
+            default_production_num[order_content.sku_code] = 0
+        else:
+            for inv in load_inventories_by_code(order_content.sku_code):
+                for i in range(1, (len(inv.get("batches")) + 1)):
+                    if int(inv.get("batches")[i - 1].get('stocks')) > order_content.number:
+                        default_production_num[order_content.sku_code] = 0
     if not contract.shipment_status == '未出库':
         flash('不能重复生成物流状态', 'warning')
         return redirect(url_for('order_manage.contract_index'))
@@ -370,10 +373,11 @@ def tracking_info_new(contract_id):
             return redirect(url_for('order_manage.tracking_infos'))
         else:
             flash('对接人姓名和电话必须填写', 'danger')
-            return redirect(url_for('order_manage.tracking_info_new', contract_id = contract.id))
+            return redirect(url_for('order_manage.tracking_info_new', contract_id=contract.id))
     else:
         form = TrackingInfoForm1()
-    return render_template('order_manage/tracking_info_new.html', contract = contract, form = form)
+    return render_template('order_manage/tracking_info_new.html', contract=contract, form=form,
+                           default_production_num=default_production_num)
 
 
 @order_manage.route('/tracking_info/<int:id>/edit', methods=['GET', 'POST'])
@@ -381,8 +385,8 @@ def tracking_info_edit(id):
     tracking_info = TrackingInfo.query.get_or_404(id)
     contract = Contract.query.filter(Contract.contract_no == tracking_info.contract_no).first()
     delivery_infos_dict = {
-        'recipient': '收货人',
         'tracking_no': '物流单号',
+        'delivery_company': '货运公司名称',
         'delivery_tel': '货运公司电话',
         'goods_weight': '货物重量(kg)',
         'goods_count': '货物件数',
@@ -390,12 +394,17 @@ def tracking_info_edit(id):
         'freight': '运费(元)',
         'pickup_no': '提货号码'
     }
+    # 需默认值 recipient, recipient_phone, recipient_address
+    today = datetime.datetime.now().strftime('%F')
     if request.method == 'POST':
         form = TrackingInfoForm2(request.form)
         tracking_info = form.save(tracking_info)
         tracking_info.delivery_infos = {
             'recipient': request.form.get('recipient'),
+            'recipient_phone': request.form.get('recipient_phone'),
+            'recipient_address': request.form.get('recipient_address'),
             'tracking_no': request.form.get('tracking_no'),
+            'delivery_company': request.form.get('delivery_company'),
             'delivery_tel': request.form.get('delivery_tel'),
             'goods_weight': request.form.get('goods_weight'),
             'goods_count': request.form.get('goods_count'),
@@ -409,7 +418,7 @@ def tracking_info_edit(id):
         return redirect(url_for('order_manage.tracking_infos'))  
     else:
         form = TrackingInfoForm2(obj=tracking_info)
-    return render_template('order_manage/tracking_info_edit.html', tracking_info=tracking_info, form=form,
+    return render_template('order_manage/tracking_info_edit.html', tracking_info=tracking_info, form=form, today=today,
                            contract=contract, delivery_infos_dict=sorted(delivery_infos_dict.items()))
 
 
@@ -439,6 +448,21 @@ def tracking_info_generate_qrcode(id):
         'status': 'success',
         'image_path': tracking_info.qrcode_image_path
         })
+
+
+@order_manage.route('/tracking_info/<int:id>/delete_qrcode')
+def tracking_info_delete_qrcode(id):
+    tracking_info = TrackingInfo.query.get_or_404(id)
+    if tracking_info.qrcode_token and tracking_info.qrcode_image:
+        qrcode_image_path = tracking_info.qrcode_image_path
+        tracking_info.qrcode_token = None
+        tracking_info.qrcode_image = None
+        tracking_info.save
+        delete_file(qrcode_image_path)
+        flash('二维码删除成功', 'success')
+    else:
+        flash('操作失败', 'danger')
+    return redirect(url_for('order_manage.tracking_info_edit', id=id))
 
 
 # download qrcode image
@@ -524,11 +548,19 @@ def region_dealers():
     percentage = []
     regions = []
     datas = []
+    day_datas = []
     months = [add_months(datetime.datetime.utcnow(), -4).strftime("%Y年%m月"),
               add_months(datetime.datetime.utcnow(), -3).strftime("%Y年%m月"),
               add_months(datetime.datetime.utcnow(), -2).strftime("%Y年%m月"),
               add_months(datetime.datetime.utcnow(), -1).strftime("%Y年%m月"),
               add_months(datetime.datetime.utcnow(), 0).strftime("%Y年%m月")]
+    days = [
+        (datetime.datetime.utcnow() + datetime.timedelta(days=-4)).strftime("%m月%d日"),
+        (datetime.datetime.utcnow() + datetime.timedelta(days=-3)).strftime("%m月%d日"),
+        (datetime.datetime.utcnow() + datetime.timedelta(days=-2)).strftime("%m月%d日"),
+        (datetime.datetime.utcnow() + datetime.timedelta(days=-1)).strftime("%m月%d日"),
+        (datetime.datetime.utcnow() + datetime.timedelta(days=0)).strftime("%m月%d日")
+    ]
     for region in SalesAreaHierarchy.query.filter_by(level_grade=2):
         count = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
             SalesAreaHierarchy.level_grade == 4).filter(
@@ -541,6 +573,36 @@ def region_dealers():
                 SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                     SalesAreaHierarchy.parent_id == region.id)]))])).filter(
                     User.created_at.between("2017-01-01", add_months(datetime.datetime.utcnow(), -4))).count()
+        day1 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+            SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                    SalesAreaHierarchy.parent_id == region.id)]))])).filter(
+            User.created_at.between("2017-01-01", datetime.datetime.utcnow() + datetime.timedelta(days=-4))).count()
+        day2 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+            SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                    SalesAreaHierarchy.parent_id == region.id)]))])).filter(
+            User.created_at.between("2017-01-01", datetime.datetime.utcnow() + datetime.timedelta(days=-3))).count()
+        day3 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+            SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                    SalesAreaHierarchy.parent_id == region.id)]))])).filter(
+            User.created_at.between("2017-01-01", datetime.datetime.utcnow() + datetime.timedelta(days=-2))).count()
+        day4 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+            SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                    SalesAreaHierarchy.parent_id == region.id)]))])).filter(
+            User.created_at.between("2017-01-01", datetime.datetime.utcnow() + datetime.timedelta(days=-1))).count()
+        day5 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+            SalesAreaHierarchy.level_grade == 4).filter(
+            SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
+                    SalesAreaHierarchy.parent_id == region.id)]))])).filter(
+            User.created_at.between("2017-01-01", datetime.datetime.utcnow() + datetime.timedelta(days=1))).count()
         month2 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
             SalesAreaHierarchy.level_grade == 4).filter(
             SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
@@ -581,9 +643,23 @@ def region_dealers():
                 'smooth': 'false'
             }
         )
+        day_datas.append(
+            {
+                'name': region.name,
+                'type': 'line',
+                'data': [day1, day2, day3, day4, day5],
+                'symbolSize': 5,
+                'label': {
+                    'normal': {
+                        'show': 'false'
+                    }
+                },
+                'smooth': 'false'
+            }
+        )
         percentage.append({'value': count, 'name': region.name})
     return render_template('order_manage/region_dealers.html', percentage=percentage,
-                           regions=regions, datas=datas, months=months)
+                           regions=regions, datas=datas, months=months, days=days, day_datas=day_datas)
 
 
 @order_manage.route('/dealers_management/')

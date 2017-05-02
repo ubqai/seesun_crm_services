@@ -32,7 +32,7 @@ def audit(id):
         db.session.add(pr)
         db.session.commit()
         flash('项目报备申请审核成功', 'success')
-        cache.delete_memoized(current_user.get_other_app_num)
+        cache.delete_memoized(current_user.get_project_report_num)
         return redirect(url_for('project_report.index'))
     return render_template('project_report/audit.html', project_report=pr)
 

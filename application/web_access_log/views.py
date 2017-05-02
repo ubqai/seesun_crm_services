@@ -78,7 +78,9 @@ def access_query(module_no=None):
         elif module_no == 9:
             return WebAccessLog.query.filter(WebAccessLog.request_path.startswith('/mobile/tracking'))
         elif module_no == 10:
-            return WebAccessLog.query.filter(WebAccessLog.request_path.startswith('/wechat/'))
+            return WebAccessLog.query.filter(
+                WebAccessLog.request_path.startswith('/wechat/') |
+                WebAccessLog.request_path.ilike('/mobile/verification/%'))
         elif module_no == 11:
             return WebAccessLog.query.filter(WebAccessLog.request_path.startswith('/mobile/construction_guide'))
         elif module_no == 12:

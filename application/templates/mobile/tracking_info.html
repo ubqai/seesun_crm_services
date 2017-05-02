@@ -15,16 +15,22 @@
 				<p class="text-sm">合同号: {{ tracking_info.contract_no }}</p>
 			</div>
 			<div class="contract-table">
-				<p class="text-sm">合同日期： {{ tracking_info.contract_date.strftime('%F') }}</p>
+				<p class="text-sm">合同日期： {{ tracking_info.contract_date.strftime('%F')  }}</p>
 			</div>
 		</div>
 
 		<div class="contract-item">
 			<div class="contract-table">
-				<p class="text-sm">发货日期： {{ tracking_info.delivery_date.strftime('%F') }}</p>
+				<p class="text-sm">发货日期： {{ tracking_info.delivery_date.strftime('%F') if tracking_info.delivery_date else '-' }}</p>
 			</div>
 			<div class="contract-table">
 				<p class="text-sm">收货人： {{ tracking_info.delivery_infos.get('recipient') or '-' }}</p>
+			</div>
+			<div class="contract-table">
+				<p class="text-sm">收货电话： {{ tracking_info.delivery_infos.get('recipient_phone') or '-' }}</p>
+			</div>
+			<div class="contract-table">
+				<p class="text-sm">收货地址： {{ tracking_info.delivery_infos.get('recipient_address') or '-' }}</p>
 			</div>
 			<div class="contract-table">
 				<p class="text-sm">物流单号： {{ tracking_info.delivery_infos.get('delivery_no') or '-' }}</p>

@@ -30,6 +30,9 @@
                     </div>
                 </div>
             </div>
+            <div class="wrapper-footer text-center">
+					<a href="{{ url_for('delete_inv', id=batch.get('batch_id') ) }}" class="text-success">删除该批次</a>
+				</div>
         </div>
     {% endfor %}
 </div>

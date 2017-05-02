@@ -12,6 +12,9 @@
 	<div class="contents">
 		<div id="chart-line" style="width:100%; height:600px"></div>
 	</div>
+    <div class="contents">
+		<div id="chart-day-line" style="width:100%; height:600px"></div>
+	</div>
     <div class="contents top-gap-2">
 		<div id="chart-pie" style="width:100%; height:600px"></div>
 	</div>
@@ -22,7 +25,7 @@
 				var chart = echarts.init(document.getElementById('chart-line'), 'macarons');
 				option = {
 					title: {
-							text: '各区域经销商数量',
+							text: '各区域经销商数量月增曲线',
 							subtext: 'BY SEESUN',
 							left:"4%",
 							top:"20px"
@@ -91,6 +94,83 @@
             }
 					],
 					series: {{ datas|safe }}
+				};
+				chart.setOption(option);
+		})();
+
+		(function(){
+				var chart = echarts.init(document.getElementById('chart-day-line'), 'macarons');
+				option = {
+					title: {
+							text: '各区域经销商数量日增曲线',
+							subtext: 'BY SEESUN',
+							left:"4%",
+							top:"20px"
+					},
+					tooltip: {
+							trigger: 'axis',
+							axisPointer: {
+									type: 'shadow'
+							}
+					},
+					legend: {
+							x: '4%',
+							top: '13%',
+							data: {{ regions|safe }},
+					},
+					grid: {
+							left: '4%',
+							borderWidth: 0,
+							top: 140,
+							containLabel: true
+					},
+					xAxis: {
+							type: 'category',
+							data: {{ days|safe }},
+							axisLine:{
+								lineStyle:{
+									color:"#50979c",
+									shadowColor: 'rgba(0, 0, 0, 0.5)',
+									shadowBlur: 0,
+									width:1,
+								}
+							},
+							minInterval: 20,
+							axisTick: {
+								show: false
+							},
+							splitLine: {
+								show: false
+							}
+					},
+					yAxis: {
+							type: 'value',
+							boundaryGap: [0, 0.01],
+							axisLine:{
+								lineStyle:{
+									color:"#50979c",
+									shadowColor: 'rgba(0, 0, 0, 0.5)',
+									shadowBlur: 0,
+									width:1
+								}
+							},
+							axisTick: {
+								show: false
+							},
+							splitLine: {
+								show: false
+							}
+					},
+					dataZoom: [
+            {
+                type: 'slider',
+                show: true,
+                startValue: 0,
+                endValue: 4,
+                handleSize: 30
+            }
+					],
+					series: {{ day_datas|safe }}
 				};
 				chart.setOption(option);
 		})();

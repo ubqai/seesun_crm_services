@@ -39,7 +39,8 @@ class ContentClassificationOptionForm(wtforms.Form):
 
 
 class MaterialForm(wtforms.Form):
-    name = wtforms.StringField('物料名称', validators=[DataRequired(message='material name is necessary')])
+    name = wtforms.StringField('物料名称', validators=[DataRequired(message='物料名称必填')])
+    stock_num = wtforms.StringField('库存数量', validators=[DataRequired(message='库存数量必填')])
 
     def save(self, obj):
         self.populate_obj(obj)
@@ -47,9 +48,10 @@ class MaterialForm(wtforms.Form):
 
 
 class MaterialApplicationForm(wtforms.Form):
+    # delete '等待经销商再次确认', '经销商已确认', '已取消'
     status = wtforms.SelectField(
         '审核意见',
-        choices=[('同意申请', '同意申请'), ('等待经销商再次确认', '等待经销商再次确认'), ('拒绝申请', '拒绝申请')],
+        choices=[('同意申请', '同意申请'), ('拒绝申请', '拒绝申请')],
         validators=[DataRequired(message='status is necessary')])
     memo = wtforms.TextAreaField('审核备注')
 
@@ -68,7 +70,6 @@ class MaterialApplicationSearchForm(wtforms.Form):
     )
     status = wtforms.SelectField(
         '申请状态',
-        choices=[('', ''), ('新申请', '新申请'), ('同意申请', '同意申请'), ('拒绝申请', '拒绝申请'), ('等待经销商再次确认', '等待经销商再次确认'),
-                 ('经销商已确认', '经销商已确认'), ('已完成', '已完成'), ('已取消', '已取消')]
+        choices=[('', ''), ('新申请', '新申请'), ('同意申请', '同意申请'), ('拒绝申请', '拒绝申请'), ('已完成', '已完成')]
     )
 

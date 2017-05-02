@@ -6,20 +6,21 @@
 <div class="main-content">
 	<div class="wrappper top-gap-3">
 		<form action="{{ url_for('mobile_design') }}" enctype="multipart/form-data" method="post">
-		  <div class="file form-item bot-gap-2">
+		  	<div class="file form-item bot-gap-2">
 				<a href="javascript:;">
 					<img src="/static/images/upload.png" style="display: block; margin: 0px auto; width: 96px;">
 					<label>上传设计图纸</label>
 					<input type="file" name="ul_file" id="ul_file" class="form-control">
 				</a>
 			</div>
+			<p class="text-content text-sm bot-gap-1"><i class="glyphicon glyphicon-exclamation-sign" style="top:2px"></i> 多个设计图纸请打包成压缩包(zip,rar)上传</p>
 			<div class="form-item">
-			<select name="filing_no" id="filing_no" class="form-control">
-				<option value=""></option>
-				{% for project_report in project_reports %}
-					<option value="{{ project_report.report_no }}">{{ project_report.report_no }}</option>
-				{% endfor %}
-			</select>
+				<select name="filing_no" id="filing_no" class="form-control">
+					<option value=""></option>
+					{% for project_report in project_reports %}
+						<option value="{{ project_report.report_no }}">{{ project_report.report_no }}</option>
+					{% endfor %}
+				</select>
 			</div>
 			<button type="submit" class="btn btn-warning btn-block top-gap-3 text-lg">申请设计</button>
 		</form>

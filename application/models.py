@@ -147,8 +147,22 @@ class Material(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     memo = db.Column(db.Text)
+    stock_num = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    application_contents = db.relationship('MaterialApplicationContent', backref='material', lazy='dynamic')
+
+    @property
+    def used_num(self):
+        count = 0
+        for application_content in self.application_contents:
+            if application_content.available_number:
+                count += application_content.available_number
+        return count
+
+    @property
+    def remain_num(self):
+        return (self.stock_num or 0) - self.used_num
 
     def __repr__(self):
         return 'Material(id: %s, name: %s, ...)' % (self.id, self.name)
@@ -158,6 +172,7 @@ class MaterialApplication(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
     app_no = db.Column(db.String(30), unique=True)
     status = db.Column(db.String(50))
+    app_memo = db.Column(db.String(500))
     memo = db.Column(db.String(200))
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
@@ -170,6 +185,7 @@ class MaterialApplication(db.Model, Rails):
 
 class MaterialApplicationContent(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
+    material_id = db.Column(db.Integer, db.ForeignKey('material.id'))
     material_name = db.Column(db.String(100))
     number = db.Column(db.Integer)
     available_number = db.Column(db.Integer)
@@ -335,6 +351,10 @@ class Order(db.Model, Rails):
         else:
             return 0
 
+    @property
+    def sale_contract_phone(self):
+        return '' if self.sale_contract_id is None else User.query.get(self.sale_contract_id).user_infos[0].telephone
+
 
 class Contract(db.Model):
     __tablename__ = 'contracts'
@@ -377,7 +397,7 @@ class OrderContent(db.Model, Rails):
     product_name = db.Column(db.String(300))
     sku_specification = db.Column(db.String(500))
     sku_code = db.Column(db.String(30))
-    number = db.Column(db.Integer)
+    number = db.Column(db.Float)
     square_num = db.Column(db.Float)
     price = db.Column(db.Float, default=0)
     amount = db.Column(db.Float, default=0)
@@ -555,16 +575,43 @@ class User(db.Model, Rails):
         else:
             return 0
 
-    @cache.memoize(7200)
     def get_other_app_num(self):
+        return self.get_material_application_num() + self.get_project_report_num() + self.get_share_inventory_num()
+        # if self.is_sales_department:
+        #     num1 = MaterialApplication.query.filter_by(status='新申请').filter(
+        #         MaterialApplication.user_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).count()
+        #     num2 = ProjectReport.query.filter_by(status='新创建待审核').filter(
+        #         ProjectReport.app_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).count()
+        #     num3 = ShareInventory.query.filter_by(status='新申请待审核').filter(
+        #         ShareInventory.applicant_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).count()
+        #     return num1 + num2 + num3
+        # else:
+        #     return 0
+
+    @cache.memoize(7200)
+    def get_material_application_num(self):
         if self.is_sales_department:
-            num1 = MaterialApplication.query.filter_by(status='新申请').filter(
+            num = MaterialApplication.query.filter_by(status='新申请').filter(
                 MaterialApplication.user_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).count()
-            num2 = ProjectReport.query.filter_by(status='新创建待审核').filter(
+            return num
+        else:
+            return 0
+
+    @cache.memoize(7200)
+    def get_project_report_num(self):
+        if self.is_sales_department:
+            num = ProjectReport.query.filter_by(status='新创建待审核').filter(
                 ProjectReport.app_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).count()
-            num3 = ShareInventory.query.filter_by(status='新申请待审核').filter(
+            return num
+        else:
+            return 0
+
+    @cache.memoize(7200)
+    def get_share_inventory_num(self):
+        if self.is_sales_department:
+            num = ShareInventory.query.filter_by(status='新申请待审核').filter(
                 ShareInventory.applicant_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).count()
-            return num1 + num2 + num3
+            return num
         else:
             return 0
 
@@ -718,6 +765,7 @@ class ProjectReport(db.Model):
     audit_content = db.Column(db.JSON, default={})
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    pic_files = db.Column(db.JSON)
 
     @property
     def app_name(self):

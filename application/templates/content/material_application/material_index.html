@@ -8,29 +8,36 @@
         <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
         <p class="contents-header-p">物料列表</p>
         <p class="contents-header-p text-sm">list of materials</p>
-        <a class="new-one" href="{{ url_for('content.material_new') }}" title="新增物料"><span class="glyphicon glyphicon-plus"></span></a>
+        <a class="new-one" href="{{ url_for('content.material_statistics') }}" title="物料统计"><span class="glyphicon glyphicon-stats"></span></a>
     </div>
     <div class="separator"><span></span></div>
 
     <div class="widget">
         <div class="widget_header">
             <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;物料列表</h4>
+            <a class="new-item" href="{{ url_for('content.material_new') }}" title="新增物料"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
         <div class="widget_contents padding-0">
             <table class="tables">
                 <thead>
                     <tr>
                         <th>物料名称</th>
+                        <th>库存数量</th>
+                        <th>已发放数量</th>
+                        <th>剩余数量</th>
                         <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for material in materials %}
                     <tr>
-                        <td>{{ material.name }}</a></td>
+                        <td>{{ material.name }}</td>
+                        <td>{{ material.stock_num }}</td>
+                        <td>{{ material.used_num }}</td>
+                        <td>{{ material.remain_num }}</td>
                         <td>
 							<a class="table-edit text-info" href="{{ url_for('content.material_edit', id = material.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
-							<a class="table-edit text-danger" href="{{ url_for('content.material_delete', id = material.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;删除</a>
+							<a class="table-edit text-danger" data-confirm="确定删除[ {{ material.name }} ]？" data-confirmType="get" href="{{ url_for('content.material_delete', id = material.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;删除</a>
                         </td>
                     </tr>
                     {% endfor %}

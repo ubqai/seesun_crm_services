@@ -23,11 +23,11 @@
                 </div>
                 <div class="form-item-2 col-3">
                     <span>*{{ form.receiver_name.label }}</span>
-                    {{ form.receiver_name(class = 'form-input form-control') }}
+                    {{ form.receiver_name(class = 'form-input form-control', value = contract.order.buyer_info.get('buyer_recipient', ''), readonly='') }}
                 </div>
                 <div class="form-item-2 col-3">
                     <span>*{{ form.receiver_tel.label }}</span>
-                    {{ form.receiver_tel(class = 'form-input form-control') }}
+                    {{ form.receiver_tel(class = 'form-input form-control', value = contract.order.buyer_info.get('buyer_phone', ''), readonly='') }}
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@
 												{% endif %}
 												<div class="sub-form-item">
 														<span>需生产数量(㎡):</span>
-														<span><input class="form-control" name="{{ order_content.sku_code }}_production_num"></span>
+														<span><input class="form-control" name="{{ order_content.sku_code }}_production_num" value="{{default_production_num.get(order_content.sku_code)}}"></span>
 												</div>
 										</div>
 			

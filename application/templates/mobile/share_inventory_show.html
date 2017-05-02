@@ -1,0 +1,50 @@
+{% extends 'mobile_base.html' %}
+{% from 'macros/mobile_partial.html' import header %}
+{% block content %}
+{{ header('工程剩余库存申请详情') }}
+
+<div class="main-content">
+
+	<div class="wrapper">
+		<div class="text bot-gap-2">
+			<p class="text-title bot-gap-1">工程剩余库存申请详情</p>
+			<div class="contract-block top-gap-3">
+				<div class="contract-header">
+					<p class="text-md text-center">编号</p>
+					<p class="text-sm text-center" style="color:#9d9d9d">{{ si.batch_no }}</p>
+				</div>
+				<div class="contract-item">
+
+					<div class="contract-item">
+					<div class="contract-table">
+						<p class="text-sm float">产品名:<span class="contract-value">{{ si.product_name }}</span></p>
+						<p class="text-sm float">规格 :<span class="contract-value">{{ si.sku_option }}</span></p>
+					</div>
+					<div class="contract-table">
+						<p class="text-sm float">生产日期 :<span class="contract-value">{{ si.production_date }}</span></p>
+						<p class="text-sm float">库存量 :<span class="contract-value">{{ si.stocks }}</span></p>
+					</div>
+					<div class="contract-table">
+						<p class="text-sm float">价格 :<span class="contract-value">{{ si.price }}</span></p>
+						<p class="text-sm float">状态 :<span class="contract-value">{{ si.status }}</span></p>
+					</div>
+
+				</div>
+
+				<div class="contract-item">
+					{% for pic_file in si.pic_files %}
+                        <img class="full-img" src="{{ pic_file }}">
+                    {% endfor %}
+				</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="divider4 top-gap-1 bot-gap-1"></div>
+
+</div>
+
+{% endblock %}

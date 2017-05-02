@@ -39,10 +39,8 @@
 						<th>报备编号</th>
                         <th>申请人</th>
 						<th>创建日期</th>
-                        <th>要约方(买方)</th>
-						<th>收货单位</th>
+                        <th>申请公司名称</th>
 						<th>项目名称</th>
-						<th>产品系列</th>
                         <th>报备状态</th>
 						<th>审核</th>
 					</tr>
@@ -53,10 +51,8 @@
                             <td><a href="{{ url_for('project_report.show', id=project_report.id) }}" class="text-danger">{{ project_report.report_no }}</a></td>
                             <td>{{ project_report.app_name }}</td>
                             <td>{{ project_report.created_at.strftime('%Y-%m-%d') }}</td>
-                            <td>{{ project_report.report_content.get('buyer') }}</td>
-                            <td>{{ project_report.report_content.get('buyer_company') }}</td>
+                            <td>{{ project_report.report_content.get('app_company') }}</td>
                             <td>{{ project_report.report_content.get('project_name') }}</td>
-                            <td>{{ project_report.report_content.get('product_series') }}</td>
                             <td>
                                 {{ project_report.status }}
                             </td>
