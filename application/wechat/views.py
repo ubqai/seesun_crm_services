@@ -25,9 +25,14 @@ def mobile_verification():
             if ti is None:
                 raise ValueError("无此二维码记录")
 
+            if ti.qrcode_scan_date is not None:
+                raise ValueError("此条码已在 %s 被验证,请联系销售确认真伪" % ti.qrcode_scan_date)
+
             contract = Contract.query.filter_by(contract_no=ti.contract_no).first()
             if contract is None or contract.order_id is None:
                 raise ValueError("二维码记录异常")
+            ti.qrcode_scan_date = datetime.datetime.now()
+            ti.save
 
             flash('校验成功', 'success')
             return redirect(url_for('mobile_verification_show', order_id=contract.order_id))

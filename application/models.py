@@ -272,6 +272,7 @@ class TrackingInfo(db.Model, Rails):
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     details = db.relationship('TrackingInfoDetail', backref='tracking_info', lazy='dynamic')
+    qrcode_scan_date = db.Column(db.DateTime)
 
     def __repr__(self):
         return 'TrackingInfo(id: %s, contract_no: %s,...)' % (self.id, self.contract_no)
