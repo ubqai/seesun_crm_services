@@ -465,6 +465,7 @@ def tracking_info_delete_qrcode(id):
     return redirect(url_for('order_manage.tracking_info_edit', id=id))
 """
 
+
 # download qrcode image
 @order_manage.route('/tracking_info/<int:id>/qrcode')
 def tracking_info_qrcode(id):
@@ -562,66 +563,66 @@ def region_dealers():
         (datetime.datetime.utcnow() + datetime.timedelta(days=0)).strftime("%m月%d日")
     ]
     for region in SalesAreaHierarchy.query.filter_by(level_grade=2):
-        count = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+        count = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(User.extra_attributes.like('1%')).filter(
             SalesAreaHierarchy.level_grade == 4).filter(
             SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                 SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                     SalesAreaHierarchy.parent_id == region.id)]))])).count()
-        month1 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+        month1 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(User.extra_attributes.like('1%')).filter(
             SalesAreaHierarchy.level_grade == 4).filter(
             SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                 SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                     SalesAreaHierarchy.parent_id == region.id)]))])).filter(
                     User.created_at.between("2017-01-01", add_months(datetime.datetime.utcnow(), -4))).count()
-        day1 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+        day1 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(User.extra_attributes.like('1%')).filter(
             SalesAreaHierarchy.level_grade == 4).filter(
             SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                 SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                     SalesAreaHierarchy.parent_id == region.id)]))])).filter(
             User.created_at.between("2017-01-01", datetime.datetime.utcnow() + datetime.timedelta(days=-4))).count()
-        day2 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+        day2 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(User.extra_attributes.like('1%')).filter(
             SalesAreaHierarchy.level_grade == 4).filter(
             SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                 SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                     SalesAreaHierarchy.parent_id == region.id)]))])).filter(
             User.created_at.between("2017-01-01", datetime.datetime.utcnow() + datetime.timedelta(days=-3))).count()
-        day3 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+        day3 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(User.extra_attributes.like('1%')).filter(
             SalesAreaHierarchy.level_grade == 4).filter(
             SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                 SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                     SalesAreaHierarchy.parent_id == region.id)]))])).filter(
             User.created_at.between("2017-01-01", datetime.datetime.utcnow() + datetime.timedelta(days=-2))).count()
-        day4 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+        day4 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(User.extra_attributes.like('1%')).filter(
             SalesAreaHierarchy.level_grade == 4).filter(
             SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                 SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                     SalesAreaHierarchy.parent_id == region.id)]))])).filter(
             User.created_at.between("2017-01-01", datetime.datetime.utcnow() + datetime.timedelta(days=-1))).count()
-        day5 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+        day5 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(User.extra_attributes.like('1%')).filter(
             SalesAreaHierarchy.level_grade == 4).filter(
             SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                 SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                     SalesAreaHierarchy.parent_id == region.id)]))])).filter(
             User.created_at.between("2017-01-01", datetime.datetime.utcnow() + datetime.timedelta(days=1))).count()
-        month2 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+        month2 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(User.extra_attributes.like('1%')).filter(
             SalesAreaHierarchy.level_grade == 4).filter(
             SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                 SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                     SalesAreaHierarchy.parent_id == region.id)]))])).filter(
                     User.created_at.between("2017-01-01", add_months(datetime.datetime.utcnow(), -3))).count()
-        month3 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+        month3 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(User.extra_attributes.like('1%')).filter(
             SalesAreaHierarchy.level_grade == 4).filter(
             SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                 SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                     SalesAreaHierarchy.parent_id == region.id)]))])).filter(
                     User.created_at.between("2017-01-01", add_months(datetime.datetime.utcnow(), -2))).count()
-        month4 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+        month4 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(User.extra_attributes.like('1%')).filter(
             SalesAreaHierarchy.level_grade == 4).filter(
             SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                 SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                     SalesAreaHierarchy.parent_id == region.id)]))])).filter(
                     User.created_at.between("2017-01-01", add_months(datetime.datetime.utcnow(), -1))).count()
-        month5 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(
+        month5 = db.session.query(User).join(User.sales_areas).filter(User.user_or_origin == 2).filter(User.extra_attributes.like('1%')).filter(
             SalesAreaHierarchy.level_grade == 4).filter(
             SalesAreaHierarchy.id.in_([area.id for area in SalesAreaHierarchy.query.filter(
                 SalesAreaHierarchy.parent_id.in_([area.id for area in SalesAreaHierarchy.query.filter(
