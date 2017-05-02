@@ -647,6 +647,10 @@ class User(db.Model, Rails):
     def is_manage_province(self, sale_area_id):
         return sale_area_id in self.get_sale_manage_provinces()
 
+    # 是否经销商
+    def is_dealer(self):
+        return self.user_or_origin == 2
+
     # 是否加盟经销商
     def is_join_dealer(self):
         return self.user_or_origin == 2 and \

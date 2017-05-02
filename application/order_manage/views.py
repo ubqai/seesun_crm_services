@@ -449,7 +449,7 @@ def tracking_info_generate_qrcode(id):
         'image_path': tracking_info.qrcode_image_path
         })
 
-
+"""
 @order_manage.route('/tracking_info/<int:id>/delete_qrcode')
 def tracking_info_delete_qrcode(id):
     tracking_info = TrackingInfo.query.get_or_404(id)
@@ -463,7 +463,7 @@ def tracking_info_delete_qrcode(id):
     else:
         flash('操作失败', 'danger')
     return redirect(url_for('order_manage.tracking_info_edit', id=id))
-
+"""
 
 # download qrcode image
 @order_manage.route('/tracking_info/<int:id>/qrcode')

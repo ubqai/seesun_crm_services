@@ -19,6 +19,13 @@ from .utils import is_number
 from decimal import Decimal
 
 
+def flash_and_redirect(redirect_url=None):
+    flash('非经销商帐号不能下单', 'danger')
+    if redirect_url:
+        return redirect(redirect_url)
+    return redirect(url_for('mobile_index'))
+
+
 @app.before_request
 def web_access_log():
     # only take record of frontend access
@@ -145,6 +152,8 @@ def mobile_cart():
     if 'order' in session:
         order = session['order']
     if request.method == 'POST':
+        if not current_user.is_dealer():
+            return flash_and_redirect(url_for('mobile_storage_show', product_id=request.form.get('product_id')))
         if request.form:
             for param in request.form:
                 current_app.logger.info(param)
@@ -175,6 +184,8 @@ def mobile_cart():
 
 @app.route('/mobile/cart_delete/<int:sku_id>', methods=['GET', 'POST'])
 def cart_delete(sku_id):
+    if not current_user.is_dealer():
+        return flash_and_redirect()
     sorders = session['order']
     for order_content in sorders:
         if order_content.get('sku_id') == str(sku_id):
@@ -191,6 +202,8 @@ def cart_delete(sku_id):
 
 @app.route('/mobile/create_order')
 def mobile_create_order():
+    if not current_user.is_dealer():
+        return flash_and_redirect()
     if 'order' in session and session['order']:
         order_no = 'SS' + datetime.datetime.now().strftime('%y%m%d%H%M%S')
         buyer = request.args.get('buyer', '')
@@ -304,6 +317,8 @@ def mobile_contract_show(id):
 def mobile_design():
     project_reports = ProjectReport.query.filter_by(status='申请通过，项目已被保护(有效期三个月)')
     if request.method == 'POST':
+        if not current_user.is_dealer():
+            return flash_and_redirect(url_for('mobile_design'))
         if request.form.get('filing_no') and request.files.get('ul_file'):
             project_report = ProjectReport.query.filter_by(report_no=request.form.get('filing_no')).first()
             if project_report in project_reports:
@@ -359,6 +374,8 @@ def mobile_material_need_contents(option_id):
 @app.route('/mobile/material_application/new', methods=['GET', 'POST'])
 def mobile_material_application_new():
     if request.method == 'POST':
+        if not current_user.is_dealer():
+            return flash_and_redirect(url_for('mobile_material_application_new'))
         app_contents = []
         if request.form:
             for param in request.form:
@@ -397,6 +414,7 @@ def mobile_material_application_show(id):
     return render_template('mobile/material_application_show.html', application=application)
 
 
+# 取消经销商再次确认步骤
 @app.route('/mobile/material_application/<int:id>/reconfirm_accept')
 def mobile_material_application_reconfirm_accept(id):
     application = MaterialApplication.query.get_or_404(id)
@@ -409,6 +427,7 @@ def mobile_material_application_reconfirm_accept(id):
     return redirect(url_for('mobile_material_applications'))
 
 
+# 取消经销商再次确认步骤
 @app.route('/mobile/material_application/<int:id>/cancel')
 def mobile_material_application_cancel(id):
     application = MaterialApplication.query.get_or_404(id)
@@ -539,6 +558,8 @@ def ckupload():
 @app.route('/mobile/project_report/new', methods=['GET', 'POST'])
 def new_project_report():
     if request.method == 'POST':
+        if not current_user.is_dealer():
+            return flash_and_redirect(url_for('new_project_report'))
         report_content = {"app_company": request.form.get("app_company"),
                           "project_follower": request.form.get("project_follower"),
                           "contract_phone": request.form.get("contract_phone"),
@@ -686,6 +707,8 @@ def upload_share_index():
 @app.route('/mobile/new_share_inventory/<product_name>/<sku_id>', methods=['GET', 'POST'])
 def new_share_inventory(product_name, sku_id):
     if request.method == 'POST':
+        if not current_user.is_dealer():
+            return flash_and_redirect(url_for('new_share_inventory', product_name=product_name, sku_id=sku_id))
         params = {
             'production_date': request.form.get('production_date', ''),
             'stocks': request.form.get('stocks', ''),
@@ -774,6 +797,8 @@ def share_inventory_show(sid):
 
 @app.route('/mobile/<int:id>/delete_inv', methods=['GET'])
 def delete_inv(id):
+    if not current_user.is_dealer():
+        return flash_and_redirect()
     response = delete_inventory(id)
     if response.status_code == 200:
         flash('库存批次删除成功', 'success')
