@@ -404,7 +404,7 @@ class OrderContent(db.Model, Rails):
     amount = db.Column(db.Float, default=0)
     memo = db.Column(db.String(100))
     batch_info = db.Column(db.JSON, default={})
-    production_num = db.Column(db.Integer, default=0)
+    production_num = db.Column(db.Float, default=0)
     inventory_choose = db.Column(db.JSON, default=[])
 
     def __repr__(self):
