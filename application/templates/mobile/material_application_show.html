@@ -17,13 +17,20 @@
                         <p class="text-sm">物料名称：{{ content.material_name }}</p>
                         <p class="text-sm">物料数量：{{ content.number }}</p>
                     </div>
-										<div class="contract-table">
-											{% if content.available_number %}
-												<p class="text-sm">可用数量：{{ content.available_number }}</p>
-											{% endif %}
-										</div>
+					<div class="contract-table">
+						{% if content.available_number %}
+							<p class="text-sm">可用数量：{{ content.available_number }}</p>
+						{% endif %}
+					</div>
                 </div>
             {% endfor %}
+			{% if application.app_memo %}
+				<div class="contract-item">
+					<div class="contract-table">
+						<p class="text-sm">申请备注：{{ application.app_memo }}</p>
+					</div>
+				</div>
+			{% endif %}
 			<div class="contract-footer">
 				<div class="contract-table">
 					<p class="text-sm">申请日期： {{ application.created_at.strftime('%F') }}</p>
