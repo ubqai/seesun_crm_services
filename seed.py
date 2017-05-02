@@ -109,8 +109,8 @@ for regional_name in ["华东区", "华中华北区", "华西华南区"]:
 
 new_webpage_describe_list={
     ("order_manage.dealers_management", "GET", "经销商视图-->经销商列表管理"),
-    ("order_manage.dealer_index", "GET", "数据统计-->各省经销商销售统计"),
-    ("order_manage.region_profit", "GET", "经销商视图-->各省销售统计"),
+    ("order_manage.dealer_index", "GET", "经销商视图-->各省经销商销售统计"),
+    ("order_manage.region_profit", "GET", "数据统计-->各省销售统计"),
     ("order_manage.region_dealers", "GET", "经销商视图-->各区经销商数量"),
     ("order_manage.order_index", "GET", "销售管理-->订单列表"),
     ("order_manage.contract_index", "GET", "销售管理-->合同列表"),
