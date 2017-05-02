@@ -34,7 +34,7 @@
 				
         <div class="widget_contents padding-0 bot-gap-3">
 						<div class="title-style">
-							<span>DETAILS</span>
+							<span>项目基础信息</span>
 							<i class="pull-right	glyphicon glyphicon-list-alt"></i>
 						</div>
             <div class="form-item">
@@ -56,6 +56,12 @@
 									<span>联系传真:</span>
 									<span>{{ project_report.report_content.get('contract_fax') }}</span>
 								</div>
+            </div>
+						<div class="title-style">
+							<span>项目详细信息</span>
+							<i class="pull-right	glyphicon glyphicon-list-alt"></i>
+						</div>
+						<div class="form-item">
 								<div class="sub-form-item">
 									<span>项目名称:</span>
 									<span>{{ project_report.report_content.get('project_name') }}</span>
@@ -63,6 +69,10 @@
 								<div class="sub-form-item">
 									<span>项目报备日期:</span>
 									<span>{{ project_report.report_content.get('report_date') }}</span>
+								</div>
+								<div class="sub-form-item">
+									<span>预计订购产品时间:</span>
+									<span>{{ project_report.report_content.get('expected_order_time') }}</span>
 								</div>
             </div>
 						<div class="form-item">
@@ -93,11 +103,11 @@
 									<span>{{ project_report.report_content.get('project_completion_time') }}</span>
 								</div>
             </div>
+						<div class="title-style">
+							<span>其他信息</span>
+							<i class="pull-right	glyphicon glyphicon-list-alt"></i>
+						</div>
 						<div class="form-item">
-								<div class="sub-form-item">
-									<span>预计订购产品时间:</span>
-									<span>{{ project_report.report_content.get('expected_order_time') }}</span>
-								</div>
 								<div class="sub-form-item">
 									<span>竞争品牌情况:</span>
 									<span>{{ project_report.report_content.get('competitive_brand_situation') }}</span>
@@ -106,12 +116,13 @@
 									<span>项目业主:</span>
 									<span>{{ project_report.report_content.get('project_owner') }}</span>
 								</div>
-            </div>
-						<div class="form-item">
 								<div class="sub-form-item">
 									<span>项目装饰总包:</span>
 									<span>{{ project_report.report_content.get('project_decoration_total') }}</span>
 								</div>
+            </div>
+						<div class="form-item">
+								
 								<div class="sub-form-item">
 									<span>项目设计公司:</span>
 									<span>{{ project_report.report_content.get('project_design_company') }}</span>
@@ -120,23 +131,34 @@
 									<span>是否需要授权书:</span>
 									<span>{{ project_report.report_content.get('is_authorization_needed') }}</span>
 								</div>
-            </div>
-						<div class="form-item">
 								<div class="sub-form-item">
 									<span>授权预计开具日期:</span>
 									<span>{{ project_report.report_content.get('expected_authorization_date') }}</span>
 								</div>
+            </div>
+						<div class="form-item">
+
 								<div class="sub-form-item">
 									<span>需授权公司名称:</span>
 									<span>{{ project_report.report_content.get('authorize_company_name') }}</span>
 								</div>
 
             </div>
-			<div class="form-item">
+						<div class="form-item">
 								{% for file in project_report.pic_files %}
-								<div class="col-3 thumbnail">
-										<img src="{{ file }}" class="full-img">
+								<div class="col-3 thumbnail thum-img"  style="width: 30% !important; margin-left: 1.5%; margin-right: 1.5%; float: left !important;" data-toggle="modal" data-target='#{{ file|replace(" ","")|replace(".","")|replace("/","") }}'>
+										<img src="{{ file }}" class="full-img" >
 								</div>
+								<div class="modal fade" id='{{ file|replace(" ","")|replace(".","")|replace("/","") }}' tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									<div class="modal-dialog" style="width:500px">
+										<div class="modal-content">
+											<div class="modal-body">
+												<img src="{{ file }}" class="full-img">
+											</div>
+										</div>
+									</div>
+								</div>
+
 								{% endfor %}
 
             </div>

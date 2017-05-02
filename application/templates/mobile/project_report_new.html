@@ -2,6 +2,14 @@
 {% from 'macros/mobile_partial.html' import header %}
 {% block content %}
 {{ header('项目报备') }}
+<div class="file form-item bot-gap-2 hidden pic-template" style="float:left; width:50%;position:relative">
+	<div class="pic-del"><i class="glyphicon glyphicon-remove"></i></div>
+	<a href="javascript:;">
+		<img src="/static/images/upload-cloud.png" style="display: block; margin: 0px auto; width: 96px; height:96px">
+		<label>上传图片</label>
+		<input type="file" name="pic_files[]" class="form-control" multiple="multiple" id="test">
+	</a>
+</div>
 <div class="main-content">
     <br/>
     <div class="bot-gap-2">
@@ -70,7 +78,7 @@
 		</div>
 		<div class="wrapper-style top-gap-3">
 			<div class="wrapper-header"><span class="wrapper-header-title">FIFTH STEP(上传现场图片)</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
-			<div class="wrapper-inner">
+			<div class="wrapper-inner clearfix">
 				<div class="file form-item bot-gap-2" style="float:left; width:50%;position:relative">
 					<a href="javascript:;">
 						<img src="/static/images/upload-cloud.png" style="display: block; margin: 0px auto; width: 96px; height:96px">

@@ -1068,3 +1068,9 @@ p.contract-subtitle {
     letter-spacing: 1px;
 		background-color:#fff;
 }
+.thum-img {
+    height: 300px;
+}
+.thum-img>img {
+    height: 100%;
+}
