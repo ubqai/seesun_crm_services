@@ -155,7 +155,9 @@ class Material(db.Model, Rails):
     @property
     def used_num(self):
         count = 0
-        for application_content in self.application_contents:
+        application_contents = self.application_contents.join(MaterialApplicationContent.application).filter(
+            MaterialApplication.status == '同意申请')
+        for application_content in application_contents:
             if application_content.available_number:
                 count += application_content.available_number
         return count
@@ -180,7 +182,7 @@ class MaterialApplication(db.Model, Rails):
     application_contents = db.relationship('MaterialApplicationContent', backref='application', lazy='dynamic')
 
     def __repr__(self):
-        return 'MaterialApplication(id: %s,...)' % (self.id)
+        return 'MaterialApplication(id: %s, app_no: %s, status: %s, ...)' % (self.id, self.app_no, self.status)
 
 
 class MaterialApplicationContent(db.Model, Rails):
@@ -463,6 +465,10 @@ class User(db.Model, Rails):
                                   backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
     departments = db.relationship('DepartmentHierarchy', secondary=users_and_departments,
                                   backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
+    # 特殊属性 - 每一位使用0,1作为区分
+    # 经销商用户 - 首位表示是否加盟 0:未加盟 , 1:加盟
+    # 员工 - 暂未使用此字段
+    extra_attributes = db.Column(db.String(10), default='')
 
     def __repr__(self):
         return '<User %r -- %r>' % (self.id, self.nickname)
@@ -650,9 +656,8 @@ class User(db.Model, Rails):
     # 是否加盟经销商
     def is_join_dealer(self):
         return self.user_or_origin == 2 and \
-               len(self.user_infos)>0 and \
-               self.user_infos[0].extra_attributes is not None and \
-               self.user_infos[0].extra_attributes[0:1] == "1"
+               self.extra_attributes is not None and \
+               self.extra_attributes[0:1] == "1"
 
     # 根据emal+密码获取用户实例
     @classmethod
@@ -700,10 +705,6 @@ class UserInfo(db.Model):
     address = db.Column(db.String(500))
     title = db.Column(db.String(200))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    # 特殊属性 - 每一位使用0,1作为区分
-    # 经销商用户 - 首位表示是否加盟 0:未加盟 , 1:加盟
-    # 员工 - 暂未使用此字段
-    extra_attributes = db.Column(db.String(10))
 
     def __repr__(self):
         return '<UserInfo %r -- %r>' % (self.id, self.name)
