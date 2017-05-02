@@ -70,15 +70,16 @@ def user_new():
             ui = UserInfo(name=form.name.data, telephone=form.phone.data, address=form.address.data,
                           title=form.title.data)
 
-            # 组装extra_attributes
-            if form.user_type.data == "2" and form.join_dealer.data:
-                ui.extra_attributes = form.join_dealer.data
-            else:
-                ui.extra_attributes = ""
 
             u = User(email=form.email.data, user_or_origin=int(form.user_type.data), nickname=form.nickname.data)
             u.password = form.password.data
             u.user_infos.append(ui)
+
+            # 组装extra_attributes
+            if form.user_type.data == "2" and form.join_dealer.data:
+                u.extra_attributes = form.join_dealer.data
+            else:
+                u.extra_attributes = ""
 
             if form.user_type.data == "3":
                 app.logger.info("into 3 : [%s]" % form.dept_ranges.data)
@@ -149,9 +150,9 @@ def user_update(user_id):
 
             # 组装extra_attributes
             if u.user_or_origin == 2 and form.join_dealer.data:
-                ui.extra_attributes = str(form.join_dealer.data)
+                u.extra_attributes = str(form.join_dealer.data)
             else:
-                ui.extra_attributes = ""
+                u.extra_attributes = ""
 
             if len(u.user_infos) == 0:
                 u.user_infos.append(ui)
