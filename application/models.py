@@ -155,7 +155,9 @@ class Material(db.Model, Rails):
     @property
     def used_num(self):
         count = 0
-        for application_content in self.application_contents:
+        application_contents = self.application_contents.join(MaterialApplicationContent.application).filter(
+            MaterialApplication.status == '同意申请')
+        for application_content in application_contents:
             if application_content.available_number:
                 count += application_content.available_number
         return count
@@ -180,7 +182,7 @@ class MaterialApplication(db.Model, Rails):
     application_contents = db.relationship('MaterialApplicationContent', backref='application', lazy='dynamic')
 
     def __repr__(self):
-        return 'MaterialApplication(id: %s,...)' % (self.id)
+        return 'MaterialApplication(id: %s, app_no: %s, status: %s, ...)' % (self.id, self.app_no, self.status)
 
 
 class MaterialApplicationContent(db.Model, Rails):
