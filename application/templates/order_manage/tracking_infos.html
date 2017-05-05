@@ -8,9 +8,10 @@
         <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
         <p class="contents-header-p">物流状态列表</p>
         <p class="contents-header-p text-sm">list of tracking infos</p>
+        <a class="new-one" href="{{ url_for('content.logistics_company_info_index') }}" title="货运公司信息"><span class="glyphicon glyphicon-globe"></span></a>
     </div>
     <div class="separator"><span></span></div>
-    <form url="{{ url_for('order_manage.tracking_infos') }}" enctype="multipart/form-data" method="get" class="form form-horizontal" >
+    <form action="{{ url_for('order_manage.tracking_infos') }}" enctype="multipart/form-data" method="get" class="form form-horizontal" >
         <div class="form-style form-default">
             <div class="form-item-2 col-3">
                 <span>从</span>

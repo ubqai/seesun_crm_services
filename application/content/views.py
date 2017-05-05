@@ -6,7 +6,7 @@ from flask_login import current_user
 from .. import app, db, cache
 from ..helpers import object_list, save_upload_file, delete_file, clip_image
 from ..models import Content, ContentCategory, ContentClassification, ContentClassificationOption
-from ..models import Material, MaterialApplication, MaterialApplicationContent
+from ..models import Material, MaterialApplication, MaterialApplicationContent, LogisticsCompanyInfo
 from ..wechat.models import WechatCall
 from .forms import *
 
@@ -391,3 +391,50 @@ def material_delete(id):
     db.session.commit()
     flash('%s has been deleted successfully' % material.name, 'success')
     return redirect(url_for('content.material_index'))
+
+
+@content.route('/logistics_company_info/index')
+def logistics_company_info_index():
+    logistics_company_infos = LogisticsCompanyInfo.query.order_by(LogisticsCompanyInfo.created_at.desc())
+    return render_template('content/logistics_company_info/index.html', logistics_company_infos=logistics_company_infos)
+
+
+@content.route('/logistics_company_info/new', methods=['GET', 'POST'])
+def logistics_company_info_new():
+    if request.method == 'POST':
+        form = LogisticsCompanyInfoForm(request.form)
+        if form.validate():
+            logistics_company_info = form.save(LogisticsCompanyInfo())
+            db.session.add(logistics_company_info)
+            db.session.commit()
+            flash('货运公司"%s"创建成功' % logistics_company_info.name, 'success')
+            return redirect(url_for('content.logistics_company_info_index'))
+    else:
+        form = LogisticsCompanyInfoForm()
+    return render_template('content/logistics_company_info/new.html', form=form)
+
+
+@content.route('/logistics_company_info/<int:id>/edit', methods=['GET', 'POST'])
+def logistics_company_info_edit(id):
+    logistics_company_info = LogisticsCompanyInfo.query.get_or_404(id)
+    if request.method == 'POST':
+        form = LogisticsCompanyInfoForm(request.form)
+        if form.validate():
+            logistics_company_info = form.save(logistics_company_info)
+            db.session.add(logistics_company_info)
+            db.session.commit()
+            flash('货运公司修改成功', 'success')
+            return redirect(url_for('content.logistics_company_info_index'))
+    else:
+        form = LogisticsCompanyInfoForm(obj=logistics_company_info)
+    return render_template('content/logistics_company_info/edit.html', logistics_company_info=logistics_company_info,
+                           form=form)
+
+
+@content.route('/logistics_company_info/<int:id>/delete')
+def logistics_company_info_delete(id):
+    logistics_company_info = LogisticsCompanyInfo.query.get_or_404(id)
+    db.session.delete(logistics_company_info)
+    db.session.commit()
+    flash('"%s"删除成功' % logistics_company_info.name, 'success')
+    return redirect(url_for('content.logistics_company_info_index'))

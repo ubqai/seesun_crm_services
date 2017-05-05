@@ -20,6 +20,7 @@ def make_shell_context():
                 Material=Material, MaterialApplication=MaterialApplication,
                 MaterialApplicationContent=MaterialApplicationContent, DesignApplication=DesignApplication,
                 TrackingInfo=TrackingInfo, TrackingInfoDetail=TrackingInfoDetail,
+                LogisticsCompanyInfo=LogisticsCompanyInfo,
                 Order=Order, OrderContent=OrderContent, Contract=Contract,
                 User=User, UserInfo=UserInfo, Resource=Resource, SalesAreaHierarchy=SalesAreaHierarchy,
                 DepartmentHierarchy=DepartmentHierarchy, UserAndSaleArea=UserAndSaleArea,

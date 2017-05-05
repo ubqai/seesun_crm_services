@@ -1,0 +1,35 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar with context %}
+{% block main_content %}
+
+{{ sidebar(active = 'service') }}
+<div class="contents">
+	<div class="contents-header">
+		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+		<p class="contents-header-p">新建货运公司</p>
+		<p class="contents-header-p text-sm">new logistics company info</p>
+	</div>
+	<div class="separator"><span></span></div>
+	<div class="widget">
+		<div class="widget_header">
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;新建货运公司</h4>
+		</div>
+
+		<form action="{{ url_for('content.logistics_company_info_new') }}" method="post">
+			<div class="widget_contents padding-0">
+                {% for field in form %}
+                <div class="form-item">
+					<span class="form-label">{{ field.label }}</span>{{ field(class='form-input form-control', required='required') }}
+				</div>
+                {% endfor %}
+			</div>
+			<div class="text-right top-gap-1">
+				<a href="{{ url_for('content.logistics_company_info_index') }}" class="btn btn-default my-btn">返回</a>
+				<button type="submit" class="btn btn-default my-btn" data-disable-with="Please wait...">提交</button>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+{% endblock %}

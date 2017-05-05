@@ -73,3 +73,13 @@ class MaterialApplicationSearchForm(wtforms.Form):
         choices=[('', ''), ('新申请', '新申请'), ('同意申请', '同意申请'), ('拒绝申请', '拒绝申请'), ('已完成', '已完成')]
     )
 
+
+class LogisticsCompanyInfoForm(wtforms.Form):
+    name = wtforms.StringField('名称', validators=[DataRequired()])
+    telephone = wtforms.StringField('电话', validators=[DataRequired()])
+
+    def save(self, obj):
+        self.populate_obj(obj)
+        return obj
+
+

@@ -384,16 +384,16 @@ def tracking_info_new(contract_id):
 def tracking_info_edit(id):
     tracking_info = TrackingInfo.query.get_or_404(id)
     contract = Contract.query.filter(Contract.contract_no == tracking_info.contract_no).first()
+    logistics_company_infos = LogisticsCompanyInfo.query.order_by(LogisticsCompanyInfo.created_at.desc())
     delivery_infos_dict = {
         'tracking_no': '物流单号',
-        'delivery_company': '货运公司名称',
-        'delivery_tel': '货运公司电话',
         'goods_weight': '货物重量(kg)',
         'goods_count': '货物件数',
         'duration': '运输时间',
         'freight': '运费(元)',
         'pickup_no': '提货号码'
     }
+    # delivery_company, delivery_tel 改为联动
     # 需默认值 recipient, recipient_phone, recipient_address
     today = datetime.datetime.now().strftime('%F')
     if request.method == 'POST':
@@ -419,7 +419,8 @@ def tracking_info_edit(id):
     else:
         form = TrackingInfoForm2(obj=tracking_info)
     return render_template('order_manage/tracking_info_edit.html', tracking_info=tracking_info, form=form, today=today,
-                           contract=contract, delivery_infos_dict=sorted(delivery_infos_dict.items()))
+                           contract=contract, delivery_infos_dict=sorted(delivery_infos_dict.items()),
+                           logistics_company_infos=logistics_company_infos)
 
 
 @order_manage.route('/tracking_info/<int:id>/generate_qrcode')

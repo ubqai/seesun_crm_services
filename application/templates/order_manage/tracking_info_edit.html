@@ -147,6 +147,23 @@
                         <span>{{ form.delivery_date.label }}</span>
                         {{ form.delivery_date(class='form-input form-control  datetimePicker', value=form.delivery_date.data.strftime('%F') if form.delivery_date.data else today) }}
                     </div>
+                    <div class="form-item-2 col-3">
+                        <span style="font-size: 12px;"><label for="delivery_company">货运公司名称</label></span>
+                        <select name="delivery_company" id="delivery_company" class="form-input form-control" onchange="$('#delivery_tel').val($(this).find('option:selected').attr('tel'));">
+                            <option value=""></option>
+                            {% for info in logistics_company_infos %}
+                                {% if info.name == tracking_info.delivery_infos.get('delivery_company') %}
+                                    <option tel="{{info.telephone}}" value="{{info.name}}" selected>{{info.name}}</option>
+                                {% else %}
+                                    <option tel="{{info.telephone}}" value="{{info.name}}">{{info.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-item-2 col-3">
+                        <span style="font-size: 12px;"><label for="delivery_tel">货运公司电话</label></span>
+                        <input name="delivery_tel" id="delivery_tel" value="{{ tracking_info.delivery_infos.get('delivery_tel') or '' }}" class="form-input form-control" type="text" readonly="readonly">
+                    </div>
                     {% for info in delivery_infos_dict %}
                     <div class="form-item-2 col-3">
                         <span style="font-size: 12px;"><label for="{{ info[0] }}">{{ info[1] }}</label></span>
@@ -175,7 +192,6 @@
         </div>
     </form>
 
-    
 </div>
 
 {% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar with context %}
+{% block main_content %}
+
+{{ sidebar(active = 'service') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">货运公司列表</p>
+        <p class="contents-header-p text-sm">list of logistics company infos</p>
+    </div>
+    <div class="separator"><span></span></div>
+
+    <div class="widget">
+        <div class="widget_header">
+            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;货运公司列表</h4>
+            <a class="new-item" href="{{ url_for('content.logistics_company_info_new') }}" title="新增货运公司"><span class="glyphicon glyphicon-plus"></span></a>
+        </div>
+        <div class="widget_contents padding-0">
+            <table class="tables">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>电话</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for info in logistics_company_infos %}
+                    <tr>
+                        <td>{{ info.name }}</td>
+                        <td>{{ info.telephone }}</td>
+                        <td>{{ info.created_at.strftime('%F %T') }}</td>
+                        <td>
+							<a class="table-edit text-info" href="{{ url_for('content.logistics_company_info_edit', id=info.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;编辑</a>
+							<a class="table-edit text-danger" data-confirm="确定删除[ {{ info.name }} ]？" data-confirmType="get" href="{{ url_for('content.logistics_company_info_delete', id=info.id) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;删除</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

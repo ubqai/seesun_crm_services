@@ -15,11 +15,11 @@
                 <div class="contract-item">
                     <div class="contract-table">
                         <p class="text-sm">物料名称：{{ content.material_name }}</p>
-                        <p class="text-sm">物料数量：{{ content.number }}</p>
+                        <p class="text-sm">申请数量：{{ content.number }}</p>
                     </div>
 					<div class="contract-table">
 						{% if content.available_number %}
-							<p class="text-sm">可用数量：{{ content.available_number }}</p>
+							<p class="text-sm">审核数量：{{ content.available_number }}</p>
 						{% endif %}
 					</div>
                 </div>

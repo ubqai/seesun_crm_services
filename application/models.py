@@ -309,6 +309,15 @@ class TrackingInfoDetail(db.Model, Rails):
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
 
+# 货运公司信息表
+class LogisticsCompanyInfo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    telephone = db.Column(db.String(50))
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+
+
 class Order(db.Model, Rails):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
