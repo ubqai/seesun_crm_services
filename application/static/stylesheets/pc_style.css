@@ -1074,3 +1074,22 @@ p.contract-subtitle {
 .thum-img>img {
     height: 100%;
 }
+.contents-side {
+    color: #999;
+    font-size: 13px;
+    position: absolute;
+    left: 154px;
+    top: 25px;
+    padding-left: 20px;
+    border-left: 1px solid #eee;
+}
+.contents-side p {
+    line-height: 24px;
+}
+.contents-side p:first-child {
+    float: left;
+}
+.contents-side p:nth-child(2){
+        float: left;
+    padding-left: 30px;
+}
