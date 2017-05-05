@@ -546,16 +546,15 @@ class User(db.Model, Rails):
         if not self.user_or_origin == 3:
             return []
         if self.departments.filter_by(name="销售部").first() is not None:  # 销售部员工
-            area = self.sales_areas.first()
-            if area is not None:
+            areas = []
+            for area in self.sales_areas:
                 if area.level_grade == 2:  # 销售总监，管理一个大区
-                    return SalesAreaHierarchy.query.filter_by(level_grade=3, parent_id=area.id).all()
+                    areas += SalesAreaHierarchy.query.filter_by(level_grade=3, parent_id=area.id).all()
                 elif area.level_grade == 3:  # 普通销售人员，管理一个省
-                    return [area]
+                    areas += [area]
                 else:
-                    return []
-            else:
-                return []
+                    areas += []
+            return areas
         else:
             return []
 
