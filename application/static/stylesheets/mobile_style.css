@@ -680,6 +680,52 @@ td input{
 }
 /*库存*/
 /*storage*/
+.keep-bot{
+	  width: 111%;
+    left: 0px;
+    bottom: 0px;
+    z-index: 10;
+    /* margin-right: -3.5%; */
+    margin-left: -5.5%;
+}
+.keep-bot a {
+    display: block;
+    text-align: center;
+    font-size: 1em;
+    padding: 15px 0px;
+    border-top: 1px solid #ddd;
+}
+.keep-bot a:last-child {
+    border-right: none;
+}
+.keep-bot a.orange{
+    background: #F8B500;
+    color: #fff;
+}
+.keep-bot a.gray{
+    background: #7C7365;
+    color: #fff;
+}
+.keep-bot button {
+    display: block;
+    text-align: center;
+    font-size: 1em;
+    padding: 15px 0px;
+		border: none;
+    border-top: 1px solid #ddd;
+}
+.keep-bot button:last-child {
+    border-right: none;
+}
+.keep-bot button.orange{
+    background: #F8B500;
+    color: #fff;
+}
+.keep-bot button.gray{
+    background: #7C7365;
+    color: #fff;
+}
+
 .fixed-bot {
     position: fixed;
     width: 100%;
