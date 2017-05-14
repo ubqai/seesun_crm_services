@@ -38,7 +38,6 @@ class TrackingInfoForm2(Form):
     production_ends_at = DateField('到', validators=[])
     delivery_date = DateField('配送日期', validators=[])
 
-
     def save(self, obj):
         self.populate_obj(obj)
         return obj

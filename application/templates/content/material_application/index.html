@@ -27,8 +27,12 @@
                 {{ form.app_no(class='form-control') }}
             </div>
             <div class="form-item-2 col-3">
-                <span>{{ form.dealer.label }}</span>
-                {{ form.dealer(class='form-control')}}
+                <span>{{ form.app_type.label }}</span>
+                {{ form.app_type(class='form-control') }}
+            </div>
+            <div class="form-item-2 col-3">
+                <span>{{ form.sales_area.label }}</span>
+                {{ form.sales_area(class='form-control')}}
             </div>
             <div class="form-item-2 col-3">
                 <span>{{ form.status.label }}</span>
@@ -36,6 +40,7 @@
             </div>
             <div class="clearfix"></div>
             <div class="text-right top-gap-2 right-gap-3">
+                <a class="btn btn-primary" href="{{ url_for('content.material_application_new') }}">员工申请入口</a>
                 <button class="btn btn-default my-btn">筛选条件</button>
             </div>
         </div>
@@ -51,8 +56,9 @@
                     <tr>
                         <th>申请号</th>
                         <th>申请日期</th>
-                        <th>区域负责人</th>
-                        <th>经销商</th>
+                        <th>申请人</th>
+                        <th>销售区域(省份)</th>
+                        <th>类型</th>
                         <th>申请状态</th>
                     </tr>
                 </thead>
@@ -61,8 +67,15 @@
                     <tr>
                         <td><a href="{{ url_for('content.material_application_edit', id = application.id) }}" class="table-link">{{ application.app_no }}</a></td>
                         <td>{{ application.created_at.strftime('%F') }}</td>
-                        <td>{{ application.user.sales_areas.all()[0].name }}</td>
                         <td>{{ application.user.nickname }}</td>
+                        <td>{{ application.sales_area }}</td>
+                        {% if application.app_type == 3 %}
+                            <td class="state staff">员工申请</td>
+                        {% elif application.app_type == 2 %}
+                            <td class="state dealer">经销商申请</td>
+                        {% else %}
+                            <td>未知类型</td>
+                        {% endif %}
                         <td><span class="text-warning">{{ application.status }}</span></td>
                     </tr>
                     {% endfor %}

@@ -1,0 +1,111 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar with context %}
+{% block main_content %}
+
+{{ sidebar(active = 'sale', work_stream = 'true') }}
+<div class="contents">
+	<div class="contents-header">
+		<div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+		<p class="contents-header-p">新建物料申请</p>
+		<p class="contents-header-p text-sm">new material application</p>
+	</div>
+	<div class="separator"><span></span></div>
+	<div class="widget">
+		<div class="widget_header">
+			<h4 class="widget_header_title"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;&nbsp;新建物料申请</h4>
+		</div>
+
+		<form action="{{ url_for('content.material_application_new') }}" method="post">
+			<div class="widget_contents padding-0">
+				<div class="form-item">
+					<div class="form-item-2 col-3">
+						<span>{{ form.department.label }}</span>
+						{{ form.department(value=current_user.departments.first().name, class='form-input form-control', required='required', readonly='readonly') }}
+					</div>
+					<div class="form-item-2 col-3">
+						<span>{{ form.applicant.label }}</span>
+						{{ form.applicant(value=current_user.nickname, class='form-input form-control', required='required', readonly='readonly') }}
+					</div>
+					<div class="form-item-2 col-3">
+						<span>{{ form.application_date.label }}</span>
+						{{ form.application_date(value=today, class='form-input form-control', required='required', readonly='readonly') }}
+					</div>
+					<div class="form-item-2 col-3">
+						<span>{{ form.sales_area.label }}</span>
+						{{ form.sales_area(class='form-input form-control', required='required') }}
+					</div>
+					<div class="form-item-2 col-3">
+						<span>{{ form.customer.label }}</span>
+						{{ form.customer(class='form-input form-control') }}
+					</div>
+					<div class="form-item-2 col-3">
+						<span>{{ form.project_name.label }}</span>
+						{{ form.project_name(class='form-input form-control') }}
+					</div>
+				</div>
+
+				<div class="form-item">
+					<div class="form-item-2" style="width: 100% !important">
+						<span>{{ form.purpose.label }}</span>
+						{{ form.purpose(class='form-input form-control', required='required') }}
+					</div>
+					<div class="form-item-2" style="width: 100% !important">
+						<span style="vertical-align: middle;">{{ form.app_memo.label }}</span>
+						{{ form.app_memo(class='form-input form-control', placeholder='申请物料不在下方列表中时, 请填写此备注') }}
+					</div>
+				</div>
+
+				<div class="form-item" style="padding: 0;">
+					<table class="tables">
+						<thead>
+						<tr>
+							<th>物料名称</th>
+							<th>申请数量</th>
+							<th>物料名称</th>
+							<th>申请数量</th>
+							<th>物料名称</th>
+							<th>申请数量</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+						{% for material in materials %}
+							<td>{{ material.name }}</td>
+							<td><input name="material_{{ material.id }}" type="number" value="0" step="1" min="0" class="table-input" required="required"></td>
+							{{ '</tr><tr>'|safe if loop.index is divisibleby 3 else '' }}
+						{% endfor %}
+						</tr>
+						</tbody>
+					</table>
+
+				</div>
+
+				<div class="form-item">
+					<div class="form-item-2 col-2">
+						<span>{{ form.delivery_method.label }}</span>
+						{{ form.delivery_method(class='form-input form-control', required='required') }}
+					</div>
+					<div class="form-item-2 col-2">
+						<span>{{ form.receive_address.label }}</span>
+						{{ form.receive_address(class='form-input form-control', required='required') }}
+					</div>
+					<div class="form-item-2 col-2">
+						<span>{{ form.receiver.label }}</span>
+						{{ form.receiver(class='form-input form-control', required='required') }}
+					</div>
+					<div class="form-item-2 col-2">
+						<span>{{ form.receiver_tel.label }}</span>
+						{{ form.receiver_tel(class='form-input form-control', required='required') }}
+					</div>
+				</div>
+			</div>
+			<div class="text-right top-gap-1">
+				<a href="{{ url_for('content.material_application_index') }}" class="btn btn-default my-btn">返回</a>
+				<button type="submit" class="btn btn-default my-btn" data-disable-with="Please wait...">提交</button>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+{% endblock %}

@@ -25,13 +25,42 @@
                 <input class="form-input form-control" value="{{ application.status }}" disabled/>
             </div>
             <div class="form-item inline-2">
-                <span class="form-label">经销商</span>
+                <span class="form-label">申请人</span>
                 <input class="form-input form-control" value="{{ application.user.nickname }}" disabled/>
+                <span class="form-label">销售区域</span>
+                <input class="form-input form-control" value="{{ application.sales_area }}" disabled/>
+                <span class="form-label">申请类型</span>
+                <input class="form-input form-control" value="{{ application.app_type_desc() }}" disabled/>
             </div>
-            <div class="form-item inline-2">
-                <span class="form-label">经销商所属区域</span>
-                <input class="form-input form-control" value="{{ application.user.sales_areas.all()[0].name }}" disabled/>
-            </div>
+            {% if application.user.is_staff() %}
+                <div class="form-item inline-2">
+                    <span class="form-label">申请用途</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('purpose') or '' }}" disabled/>
+                </div>
+                <div class="form-item inline-2">
+                    <span class="form-label">寄件方式</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('delivery_method') or '' }}" disabled/>
+                    <span class="form-label">收件地址</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('receive_address') or '' }}" disabled/>
+                </div>
+                <div class="form-item inline-2">
+                    <span class="form-label">收件人</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('receiver') or '' }}" disabled/>
+                    <span class="form-label">收件人电话</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('receiver_tel') or '' }}" disabled/>
+                </div>
+            {% elif application.user.is_dealer() %}
+                <div class="form-item inline-2">
+                    <span class="form-label">联系人姓名</span>
+                    <input class="form-input form-control" value="{{ application.user.user_infos[0].name }}" disabled/>
+                    <span class="form-label">联系人电话</span>
+                    <input class="form-input form-control" value="{{ application.user.user_infos[0].telephone }}" disabled/>
+                </div>
+                <div class="form-item inline-2">
+                    <span class="form-label">联系人地址</span>
+                    <input class="form-input form-control" value="{{ application.user.user_infos[0].address }}" disabled/>
+                </div>
+            {% endif %}
         </div>
 
         <form action="{{ url_for('content.material_application_edit', id=application.id) }}" method="post">

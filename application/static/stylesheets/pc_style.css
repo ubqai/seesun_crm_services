@@ -1013,6 +1013,12 @@ p.contract-subtitle {
 .state.invalid:before {
 	background-color:#cd3700;
 }
+.state.staff:before {
+    background-color:#d88263;
+}
+.state.dealer:before {
+    background-color:#5ec25e;
+}
 .tr-separator{
     background: #eee;
     box-shadow: inset 0px 0px 3px 0px rgba(0,0,0,0.15);
@@ -1092,4 +1098,9 @@ p.contract-subtitle {
 .contents-side p:nth-child(2){
         float: left;
     padding-left: 30px;
+}
+.table-input{
+    border: none;
+    text-align: center;
+    width: 100%;
 }

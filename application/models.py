@@ -174,8 +174,11 @@ class MaterialApplication(db.Model, Rails):
     id = db.Column(db.Integer, primary_key=True)
     app_no = db.Column(db.String(30), unique=True)
     status = db.Column(db.String(50))
-    app_memo = db.Column(db.String(500))
+    app_type = db.Column(db.Integer)  # 根据申请人确认申请类型, [3: 'staff', 2: 'dealer']
+    sales_area = db.Column(db.String(20))  # 销售区域(省份), 用于统计
+    app_memo = db.Column(db.String(500))  # 物料申请备注
     memo = db.Column(db.String(200))
+    app_infos = db.Column(db.JSON, default={})
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -183,6 +186,14 @@ class MaterialApplication(db.Model, Rails):
 
     def __repr__(self):
         return 'MaterialApplication(id: %s, app_no: %s, status: %s, ...)' % (self.id, self.app_no, self.status)
+
+    def app_type_desc(self):
+        if self.app_type == 2:
+            return '经销商申请'
+        elif self.app_type == 3:
+            return '员工申请'
+        else:
+            return '未知类型'
 
 
 class MaterialApplicationContent(db.Model, Rails):
@@ -660,6 +671,10 @@ class User(db.Model, Rails):
     # 是否经销商
     def is_dealer(self):
         return self.user_or_origin == 2
+
+    # 是否员工
+    def is_staff(self):
+        return self.user_or_origin == 3
 
     # 是否加盟经销商
     def is_join_dealer(self):

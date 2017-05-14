@@ -383,8 +383,10 @@ def mobile_material_application_new():
                     if int(request.form.get(param)) > 0:
                         app_contents.append([param.split('_', 1)[1], request.form.get(param)])
         if app_contents:
+            sales_area = SalesAreaHierarchy.query.get(current_user.sales_areas.first().parent_id).name
             application = MaterialApplication(app_no='MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
-                                              user=current_user, status='新申请', app_memo=request.form.get('app_memo'))
+                                              user=current_user, status='新申请', app_memo=request.form.get('app_memo'),
+                                              app_type=2, sales_area=sales_area)
             db.session.add(application)
             for app_content in app_contents:
                 material = Material.query.get_or_404(app_content[0])
@@ -394,7 +396,7 @@ def mobile_material_application_new():
             db.session.commit()
             flash('物料申请提交成功', 'success')
         else:
-            flash('Please input correct number!', 'danger')
+            flash('请输入正确的数量', 'danger')
         return redirect(url_for('mobile_material_application_new'))
     materials = Material.query.order_by(Material.created_at.asc())
     return render_template('mobile/material_application_new.html', materials=materials)

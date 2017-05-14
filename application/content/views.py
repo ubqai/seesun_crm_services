@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os
+import os, datetime
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 from flask_login import current_user
 
@@ -262,19 +262,70 @@ def option_delete(id):
 def material_application_index():
     form = MaterialApplicationSearchForm(request.args)
     query = MaterialApplication.query.filter(
-        MaterialApplication.user_id.in_(set([user.id for user in current_user.get_subordinate_dealers()])))
+        MaterialApplication.user_id.in_(
+            set([user.id for user in current_user.get_subordinate_dealers()] +
+                [user.id for user in User.query.filter(User.user_or_origin == 3)])))
     if form.created_at_gt.data:
         query = query.filter(MaterialApplication.created_at >= form.created_at_gt.data)
     if form.created_at_lt.data:
         query = query.filter(MaterialApplication.created_at <= form.created_at_lt.data)
     if form.app_no.data:
         query = query.filter(MaterialApplication.app_no.contains(form.app_no.data))
-    if request.args.get('dealer'):
-        query = query.filter(MaterialApplication.user_id == request.args.get('dealer'))
+    if request.args.get('sales_area'):
+        query = query.filter(MaterialApplication.sales_area == request.args.get('sales_area'))
     if request.args.get('status'):
-        query = query.filter(MaterialApplication.status == request.args.get('stat'))
+        query = query.filter(MaterialApplication.status == request.args.get('status'))
+    if request.args.get('app_type'):
+        query = query.filter(MaterialApplication.app_type == request.args.get('app_type'))
     applications = query.order_by(MaterialApplication.created_at.desc())
     return object_list('content/material_application/index.html', applications, paginate_by=20, form=form)
+
+
+# 物料申请后台创建入口, 员工用
+@content.route('/material_application/new', methods=['GET', 'POST'])
+def material_application_new():
+    if not current_user.is_staff():
+        flash('只有员工帐号才能使用此功能', 'danger')
+        return redirect(url_for('content.material_application_index'))
+
+    materials = Material.query.order_by(Material.created_at.desc())
+    if request.method == 'POST':
+        app_contents = []
+        app_infos = {
+            'customer': request.form.get('customer'),
+            'project_name': request.form.get('project_name'),
+            'purpose': request.form.get('purpose'),
+            'delivery_method': request.form.get('delivery_method'),
+            'receive_address': request.form.get('receive_address'),
+            'receiver': request.form.get('receiver'),
+            'receiver_tel': request.form.get('receiver_tel')
+        }
+        if request.form:
+            for param in request.form:
+                if 'material' in param and request.form.get(param):
+                    if int(request.form.get(param)) > 0:
+                        app_contents.append([param.split('_', 1)[1], request.form.get(param)])
+
+        if app_contents:
+            application = MaterialApplication(app_no='MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
+                                              user=current_user, status='新申请', app_memo=request.form.get('app_memo'),
+                                              app_type=3, sales_area=request.form.get('sales_area'), app_infos=app_infos
+                                              )
+            db.session.add(application)
+            for app_content in app_contents:
+                material = Material.query.get_or_404(app_content[0])
+                ma_content = MaterialApplicationContent(material_id=material.id, material_name=material.name,
+                                                        number=app_content[1], application=application)
+                db.session.add(ma_content)
+            db.session.commit()
+            flash('物料申请提交成功', 'success')
+        else:
+            flash('请输入正确的数量', 'danger')
+        return redirect(url_for('content.material_application_index'))
+    else:
+        form = MaterialApplicationForm2()
+        today = datetime.datetime.now().strftime('%F')
+    return render_template('content/material_application/new.html', form=form, materials=materials, today=today)
 
 
 @content.route('/material_application/<int:id>')
@@ -301,32 +352,33 @@ def material_application_edit(id):
             cache.delete_memoized(current_user.get_material_application_num)
         else:
             flash('审核失败', 'danger')
-        WechatCall.send_template_to_user(str(application.user_id),
-                                         "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0",
-                                         {
-                                             "first": {
-                                                 "value": "您的物料申请订单状态已更改",
-                                                 "color": "#173177"
+        if application.user.is_dealer():
+            WechatCall.send_template_to_user(str(application.user_id),
+                                             "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0",
+                                             {
+                                                 "first": {
+                                                     "value": "您的物料申请订单状态已更改",
+                                                     "color": "#173177"
+                                                 },
+                                                 "keyword1": {
+                                                     "value": application.app_no,
+                                                     "color": "#173177"
+                                                 },
+                                                 "keyword2": {
+                                                     "value": application.status,
+                                                     "color": "#173177"
+                                                 },
+                                                 "keyword3": {
+                                                     "value": application.memo,
+                                                     "color": "#173177"
+                                                 },
+                                                 "remark": {
+                                                     "value": "感谢您的使用！",
+                                                     "color": "#173177"
+                                                 },
                                              },
-                                             "keyword1": {
-                                                 "value": application.app_no,
-                                                 "color": "#173177"
-                                             },
-                                             "keyword2": {
-                                                 "value": application.status,
-                                                 "color": "#173177"
-                                             },
-                                             "keyword3": {
-                                                 "value": application.memo,
-                                                 "color": "#173177"
-                                             },
-                                             "remark": {
-                                                 "value": "感谢您的使用！",
-                                                 "color": "#173177"
-                                             },
-                                         },
-                                         url_for('mobile_material_application_show', id=application.id)
-                                         )
+                                             url_for('mobile_material_application_show', id=application.id)
+                                             )
         return redirect(url_for('content.material_application_index'))
     form = MaterialApplicationForm(obj=application)
     return render_template('content/material_application/edit.html', application=application, form=form)
