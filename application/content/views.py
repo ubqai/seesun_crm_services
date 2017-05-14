@@ -325,7 +325,9 @@ def material_application_new():
     else:
         form = MaterialApplicationForm2()
         today = datetime.datetime.now().strftime('%F')
-    return render_template('content/material_application/new.html', form=form, materials=materials, today=today)
+        departments = ', '.join([department.name for department in current_user.departments])
+    return render_template('content/material_application/new.html', form=form, materials=materials, today=today,
+                           departments=departments)
 
 
 @content.route('/material_application/<int:id>')

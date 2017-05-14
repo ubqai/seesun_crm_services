@@ -20,7 +20,7 @@
 				<div class="form-item">
 					<div class="form-item-2 col-3">
 						<span>{{ form.department.label }}</span>
-						{{ form.department(value=current_user.departments.first().name, class='form-input form-control', required='required', readonly='readonly') }}
+						{{ form.department(value=departments, class='form-input form-control', required='required', readonly='readonly') }}
 					</div>
 					<div class="form-item-2 col-3">
 						<span>{{ form.applicant.label }}</span>

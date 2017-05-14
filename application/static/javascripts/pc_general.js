@@ -247,9 +247,9 @@ $(function(){
 									msg+
 								"</div>"+
 								"<div class='modal-footer'>"+
-									"<a href="+href+" class='btn btn-default'>删除"+
+									"<a href="+href+" class='btn btn-default'>确认"+
 									"</a>"+
-									"<button type='button' class='btn btn-default' data-dismiss='modal'>关闭</button>"+
+									"<button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>"+
 								"</div>"+
 							"</div>"+
 						"</div>"+
@@ -265,9 +265,9 @@ $(function(){
 										msg+
 									"</div>"+
 									"<div class='modal-footer'>"+
-										"<button type='submit' class='btn btn-default'>删除"+
+										"<button type='submit' class='btn btn-default'>确认"+
 										"</button>"+
-										"<button type='button' class='btn btn-default' data-dismiss='modal'>关闭</button>"+
+										"<button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>"+
 									"</div>"+
 								"</div>"+
 							"</div>"+

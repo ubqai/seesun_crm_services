@@ -74,7 +74,7 @@
                             <td><span class="text-warning">{{ contract.payment_status }}</span></td>
                             <td>
                                 {% if contract.payment_status == '未付款' or contract.payment_status == None %}
-                                    <a class="new-one" href="{{ url_for('order_manage.payment_status_update', contract_id=contract.id) }}">改为已付款状态</a>
+                                    <a class="new-one" href="{{ url_for('order_manage.payment_status_update', contract_id=contract.id) }}" data-confirm="合同号[ {{contract.contract_no}} ]确认已付款吗?" data-confirmType="get">改为已付款状态</a>
                                 {% endif %}
                             </td>
                         </tr>
