@@ -30,7 +30,14 @@
                 </ul>
             </li>
             <li class="sub-menu {% if active == 'sale' %}active{% endif %}">
-                <a><i class="glyphicon glyphicon-shopping-cart"></i><span>销售管理</span><span class="dcjq-icon"></span></a>
+                <a><i class="glyphicon glyphicon-shopping-cart"></i>
+                    <span>销售管理
+                        {% if current_user.get_orders_num() + current_user.get_other_app_num() > 0 %}
+                            <span class="badge" style="background: #d8976e;">{{ current_user.get_orders_num() + current_user.get_other_app_num() }}</span>
+                        {% endif %}
+                    </span>
+                    <span class="dcjq-icon"></span>
+                </a>
                 <ul class="sub">
                     {% if current_user.is_authorized('order_manage.order_index') %}
                     <li>
