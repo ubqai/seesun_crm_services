@@ -34,6 +34,10 @@
             </div>
             {% if application.user.is_staff() %}
                 <div class="form-item inline-2">
+                    <span class="form-label">客户名称</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('customer') or '' }}" disabled/>
+                    <span class="form-label">项目名称</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('project_name') or '' }}" disabled/>
                     <span class="form-label">申请用途</span>
                     <input class="form-input form-control" value="{{ application.app_infos.get('purpose') or '' }}" disabled/>
                 </div>
