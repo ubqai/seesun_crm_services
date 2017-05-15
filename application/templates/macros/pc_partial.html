@@ -30,8 +30,7 @@
                 </ul>
             </li>
             <li class="sub-menu {% if active == 'sale' %}active{% endif %}">
-                <a><i class="glyphicon glyphicon-shopping-cart"></i>
-                    <span>销售管理
+                <a><i class="glyphicon glyphicon-shopping-cart"></i><span>销售管理
                         {% if current_user.get_orders_num() + current_user.get_other_app_num() > 0 %}
                             <span class="badge" style="background: #d8976e;">{{ current_user.get_orders_num() + current_user.get_other_app_num() }}</span>
                         {% endif %}
