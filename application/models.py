@@ -641,6 +641,12 @@ class User(db.Model, Rails):
         else:
             return 0
 
+    def get_finance_contract_num(self):
+        return Contract.query.filter(Contract.payment_status == '未付款').count()
+
+    def get_contract_for_tracking_num(self):
+        return Contract.query.filter(Contract.shipment_status == '未出库').count()
+
     # 是否为销售总监
     # Y - 是 ； N - 否 ; U - 未知
     def is_sale_manage(self):

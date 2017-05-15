@@ -102,7 +102,11 @@
                 <a><i class="glyphicon glyphicon-shopping-cart"></i><span>财务管理</span><span class="dcjq-icon"></span></a>
                 <ul class="sub">
                     {% if current_user.is_authorized('order_manage.finance_contract_index') %}
-                    <li><a href="{{ url_for('order_manage.finance_contract_index') }}">合同列表</a></li>
+                    <li><a href="{{ url_for('order_manage.finance_contract_index') }}">合同列表
+                        {% if current_user.get_finance_contract_num() > 0 %}
+                            <span class="badge" style="background: #ff6c60;">{{ current_user.get_finance_contract_num() }}</span>
+                        {% endif %}
+                    </a></li>
                     {% else %}
                     <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>合同列表</a></li>
                     {% endif %}
@@ -152,7 +156,11 @@
                 <a><i class="glyphicon glyphicon-phone-alt"></i><span>售后服务</span><span class="dcjq-icon"></span></a>
                 <ul class="sub">
                     {% if current_user.is_authorized('order_manage.contracts_for_tracking') %}
-                    <li><a href="{{ url_for('order_manage.contracts_for_tracking') }}">生产合同列表</a></li>
+                    <li><a href="{{ url_for('order_manage.contracts_for_tracking') }}">生产合同列表
+                        {% if current_user.get_contract_for_tracking_num() > 0 %}
+                            <span class="badge" style="background: #ff6c60;">{{ current_user.get_contract_for_tracking_num() }}</span>
+                        {% endif %}
+                    </a></li>
                     {% else %}
                     <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>生产合同列表</a></li>
                     {% endif %}
