@@ -16,8 +16,11 @@
             <a class="new-one" href="{{ url_for('content.material_index') }}" title="访问列表"><span class="glyphicon glyphicon-list"></span></a>
         </div>
         <div class="separator"><span></span></div>
-            <div id="chart2" style="width:100%; height:{{ len(material_names)*70 }}px"></div>
-        </div>
+
+        <!-- Add search form here! -->
+
+        <div id="chart2" style="width:100%; height:{{ len(material_names)*70 }}px"></div>
+    </div>
 	<script>
 
 		(function(){

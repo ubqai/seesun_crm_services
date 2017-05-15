@@ -398,7 +398,7 @@ def mobile_material_application_new():
         else:
             flash('请输入正确的数量', 'danger')
         return redirect(url_for('mobile_material_application_new'))
-    materials = Material.query.order_by(Material.created_at.asc())
+    materials = Material.query.order_by(Material.name.desc())
     return render_template('mobile/material_application_new.html', materials=materials)
 
 

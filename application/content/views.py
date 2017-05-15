@@ -288,7 +288,6 @@ def material_application_new():
         flash('只有员工帐号才能使用此功能', 'danger')
         return redirect(url_for('content.material_application_index'))
 
-    materials = Material.query.order_by(Material.created_at.desc())
     if request.method == 'POST':
         app_contents = []
         app_infos = {
@@ -323,6 +322,7 @@ def material_application_new():
             flash('请输入正确的数量', 'danger')
         return redirect(url_for('content.material_application_index'))
     else:
+        materials = Material.query.order_by(Material.name.desc())
         form = MaterialApplicationForm2()
         today = datetime.datetime.now().strftime('%F')
         departments = ', '.join([department.name for department in current_user.departments])
