@@ -14,29 +14,36 @@
     <form action="{{ url_for('order_manage.tracking_infos') }}" enctype="multipart/form-data" method="get" class="form form-horizontal" >
         <div class="form-style form-default">
             <div class="form-item-2 col-3">
-                <span>从</span>
-                <input class="form-control datetimePicker" name="from">
+                <span>合同日期从</span>
+                <input class="form-control datetimePicker" name="contract_date_gt" value="{{ request.args.get('contract_date_gt') or '' }}">
             </div>
             <div class="form-item-2 col-3">
                 <span>到</span>
-                <input class="form-control datetimePicker" name="to">
+                <input class="form-control datetimePicker" name="contract_date_lt" value="{{ request.args.get('contract_date_lt') or '' }}">
             </div>
             <div class="form-item-2 col-3">
                 <span>合同号</span>
-                <input class="form-control" name="contract_no">
+                <input class="form-control" name="contract_no" value="{{ request.args.get('contract_no') or '' }}">
             </div>
             <div class="form-item-2 col-3">
                 <span>对接人姓名</span>
-                <input class="form-control" name="receiver_name">
+                <input class="form-control" name="receiver_name" value="{{ request.args.get('receiver_name') or '' }}">
             </div>
             <div class="form-item-2 col-3">
                 <span>对接人电话</span>
-                <input class="form-control" name="receiver_tel">
+                <input class="form-control" name="receiver_tel" value="{{ request.args.get('receiver_tel') or '' }}">
             </div>
             <div class="form-item-2 col-3">
                 <span>物流状态</span>
-                <select class="form-control" name="status">
+                <select class="form-control" name="delivery_status">
                     <option value=""></option>
+                    {% for status in ['未发货', '已发货'] %}
+                        {% if request.args.get('delivery_status') == status %}
+                            <option value="{{ status }}" selected>{{ status }}</option>
+                        {% else %}
+                            <option value="{{ status }}">{{ status }}</option>
+                        {% endif %}
+                    {% endfor %}
                 </select>
             </div>
             <div class="clearfix"></div>

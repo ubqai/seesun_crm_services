@@ -293,14 +293,14 @@ class TrackingInfo(db.Model, Rails):
     @property
     def production_status(self):
         if self.production_date:
-            if self.production_date < datetime.datetime.now():
+            if self.production_date <= datetime.datetime.now():
                 return '已生产'
         return '未生产'
 
     @property
     def delivery_status(self):
         if self.delivery_date:
-            if self.delivery_date < datetime.datetime.now():
+            if self.delivery_date <= datetime.datetime.now():
                 return '已发货'
         return '未发货'
 
@@ -641,6 +641,7 @@ class User(db.Model, Rails):
         else:
             return 0
 
+    # @cache.memoize(7200)
     def get_finance_contract_num(self):
         return Contract.query.filter(Contract.payment_status == '未付款').count()
 
@@ -689,7 +690,7 @@ class User(db.Model, Rails):
                self.extra_attributes is not None and \
                self.extra_attributes[0:1] == "1"
 
-    # 根据emal+密码获取用户实例
+    # 根据email+密码获取用户实例
     @classmethod
     def login_verification(cls, email, password, user_or_origin):
         user = User.query.filter(User.email == email)

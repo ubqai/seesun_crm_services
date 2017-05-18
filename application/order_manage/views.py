@@ -264,6 +264,7 @@ def payment_status_update(contract_id):
     db.session.add(contract)
     db.session.commit()
     flash("付款状态修改成功", 'success')
+    # cache.delete_memoized(current_user.get_finance_contract_num)
     return redirect(url_for('order_manage.finance_contract_index'))
 
 
@@ -311,8 +312,26 @@ def contract_offer(id):
 def tracking_infos():
     page_size = int(request.args.get('page_size', 10))
     page_index = int(request.args.get('page', 1))
-    tracking_infos = TrackingInfo.query.order_by(TrackingInfo.created_at.desc())\
-        .paginate(page_index, per_page=page_size, error_out=True)
+    query = TrackingInfo.query
+    if request.args.get('contract_date_gt'):
+        query = query.filter(TrackingInfo.contract_date >= request.args.get('contract_date_gt'))
+    if request.args.get('contract_date_lt'):
+        query = query.filter(TrackingInfo.contract_date <= request.args.get('contract_date_lt'))
+    if request.args.get('contract_no'):
+        query = query.filter(TrackingInfo.contract_no.contains(request.args.get('contract_no').strip()))
+    if request.args.get('receiver_name'):
+        query = query.filter(TrackingInfo.receiver_name.contains(request.args.get('receiver_name').strip()))
+    if request.args.get('receiver_tel'):
+        query = query.filter(TrackingInfo.receiver_tel.contains(request.args.get('receiver_tel').strip()))
+    if request.args.get('delivery_status'):
+        delivery_status = request.args.get('delivery_status')
+        if delivery_status == '已发货':
+            query = query.filter(TrackingInfo.delivery_date <= datetime.datetime.now())
+        else:
+            query = query.filter((TrackingInfo.delivery_date > datetime.datetime.now()) |
+                                 (TrackingInfo.delivery_date == None))
+    tracking_infos = query.order_by(TrackingInfo.created_at.desc()
+                                    ).paginate(page_index, per_page=page_size, error_out=True)
     return render_template('order_manage/tracking_infos.html', tracking_infos=tracking_infos)
 
 
