@@ -288,11 +288,12 @@ class WechatCall:
                 {
                     "name": "相关服务".encode("utf-8").decode("latin1"),
                     "sub_button": [
-                        {
-                            "type": "scancode_waitmsg",
-                            "name": "检验真伪".encode("utf-8").decode("latin1"),
-                            "key": "click_scan_wait"
-                        },
+                        # 使用页面内功能,取消按钮
+                        # {
+                        #     "type": "scancode_waitmsg",
+                        #     "name": "检验真伪".encode("utf-8").decode("latin1"),
+                        #     "key": "click_scan_wait"
+                        # },
                         {
                             "type": "click",
                             "name": "人工客服".encode("utf-8").decode("latin1"),
