@@ -2,7 +2,7 @@ from flask import Blueprint, flash, render_template, request, session, redirect,
 from .models import WechatAccessToken, app, WECHAT_SERVER_AUTHENTICATION_TOKEN, WechatCall, WechatUserInfo, \
     WechatPushMsg
 from ..backstage_management.forms import WechatUserLoginForm
-from ..models import User, TrackingInfo, Contract
+from ..models import User, TrackingInfo, Contract, SalesAreaHierarchy, UserAndSaleArea, UserInfo
 from flask_login import login_user, current_user, logout_user
 import hashlib
 
@@ -16,6 +16,7 @@ wechat = Blueprint('wechat', __name__, template_folder='templates')
 def mobile_verification():
     if request.method == 'POST':
         try:
+            valid_info = {"color": "red", "info": ""}
             qrcode_token = request.form.get("text-verification", None)
             if qrcode_token is None or qrcode_token == "":
                 raise ValueError("请传入扫描结果")
@@ -25,19 +26,29 @@ def mobile_verification():
             if ti is None:
                 raise ValueError("无此二维码记录")
 
-            if ti.qrcode_scan_date is not None:
-                raise ValueError("此条码已在 %s 被验证,请联系销售确认真伪" % ti.qrcode_scan_date)
-
             contract = Contract.query.filter_by(contract_no=ti.contract_no).first()
             if contract is None or contract.order_id is None:
                 raise ValueError("二维码记录异常")
+
+            if ti.qrcode_scan_date is not None:
+                dealer_sale_id = User.query.filter_by(id=contract.user_id).first().sales_areas.first().id
+                sah_city_id = SalesAreaHierarchy.query.filter_by(id=dealer_sale_id).first().parent_id
+                user_sale_id = UserAndSaleArea.query.filter_by(sales_area_id=sah_city_id).first().user_id
+                user_sale = UserInfo.query.filter_by(id=user_sale_id).first()
+
+                valid_info["color"] = "blue"
+                raise ValueError("此条码已在 %s, %s 被验证,请联系销售 %s,电话 %s 确认真伪" % (
+                    ti.qrcode_scan_date.strftime("%Y年%m月%d日"), ti.qrcode_scan_date.strftime("%H点%M分"), user_sale.name,
+                    user_sale.telephone))
+
             ti.qrcode_scan_date = datetime.datetime.now()
             ti.save
 
             flash('校验成功', 'success')
             return redirect(url_for('mobile_verification_show', order_id=contract.order_id))
         except Exception as e:
-            flash('校验失败,%s' % e)
+            valid_info["info"] = str(e)
+            session["valid_info"] = valid_info
             return redirect(url_for('wechat.mobile_verification'))
     else:
         wechat_info = None

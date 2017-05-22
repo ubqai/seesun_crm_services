@@ -6,24 +6,34 @@
 <script type="application/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 
 <div class="main-content">
-	<div class="top-gap-3 bot-gap-3 wrappper">
-		<button class="btn btn-warning btn-block text-lg" id="scanQRCode">扫描</button> 
+    <div class="top-gap-3 bot-gap-3 wrappper">
+        <button class="btn btn-warning btn-block text-lg" id="scanQRCode">扫描</button>
 
-		<form action="{{ url_for('wechat.mobile_verification') }}" method="post" class="top-gap-3">
-			<div class="form-item">
-				<input class="form-input form-control" id ="text-verification"  name="text-verification" placeholder="扫描结果"/>
-				<input type="submit" class="btn btn-default btn-block top-gap-1" id="btn-verification" value="提交验证"></button>
-			</div>
-		</form>
-	</div>
+        <form action="{{ url_for('wechat.mobile_verification') }}" method="post" class="top-gap-3">
+            <div class="form-item">
+                <input class="form-input form-control" id="text-verification" name="text-verification"
+                       placeholder="扫描结果"/>
+                <input type="submit" class="btn btn-default btn-block top-gap-1" id="btn-verification"
+                       value="提交验证"></button>
+            </div>
+        </form>
+    </div>
 
-<!-- 	<div class="top-gap-3 left-gap-3 right-gap-3 bot-gap-3 wrappper" style="padding:10%">
-		<img src="/static/images/scanning.jpg" class="full-img" style="border:1px solid #aaa">
-	</div>
-	<div class="wrappper">
-		<a class="btn btn-default btn-block text-lg" disabled style="background:url('/static/images/btn-bg.jpg'); color:#fff">赛尚荣誉出品</a>
-		<a class="btn btn-warning btn-block top-gap-3 text-lg">查询无此交易</a>
-	</div> -->
+    {% if session["valid_info"] %}
+    <div class="base-alert alert alert-dismissable alert-warning" >
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <font color={{session["valid_info"]["color"]}}> {{ session["valid_info"]["info"] }} </font>
+        <span hidden>{{session.pop("valid_info")}}</span>
+    </div>
+    {% endif %}
+
+    <!-- 	<div class="top-gap-3 left-gap-3 right-gap-3 bot-gap-3 wrappper" style="padding:10%">
+            <img src="/static/images/scanning.jpg" class="full-img" style="border:1px solid #aaa">
+        </div>
+        <div class="wrappper">
+            <a class="btn btn-default btn-block text-lg" disabled style="background:url('/static/images/btn-bg.jpg'); color:#fff">赛尚荣誉出品</a>
+            <a class="btn btn-warning btn-block top-gap-3 text-lg">查询无此交易</a>
+        </div> -->
 </div>
 
 {% endblock %}
