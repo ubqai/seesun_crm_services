@@ -382,7 +382,7 @@ def mobile_material_application_new():
                 if 'material' in param and request.form.get(param):
                     if int(request.form.get(param)) > 0:
                         app_contents.append([param.split('_', 1)[1], request.form.get(param)])
-        if app_contents:
+        if app_contents or request.form.get('app_memo'):
             sales_area = SalesAreaHierarchy.query.get(current_user.sales_areas.first().parent_id).name
             application = MaterialApplication(app_no='MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
                                               user=current_user, status='新申请', app_memo=request.form.get('app_memo'),
@@ -396,7 +396,7 @@ def mobile_material_application_new():
             db.session.commit()
             flash('物料申请提交成功', 'success')
         else:
-            flash('请输入正确的数量', 'danger')
+            flash('物料申请内容不能为空', 'danger')
         return redirect(url_for('mobile_material_application_new'))
     materials = Material.query.order_by(Material.name.desc())
     return render_template('mobile/material_application_new.html', materials=materials)
@@ -459,7 +459,8 @@ def mobile_tracking():
             return redirect(url_for('mobile_tracking'))
     contracts = Contract.query.filter_by(user_id=current_user.id).all()
     tracking_infos = TrackingInfo.query.filter(
-        TrackingInfo.contract_no.in_([contract.contract_no for contract in contracts])).all()
+        TrackingInfo.contract_no.in_([contract.contract_no for contract in contracts])
+    ).order_by(TrackingInfo.created_at.desc())
     return render_template('mobile/tracking.html', tracking_infos=tracking_infos)
 
 

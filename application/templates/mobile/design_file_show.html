@@ -9,7 +9,20 @@
         {% if application.dl_file_memo %}
         <p class="text-content text-sm bot-gap-1"><i class="glyphicon glyphicon-exclamation-sign" style="top:2px"></i> {{ application.dl_file_memo }} </p>
         {% endif %}
-        <img src="{{ application.dl_file }}" style="width: 100%;">
+        {% if application.dl_file %}
+            {% if application.dl_file.endswith('jpg') %}
+                <a href="{{ application.dl_file }}"><img src="{{ application.dl_file }}" style="width: 100%;"></a>
+            {% else %}
+                <div class="file bot-gap-2">
+                    <a href="{{ application.dl_file }}">
+                        <img src="/static/images/doc.png" style="width: 96px;">
+                        <label>设计文件.{{ application.dl_file.rsplit('.', 1)[1] }}</label>
+                    </a>
+                </div>
+            {% endif %}
+        {% else %}
+
+        {% endif %}
 	</div>
 </div>
 
