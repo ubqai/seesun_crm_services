@@ -95,7 +95,7 @@
         <div class="widget_contents padding-0 top-gap-3">
             <div class="form-item inline-2">
                 <span class="form-label">审核备注</span>
-                <textarea class="form-input form-control" id="memo" name="memo">{{ application.memo }}</textarea>
+                <textarea class="form-input form-control" id="memo" name="memo" readonly="readonly">{{ application.memo }}</textarea>
             </div>
         </div>
         {% if application.status=="同意申请" %}
