@@ -257,7 +257,7 @@ def option_delete(id):
 
 
 # --- Material need ---
-# 所有物料申请审批都转到市场部
+# 物料申请销售部审批列表
 @content.route('/material_application/index/')
 def material_application_index():
     form = MaterialApplicationSearchForm(request.args)
@@ -279,6 +279,15 @@ def material_application_index():
         query = query.filter(MaterialApplication.app_type == request.args.get('app_type'))
     applications = query.order_by(MaterialApplication.created_at.desc())
     return object_list('content/material_application/index.html', applications, paginate_by=20, form=form)
+
+
+# 物料申请市场部确认列表
+@content.route('/material_application/index_approved')
+def material_application_index_approved():
+    applications = MaterialApplication.query.filter(
+        MaterialApplication.status.in_(['同意申请', '已发货'])
+    ).order_by(MaterialApplication.created_at.desc())
+    return object_list('content/material_application/index_approved.html', applications, paginate_by=20)
 
 
 # 物料申请后台创建入口, 员工用
@@ -371,7 +380,7 @@ def material_application_edit(id):
                                                      "color": "#173177"
                                                  },
                                                  "keyword3": {
-                                                     "value": application.memo,
+                                                     "value": '',
                                                      "color": "#173177"
                                                  },
                                                  "remark": {
@@ -384,6 +393,50 @@ def material_application_edit(id):
         return redirect(url_for('content.material_application_index'))
     form = MaterialApplicationForm(obj=application)
     return render_template('content/material_application/edit.html', application=application, form=form)
+
+
+# 物料申请发货确认
+@content.route('/material_application/<int:id>/confirm', methods=['GET', 'POST'])
+def material_application_confirm(id):
+    application = MaterialApplication.query.get_or_404(id)
+    if request.method == 'POST':
+        if not application.status == '同意申请':
+            flash('状态错误', 'danger')
+            return redirect('content.material_application_approved_index')
+        application.status = '已发货'
+        db.session.add(application)
+        db.session.commit()
+        cache.delete_memoized(current_user.get_material_application_approved_num)
+        flash('物料申请"%s"已确认发货' % application.app_no, 'success')
+        if application.user.is_dealer():
+            WechatCall.send_template_to_user(str(application.user_id),
+                                             "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0",
+                                             {
+                                                 "first": {
+                                                     "value": "您的物料申请订单状态已更改",
+                                                     "color": "#173177"
+                                                 },
+                                                 "keyword1": {
+                                                     "value": application.app_no,
+                                                     "color": "#173177"
+                                                 },
+                                                 "keyword2": {
+                                                     "value": application.status,
+                                                     "color": "#173177"
+                                                 },
+                                                 "keyword3": {
+                                                     "value": '',
+                                                     "color": "#173177"
+                                                 },
+                                                 "remark": {
+                                                     "value": "感谢您的使用！",
+                                                     "color": "#173177"
+                                                 },
+                                             },
+                                             url_for('mobile_material_application_show', id=application.id)
+                                             )
+        return redirect(url_for('content.material_application_index_approved'))
+    return render_template('content/material_application/confirm.html', application=application)
 
 
 @content.route('/material/index')

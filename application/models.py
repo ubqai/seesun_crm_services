@@ -603,16 +603,6 @@ class User(db.Model, Rails):
 
     def get_other_app_num(self):
         return self.get_material_application_num() + self.get_project_report_num() + self.get_share_inventory_num()
-        # if self.is_sales_department:
-        #     num1 = MaterialApplication.query.filter_by(status='新申请').filter(
-        #         MaterialApplication.user_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).count()
-        #     num2 = ProjectReport.query.filter_by(status='新创建待审核').filter(
-        #         ProjectReport.app_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).count()
-        #     num3 = ShareInventory.query.filter_by(status='新申请待审核').filter(
-        #         ShareInventory.applicant_id.in_(set([user.id for user in self.get_subordinate_dealers()]))).count()
-        #     return num1 + num2 + num3
-        # else:
-        #     return 0
 
     @cache.memoize(7200)
     def get_material_application_num(self):
@@ -622,6 +612,10 @@ class User(db.Model, Rails):
             return num
         else:
             return 0
+
+    @cache.memoize(7200)
+    def get_material_application_approved_num(self):
+        return MaterialApplication.query.filter(MaterialApplication.status == '同意申请').count()
 
     @cache.memoize(7200)
     def get_project_report_num(self):

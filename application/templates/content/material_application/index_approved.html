@@ -1,0 +1,59 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar with context %}
+{% from 'macros/pc_pagination.html' import paginate %}
+{% block main_content %}
+
+{{ sidebar(active = 'service') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">物料申请列表</p>
+        <p class="contents-header-p text-sm">list of material applications</p>
+        <a class="new-one" href="{{ url_for('content.material_index') }}" title="物料管理"><span class="glyphicon glyphicon-th-large"></span></a>
+    </div>
+    <div class="separator"><span></span></div>
+
+    <div class="widget">
+        <div class="widget_header">
+            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;物料申请列表</h4>
+        </div>
+        <div class="widget_contents padding-0">
+            <table class="tables">
+                <thead>
+                    <tr>
+                        <th>申请号</th>
+                        <th>申请日期</th>
+                        <th>申请人</th>
+                        <th>销售区域(省份)</th>
+                        <th>类型</th>
+                        <th>申请状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in object_list.items %}
+                    <tr>
+                        <td><a href="{{ url_for('content.material_application_confirm', id = application.id) }}" class="table-link">{{ application.app_no }}</a></td>
+                        <td>{{ application.created_at.strftime('%F') }}</td>
+                        <td>{{ application.user.nickname }}</td>
+                        <td>{{ application.sales_area }}</td>
+                        {% if application.app_type == 3 %}
+                            <td class="state staff">员工申请</td>
+                        {% elif application.app_type == 2 %}
+                            <td class="state dealer">经销商申请</td>
+                        {% else %}
+                            <td>未知类型</td>
+                        {% endif %}
+                        <td><span class="text-warning">{{ application.status }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div style="text-align: center;">
+			{{ paginate(object_list) }}
+		</div>
+    </div>
+</div>
+
+{% endblock %}
+
