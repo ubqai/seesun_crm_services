@@ -2,6 +2,7 @@
 from flask import Blueprint, flash, redirect, render_template, url_for, request, current_app
 from ..models import *
 from flask_login import current_user
+from ..wechat.models import WechatCall
 from .. import cache
 
 
@@ -31,6 +32,32 @@ def audit(id):
         pr.status = request.form.get("status")
         db.session.add(pr)
         db.session.commit()
+        WechatCall.send_template_to_user(str(pr.app_id),
+                                         "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0",
+                                         {
+                                             "first": {
+                                                 "value": "您的项目报备状态已更新",
+                                                 "color": "#173177"
+                                             },
+                                             "keyword1": {
+                                                 "value": pr.report_no,
+                                                 "color": "#173177"
+                                             },
+                                             "keyword2": {
+                                                 "value": pr.status,
+                                                 "color": "#173177"
+                                             },
+                                             "keyword3": {
+                                                 "value": "",
+                                                 "color": "#173177"
+                                             },
+                                             "remark": {
+                                                 "value": "感谢您的使用！",
+                                                 "color": "#173177"
+                                             },
+                                         },
+                                         url_for('project_report_show', id=pr.id)
+                                         )
         flash('项目报备申请审核成功', 'success')
         cache.delete_memoized(current_user.get_project_report_num)
         return redirect(url_for('project_report.index'))
@@ -43,6 +70,32 @@ def cancel(id):
     pr.status = "报备已取消"
     db.session.add(pr)
     db.session.commit()
+    WechatCall.send_template_to_user(str(pr.app_id),
+                                     "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0",
+                                     {
+                                         "first": {
+                                             "value": "您的项目报备状态已更新",
+                                             "color": "#173177"
+                                         },
+                                         "keyword1": {
+                                             "value": pr.report_no,
+                                             "color": "#173177"
+                                         },
+                                         "keyword2": {
+                                             "value": pr.status,
+                                             "color": "#173177"
+                                         },
+                                         "keyword3": {
+                                             "value": "",
+                                             "color": "#173177"
+                                         },
+                                         "remark": {
+                                             "value": "感谢您的使用！",
+                                             "color": "#173177"
+                                         },
+                                     },
+                                     url_for('project_report_show', id=pr.id)
+                                     )
     flash('项目报备申请取消成功', 'success')
     cache.delete_memoized(current_user.get_other_app_num)
     return redirect(url_for("project_report.index"))

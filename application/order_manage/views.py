@@ -240,6 +240,35 @@ def contract_edit(id):
         db.session.add(contract)
         db.session.add(order)
         db.session.commit()
+        product_name = ''
+        for content in order.order_contents:
+            "%s%s " % (product_name, content.product_name)
+        WechatCall.send_template_to_user(str(order.user_id),
+                                         "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0",
+                                         {
+                                             "first": {
+                                                 "value": "您的合同内容已更改",
+                                                 "color": "#173177"
+                                             },
+                                             "keyword1": {
+                                                 "value": contract.contract_no,
+                                                 "color": "#173177"
+                                             },
+                                             "keyword2": {
+                                                 "value": "合同内容修改",
+                                                 "color": "#173177"
+                                             },
+                                             "keyword3": {
+                                                 "value": product_name,
+                                                 "color": "#173177"
+                                             },
+                                             "remark": {
+                                                 "value": "感谢您的使用！",
+                                                 "color": "#173177"
+                                             },
+                                         },
+                                         url_for('mobile_contract_show', id=contract.id)
+                                         )
         flash("合同修改成功", 'success')
         return redirect(url_for('order_manage.contract_index'))
     return render_template('order_manage/contract_edit.html', form=form, order=order, contract=contract)
