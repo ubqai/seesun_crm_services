@@ -165,7 +165,7 @@ def contract_new(id):
                                                  "color": "#173177"
                                              },
                                          },
-                                         url_for('mobile_contract_show', id=contract.id)
+                                         url_for('mobile_contract_show', id=order.id)
                                          )
         cache.delete_memoized(current_user.get_orders_num)
         flash("合同生成成功", 'success')
@@ -267,7 +267,7 @@ def contract_edit(id):
                                                  "color": "#173177"
                                              },
                                          },
-                                         url_for('mobile_contract_show', id=contract.id)
+                                         url_for('mobile_contract_show', id=order.id)
                                          )
         flash("合同修改成功", 'success')
         return redirect(url_for('order_manage.contract_index'))
