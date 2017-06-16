@@ -194,21 +194,22 @@ def user_update(user_id):
             form.address.data = ui.address
             form.phone.data = ui.telephone
             form.title.data = ui.title
-            if u.is_join_dealer():
-                form.join_dealer.data = 1
-            else:
-                form.join_dealer.data = 0
-
-            if u.is_anonymous():
-                form.is_anonymous.data = 1
-            else:
-                form.is_anonymous.data = 0
 
             app.logger.info("join_delaer: [%s]" % form.join_dealer.default)
         if u.sales_areas.first() is not None:
             form.sale_range.default = u.sales_areas.first().id
         if u.departments.first() is not None:
             form.dept_ranges.default = u.departments.all()
+
+        if u.is_join_dealer():
+            form.join_dealer.data = 1
+        else:
+            form.join_dealer.data = 0
+
+        if u.is_anonymous():
+            form.is_anonymous.data = 1
+        else:
+            form.is_anonymous.data = 0
 
         return render_template('organization/user_update.html', form=form, user_id=u.id)
 
