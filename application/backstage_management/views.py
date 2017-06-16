@@ -62,6 +62,13 @@ def login_check():
                 flash("请登入后操作")
                 session["login_next_url"] = request.path
                 return redirect(url_for('mobile_user_login'))
+            # 被禁止用户
+            else:
+                login_valid_errmsg = current_user.check_can_login()
+                if not login_valid_errmsg == "":
+                    flash(login_valid_errmsg)
+                    logout_user()
+                    return redirect(url_for('mobile_user_login'))
         # 其他与微信服务器交互接口 不进行登入判断
         elif request.endpoint.startswith("wechat."):
             # 微信
@@ -79,6 +86,13 @@ def login_check():
                 flash("请登入后操作")
                 session["login_next_url"] = request.path
                 return redirect(url_for('backstage_management.account_login'))
+            # 被禁止用户
+            else:
+                login_valid_errmsg = current_user.check_can_login()
+                if not login_valid_errmsg == "":
+                    flash(login_valid_errmsg)
+                    logout_user()
+                    return redirect(url_for('backstage_management.account_login'))
 
     return None
 
