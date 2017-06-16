@@ -9,13 +9,24 @@
 			<select name="contract_no" id="contract_no" class="form-control">
 					<option value="">请选择合同号</option>
 				{% for tracking_info in tracking_infos %}
-					<option value="{{ tracking_info.contract_no }}">{{ tracking_info.contract_no }}</option>
+					<option receiver="{{ tracking_info.delivery_infos.get('recipient') }}" value="{{ tracking_info.contract_no }}">{{ tracking_info.contract_no }}</option>
 				{% endfor %}
 			</select>
-			<input name="receiver_tel" class="form-control top-gap-3" placeholder="请输入手机号码">
+			<input id="receiver_tel" name="receiver_tel" class="form-control top-gap-3" placeholder="请输入收件人的手机号码">
 			<input value="查询" type="submit" class="btn btn-block btn-warning top-gap-3">
 		</form>
 	</div>
 </div>
+
+<script>
+	$('#contract_no').change(function(){
+		var receiver = $(this).find('option:selected').attr('receiver');
+		if(receiver){
+			$('#receiver_tel').attr('placeholder', '请输入收件人' + receiver + '的手机号码');
+		}else{
+			$('#receiver_tel').attr('placeholder', '请输入收件人的手机号码');
+		}
+	})
+</script>
 
 {% endblock %}

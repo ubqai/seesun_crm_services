@@ -29,6 +29,9 @@ def edit(id):
                     if application.dl_file:
                         delete_file(application.dl_file)
                     application.dl_file = file_path
+                else:
+                    flash('%s文件格式不合法' % str(request.files.get('dl_file').filename), 'danger')
+                    return redirect(url_for('design_application.index'))
             flash('申请通过 %s' % str(request.files.get('dl_file').filename), 'success')
         elif request.form.get('status') == '申请不通过':
             flash('申请不通过', 'warning')

@@ -91,7 +91,7 @@ class MaterialApplicationSearchForm(Form):
     sales_area = SelectField('销售区域(省份)', choices=[('', '')] + [(obj.name, obj.name) for obj in get_provinces()])
     status = SelectField(
         '申请状态',
-        choices=[('', ''), ('新申请', '新申请'), ('同意申请', '同意申请'), ('拒绝申请', '拒绝申请'), ('已完成', '已完成')]
+        choices=[('', ''), ('新申请', '新申请'), ('同意申请', '同意申请'), ('拒绝申请', '拒绝申请'), ('已发货', '已发货')]
     )
     app_type = SelectField('类型', choices=[('', ''), (2, '经销商申请'), (3, '员工申请')])
 

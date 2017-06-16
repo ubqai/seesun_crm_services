@@ -170,6 +170,16 @@
                     {% else %}
                     <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>物流状态列表</a></li>
                     {% endif %}
+
+                    {% if current_user.is_authorized('content.material_application_approved_index') %}
+                    <li><a href="{{ url_for('content.material_application_index_approved') }}">物料申请列表
+                        {% if current_user.get_material_application_approved_num() > 0 %}
+                            <span class="badge" style="background: #ff6c60;">{{ current_user.get_material_application_approved_num() }}</span>
+                        {% endif %}
+                    </a></li>
+                    {% else %}
+                    <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>物料申请列表</a></li>
+                    {% endif %}
                 </ul>
             </li>
             <li class="sub-menu {% if active == 'statistics' %}active{% endif %}">

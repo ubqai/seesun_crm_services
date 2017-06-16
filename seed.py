@@ -124,6 +124,7 @@ new_webpage_describe_list={
     ("content.category_index", "GET", "归档中心-->内容"),
     ("order_manage.contracts_for_tracking", "GET", "售后服务-->生产合同列表"),
     ("order_manage.tracking_infos", "GET", "售后服务-->物流状态列表"),
+    ("content.material_application_index_approved", "GET", "售后服务-->物料申请列表"),
     ("web_access_log.statistics", "GET", "数据统计-->点击率统计"),
     ("order_manage.team_profit", "GET", "数据统计-->销售团队销售统计"),
     ("organization.user_index", "GET", "系统组织架构-->用户管理"),

@@ -1,0 +1,112 @@
+{% extends 'pc_base.html' %}
+{% from 'macros/pc_partial.html' import sidebar with context %}
+{% block main_content %}
+
+{{ sidebar(active = 'service') }}
+<div class="contents">
+    <div class="contents-header">
+        <div class="contents-header-img"><img class="full-img" src="/static/images/product.png" /></div>
+        <p class="contents-header-p">物料申请发货确认</p>
+        <p class="contents-header-p text-sm">confirmation of material application</p>
+    </div>
+    <div class="separator"><span></span></div>
+
+    <div class="widget">
+        <div class="widget_header">
+            <h4 class="widget_header_title"><span class="glyphicon glyphicon-th-large"></span>&nbsp;&nbsp;&nbsp;物料申请详情</h4>
+        </div>
+        <div class="widget_contents padding-0 bot-gap-3">
+            <div class="form-item inline-2">
+                <span class="form-label">申请号</span>
+                <input class="form-input form-control" value="{{ application.app_no }}" disabled/>
+                <span class="form-label">申请日期</span>
+                <input class="form-input form-control" value="{{ application.created_at.strftime('%F') }}" disabled/>
+                <span class="form-label">申请状态</span>
+                <input class="form-input form-control" value="{{ application.status }}" disabled/>
+            </div>
+            <div class="form-item inline-2">
+                <span class="form-label">申请人</span>
+                <input class="form-input form-control" value="{{ application.user.nickname }}" disabled/>
+                <span class="form-label">销售区域</span>
+                <input class="form-input form-control" value="{{ application.sales_area }}" disabled/>
+                <span class="form-label">申请类型</span>
+                <input class="form-input form-control" value="{{ application.app_type_desc() }}" disabled/>
+            </div>
+            {% if application.user.is_staff() %}
+                <div class="form-item inline-2">
+                    <span class="form-label">客户名称</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('customer') or '' }}" disabled/>
+                    <span class="form-label">项目名称</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('project_name') or '' }}" disabled/>
+                    <span class="form-label">申请用途</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('purpose') or '' }}" disabled/>
+                </div>
+                <div class="form-item inline-2">
+                    <span class="form-label">寄件方式</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('delivery_method') or '' }}" disabled/>
+                    <span class="form-label">收件地址</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('receive_address') or '' }}" disabled/>
+                </div>
+                <div class="form-item inline-2">
+                    <span class="form-label">收件人</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('receiver') or '' }}" disabled/>
+                    <span class="form-label">收件人电话</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('receiver_tel') or '' }}" disabled/>
+                </div>
+            {% elif application.user.is_dealer() %}
+                <div class="form-item inline-2">
+                    <span class="form-label">联系人姓名</span>
+                    <input class="form-input form-control" value="{{ application.user.user_infos[0].name }}" disabled/>
+                    <span class="form-label">联系人电话</span>
+                    <input class="form-input form-control" value="{{ application.user.user_infos[0].telephone }}" disabled/>
+                </div>
+                <div class="form-item inline-2">
+                    <span class="form-label">联系人地址</span>
+                    <input class="form-input form-control" value="{{ application.user.user_infos[0].address }}" disabled/>
+                </div>
+            {% endif %}
+        </div>
+
+
+        <div class="widget_contents padding-0">
+            <table class="tables">
+                <thead>
+                    <tr>
+                        <th>物料名称</th>
+                        <th>申请数量</th>
+                        <th>审核数量</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for content in application.application_contents %}
+                    <tr>
+                        <td>{{ content.material_name }}</td>
+                        <td>{{ content.number }}</td>
+                        <td><input class="form-control" name="content_{{ content.id }}" value="{{ content.available_number or content.number }}" type="number" step="1" min="0" {{ 'disabled' if content.available_number else '' }}></td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td style="background: #a9d86e;">申请备注</td>
+                        <td colspan="2">{{ application.app_memo }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="widget_contents padding-0 top-gap-3">
+            <div class="form-item inline-2">
+                <span class="form-label">审核备注</span>
+                <textarea class="form-input form-control" id="memo" name="memo" readonly="readonly">{{ application.memo }}</textarea>
+            </div>
+        </div>
+        {% if application.status=="同意申请" %}
+            <div class="text-right top-gap-3">
+                <form action="{{ url_for('content.material_application_confirm', id=application.id) }}" method="post">
+                    <button type="submit" data-confirm="确认改为已发货状态吗?" data-confirmType="post" class="btn btn-default my-btn">确认已发货</button>
+                </form>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
