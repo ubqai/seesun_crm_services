@@ -543,7 +543,10 @@ class User(db.Model, Rails):
         if self.user_or_origin == 3 and self.departments.count() == 0:
             return "用户[%s]部门异常,请联系管理员" % self.nickname
         if self.is_anonymous():
-            return "用户[%s]已被禁用,请联系管理员" % self.nickname
+            if self.user_or_origin == 2:
+                return "[%s经销商]暂时无法登陆，请联系管理员" % self.nickname
+            else:
+                return "用户[%s]已被禁用,请联系管理员" % self.nickname
         return ""
 
     def get_user_type_name(self):
