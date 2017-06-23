@@ -75,11 +75,7 @@ def user_new():
             u.password = form.password.data
             u.user_infos.append(ui)
 
-            # 组装extra_attributes
-            if form.user_type.data == "2" and form.join_dealer.data:
-                u.extra_attributes = form.join_dealer.data
-            else:
-                u.extra_attributes = ""
+            u.set_join_dealer(str(form.join_dealer.data))
 
             if form.user_type.data == "3":
                 app.logger.info("into 3 : [%s]" % form.dept_ranges.data)
@@ -108,6 +104,7 @@ def user_new():
     else:
         form = UserForm(meta={'csrf_context': session})
         form.reset_select_field()
+        form.is_anonymous.data = 0
         return render_template('organization/user_new.html', form=form)
 
 
@@ -148,11 +145,11 @@ def user_update(user_id):
             ui.address = form.address.data
             ui.title = form.title.data
 
-            # 组装extra_attributes
-            if u.user_or_origin == 2 and form.join_dealer.data:
-                u.extra_attributes = str(form.join_dealer.data)
-            else:
-                u.extra_attributes = ""
+            u.set_join_dealer(str(form.join_dealer.data))
+
+            # 只有 admin 才能修改用户是否禁用
+            if current_user.get_max_level_grade() == 1:
+                u.set_is_anonymous(str(form.is_anonymous.data))
 
             if len(u.user_infos) == 0:
                 u.user_infos.append(ui)
@@ -197,16 +194,22 @@ def user_update(user_id):
             form.address.data = ui.address
             form.phone.data = ui.telephone
             form.title.data = ui.title
-            if u.is_join_dealer():
-                form.join_dealer.data = 1
-            else:
-                form.join_dealer.data = 0
 
             app.logger.info("join_delaer: [%s]" % form.join_dealer.default)
         if u.sales_areas.first() is not None:
             form.sale_range.default = u.sales_areas.first().id
         if u.departments.first() is not None:
             form.dept_ranges.default = u.departments.all()
+
+        if u.is_join_dealer():
+            form.join_dealer.data = 1
+        else:
+            form.join_dealer.data = 0
+
+        if u.is_anonymous():
+            form.is_anonymous.data = 1
+        else:
+            form.is_anonymous.data = 0
 
         return render_template('organization/user_update.html', form=form, user_id=u.id)
 

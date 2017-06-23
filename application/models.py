@@ -487,6 +487,7 @@ class User(db.Model, Rails):
                                   backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
     # 特殊属性 - 每一位使用0,1作为区分
     # 经销商用户 - 首位表示是否加盟 0:未加盟 , 1:加盟
+    # 是否被禁止登入 - 第2位表示是否被禁止登入 0:未禁止， 1:禁止
     # 员工 - 暂未使用此字段
     extra_attributes = db.Column(db.String(10), default='')
 
@@ -503,7 +504,36 @@ class User(db.Model, Rails):
 
     # 为那些不被获准登录的用户返回True
     def is_anonymous(self):
+        if self.extra_attributes is not None and self.extra_attributes[1:2] == '1':
+            return True
         return False
+
+    # 设置用户是否禁用
+    def set_is_anonymous(self, is_anonymous_data):
+        if is_anonymous_data is None or is_anonymous_data == 'None':
+            is_anonymous_data = '0'
+
+        if self.extra_attributes is None or self.extra_attributes == "":
+            # 第一位默认为1
+            self.extra_attributes = '1' + is_anonymous_data
+        else:
+            list_extra_attributes = list(self.extra_attributes)
+            list_extra_attributes[1] = is_anonymous_data
+            self.extra_attributes = ''.join(list_extra_attributes)
+
+    # 设置用户是否加盟 -- 供应商专属属性
+    def set_join_dealer(self, join_dealer_data):
+        if join_dealer_data is None or join_dealer_data == 'None':
+            join_dealer_data = '1'
+
+        if self.user_or_origin == 2:
+            if self.extra_attributes is None or self.extra_attributes == "":
+                # 第二位默认为0
+                self.extra_attributes = join_dealer_data + "0"
+            else:
+                list_extra_attributes = list(self.extra_attributes)
+                list_extra_attributes[0] = join_dealer_data
+                self.extra_attributes = ''.join(list_extra_attributes)
 
     # 为用户返回唯一的unicode标识符
     def get_id(self):
@@ -511,8 +541,12 @@ class User(db.Model, Rails):
 
     def check_can_login(self):
         if self.user_or_origin == 3 and self.departments.count() == 0:
-            return "用户部门异常,请联系管理员"
-
+            return "用户[%s]部门异常,请联系管理员" % self.nickname
+        if self.is_anonymous():
+            if self.user_or_origin == 2:
+                return "[%s经销商]暂时无法登陆，请联系管理员" % self.nickname
+            else:
+                return "用户[%s]已被禁用,请联系管理员" % self.nickname
         return ""
 
     def get_user_type_name(self):
