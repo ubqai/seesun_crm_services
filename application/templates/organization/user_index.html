@@ -104,8 +104,8 @@
 		{{ 
 			render_pagination(
 				pagination,
-				url_for('organization.user_index', page = pagination.prev_num,name=form.name.data,email=form.email.data,dept_ranges=form.dept_ranges.data,sale_range=form.sale_range.data) ,
-				url_for('organization.user_index', page = pagination.next_num,name=form.name.data,email=form.email.data,dept_ranges=form.dept_ranges.date,sale_range=form.sale_range.data)
+				url_for('organization.user_index', page = pagination.prev_num,user_type=form.user_type.data,name=form.name.data,email=form.email.data,dept_ranges=form.dept_ranges.data,sale_range=form.sale_range.data) ,
+				url_for('organization.user_index', page = pagination.next_num,user_type=form.user_type.data,name=form.name.data,email=form.email.data,dept_ranges=form.dept_ranges.date,sale_range=form.sale_range.data)
 			) 
 		}}
 	{% endif %}
