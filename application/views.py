@@ -384,9 +384,15 @@ def mobile_material_application_new():
                         app_contents.append([param.split('_', 1)[1], request.form.get(param)])
         if app_contents or request.form.get('app_memo'):
             sales_area = SalesAreaHierarchy.query.get(current_user.sales_areas.first().parent_id).name
+            app_infos = {
+                'receive_address': request.form.get('receive_address'),
+                'receiver': request.form.get('receiver'),
+                'receiver_tel': request.form.get('receiver_tel'),
+                'receiver_company': request.form.get('receiver_company')
+            }
             application = MaterialApplication(app_no='MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
                                               user=current_user, status='新申请', app_memo=request.form.get('app_memo'),
-                                              app_type=2, sales_area=sales_area)
+                                              app_type=2, sales_area=sales_area, app_infos=app_infos)
             db.session.add(application)
             for app_content in app_contents:
                 material = Material.query.get_or_404(app_content[0])
