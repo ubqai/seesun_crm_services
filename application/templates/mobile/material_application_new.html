@@ -8,8 +8,29 @@
 
 	<form action="{{ url_for('mobile_material_application_new') }}" method="post">
 		<div class="wrapper-style top-gap-3 bot-gap-2">
+			<div class="wrapper-header"><span class="wrapper-header-title">FIRST STEP</span><span class="wrapper-header-icon glyphicon glyphicon-bookmark pull-right"></span></div>
 			<div class="wrapper-inner">
             	<p class="text-content text-sm">
+					<span class="wrapper-header-title">收件人：</span>
+					<input class="form-control" name="receiver" value="{{ current_user.user_infos[0].name or '' }}" required="required">
+				</p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm">
+					<span class="wrapper-header-title">收件人电话：</span>
+					<input class="form-control" name="receiver_tel" value="{{ current_user.user_infos[0].telephone or '' }}" required="required">
+				</p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm">
+					<span class="wrapper-header-title">收件人地址：</span>
+					<input class="form-control" name="receive_address" value="{{ current_user.user_infos[0].address or '' }}" required="required">
+				</p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm">
+					<span class="wrapper-header-title">收件人公司：</span>
+					<input class="form-control" name="receiver_company" required="required">
+				</p>
+				<div class="light-divider top-gap-1 bot-gap-1"></div>
+				<p class="text-content text-sm">
 					<span class="wrapper-header-title">备注：</span>
 					<textarea class="form-control" name="app_memo" placeholder="如申请物料不在列表中,如产品样块,请在此填写备注"></textarea>
 				</p>

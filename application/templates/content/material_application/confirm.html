@@ -59,10 +59,20 @@
                     <input class="form-input form-control" value="{{ application.user.user_infos[0].name }}" disabled/>
                     <span class="form-label">联系人电话</span>
                     <input class="form-input form-control" value="{{ application.user.user_infos[0].telephone }}" disabled/>
-                </div>
-                <div class="form-item inline-2">
                     <span class="form-label">联系人地址</span>
                     <input class="form-input form-control" value="{{ application.user.user_infos[0].address }}" disabled/>
+                </div>
+                <div class="form-item inline-2">
+                    <span class="form-label">收件人姓名</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('receiver') or '' }}" disabled/>
+                    <span class="form-label">收件人电话</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('receiver_tel') or '' }}" disabled/>
+                </div>
+                <div class="form-item inline-2">
+                    <span class="form-label">收件人地址</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('receive_address') or '' }}" disabled/>
+                    <span class="form-label">收件人公司</span>
+                    <input class="form-input form-control" value="{{ application.app_infos.get('receiver_company') or '' }}" disabled/>
                 </div>
             {% endif %}
         </div>
