@@ -15,10 +15,12 @@ inventory = Blueprint('inventory', __name__, template_folder='templates')
 def index():
     sku_features = load_skufeatures()
     option_ids = [x for x in request.args.getlist('options[]') if x != '']
+    sku_code = request.args.get('sku_code', '')
     current_app.logger.info(option_ids)
-    skus = load_all_skus({'option_ids': option_ids, 'page': str(request.args.get('page', 1)),
-                          'page_size': '50'})
-    return render_template('inventory/index.html', skus=skus, sku_features=sku_features, option_ids=option_ids)
+    skus = load_all_skus({'option_ids': option_ids, 'sku_code': sku_code,
+                          'page': str(request.args.get('page', 1)), 'page_size': '50'})
+    return render_template('inventory/index.html', skus=skus, sku_features=sku_features, option_ids=option_ids,
+                           sku_code = sku_code)
 
 
 @inventory.route('/sku/<int:id>', methods=['GET'])
