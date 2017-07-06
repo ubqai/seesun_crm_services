@@ -32,7 +32,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				{% for product in products %}
+				{% for product in products|sort(attribute='name') %}
 					<tr>
 						<td><a href="{{ url_for('product.show', id = product.get('product_id'), category_id = category.get('category_id')) }}" class="table-link">{{ product.get('name') }}</a></td>
 						<td>{{ product.get('code') }}</td>
