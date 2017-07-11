@@ -713,8 +713,12 @@ def upload_share_index():
     return render_template('mobile/upload_share_index.html', categories=categories)
 
 
-@app.route('/mobile/new_share_inventory/<product_name>/<sku_id>', methods=['GET', 'POST'])
-def new_share_inventory(product_name, sku_id):
+# 原route格式(/mobile/new_share_inventory/<product_name>/<sku_id>)
+# product_name中带斜杠'/'时, 会使url解析错误, 因此传参改为url后置参数
+@app.route('/mobile/new_share_inventory/', methods=['GET', 'POST'])
+def new_share_inventory():
+    product_name = request.args.get('product_name')
+    sku_id = request.args.get('sku_id')
     if request.method == 'POST':
         if not current_user.is_dealer():
             return flash_and_redirect(url_for('new_share_inventory', product_name=product_name, sku_id=sku_id))

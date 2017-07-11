@@ -129,12 +129,14 @@
                 </ul>
             </li>
             <li class="sub-menu {% if active == 'design' %}active{% endif %}">
-                <a><i class="glyphicon glyphicon-paperclip"></i><span>产品设计</span><span class="dcjq-icon"></span></a>
+                <a><i class="glyphicon glyphicon-paperclip"></i><span>产品设计</span>
+                    {% if current_user.get_new_design_application_num() > 0 %}
+                        <span class="badge" style="background: #d8976e;">{{ current_user.get_new_design_application_num() }}</span>
+                    {% endif %}
+                    <span class="dcjq-icon"></span></a>
                 <ul class="sub">
                     {% if current_user.is_authorized('design_application.index') %}
-                    <li><a href="{{ url_for('design_application.index') }}">待设计列表 &nbsp;&nbsp;<div
-                            class="badge badge-info"></div>
-                    </a></li>
+                    <li><a href="{{ url_for('design_application.index') }}">待设计列表</a></li>
                     {% else %}
                     <li><a href='javascript:void(0)' style="color:#777"><i class="glyphicon glyphicon-ban-circle" style="color:#777"></i>待设计列表 &nbsp;&nbsp;<div
                             class="badge badge-info"></div>
@@ -153,7 +155,12 @@
                 </ul>
             </li>
             <li class="sub-menu {% if active == 'service' %}active{% endif %}">
-                <a><i class="glyphicon glyphicon-phone-alt"></i><span>售后服务</span><span class="dcjq-icon"></span></a>
+                <a><i class="glyphicon glyphicon-phone-alt"></i><span>售后服务</span>
+                    {% if current_user.get_contract_for_tracking_num() + current_user.get_material_application_approved_num() > 0 %}
+                        <span class="badge" style="background: #d8976e;">{{ current_user.get_contract_for_tracking_num() + current_user.get_material_application_approved_num() }}</span>
+                    {% endif %}
+                    <span class="dcjq-icon"></span>
+                </a>
                 <ul class="sub">
                     {% if current_user.is_authorized('order_manage.contracts_for_tracking') %}
                     <li><a href="{{ url_for('order_manage.contracts_for_tracking') }}">生产合同列表
