@@ -201,7 +201,7 @@ def audit_share_inventory(id):
                                                  "color": "#173177"
                                              },
                                          },
-                                         url_for('share_inventory_show', id=si.id)
+                                         url_for('share_inventory_show', sid=si.id)
                                          )
         flash('工程剩余库存申请审核成功', 'success')
         cache.delete_memoized(current_user.get_share_inventory_num)
