@@ -189,7 +189,7 @@ def audit_share_inventory(id):
                                                  "color": "#173177"
                                              },
                                              "keyword2": {
-                                                 "value": "申请上传工程剩余库存 审核状态更改",
+                                                 "value": si.status,
                                                  "color": "#173177"
                                              },
                                              "keyword3": {
