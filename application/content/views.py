@@ -314,7 +314,7 @@ def material_application_new():
                     if int(request.form.get(param)) > 0:
                         app_contents.append([param.split('_', 1)[1], request.form.get(param)])
 
-        if app_contents:
+        if app_contents or request.form.get('app_memo'):
             application = MaterialApplication(app_no='MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
                                               user=current_user, status='新申请', app_memo=request.form.get('app_memo'),
                                               app_type=3, sales_area=request.form.get('sales_area'), app_infos=app_infos
@@ -328,7 +328,7 @@ def material_application_new():
             db.session.commit()
             flash('物料申请提交成功', 'success')
         else:
-            flash('请输入正确的数量', 'danger')
+            flash('物料申请内容不能为空', 'danger')
         return redirect(url_for('content.material_application_index'))
     else:
         materials = Material.query.order_by(Material.name.desc())
