@@ -265,6 +265,12 @@ def material_application_index():
         MaterialApplication.user_id.in_(
             set([user.id for user in current_user.get_subordinate_dealers()] +
                 [user.id for user in User.query.filter(User.user_or_origin == 3)])))
+    # 增加后台员工申请订单过滤, 按销售区域划分
+    query = query.filter(
+        MaterialApplication.sales_area.in_(
+            set([sa.name for sa in current_user.get_province_sale_areas()])
+        )
+    )
     if form.created_at_gt.data:
         query = query.filter(MaterialApplication.created_at >= form.created_at_gt.data)
     if form.created_at_lt.data:
