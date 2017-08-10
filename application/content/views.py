@@ -410,6 +410,7 @@ def material_application_confirm(id):
             flash('状态错误', 'danger')
             return redirect('content.material_application_approved_index')
         application.status = '已发货'
+        application.memo = request.form.get('memo')
         db.session.add(application)
         db.session.commit()
         cache.delete_memoized(current_user.get_material_application_approved_num)

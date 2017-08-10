@@ -102,19 +102,19 @@
                 </tbody>
             </table>
         </div>
+        <form action="{{ url_for('content.material_application_confirm', id=application.id) }}" method="post">
         <div class="widget_contents padding-0 top-gap-3">
             <div class="form-item inline-2">
                 <span class="form-label">审核备注</span>
-                <textarea class="form-input form-control" id="memo" name="memo" readonly="readonly">{{ application.memo }}</textarea>
+                <textarea class="form-input form-control" id="memo" name="memo" {% if application.status=='已发货' %} readonly="readonly"{% endif %}>{{ application.memo }}</textarea>
             </div>
         </div>
         {% if application.status=="同意申请" %}
             <div class="text-right top-gap-3">
-                <form action="{{ url_for('content.material_application_confirm', id=application.id) }}" method="post">
-                    <button type="submit" data-confirm="确认改为已发货状态吗?" data-confirmType="post" class="btn btn-default my-btn">确认已发货</button>
-                </form>
+               <button type="submit" class="btn btn-default my-btn">确认已发货</button>
             </div>
         {% endif %}
+        </form>
 
     </div>
 </div>
