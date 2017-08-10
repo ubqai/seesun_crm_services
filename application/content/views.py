@@ -288,7 +288,7 @@ def material_application_index():
 
 
 # 物料申请市场部确认列表
-@content.route('/material_application/index_approved')
+@content.route('/material_application/index_approved/')
 def material_application_index_approved():
     applications = MaterialApplication.query.filter(
         MaterialApplication.status.in_(['同意申请', '已发货'])
