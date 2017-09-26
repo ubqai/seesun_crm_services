@@ -16,7 +16,7 @@
 
 	<body class="{% block body_class %}{% endblock %}">
 		{% for category, message in get_flashed_messages(with_categories = true) %}
-			<div class="base-alert alert alert-dismissable alert-{{ category }}" style="position:fixed">
+			<div class="base-alert alert alert-dismissable alert-{{ category }}" style="margin-bottom: 0px; font-size:13px;background: #eee; box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.15);">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				{{ message }}
 			</div>

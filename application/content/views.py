@@ -265,6 +265,12 @@ def material_application_index():
         MaterialApplication.user_id.in_(
             set([user.id for user in current_user.get_subordinate_dealers()] +
                 [user.id for user in User.query.filter(User.user_or_origin == 3)])))
+    # 增加后台员工申请订单过滤, 按销售区域划分
+    query = query.filter(
+        MaterialApplication.sales_area.in_(
+            set([sa.name for sa in current_user.get_province_sale_areas()])
+        )
+    )
     if form.created_at_gt.data:
         query = query.filter(MaterialApplication.created_at >= form.created_at_gt.data)
     if form.created_at_lt.data:
@@ -282,7 +288,7 @@ def material_application_index():
 
 
 # 物料申请市场部确认列表
-@content.route('/material_application/index_approved')
+@content.route('/material_application/index_approved/')
 def material_application_index_approved():
     applications = MaterialApplication.query.filter(
         MaterialApplication.status.in_(['同意申请', '已发货'])
@@ -314,7 +320,7 @@ def material_application_new():
                     if int(request.form.get(param)) > 0:
                         app_contents.append([param.split('_', 1)[1], request.form.get(param)])
 
-        if app_contents:
+        if app_contents or request.form.get('app_memo'):
             application = MaterialApplication(app_no='MA' + datetime.datetime.now().strftime('%y%m%d%H%M%S'),
                                               user=current_user, status='新申请', app_memo=request.form.get('app_memo'),
                                               app_type=3, sales_area=request.form.get('sales_area'), app_infos=app_infos
@@ -328,7 +334,7 @@ def material_application_new():
             db.session.commit()
             flash('物料申请提交成功', 'success')
         else:
-            flash('请输入正确的数量', 'danger')
+            flash('物料申请内容不能为空', 'danger')
         return redirect(url_for('content.material_application_index'))
     else:
         materials = Material.query.order_by(Material.name.desc())
@@ -404,6 +410,7 @@ def material_application_confirm(id):
             flash('状态错误', 'danger')
             return redirect('content.material_application_approved_index')
         application.status = '已发货'
+        application.memo = request.form.get('memo')
         db.session.add(application)
         db.session.commit()
         cache.delete_memoized(current_user.get_material_application_approved_num)

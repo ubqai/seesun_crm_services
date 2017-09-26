@@ -56,7 +56,7 @@
 				</div>
 
 				<div class="form-item" style="padding: 0;">
-					<table class="tables">
+					<table class="tables" id="material_list">
 						<colgroup>
 							<col style="width: 25%;">
 							<col style="width: 8%;">
@@ -78,7 +78,7 @@
 						<tbody>
 						<tr>
 						{% for material in materials %}
-							<td>{{ material.name }}</td>
+							<td style="{% if '证书-' in material.name or '样册-' in material.name %}background: #eee;{% endif %}">{{ material.name }}</td>
 							<td><input name="material_{{ material.id }}" type="number" value="0" step="1" min="0" class="table-input" required="required"></td>
 							{{ '</tr><tr>'|safe if loop.index is divisibleby 3 else '' }}
 						{% endfor %}

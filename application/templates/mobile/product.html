@@ -15,7 +15,7 @@
 		<div class="sub-module-1 clearfix" id="p_category_{{ category.get('category_id') }}">
 			<p class="module-title">{{ category.get('category_name') }}</p>
 			<div class="divider2"></div>
-			{% for product in products_hash.get(category.get('category_id')) %}
+			{% for product in products_hash.get(category.get('category_id'))|sort(attribute='name') %}
 				<a href="{{ url_for('mobile_product_show', id = product.get('product_id')) }}" 
 					class="col-6-gap product top-gap-1 {% if loop.index>4 %}over-p hidden{% endif %}">
 					<img class="full-img" src="{{ product.get('images')[0] or '/static/images/alt.jpg' }}">

@@ -677,6 +677,11 @@ class User(db.Model, Rails):
         return Contract.query.filter((Contract.payment_status == '已付款') &
                                      (Contract.shipment_status == '未出库')).count()
 
+    # 获取'新申请'产品设计的数量, DesignApplication
+    @cache.memoize(7200)
+    def get_new_design_application_num(self):
+        return DesignApplication.query.filter(DesignApplication.status == '新申请').count()
+
     # 是否为销售总监
     # Y - 是 ； N - 否 ; U - 未知
     def is_sale_manage(self):

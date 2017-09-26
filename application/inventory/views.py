@@ -7,6 +7,7 @@ from application.utils import is_number
 from flask_login import current_user
 from .api import load_all_skus, load_skufeatures
 from .. import cache
+from ..wechat.models import WechatCall
 
 inventory = Blueprint('inventory', __name__, template_folder='templates')
 
@@ -15,10 +16,12 @@ inventory = Blueprint('inventory', __name__, template_folder='templates')
 def index():
     sku_features = load_skufeatures()
     option_ids = [x for x in request.args.getlist('options[]') if x != '']
+    sku_code = request.args.get('sku_code', '')
     current_app.logger.info(option_ids)
-    skus = load_all_skus({'option_ids': option_ids, 'page': str(request.args.get('page', 1)),
-                          'page_size': '50'})
-    return render_template('inventory/index.html', skus=skus, sku_features=sku_features, option_ids=option_ids)
+    skus = load_all_skus({'option_ids': option_ids, 'sku_code': sku_code,
+                          'page': str(request.args.get('page', 1)), 'page_size': '50'})
+    return render_template('inventory/index.html', skus=skus, sku_features=sku_features, option_ids=option_ids,
+                           sku_code = sku_code)
 
 
 @inventory.route('/sku/<int:id>', methods=['GET'])
@@ -174,6 +177,32 @@ def audit_share_inventory(id):
                 return render_template('inventory/audit_share_inventory.html', si=si, params={})
         db.session.add(si)
         db.session.commit()
+        WechatCall.send_template_to_user(str(si.applicant_id),
+                                         "lW5jdqbUIcAwTF5IVy8iBzZM-TXMn1hVf9qWOtKZWb0",
+                                         {
+                                             "first": {
+                                                 "value": "您的申请上传工程剩余库存 审核状态已更改",
+                                                 "color": "#173177"
+                                             },
+                                             "keyword1": {
+                                                 "value": si.batch_no,
+                                                 "color": "#173177"
+                                             },
+                                             "keyword2": {
+                                                 "value": si.status,
+                                                 "color": "#173177"
+                                             },
+                                             "keyword3": {
+                                                 "value": si.product_name,
+                                                 "color": "#173177"
+                                             },
+                                             "remark": {
+                                                 "value": "感谢您的使用！",
+                                                 "color": "#173177"
+                                             },
+                                         },
+                                         url_for('share_inventory_show', sid=si.id)
+                                         )
         flash('工程剩余库存申请审核成功', 'success')
         cache.delete_memoized(current_user.get_share_inventory_num)
         return redirect(url_for('inventory.share_inventory_list'))
